@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:sps/screens/sps_login.dart';
+import 'package:sps/screens/sps_login_screen.dart';
 
 void main() {
   runApp(Sps());
@@ -18,7 +18,9 @@ class Sps extends StatelessWidget {
         primaryColor: Color(0xFF004077),
         accentColor: Color(0xFF004077),
       ),
+      //Coloca o splash Screen
       home: MyHomePage(title: 'Schuler Production System'),
+      //home: SpsLoginScreen(),
     );
   }
 }
@@ -42,8 +44,8 @@ Widget _introScreen() {
   return Stack(
     children: <Widget>[
       SplashScreen(
-        seconds: 5,
-        navigateAfterSeconds: Sps_login(),
+        seconds: 1,
+        navigateAfterSeconds: SpsLoginScreen(),
         loaderColor: Colors.transparent,
       ),
       Container(

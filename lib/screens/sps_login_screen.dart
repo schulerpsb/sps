@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:sps/screens/sps_home.dart';
+import 'package:sps/dao/sps_dao_login_class.dart';
+import 'package:sps/http/sps_http_login_class.dart';
+import 'package:sps/models/sps_login.dart';
+import 'package:sps/screens/sps_home_screen.dart';
 
-class Sps_login extends StatefulWidget {
-
+class SpsLoginScreen extends StatefulWidget {
   @override
-  _Sps_loginState createState() => _Sps_loginState();
+  _SpsLoginScreenState createState() => _SpsLoginScreenState();
 }
 
-class _Sps_loginState extends State<Sps_login> {
-
+class _SpsLoginScreenState extends State<SpsLoginScreen> {
   final _controladorusuario = TextEditingController();
   final _controladorsenha = TextEditingController();
+
+  _SpsLoginScreenState();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,7 @@ class _Sps_loginState extends State<Sps_login> {
                   labelText: 'Usuário',
                   hintText: 'Digite o Usuário',
                 ),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
               ),
             ),
             Padding(
@@ -58,7 +61,7 @@ class _Sps_loginState extends State<Sps_login> {
                   labelText: 'Senha',
                   hintText: 'Digite a senha',
                 ),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.text,
               ),
             ),
             Builder(builder: (context) {
@@ -70,7 +73,36 @@ class _Sps_loginState extends State<Sps_login> {
                   ),
                 ),
                 onPressed: () {
-                  _efetuaLogin(context);
+                  if (_controladorusuario != null &&
+                      _controladorsenha != null &&
+                      _controladorusuario.text != "" &&
+                      _controladorsenha.text != "") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return HomeSps(
+                              _controladorusuario, _controladorsenha);
+                        },
+                      ),
+                    );
+                  } else {
+                    final snackBar = SnackBar(
+                      content: Text('Favor Preencher usuário e senha!'),
+                      action: SnackBarAction(
+                        label: 'Undo',
+                        onPressed: () {
+                          // Some code to undo the change.
+                        },
+                      ),
+                    );
+                    // Find the Scaffold in the widget tree and use
+                    // it to show a SnackBar.
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  }
+//                  final SpsLogin spsLogin = SpsLogin();
+//                  spsLogin.efetuaLogin(context,_controladorusuario,_controladorsenha);
+                  //SpsLoginClass.efetuaLogin(context,_controladorusuario,_controladorsenha);
                 },
               );
             }),
@@ -78,48 +110,5 @@ class _Sps_loginState extends State<Sps_login> {
         ),
       ),
     );
-  }
-
-  void _efetuaLogin(BuildContext context) {
-
-    final usuario = _controladorusuario.text;
-    final senha = _controladorsenha.text;
-
-    if (usuario != null && senha != null) {
-      final SessaoAtual = DadosSessao(usuario, senha);
-      debugPrint('$SessaoAtual');
-      Navigator.push(context,MaterialPageRoute(
-        builder: (context) {
-          return homeSps();
-        },
-      ),
-      );
-      //Navigator.pop(context, trasferenciaCriada);
-    } else {
-      final snackBar = SnackBar(
-        content: Text('Valores inválidos!'),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            // Some code to undo the change.
-          },
-        ),
-      );
-      // Find the Scaffold in the widget tree and use
-      // it to show a SnackBar.
-      Scaffold.of(context).showSnackBar(snackBar);
-    }
-  }
-}
-
-class DadosSessao {
-  final String usuario;
-  final String senha;
-
-  DadosSessao(this.usuario, this.senha);
-
-  @override
-  String toString() {
-    return 'Dados Sessão: {usuario: $usuario, senha: $senha}';
   }
 }
