@@ -18,11 +18,10 @@ class HomeSps extends StatefulWidget {
 
 class _HomeSpsState extends State<HomeSps> {
 
-  final TextEditingController _controladorusuario;
-  final TextEditingController _controladorsenha;
+
   final SpsLogin spslogin = SpsLogin();
 
-  _HomeSpsState(this._controladorusuario, this._controladorsenha);
+  _HomeSpsState(_controladorusuario, _controladorsenha);
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +55,7 @@ class _HomeSpsState extends State<HomeSps> {
                 return ListView(children: <Widget>[
                   Center(
                       child: FlatButton(
+                        onPressed: null,
                         child: Icon(
                           Icons.account_box,
                           size: 50,
@@ -96,106 +96,7 @@ class _HomeSpsState extends State<HomeSps> {
           return Text('Unkown error');
         },
       ),
-//      body: FutureBuilder<Map<String, dynamic>>(
-//        //future: spslogin.efetuaLogin(this.widget._controladorusuario,widget._controladorsenha),
-//        future: Future.delayed(Duration(seconds: 1)).then((value) =>spslogin.efetuaLogin(this.widget._controladorusuario,widget._controladorsenha),),
-//        builder: (context, snapshot) {
-//          switch (snapshot.connectionState) {
-//            case ConnectionState.none:
-//              return Text(snapshot.connectionState.toString());
-//              break;
-//            case ConnectionState.waiting:
-//              return Text(snapshot.connectionState.toString());
-//              //return Progress();
-//              break;
-//            case ConnectionState.active:
-//              break;
-//            case ConnectionState.done:
-//              return Text(snapshot.connectionState.toString());
-////              if (snapshot.hasError) {
-////                return CenteredMessage(
-////                  'Falha de conexão!',
-////                  icon: Icons.error,
-////                );
-////              }
-//              //debugPrint(snapshot.toString());
-////              if (snapshot.data.isNotEmpty) {
-////                return ListView.builder(
-////                  itemCount: snapshot.data.length,
-////                  itemBuilder: (context, indice) {
-////                    return null;
-////                  },
-////                );
-////              } else {
-////                return CenteredMessage(
-////                  'No transaction found!',
-////                  icon: Icons.warning,
-////                );
-////              }
-//              break;
-//          }
-//          return Text('Unkown error');
-//        },
-//      ),
+
     );
   }
-//  Widget build(BuildContext context) {
-//
-//    final SpsLogin spslogin = SpsLogin();
-//
-//    return Scaffold(
-//        appBar: AppBar(
-//            title: Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//              children: [
-//                Image.asset(
-//                  'images/logo_sps.png',
-//                  fit: BoxFit.contain,
-//                  height: 32,
-//                ),
-//                Container(child: Text('Home SPS')),
-//                Icon(Icons.person),
-//              ],
-//            )),
-//        body: FutureBuilder<Map<String, dynamic>>(
-//          future: spslogin.efetuaLogin(this.widget._controladorusuario,widget._controladorsenha),
-//          //future: Future.delayed(Duration(microseconds: 1)).then((value) => spslogin.efetuaLogin(this._controladorusuario,_controladorsenha)),
-//          builder: (context, snapshot) {
-//            switch (snapshot.connectionState) {
-//              case ConnectionState.none:
-//                break;
-//              case ConnectionState.waiting:
-//                return Progress();
-//                break;
-//              case ConnectionState.active:
-//                break;
-//              case ConnectionState.done:
-//                if (snapshot.hasError) {
-//                  return CenteredMessage(
-//                    'Falha de conexão!',
-//                    icon: Icons.error,
-//                  );
-//                }
-//                return Text('Feito');
-////                if (snapshot.data.isNotEmpty) {
-////                    return Text('Feito');
-//////                  return ListView.builder(
-//////                    itemCount: snapshot.data.length,
-//////                    itemBuilder: (context, indice) {
-//////                      return ItemTransferencia(snapshot.data[indice]);
-//////                    },
-//////                  );
-////                } else {
-////                  return CenteredMessage(
-////                    'No transaction found!',
-////                    icon: Icons.warning,
-////                  );
-////                }
-//                break;
-//            }
-//            return Text('Unkown error');
-//          },
-//        ),
-//    );
-//  }
 }

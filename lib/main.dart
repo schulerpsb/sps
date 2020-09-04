@@ -18,7 +18,7 @@ class Sps extends StatelessWidget {
         primaryColor: Color(0xFF004077),
         accentColor: Color(0xFF004077),
       ),
-      //Coloca o splash Screen
+      //splash Screen
       home: MyHomePage(title: 'Schuler Production System'),
       //home: SpsLoginScreen(),
     );
@@ -44,7 +44,7 @@ Widget _introScreen() {
   return Stack(
     children: <Widget>[
       SplashScreen(
-        seconds: 1,
+        seconds: 3,
         navigateAfterSeconds: SpsLoginScreen(),
         loaderColor: Colors.transparent,
       ),
