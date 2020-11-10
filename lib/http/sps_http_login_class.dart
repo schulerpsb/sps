@@ -8,7 +8,7 @@ class SpsHttpLogin {
   final String senha;
   static const baseUrl = 'https://teklist.schuler.de/webapi/api/login/read.php';
 
-  //static const baseUrl = 'https://teklist.schuler.de/webapi/api/post/read.php';
+  //.static const baseUrl = 'https://teklist.schuler.de/webapi/api/post/read.php';
 
   SpsHttpLogin(this.usuario, this.senha);
 
