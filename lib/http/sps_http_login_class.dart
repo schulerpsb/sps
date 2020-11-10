@@ -11,7 +11,7 @@ class SpsHttpLogin {
   //Servidor DEV
   static const baseUrl = 'http://10.17.20.45/webapi/api/login/read.php';
 
-  //.static const baseUrl = 'https://teklist.schuler.de/webapi/api/post/read.php';
+  //static const baseUrl = 'https://teklist.schuler.de/webapi/api/post/read.php';
 
   SpsHttpLogin(this.usuario, this.senha);
 
