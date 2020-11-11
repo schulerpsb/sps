@@ -5,7 +5,7 @@ import 'package:sps/screens/sps_login_screen.dart';
 
 void main() {
   //runApp(Sps(),
-  runApp(MenuPrincipal(),
+  runApp(sps_menu_screen(),
   );
 }
 
