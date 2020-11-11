@@ -4,6 +4,7 @@ import 'package:sps/screens/MenuPrincipal.dart';
 import 'package:sps/screens/sps_login_screen.dart';
 
 void main() {
+  //runApp(Sps(),
   runApp(MenuPrincipal(),
   );
 }
