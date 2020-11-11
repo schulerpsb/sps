@@ -24,10 +24,10 @@ class sps_menu_screen extends StatelessWidget {
             child: RaisedButton.icon(
               onPressed: () {
                 print('Checklist');
-                //_sps_checklist_screen(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => sps_checklist_screen()),
+                  MaterialPageRoute(
+                      builder: (context) => sps_checklist_screen()),
                 );
               },
               shape: RoundedRectangleBorder(
@@ -111,31 +111,5 @@ class sps_menu_screen extends StatelessWidget {
         ],
       ),
     ));
-  }
-
-  _sps_checklist_screen(context) {
-    print('Checklist2');
-    Navigator.of(context).push(_createRoute(sps_checklist_screen())
-    );
-  }
-
-  Route _createRoute(Widget destino) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => destino,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-    print('Checklist3');
   }
 }
