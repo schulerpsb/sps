@@ -97,7 +97,7 @@ class MenuPrincipal extends StatelessWidget {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'GESTÃO DE FORNECEDORES (COTAÇÃO).',
+                      'GESTÃO DE FORNECEDORES (COTAÇÃO)',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
