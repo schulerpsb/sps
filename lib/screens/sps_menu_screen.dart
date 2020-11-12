@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sps_checklist_screen.dart';
+import 'sps_cotacao_screen.dart';
+import 'sps_feedback_screen.dart';
 
 class sps_menu_screen extends StatelessWidget {
   @override
@@ -23,7 +25,6 @@ class sps_menu_screen extends StatelessWidget {
                 const EdgeInsets.only(top: 80, left: 22, right: 20, bottom: 20),
             child: RaisedButton.icon(
               onPressed: () {
-                print('Checklist');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -40,7 +41,7 @@ class sps_menu_screen extends StatelessWidget {
               ),
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
               textColor: Colors.white,
-              splashColor: Colors.red,
+              splashColor: Colors.white,
               color: Color(0xff06044C),
             ),
           ),
@@ -49,7 +50,11 @@ class sps_menu_screen extends StatelessWidget {
                 const EdgeInsets.only(top: 20, left: 22, right: 20, bottom: 20),
             child: RaisedButton.icon(
               onPressed: () {
-                print('Feedback');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => sps_feedback_screen()),
+                );
               },
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -61,7 +66,7 @@ class sps_menu_screen extends StatelessWidget {
               ),
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
               textColor: Colors.white,
-              splashColor: Colors.red,
+              splashColor: Colors.white,
               color: Color(0xff06044C),
             ),
           ),
@@ -70,7 +75,11 @@ class sps_menu_screen extends StatelessWidget {
                 const EdgeInsets.only(top: 20, left: 22, right: 20, bottom: 20),
             child: RaisedButton.icon(
               onPressed: () {
-                print('Cotação');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => sps_cotacao_screen()),
+                );
               },
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -83,7 +92,7 @@ class sps_menu_screen extends StatelessWidget {
               ),
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
               textColor: Colors.white,
-              splashColor: Colors.red,
+              splashColor: Colors.white,
               color: Color(0xff06044C),
             ),
           ),
