@@ -1,6 +1,6 @@
 import 'package:http_interceptor/http_interceptor.dart';
 
-class LoggingInterceptor implements InterceptorContract {
+class JsonInterceptor implements InterceptorContract {
   @override
   Future<RequestData> interceptRequest({RequestData data}) async {
     print('Interceptor - Request');

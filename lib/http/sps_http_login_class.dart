@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
-import 'logging_interceptor.dart';
+import 'Json_interceptor.dart';
 
 class SpsHttpLogin {
   final String usuario;
@@ -24,7 +24,7 @@ class SpsHttpLogin {
     final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
-      LoggingInterceptor(),
+      JsonInterceptor(),
     ]);
 
     final Response response = await client

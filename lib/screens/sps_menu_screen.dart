@@ -77,8 +77,7 @@ class sps_menu_screen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => sps_cotacao_screen()),
+                  MaterialPageRoute(builder: (context) => sps_cotacao_screen()),
                 );
               },
               shape: RoundedRectangleBorder(
