@@ -69,8 +69,18 @@ class _sps_checklist_screen extends State<sps_checklist_screen> {
                         subtitle: Text(
                             snapshot.data[index]["status"] == "PARCIAL"
                                 ? '${snapshot.data[index]["descr_programacao"]}' +
-                                    "\n\nREFERÊNCIA: " +
+                                    "\n\n" +
+                                    "PEDIDO: " +
+                                    '${snapshot.data[index]["codigo_pedido"]}' +
+                                    "/" +
+                                    '${snapshot.data[index]["item_pedido"]}' +
+                                    " (" +
+                                    '${snapshot.data[index]["codigo_material"]}' +
+                                    ")\n" +
+                                    "REFERÊNCIA: " +
                                     '${snapshot.data[index]["referencia_parceiro"]}' +
+                                    "\nPROJETO: " +
+                                    '${snapshot.data[index]["codigo_projeto"]}' +
                                     "\n\n" +
                                     "PRAZO: " +
                                     snapshot.data[index]["dtfim_aplicacao"] +
@@ -80,8 +90,18 @@ class _sps_checklist_screen extends State<sps_checklist_screen> {
                                         .toString() +
                                     " %"
                                 : '${snapshot.data[index]["descr_programacao"]}' +
-                                    "\n\nREFERÊNCIA: " +
+                                    "\n\n" +
+                                    "PEDIDO: " +
+                                    '${snapshot.data[index]["codigo_pedido"]}' +
+                                    "/" +
+                                    '${snapshot.data[index]["item_pedido"]}' +
+                                    " (" +
+                                    '${snapshot.data[index]["codigo_material"]}' +
+                                    ")\n" +
+                                    "REFERÊNCIA: " +
                                     '${snapshot.data[index]["referencia_parceiro"]}' +
+                                    "\nPROJETO: " +
+                                    '${snapshot.data[index]["codigo_projeto"]}' +
                                     "\n\n" +
                                     "PRAZO: " +
                                     snapshot.data[index]["dtfim_aplicacao"],
@@ -95,8 +115,8 @@ class _sps_checklist_screen extends State<sps_checklist_screen> {
                             MaterialPageRoute(
                                 builder: (context) =>
                                     sps_checklist_cq_screen()),
-                                    //Teste Adriano
-                                    //sps_checklist_cq_screen(h_codigo_programacao: snapshot.data[index]["descr_programacao"])),
+                            //Teste Adriano
+                            //sps_checklist_cq_screen(h_codigo_programacao: snapshot.data[index]["descr_programacao"])),
                           );
                         },
                       ),

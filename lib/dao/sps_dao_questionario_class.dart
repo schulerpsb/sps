@@ -13,6 +13,11 @@ class SpsDaoQuestionario {
       'percentual_evolucao FLOAT, '
       'status TEXT, '
       'referencia_parceiro TEXT, '
+      'codigo_pedido TEXT, '
+      'item_pedido INTEGER, '
+      'codigo_projeto TEXT, '
+      'descr_projeto TEXT, '
+      'codigo_material TEXT, '
       'PRIMARY KEY (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador))';
 
   Future<Database> getDatabase() async {

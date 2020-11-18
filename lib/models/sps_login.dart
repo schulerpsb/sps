@@ -16,6 +16,7 @@ class SpsLogin {
         usuario, senha);
     if (dadosUsuario != null) {
       final SpsDaoLogin objLoginDao = SpsDaoLogin();
+      final int resulcreate = await objLoginDao.create_table();
       final int resullimpar = await objLoginDao.emptyTable(dadosUsuario);
       final int resultsave = await objLoginDao.save(dadosUsuario);
       final List<Map<String, dynamic>> DadosSessao = await objLoginDao

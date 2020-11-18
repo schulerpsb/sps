@@ -12,7 +12,7 @@ class sps_menu_screen extends StatelessWidget {
         backgroundColor: Color(0xFF004077),
         title: Text(
           'FORNECEDORES - APLICATIVOS',
-          style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -22,7 +22,7 @@ class sps_menu_screen extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding:
-                const EdgeInsets.only(top: 80, left: 22, right: 20, bottom: 20),
+                const EdgeInsets.only(top: 80, left: 27, right: 20, bottom: 20),
             child: RaisedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -36,7 +36,7 @@ class sps_menu_screen extends StatelessWidget {
               icon: Icon(Icons.receipt, color: Colors.white, size: 30.0),
               label: Text(
                 'SISTEMA CHECKLIST (FOLLOW UP)              ',
-                style: TextStyle(color: Colors.white, fontSize: 16.0),
+                style: TextStyle(color: Colors.white, fontSize: 14.0),
                 textAlign: TextAlign.center,
               ),
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
@@ -47,7 +47,7 @@ class sps_menu_screen extends StatelessWidget {
           ),
           Padding(
             padding:
-                const EdgeInsets.only(top: 20, left: 22, right: 20, bottom: 20),
+                const EdgeInsets.only(top: 20, left: 27, right: 20, bottom: 20),
             child: RaisedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -61,7 +61,7 @@ class sps_menu_screen extends StatelessWidget {
               icon: Icon(Icons.equalizer, color: Colors.white, size: 30.0),
               label: Text(
                 'GESTÃO DE FORNECEDORES (FEEDBACK)   ',
-                style: TextStyle(color: Colors.white, fontSize: 16.0),
+                style: TextStyle(color: Colors.white, fontSize: 14.0),
                 textAlign: TextAlign.center,
               ),
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
@@ -72,7 +72,7 @@ class sps_menu_screen extends StatelessWidget {
           ),
           Padding(
             padding:
-                const EdgeInsets.only(top: 20, left: 22, right: 20, bottom: 20),
+                const EdgeInsets.only(top: 20, left: 27, right: 20, bottom: 20),
             child: RaisedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -86,7 +86,7 @@ class sps_menu_screen extends StatelessWidget {
                   Icon(Icons.monetization_on, color: Colors.white, size: 30.0),
               label: Text(
                 'GESTÃO DE FORNECEDORES (COTAÇÃO)    ',
-                style: TextStyle(color: Colors.white, fontSize: 16.0),
+                style: TextStyle(color: Colors.white, fontSize: 14.0),
                 textAlign: TextAlign.center,
               ),
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
@@ -95,26 +95,18 @@ class sps_menu_screen extends StatelessWidget {
               color: Color(0xFF004077),
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 70, left: 18, right: 18, bottom: 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                    'Developed by Prensas Schuler Brasil',
-                    style: TextStyle(
-                      color: Color(0xFF004077),
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              ],
-            ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                'Developed by Prensas Schuler Brasil\n',
+                style: TextStyle(
+                  color: Color(0xFF004077),
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ), // Your footer widget
           ),
         ],
       ),

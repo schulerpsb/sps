@@ -36,6 +36,12 @@ class SpsDaoLogin {
     );
   }
 
+  Future<int> create_table() async {
+    final Database db = await getDatabase();
+    db.execute(SpsDaoLogin.tableSql);
+    debugPrint('Tabela (causrl0) criada com sucesso ou já existente!');
+  }
+
   Future<int> save(Map<String, dynamic> dadosUsuario) async {
     final Database db = await getDatabase();
     return db.insert('causrl0', dadosUsuario);

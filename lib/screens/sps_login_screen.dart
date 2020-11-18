@@ -3,6 +3,7 @@ import 'package:sps/dao/sps_dao_login_class.dart';
 import 'package:sps/http/sps_http_login_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/screens/sps_home_screen.dart';
+import 'package:sps/screens/sps_menu_screen.dart';
 
 class SpsLoginScreen extends StatefulWidget {
   @override
@@ -81,8 +82,9 @@ class _SpsLoginScreenState extends State<SpsLoginScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return HomeSps(
-                              _controladorusuario, _controladorsenha);
+                          //return HomeSps(
+                          //    _controladorusuario, _controladorsenha);
+                        return sps_menu_screen();
                         },
                       ),
                     );

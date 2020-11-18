@@ -53,6 +53,11 @@ class SpsHttpQuestionario {
         'percentual_evolucao ': element['percentual_evolucao'],
         'status': element['status'],
         'referencia_parceiro': element['referencia_parceiro'],
+        'codigo_pedido': element['codigo_pedido'],
+        'item_pedido': element['item_pedido'],
+        'codigo_projeto': element['codigo_projeto'],
+        'descr_projeto': element['descr_projeto'],
+        'codigo_material': element['codigo_material'],
       };
       transactionJsonOcorrencias.add(transactionJsonMap);
     }
