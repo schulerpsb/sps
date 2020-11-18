@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SpsDaoQuestionario {
-  static final String tableSql = 'CREATE TABLE lista_checklist('
+  static final String tableSql = 'CREATE TABLE IF NOT EXISTS lista_checklist('
       'codigo_empresa TEXT, '
       'codigo_programacao INTEGER, '
       'registro_colaborador TEXT, '
@@ -13,6 +12,7 @@ class SpsDaoQuestionario {
       'dtfim_aplicacao DATE, '
       'percentual_evolucao FLOAT, '
       'status TEXT, '
+      'referencia_parceiro TEXT, '
       'PRIMARY KEY (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador))';
 
   Future<Database> getDatabase() async {
@@ -30,18 +30,25 @@ class SpsDaoQuestionario {
     );
   }
 
-  Future<int> create_table(Map<String, dynamic> dadosQuestionario) async {
+  Future<int> create_table() async {
     final Database db = await getDatabase();
     db.execute(SpsDaoQuestionario.tableSql);
-    debugPrint('Tabela criada com sucesso!');
+    debugPrint('Tabela (lista_checklist) criada com sucesso ou já existente!');
   }
 
-  Future<int> save(Map<String, dynamic> dadosQuestionario) async {
+  Future<int> save(List<Map<String, dynamic>> dadosQuestionario) async {
     final Database db = await getDatabase();
-    return db.insert('lista_checklist', dadosQuestionario);
+    var wregistros = dadosQuestionario.length;
+    var windex = 0;
+    while (windex < wregistros) {
+      db.insert('lista_checklist', dadosQuestionario[windex]);
+      debugPrint("Gravando lista_checklist => " + dadosQuestionario[windex].toString());
+      windex = windex + 1;
+    }
+    return null;
   }
 
-  Future<int> emptyTable(Map<String, dynamic> dadosQuestionario) async {
+  Future<int> emptyTable() async {
     final Database db = await getDatabase();
     return db.rawDelete('delete from lista_checklist');
   }
@@ -51,6 +58,4 @@ class SpsDaoQuestionario {
     final List<Map<String, dynamic>> result = await db.query('lista_checklist');
     return result;
   }
-
-
 }

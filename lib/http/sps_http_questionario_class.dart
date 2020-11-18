@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
 import 'Json_interceptor.dart';
@@ -13,8 +12,8 @@ class SpsHttpQuestionario {
 
   SpsHttpQuestionario();
 
-  Future<Map<String, dynamic>> listarQuestionario(String doc_action, String registro_colaborador, String identificacao_utilizador, String tipo_frequencia, String tipo_checklist) async {
-    final Map<String, dynamic> dadosQuestionario = {
+  Future<List<Map<String, dynamic>>> listarQuestionario(String doc_action, String registro_colaborador, String identificacao_utilizador, String tipo_frequencia, String tipo_checklist) async {
+    final Map<String, dynamic> keyQuestionario = {
       'doc_action': doc_action,
       'registro_colaborador': registro_colaborador,
       'identificacao_utilizador': identificacao_utilizador,
@@ -22,7 +21,7 @@ class SpsHttpQuestionario {
       'tipo_checklist': tipo_checklist,
     };
 
-    final String dadosQuestionarioJson = jsonEncode(dadosQuestionario);
+    final String dadosQuestionarioJson = jsonEncode(keyQuestionario);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -41,6 +40,7 @@ class SpsHttpQuestionario {
         );
 
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
+    final List<Map<String, dynamic>> transactionJsonOcorrencias = [];
     Map<String, dynamic> transactionJsonMap = null;
     for (Map<String, dynamic> element in transactionJsonList) {
       transactionJsonMap = {
@@ -52,8 +52,10 @@ class SpsHttpQuestionario {
         'dtfim_aplicacao': element['dtfim_aplicacao'],
         'percentual_evolucao ': element['percentual_evolucao'],
         'status': element['status'],
+        'referencia_parceiro': element['referencia_parceiro'],
       };
+      transactionJsonOcorrencias.add(transactionJsonMap);
     }
-    return transactionJsonMap;
+    return transactionJsonOcorrencias;
   }
 }

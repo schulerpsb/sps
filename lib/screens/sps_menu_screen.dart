@@ -9,7 +9,7 @@ class sps_menu_screen extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff06044C),
+        backgroundColor: Color(0xFF004077),
         title: Text(
           'FORNECEDORES - APLICATIVOS',
           style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
@@ -42,7 +42,7 @@ class sps_menu_screen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
               textColor: Colors.white,
               splashColor: Colors.white,
-              color: Color(0xff06044C),
+              color: Color(0xFF004077),
             ),
           ),
           Padding(
@@ -67,7 +67,7 @@ class sps_menu_screen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
               textColor: Colors.white,
               splashColor: Colors.white,
-              color: Color(0xff06044C),
+              color: Color(0xFF004077),
             ),
           ),
           Padding(
@@ -92,7 +92,7 @@ class sps_menu_screen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
               textColor: Colors.white,
               splashColor: Colors.white,
-              color: Color(0xff06044C),
+              color: Color(0xFF004077),
             ),
           ),
           Padding(
@@ -107,7 +107,7 @@ class sps_menu_screen extends StatelessWidget {
                   child: Text(
                     'Developed by Prensas Schuler Brasil',
                     style: TextStyle(
-                      color: Color(0xff06044C),
+                      color: Color(0xFF004077),
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),

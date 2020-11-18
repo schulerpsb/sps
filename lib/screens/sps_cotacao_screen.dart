@@ -27,7 +27,7 @@ class sps_cotacao_screen extends StatelessWidget {
                   child: Text(
                     'Developed by Prensas Schuler Brasil',
                     style: TextStyle(
-                      color: Color(0xff06044C),
+                      color: Color(0xFF004077),
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),
