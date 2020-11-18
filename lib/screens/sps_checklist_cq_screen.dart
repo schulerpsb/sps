@@ -17,15 +17,14 @@ class _sps_checklist_cq_screen extends State<sps_checklist_cq_screen> {
   final SpsQuestionarioItem spsQuestionarioItem = SpsQuestionarioItem();
 
   List<String> allItemList = [
-    'Red',
-    'Green',
-    'Blue',
-    'Yellow',
-    'Black',
-    'Violet',
+    'Não se aplica',
+    'Rejeitado',
+    'Aprovado parcial',
+    'Aprovado',
   ];
 
-  List<String> checkedItemList = ['Green', 'Yellow'];
+  //List<String> checkedItemList = ['Green', 'Yellow'];
+  List<String> checkedItemList = [];
 
   @override
   Widget build(BuildContext context) {
