@@ -6,7 +6,7 @@ import 'Json_interceptor.dart';
 class SpsHttpLogin {
   final String usuario;
   final String senha;
-  //Servidor de produção
+  //Servidor de produção.
   //static const baseUrl = 'https://teklist.schuler.de/webapi/api/login/read.php';
   //Servidor DEV
   static const baseUrl = 'http://10.17.20.45/webapi/api/login/read.php';
