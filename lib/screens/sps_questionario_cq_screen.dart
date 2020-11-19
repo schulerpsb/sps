@@ -17,15 +17,7 @@ class sps_questionario_cq_screen extends StatefulWidget {
 class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
   final SpsQuestionarioItem spsQuestionarioItem = SpsQuestionarioItem();
 
-  List<String> allItemList = [
-    'Não se aplica',
-    'Rejeitado',
-    'Aprovado parcial',
-    'Aprovado',
-  ];
-
-  //List<String> checkedItemList = ['Green', 'Yellow'];
-  List<String> checkedItemList = [];
+  var _singleValue = List();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +34,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: spsQuestionarioItem.listarQuestionarioItem(),
         builder: (context, snapshot) {
+          _singleValue.clear();
           debugPrint(snapshot.data.toString());
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -97,6 +90,25 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                       padding: EdgeInsets.only(top: 5),
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
+                        switch (snapshot.data[index]["seq_pergunta"]) {
+                          case 'NÃO SE APLICA':
+                            _singleValue.add("NÃO SE APLICA");
+                            break;
+                          case 'REJEITADO':
+                            _singleValue.add("REJEITADO");
+                            break;
+                          case 'APROVADO PARCIAL':
+                            _singleValue.add("APROVADO PARCIAL");
+                            break;
+                          case 'APROVADO':
+                            _singleValue.add("APROVADO");
+                            break;
+                          default:
+                            _singleValue.add("AA");
+                            break;
+                        }
+
+                        debugPrint("tamanho:" + _singleValue.length.toString());
                         return Card(
                           color: Colors.white,
                           child: Column(children: <Widget>[
@@ -118,19 +130,54 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                             sps_questionario_cq_midia_screen()),
                                   );
                                 }),
-                            GroupedCheckbox(
-                                itemList: allItemList,
-                                checkedItemList: checkedItemList,
-                                disabled: ['Black'],
-                                onChanged: (itemList) {
-                                  setState(() {
-                                    //selectedItemList = itemList;
-                                    print('SELECTED ITEM LIST $itemList');
-                                  });
-                                },
-                                orientation: CheckboxOrientation.HORIZONTAL,
-                                checkColor: Colors.blue,
-                                activeColor: Colors.red),
+                            Row(children: <Widget>[
+                              Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 40)),
+                              Container(
+                                color: Color(0xFF9fbded),
+                                child: CustomRadioWidget(
+                                  value: "NÃO SE APLICA",
+                                  groupValue: _singleValue[index],
+                                  onChanged: (value) => setState(
+                                    () => _singleValue[index] = value,
+                                  ),
+                                ),
+                              ),
+                              Text("          "),
+                              Container(
+                                color: Colors.red,
+                                child: CustomRadioWidget(
+                                  value: "REJEITADO",
+                                  groupValue: _singleValue[index],
+                                  onChanged: (value) => setState(
+                                    () => _singleValue[index] = value,
+                                  ),
+                                ),
+                              ),
+                              Text("          "),
+                              Container(
+                                color: Colors.orange,
+                                child: CustomRadioWidget(
+                                  value: "APROVADO PARCIAL",
+                                  groupValue: _singleValue[index],
+                                  onChanged: (value) => setState(
+                                    () => _singleValue[index] = value,
+                                  ),
+                                ),
+                              ),
+                              Text("          "),
+                              Container(
+                                color: Colors.green,
+                                child: CustomRadioWidget(
+                                  value: "APROVADO",
+                                  groupValue: _singleValue[index],
+                                  onChanged: (value) => setState(
+                                    () => _singleValue[index] = value,
+                                  ),
+                                ),
+                              ),
+                              Text("          "),
+                            ]),
+                            Text(""),
                           ]),
                         );
                       },
@@ -147,6 +194,60 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
           }
           return Text('Unkown error');
         },
+      ),
+    );
+  }
+}
+
+class CustomRadioWidget<T> extends StatelessWidget {
+  final T value;
+  final T groupValue;
+  final ValueChanged<T> onChanged;
+  final double width;
+  final double height;
+
+  CustomRadioWidget({this.value, this.groupValue, this.onChanged, this.width = 32, this.height = 32});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: GestureDetector(
+        onTap: () {
+          onChanged(this.value);
+        },
+        child: Container(
+          height: this.height,
+          width: this.width,
+          decoration: ShapeDecoration(
+            shape: CircleBorder(),
+            gradient: LinearGradient(
+              colors: [
+                Colors.black,
+                Colors.black,
+              ],
+            ),
+          ),
+
+          child: Center(
+            child: Container(
+              height: this.height - 5,
+              width: this.width - 5,
+              decoration: ShapeDecoration(
+                shape: CircleBorder(),
+                gradient: LinearGradient(
+                  colors: value == groupValue ? [
+                    Color(0xFFE13684),
+                    Color(0xFFFF6EEC),
+                  ] : [
+                    Theme.of(context).scaffoldBackgroundColor,
+                    Theme.of(context).scaffoldBackgroundColor,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
