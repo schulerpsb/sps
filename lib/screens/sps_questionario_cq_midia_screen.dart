@@ -41,14 +41,14 @@ class _sps_questionario_midia_screen extends State<sps_questionario_cq_midia_scr
 
             new Container(
               color: Color(0xFFe9eef7),
-              child: Center(child: Text('Hi from School', style: TextStyle(color: Colors.white),),),
+              child: Center(child: Text('Galeria de imagens', style: TextStyle(color: Colors.black),),),
             ),
             new Container(
               color: Color(0xFFe9eef7),
-              child: Center(child: Text('Hi from home', style: TextStyle(color: Colors.white),),),
+              child: Center(child: Text('Galeria de vídeos', style: TextStyle(color: Colors.black),),),
             ),   new Container(
             color: Color(0xFFe9eef7),
-            child: Center(child: Text('Hi from Hospital', style: TextStyle(color: Colors.white),),),
+            child: Center(child: Text('Galeria de áudios', style: TextStyle(color: Colors.black),),),
           ),
 
           ]),
