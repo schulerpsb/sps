@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
-import 'package:sps/models/sps_questionario.dart';
+import 'package:sps/models/sps_questionario_cq_midia.dart';
 import 'sps_checklist_cq_screen.dart';
 
-class sps_questionario_cq_screen extends StatefulWidget {
+class sps_checklist_followup_midia_screen extends StatefulWidget {
   @override
-  _sps_checklist_screen createState() => _sps_checklist_screen();
+  _sps_checklist_followup_midia_screen createState() => _sps_checklist_followup_midia_screen();
 }
 
-class _sps_checklist_screen extends State<sps_questionario_cq_screen> {
-  final SpsQuestionario spsquestionario = SpsQuestionario();
+class _sps_checklist_followup_midia_screen extends State<sps_checklist_followup_midia_screen> {
+  final SpsQuestionarioCqMidia spsquestionariocqmidia = SpsQuestionarioCqMidia();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _sps_checklist_screen extends State<sps_questionario_cq_screen> {
         centerTitle: true,
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: spsquestionario.listarQuestionario(),
+        future: spsquestionariocqmidia.listarQuestionarioCqMidia(),
         builder: (context, snapshot) {
           debugPrint(snapshot.data.toString());
           switch (snapshot.connectionState) {

@@ -28,7 +28,7 @@ class sps_menu_screen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => sps_checklist_screen()),
+                      builder: (context) => sps_questionario_cq_screen()),
                 );
               },
               shape: RoundedRectangleBorder(
