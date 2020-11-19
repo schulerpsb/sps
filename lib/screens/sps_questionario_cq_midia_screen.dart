@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_cq_midia.dart';
-import 'sps_checklist_cq_screen.dart';
+import 'sps_questionario_cq_screen.dart';
 
 class sps_checklist_followup_midia_screen extends StatefulWidget {
   @override
@@ -114,7 +114,7 @@ class _sps_checklist_followup_midia_screen extends State<sps_checklist_followup_
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    sps_checklist_cq_screen()),
+                                    sps_questionario_cq_screen()),
                             //Teste Adriano
                             //sps_checklist_cq_screen(h_codigo_programacao: snapshot.data[index]["descr_programacao"])),
                           );

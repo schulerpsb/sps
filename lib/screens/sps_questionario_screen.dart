@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario.dart';
-import 'sps_checklist_cq_screen.dart';
+import 'sps_questionario_cq_screen.dart';
 
-class sps_questionario_cq_screen extends StatefulWidget {
+class sps_questionario_screen extends StatefulWidget {
   @override
-  _sps_checklist_screen createState() => _sps_checklist_screen();
+  _sps_questionario_screen createState() => _sps_questionario_screen();
 }
 
-class _sps_checklist_screen extends State<sps_questionario_cq_screen> {
+class _sps_questionario_screen extends State<sps_questionario_screen> {
   final SpsQuestionario spsquestionario = SpsQuestionario();
 
   @override
@@ -114,9 +114,9 @@ class _sps_checklist_screen extends State<sps_questionario_cq_screen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    sps_checklist_cq_screen()),
+                                    sps_questionario_cq_screen()),
                             //Teste Adriano
-                            //sps_checklist_cq_screen(h_codigo_programacao: snapshot.data[index]["descr_programacao"])),
+                            //sps_questionario_cq_screen(h_codigo_programacao: snapshot.data[index]["descr_programacao"])),
                           );
                         },
                       ),

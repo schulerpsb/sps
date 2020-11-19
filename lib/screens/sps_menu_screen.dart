@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'sps_checklist_screen.dart';
+import 'sps_questionario_screen.dart';
 import 'sps_cotacao_screen.dart';
 import 'sps_feedback_screen.dart';
 
@@ -28,7 +28,7 @@ class sps_menu_screen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => sps_questionario_cq_screen()),
+                      builder: (context) => sps_questionario_screen()),
                 );
               },
               shape: RoundedRectangleBorder(

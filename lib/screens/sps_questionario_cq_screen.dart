@@ -4,16 +4,16 @@ import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_item.dart';
 import 'package:grouped_checkbox/grouped_checkbox.dart';
 
-class sps_checklist_cq_screen extends StatefulWidget {
+class sps_questionario_cq_screen extends StatefulWidget {
   //Teste Adriano
   //final String h_codigo_programacao;
-  //const sps_checklist_cq_screen({Key key, this.h_codigo_programacao}): super(key: key);
+  //const sps_questionario_cq_screen({Key key, this.h_codigo_programacao}): super(key: key);
 
   @override
-  _sps_checklist_cq_screen createState() => _sps_checklist_cq_screen();
+  _sps_questionario_cq_screen createState() => _sps_questionario_cq_screen();
 }
 
-class _sps_checklist_cq_screen extends State<sps_checklist_cq_screen> {
+class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
   final SpsQuestionarioItem spsQuestionarioItem = SpsQuestionarioItem();
 
   List<String> allItemList = [
