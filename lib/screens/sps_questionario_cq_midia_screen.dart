@@ -4,12 +4,12 @@ import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_cq_midia.dart';
 import 'sps_questionario_cq_screen.dart';
 
-class sps_checklist_followup_midia_screen extends StatefulWidget {
+class sps_questionario_cq_midia_screen extends StatefulWidget {
   @override
-  _sps_checklist_followup_midia_screen createState() => _sps_checklist_followup_midia_screen();
+  _sps_questionario_midia_screen createState() => _sps_questionario_midia_screen();
 }
 
-class _sps_checklist_followup_midia_screen extends State<sps_checklist_followup_midia_screen> {
+class _sps_questionario_midia_screen extends State<sps_questionario_cq_midia_screen> {
   final SpsQuestionarioCqMidia spsquestionariocqmidia = SpsQuestionarioCqMidia();
 
   @override
@@ -18,7 +18,7 @@ class _sps_checklist_followup_midia_screen extends State<sps_checklist_followup_
       appBar: AppBar(
         backgroundColor: Color(0xFF004077),
         title: Text(
-          'FOLLOW UP',
+          'FOLLOW UP XPTO',
           style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,

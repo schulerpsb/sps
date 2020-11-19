@@ -3,6 +3,7 @@ import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_item.dart';
 import 'package:grouped_checkbox/grouped_checkbox.dart';
+import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 
 class sps_questionario_cq_screen extends StatefulWidget {
   //Teste Adriano
@@ -99,15 +100,23 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                           color: Color(0xFFded5d5),
                           child: Column(children: <Widget>[
                             ListTile(
-                              title: Text(
-                                  '${snapshot.data[index]["seq_pergunta"]}' +
-                                      " - " +
-                                      '${snapshot.data[index]["descr_pergunta"]}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20)),
-                              subtitle: Text(""),
-                            ),
+                                title: Text(
+                                    '${snapshot.data[index]["seq_pergunta"]}' +
+                                        " - " +
+                                        '${snapshot.data[index]["descr_pergunta"]}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20)),
+                                subtitle: Text(""),
+                                trailing: Icon(Icons.collections),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            sps_questionario_cq_midia_screen()),
+                                  );
+                                }),
                             GroupedCheckbox(
                                 itemList: allItemList,
                                 checkedItemList: checkedItemList,
