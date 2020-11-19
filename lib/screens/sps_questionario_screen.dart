@@ -54,19 +54,9 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
                       color: Colors.white,
                       child: ListTile(
                         title: Text(
-                            '${snapshot.data[index]["codigo_programacao"]}' +
-                                " (" +
-                                snapshot.data[index]["status"] +
-                                ")",
+                            '${snapshot.data[index]["codigo_programacao"]}',
                             style: TextStyle(
-                                color: snapshot.data[index]["status"] == "OK"
-                                    ? Color(0xFF0bbf1a) // Verde
-                                    : snapshot.data[index]["status"] ==
-                                            "PARCIAL"
-                                        ? Color(0xFFfffb00) // Amarelo
-                                        : Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20)),
+                                fontWeight: FontWeight.bold, fontSize: 20)),
                         subtitle: Text(
                             snapshot.data[index]["status"] == "PARCIAL"
                                 ? '${snapshot.data[index]["descr_programacao"]}' +
@@ -109,7 +99,23 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold)),
-                        trailing: Icon(Icons.open_in_new, color: Colors.black),
+                        trailing: snapshot.data[index]["status"] == "OK"
+                            ? Icon(
+                                Icons.check,
+                                color: Colors.green,
+                                size: 40,
+                              )
+                            : snapshot.data[index]["status"] == "PARCIAL"
+                                ? Icon(
+                                    Icons.play_circle_outline,
+                                    color: Colors.yellow,
+                                    size: 40,
+                                  )
+                                : Icon(
+                                    Icons.timer,
+                                    color: Colors.red,
+                                    size: 40,
+                                  ),
                         onTap: () {
                           Navigator.push(
                             context,
