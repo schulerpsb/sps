@@ -6,7 +6,7 @@ import 'package:grouped_checkbox/grouped_checkbox.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 
 class sps_questionario_cq_screen extends StatefulWidget {
-  //Teste Adriano
+  //Teste Adriano.
   //final String h_codigo_programacao;
   //const sps_questionario_cq_screen({Key key, this.h_codigo_programacao}): super(key: key);
 
