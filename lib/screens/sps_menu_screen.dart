@@ -8,6 +8,7 @@ class sps_menu_screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
+      backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
       appBar: AppBar(
         backgroundColor: Color(0xFF004077),
         title: Text(

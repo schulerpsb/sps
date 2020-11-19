@@ -15,6 +15,7 @@ class _sps_questionario_midia_screen extends State<sps_questionario_cq_midia_scr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
       appBar: AppBar(
         backgroundColor: Color(0xFF004077),
         title: Text(
@@ -50,7 +51,7 @@ class _sps_questionario_midia_screen extends State<sps_questionario_cq_midia_scr
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     return Card(
-                      color: Color(0xFFded5d5),
+                      color: Colors.white,
                       child: ListTile(
                         title: Text(
                             '${snapshot.data[index]["codigo_programacao"]}' +

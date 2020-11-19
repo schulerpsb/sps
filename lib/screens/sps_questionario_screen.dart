@@ -15,8 +15,9 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
       appBar: AppBar(
-        backgroundColor: Color(0xFF004077),
+        backgroundColor: Color(0xFF004077), // Azul Schuler
         title: Text(
           'FOLLOW UP',
           style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
@@ -50,7 +51,7 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     return Card(
-                      color: Color(0xFFded5d5),
+                      color: Colors.white,
                       child: ListTile(
                         title: Text(
                             '${snapshot.data[index]["codigo_programacao"]}' +

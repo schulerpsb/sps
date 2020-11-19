@@ -30,6 +30,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
       appBar: AppBar(
         backgroundColor: Color(0xFF004077),
         title: Text(
@@ -97,7 +98,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return Card(
-                          color: Color(0xFFded5d5),
+                          color: Colors.white,
                           child: Column(children: <Widget>[
                             ListTile(
                                 title: Text(
