@@ -1,27 +1,43 @@
+// Copyright 2019 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
-import 'package:sps/components/centered_message.dart';
-import 'package:sps/components/progress.dart';
-import 'package:sps/models/sps_questionario_cq_midia.dart';
-import 'sps_questionario_cq_screen.dart';
 
-class sps_questionario_cq_midia_screen extends StatefulWidget {
-  @override
-  _sps_questionario_midia_screen createState() =>
-      _sps_questionario_midia_screen();
+void main() {
+  runApp(MyApp());
 }
 
-class _sps_questionario_midia_screen
-    extends State<sps_questionario_cq_midia_screen> {
-  final SpsQuestionarioCqMidia spsquestionariocqmidia =
-  SpsQuestionarioCqMidia();
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Image Picker Demo',
+      home: MyHomePage(title: 'Image Picker Example'),
+    );
+  }
+}
 
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   PickedFile _imageFile;
   dynamic _pickImageError;
   bool isVideo = false;
@@ -179,141 +195,97 @@ class _sps_questionario_midia_screen
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 3,
-        child: new Scaffold(
-          backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
-          appBar: AppBar(
-            backgroundColor: Color(0xFF004077),
-            title: Text(
-              'QUESTIONÁRIO - MÍDIA',
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+            ? FutureBuilder<void>(
+          future: retrieveLostData(),
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return const Text(
+                  'You have not yet picked an image.',
+                  textAlign: TextAlign.center,
+                );
+              case ConnectionState.done:
+                return isVideo ? _previewVideo() : _previewImage();
+              default:
+                if (snapshot.hasError) {
+                  return Text(
+                    'Pick image/video error: ${snapshot.error}}',
+                    textAlign: TextAlign.center,
+                  );
+                } else {
+                  return const Text(
+                    'You have not yet picked an image.',
+                    textAlign: TextAlign.center,
+                  );
+                }
+            }
+          },
+        )
+            : (isVideo ? _previewVideo() : _previewImage()),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Semantics(
+            label: 'image_picker_example_from_gallery',
+            child: FloatingActionButton(
+              onPressed: () {
+                isVideo = false;
+                _onImageButtonPressed(ImageSource.gallery, context: context);
+              },
+              heroTag: 'image0',
+              tooltip: 'Pick Image from gallery',
+              child: const Icon(Icons.photo_library),
             ),
-            centerTitle: true,
-            bottom: TabBar(tabs: [
-              Tab(
-                icon: Icon(Icons.photo),
-              ),
-              Tab(
-                icon: Icon(Icons.video_library),
-              ),
-              Tab(
-                icon: Icon(Icons.audiotrack),
-              ),
-            ]),
           ),
-          body: TabBarView(children: [
-//             any widget can work very well here <3
-            new Container(
-              color: Color(0xFFe9eef7),
-              child: Center(
-                child: Text(
-                  'Galeria de áudios',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                isVideo = false;
+                _onImageButtonPressed(ImageSource.camera, context: context);
+              },
+              heroTag: 'image1',
+              tooltip: 'Take a Photo',
+              child: const Icon(Icons.camera_alt),
             ),
-            new Container(
-              child: Center(
-                child: !kIsWeb &&
-                    defaultTargetPlatform == TargetPlatform.android
-                    ? FutureBuilder<void>(
-                  future: retrieveLostData(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<void> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                      case ConnectionState.waiting:
-                        return const Text(
-                          'You have not yet picked an image.',
-                          textAlign: TextAlign.center,
-                        );
-                      case ConnectionState.done:
-                        return isVideo ? _previewVideo() : _previewImage();
-                      default:
-                        if (snapshot.hasError) {
-                          return Text(
-                            'Pick image/video error: ${snapshot.error}}',
-                            textAlign: TextAlign.center,
-                          );
-                        } else {
-                          return const Text(
-                            'You have not yet picked an image.',
-                            textAlign: TextAlign.center,
-                          );
-                        }
-                    }
-                  },
-                )
-                    : (isVideo ? _previewVideo() : _previewImage()),
-              ),
-            ),
-            new Container(
-              color: Color(0xFFe9eef7),
-              child: Center(
-                child: Text(
-                  'Galeria de áudios',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-          ]),
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Semantics(
-                label: 'image_picker_example_from_gallery',
-                child: FloatingActionButton(
-                  onPressed: () {
-                    isVideo = false;
-                    _onImageButtonPressed(ImageSource.gallery, context: context);
-                  },
-                  heroTag: 'image0',
-                  tooltip: 'Pick Image from gallery',
-                  child: const Icon(Icons.photo_library),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    isVideo = false;
-                    _onImageButtonPressed(ImageSource.camera, context: context);
-                  },
-                  heroTag: 'image1',
-                  tooltip: 'Take a Photo',
-                  child: const Icon(Icons.camera_alt),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.red,
-                  onPressed: () {
-                    isVideo = true;
-                    _onImageButtonPressed(ImageSource.gallery);
-                  },
-                  heroTag: 'video0',
-                  tooltip: 'Pick Video from gallery',
-                  child: const Icon(Icons.video_library),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.red,
-                  onPressed: () {
-                    isVideo = true;
-                    _onImageButtonPressed(ImageSource.camera);
-                  },
-                  heroTag: 'video1',
-                  tooltip: 'Take a Video',
-                  child: const Icon(Icons.videocam),
-                ),
-              ),
-            ],
           ),
-        ));
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: FloatingActionButton(
+              backgroundColor: Colors.red,
+              onPressed: () {
+                isVideo = true;
+                _onImageButtonPressed(ImageSource.gallery);
+              },
+              heroTag: 'video0',
+              tooltip: 'Pick Video from gallery',
+              child: const Icon(Icons.video_library),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: FloatingActionButton(
+              backgroundColor: Colors.red,
+              onPressed: () {
+                isVideo = true;
+                _onImageButtonPressed(ImageSource.camera);
+              },
+              heroTag: 'video1',
+              tooltip: 'Take a Video',
+              child: const Icon(Icons.videocam),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Text _getRetrieveErrorWidget() {
@@ -325,8 +297,8 @@ class _sps_questionario_midia_screen
     return null;
   }
 
-  Future<void> _displayPickImageDialog(BuildContext context,
-      OnPickImageCallback onPick) async {
+  Future<void> _displayPickImageDialog(
+      BuildContext context, OnPickImageCallback onPick) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -382,8 +354,8 @@ class _sps_questionario_midia_screen
   }
 }
 
-typedef void OnPickImageCallback(double maxWidth, double maxHeight,
-    int quality);
+typedef void OnPickImageCallback(
+    double maxWidth, double maxHeight, int quality);
 
 class AspectRatioVideo extends StatefulWidget {
   AspectRatioVideo(this.controller);
