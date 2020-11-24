@@ -267,7 +267,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
               }
               break;
           }
-          return Text('Unkown error');
+          return Text('Unkown error.');
         },
       ),
     );
