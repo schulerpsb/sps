@@ -115,7 +115,7 @@ packages:
     source: hosted
     version: "0.6.7+14"
   image_picker_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image_picker_platform_interface
       url: "https://pub.dartlang.org"
@@ -267,12 +267,12 @@ packages:
     source: hosted
     version: "2.0.8"
   video_player:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "0.10.12+5"
   video_player_platform_interface:
     dependency: transitive
     description:

@@ -17,11 +17,12 @@ class sps_questionario_cq_midia_screen extends StatefulWidget {
       _sps_questionario_midia_screen();
 }
 
+//Declaração da classe _sps_questionario_midia_screen
 class _sps_questionario_midia_screen
-    extends State<sps_questionario_cq_midia_screen> {
-  final SpsQuestionarioCqMidia spsquestionariocqmidia =
-  SpsQuestionarioCqMidia();
+    extends State<sps_questionario_cq_midia_screen> with TickerProviderStateMixin {
 
+  //Declaração de variáveis da classe _sps_questionario_midia_screen
+  final SpsQuestionarioCqMidia spsquestionariocqmidia = SpsQuestionarioCqMidia();
   PickedFile _imageFile;
   dynamic _pickImageError;
   bool isVideo = false;
@@ -34,6 +35,10 @@ class _sps_questionario_midia_screen
   final TextEditingController maxHeightController = TextEditingController();
   final TextEditingController qualityController = TextEditingController();
 
+  TabController controller;
+  //FIM - Declaração de variáveis da classe _sps_questionario_midia_screen
+
+  //Métodos da classe _sps_questionario_midia_screen
   Future<void> _playVideo(PickedFile file) async {
     if (file != null && mounted) {
       await _disposeVideoController();
@@ -65,25 +70,24 @@ class _sps_questionario_midia_screen
           source: source, maxDuration: const Duration(seconds: 10));
       await _playVideo(file);
     } else {
-      await _displayPickImageDialog(context,
-              (double maxWidth, double maxHeight, int quality) async {
-            try {
-              final pickedFile = await _picker.getImage(
-                source: source,
-                maxWidth: maxWidth,
-                maxHeight: maxHeight,
-                imageQuality: quality,
-              );
-              setState(() {
-                _imageFile = pickedFile;
-              });
-            } catch (e) {
-              setState(() {
-                _pickImageError = e;
-              });
-            }
-          });
+      final pickedFile = await _picker.getImage(
+        source: source,
+        maxWidth: 0.0,
+        maxHeight: 0.0,
+        imageQuality: 0,
+      );
     }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    controller = new TabController(vsync: this, length: 3);
+    controller.addListener(updateIndex);
+  }
+
+  void updateIndex() {
+    setState(() {});
   }
 
   @override
@@ -101,6 +105,7 @@ class _sps_questionario_midia_screen
     maxWidthController.dispose();
     maxHeightController.dispose();
     qualityController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -119,7 +124,7 @@ class _sps_questionario_midia_screen
     }
     if (_controller == null) {
       return const Text(
-        'You have not yet picked a video',
+        'Nenhum vídeo disponível.',
         textAlign: TextAlign.center,
       );
     }
@@ -151,7 +156,7 @@ class _sps_questionario_midia_screen
       );
     } else {
       return const Text(
-        'You have not yet picked an image.',
+        'Nenhuma imagem disponível.',
         textAlign: TextAlign.center,
       );
     }
@@ -177,6 +182,48 @@ class _sps_questionario_midia_screen
     }
   }
 
+  Text _getRetrieveErrorWidget() {
+    if (_retrieveDataError != null) {
+      final Text result = Text(_retrieveDataError);
+      _retrieveDataError = null;
+      return result;
+    }
+    return null;
+  }
+
+ Widget _bottomButtons(int index ) {
+    switch(index) {
+      case 0: // dashboard
+        return FloatingActionButton(
+          onPressed: () {
+            isVideo = false;
+            _onImageButtonPressed(ImageSource.camera, context: context);
+          },
+          heroTag: 'image1',
+          tooltip: 'Take a Photo',
+          child: const Icon(Icons.camera_alt),
+        );
+      case 1: // doctors
+        return FloatingActionButton(
+          backgroundColor: Colors.red,
+          onPressed: () {
+            isVideo = true;
+            _onImageButtonPressed(ImageSource.camera);
+          },
+          heroTag: 'video1',
+          tooltip: 'Take a Video',
+          child: const Icon(Icons.videocam),
+        );
+        break;
+      case 2: // assistants
+        return null;
+        break;
+    }
+  }
+
+ //FIM - Métodos da classe _sps_questionario_midia_screen
+
+ //Widget Build da classe  _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -190,7 +237,9 @@ class _sps_questionario_midia_screen
               style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
-            bottom: TabBar(tabs: [
+            bottom: TabBar(
+                controller: controller,
+                tabs: [
               Tab(
                 icon: Icon(Icons.photo),
               ),
@@ -202,189 +251,103 @@ class _sps_questionario_midia_screen
               ),
             ]),
           ),
-          body: TabBarView(children: [
+          body: TabBarView(
+              controller: controller,
+              children: [
 //             any widget can work very well here <3
+            //Container com a galeria de imagens
             new Container(
-              color: Color(0xFFe9eef7),
               child: Center(
-                child: Text(
-                  'Galeria de áudios',
-                  style: TextStyle(color: Colors.black),
-                ),
+                child:
+                    !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+                        ? FutureBuilder<void>(
+                            future: retrieveLostData(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<void> snapshot) {
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.none:
+                                case ConnectionState.waiting:
+                                  return const Text(
+                                    'Nenhuma imagem disponível.',
+                                    textAlign: TextAlign.center,
+                                  );
+                                case ConnectionState.done:
+                                  return _previewImage();
+                                default:
+                                  if (snapshot.hasError) {
+                                    return Text(
+                                      'Erro ao selecionar imagem. erro: ${snapshot.error}}',
+                                      textAlign: TextAlign.center,
+                                    );
+                                  } else {
+                                    return const Text(
+                                      'Nenhuma imagem disponível.',
+                                      textAlign: TextAlign.center,
+                                    );
+                                  }
+                              }
+                            },
+                          )
+                        : (_previewImage()),
               ),
             ),
-            new Container(
-              child: Center(
-                child: !kIsWeb &&
-                    defaultTargetPlatform == TargetPlatform.android
-                    ? FutureBuilder<void>(
-                  future: retrieveLostData(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<void> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                      case ConnectionState.waiting:
-                        return const Text(
-                          'You have not yet picked an image.',
-                          textAlign: TextAlign.center,
-                        );
-                      case ConnectionState.done:
-                        return isVideo ? _previewVideo() : _previewImage();
-                      default:
-                        if (snapshot.hasError) {
-                          return Text(
-                            'Pick image/video error: ${snapshot.error}}',
-                            textAlign: TextAlign.center,
-                          );
-                        } else {
-                          return const Text(
-                            'You have not yet picked an image.',
-                            textAlign: TextAlign.center,
-                          );
+                //Container com a galeria de vídeos
+                new Container(
+                  child: Center(
+                    child:
+                    !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+                        ? FutureBuilder<void>(
+                      future: retrieveLostData(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<void> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                          case ConnectionState.waiting:
+                            return const Text(
+                              'Nenhum vídeo disponível.',
+                              textAlign: TextAlign.center,
+                            );
+                          case ConnectionState.done:
+                            return _previewVideo();
+                          default:
+                            if (snapshot.hasError) {
+                              return Text(
+                                'Erro ao selecionar vídeo. erro: ${snapshot.error}}',
+                                textAlign: TextAlign.center,
+                              );
+                            } else {
+                              return const Text(
+                                'Nenhum vídeo disponível.',
+                                textAlign: TextAlign.center,
+                              );
+                            }
                         }
-                    }
-                  },
-                )
-                    : (isVideo ? _previewVideo() : _previewImage()),
-              ),
-            ),
+                      },
+                    )
+                        : (_previewVideo()),
+                  ),
+                ),
             new Container(
               color: Color(0xFFe9eef7),
               child: Center(
-                child: Text(
-                  'Galeria de áudios',
+                child: Text('Nenhum áudio disponível.',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
           ]),
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Semantics(
-                label: 'image_picker_example_from_gallery',
-                child: FloatingActionButton(
-                  onPressed: () {
-                    isVideo = false;
-                    _onImageButtonPressed(ImageSource.gallery, context: context);
-                  },
-                  heroTag: 'image0',
-                  tooltip: 'Pick Image from gallery',
-                  child: const Icon(Icons.photo_library),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    isVideo = false;
-                    _onImageButtonPressed(ImageSource.camera, context: context);
-                  },
-                  heroTag: 'image1',
-                  tooltip: 'Take a Photo',
-                  child: const Icon(Icons.camera_alt),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.red,
-                  onPressed: () {
-                    isVideo = true;
-                    _onImageButtonPressed(ImageSource.gallery);
-                  },
-                  heroTag: 'video0',
-                  tooltip: 'Pick Video from gallery',
-                  child: const Icon(Icons.video_library),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.red,
-                  onPressed: () {
-                    isVideo = true;
-                    _onImageButtonPressed(ImageSource.camera);
-                  },
-                  heroTag: 'video1',
-                  tooltip: 'Take a Video',
-                  child: const Icon(Icons.videocam),
-                ),
-              ),
-            ],
-          ),
+          floatingActionButton: _bottomButtons(controller.index),
         ));
   }
-
-  Text _getRetrieveErrorWidget() {
-    if (_retrieveDataError != null) {
-      final Text result = Text(_retrieveDataError);
-      _retrieveDataError = null;
-      return result;
-    }
-    return null;
-  }
-
-  Future<void> _displayPickImageDialog(BuildContext context,
-      OnPickImageCallback onPick) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Add optional parameters'),
-            content: Column(
-              children: <Widget>[
-                TextField(
-                  controller: maxWidthController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration:
-                  InputDecoration(hintText: "Enter maxWidth if desired"),
-                ),
-                TextField(
-                  controller: maxHeightController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  decoration:
-                  InputDecoration(hintText: "Enter maxHeight if desired"),
-                ),
-                TextField(
-                  controller: qualityController,
-                  keyboardType: TextInputType.number,
-                  decoration:
-                  InputDecoration(hintText: "Enter quality if desired"),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: const Text('CANCEL'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                  child: const Text('PICK'),
-                  onPressed: () {
-                    double width = maxWidthController.text.isNotEmpty
-                        ? double.parse(maxWidthController.text)
-                        : null;
-                    double height = maxHeightController.text.isNotEmpty
-                        ? double.parse(maxHeightController.text)
-                        : null;
-                    int quality = qualityController.text.isNotEmpty
-                        ? int.parse(qualityController.text)
-                        : null;
-                    onPick(width, height, quality);
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          );
-        });
-  }
 }
+//FIM - Widget Build da classe  _sps_questionario_midia_screen
+//FIM - Declaração da classe _sps_questionario_midia_screen
 
-typedef void OnPickImageCallback(double maxWidth, double maxHeight,
-    int quality);
+typedef void OnPickImageCallback(
+    double maxWidth, double maxHeight, int quality);
 
+
+// Declaração da classe AspectRatioVideo
 class AspectRatioVideo extends StatefulWidget {
   AspectRatioVideo(this.controller);
 
@@ -393,7 +356,9 @@ class AspectRatioVideo extends StatefulWidget {
   @override
   AspectRatioVideoState createState() => AspectRatioVideoState();
 }
+//FIM -  Declaração da classe AspectRatioVideo
 
+// Declaração da classe AspectRatioVideoState
 class AspectRatioVideoState extends State<AspectRatioVideo> {
   VideoPlayerController get controller => widget.controller;
   bool initialized = false;
@@ -434,3 +399,4 @@ class AspectRatioVideoState extends State<AspectRatioVideo> {
     }
   }
 }
+// FIM - Declaração da classe AspectRatioVideoState
