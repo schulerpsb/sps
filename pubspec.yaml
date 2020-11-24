@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  exif:
   flutter:
     sdk: flutter
   splashscreen: ^1.2.0
@@ -29,6 +30,10 @@ dependencies:
   flutter_plugin_android_lifecycle: ^1.0.2
   image_picker_platform_interface: ^1.1.0
   image_picker: ^0.6.7+14
+  url_launcher: ^5.4.0
+  media_gallery: ^0.1.5
+  transparent_image:
+  permission_handler:
 
   # Dependências para o DB
   sqflite:
