@@ -27,7 +27,7 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: spsquestionario.listarQuestionario(),
         builder: (context, snapshot) {
-          debugPrint(snapshot.data.toString());
+          //debugPrint(snapshot.data.toString());
           switch (snapshot.connectionState) {
             case ConnectionState.none:
               break;
@@ -58,44 +58,8 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 20)),
                         subtitle: Text(
-                            snapshot.data[index]["status"] == "PARCIAL"
-                                ? '${snapshot.data[index]["descr_programacao"]}' +
-                                    "\n\n" +
-                                    "PEDIDO: " +
-                                    '${snapshot.data[index]["codigo_pedido"]}' +
-                                    "/" +
-                                    '${snapshot.data[index]["item_pedido"]}' +
-                                    " (" +
-                                    '${snapshot.data[index]["codigo_material"]}' +
-                                    ")\n" +
-                                    "REFERÊNCIA: " +
-                                    '${snapshot.data[index]["referencia_parceiro"]}' +
-                                    "\nPROJETO: " +
-                                    '${snapshot.data[index]["codigo_projeto"]}' +
-                                    "\n\n" +
-                                    "PRAZO: " +
-                                    snapshot.data[index]["dtfim_aplicacao"] +
-                                    "        EVOLUÇÃO: " +
-                                    snapshot.data[index]["percentual_evolucao"]
-                                        .toStringAsPrecision(4)
-                                        .toString() +
-                                    " %"
-                                : '${snapshot.data[index]["descr_programacao"]}' +
-                                    "\n\n" +
-                                    "PEDIDO: " +
-                                    '${snapshot.data[index]["codigo_pedido"]}' +
-                                    "/" +
-                                    '${snapshot.data[index]["item_pedido"]}' +
-                                    " (" +
-                                    '${snapshot.data[index]["codigo_material"]}' +
-                                    ")\n" +
-                                    "REFERÊNCIA: " +
-                                    '${snapshot.data[index]["referencia_parceiro"]}' +
-                                    "\nPROJETO: " +
-                                    '${snapshot.data[index]["codigo_projeto"]}' +
-                                    "\n\n" +
-                                    "PRAZO: " +
-                                    snapshot.data[index]["dtfim_aplicacao"],
+                            texto_principal
+                                .wtexto_principal(snapshot.data[index]),
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold)),
@@ -120,10 +84,19 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    sps_questionario_cq_screen()),
-                            //Teste Adriano
-                            //sps_questionario_cq_screen(h_codigo_programacao: snapshot.data[index]["descr_programacao"])),
+                              builder: (context) => sps_questionario_cq_screen(
+                                snapshot.data[index]["codigo_empresa"],
+                                snapshot.data[index]["codigo_programacao"],
+                                snapshot.data[index]["codigo_grupo"],
+                                snapshot.data[index]["codigo_checklist"],
+                                snapshot.data[index]["descr_programacao"],
+                                snapshot.data[index]["codigo_pedido"],
+                                snapshot.data[index]["item_pedido"],
+                                snapshot.data[index]["codigo_material"],
+                                snapshot.data[index]["referencia_parceiro"],
+                                snapshot.data[index]["codigo_projeto"],
+                              ),
+                            ),
                           );
                         },
                       ),
@@ -142,5 +115,46 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
         },
       ),
     );
+  }
+}
+
+class texto_principal {
+  static String wtexto_principal(wsnapshot) {
+    return wsnapshot["status"] == "PARCIAL"
+        ? '${wsnapshot["descr_programacao"]}' +
+            "\n\n" +
+            "PEDIDO: " +
+            '${wsnapshot["codigo_pedido"]}' +
+            "/" +
+            '${wsnapshot["item_pedido"]}' +
+            " (" +
+            '${wsnapshot["codigo_material"]}' +
+            ")\n" +
+            "REFERÊNCIA: " +
+            '${wsnapshot["referencia_parceiro"]}' +
+            "\nPROJETO: " +
+            '${wsnapshot["codigo_projeto"]}' +
+            "\n\n" +
+            "PRAZO: " +
+            wsnapshot["dtfim_aplicacao"] +
+            "        EVOLUÇÃO: " +
+            wsnapshot["percentual_evolucao"].toStringAsPrecision(4).toString() +
+            " %"
+        : '${wsnapshot["descr_programacao"]}' +
+            "\n\n" +
+            "PEDIDO: " +
+            '${wsnapshot["codigo_pedido"]}' +
+            "/" +
+            '${wsnapshot["item_pedido"]}' +
+            " (" +
+            '${wsnapshot["codigo_material"]}' +
+            ")\n" +
+            "REFERÊNCIA: " +
+            '${wsnapshot["referencia_parceiro"]}' +
+            "\nPROJETO: " +
+            '${wsnapshot["codigo_projeto"]}' +
+            "\n\n" +
+            "PRAZO: " +
+            wsnapshot["dtfim_aplicacao"];
   }
 }

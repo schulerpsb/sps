@@ -1,17 +1,29 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 
 class SpsQuestionarioItem {
   @override
-  Future<List<Map<String, dynamic>>> listarQuestionarioItem() async {
-    final acao = '';
-    final sessao_checklist = '01 PRINCIPAL';
-    final codigo_empresa = '7000';
-    final codigo_programacao = '1009';
-    final registro_colaborador = '';
-    final identificacao_utilizador = '';
-    final codigo_grupo = '01';
-    final codigo_checklist = '100';
+  Future<List<Map<String, dynamic>>> listarQuestionarioItem(
+      h_codigo_empresa,
+      h_codigo_programacao,
+      h_codigo_grupo,
+      h_codigo_checklist) async {
+    final acao = 'PROXIMO';
+    final sessao_checklist = '';
+    final codigo_empresa = h_codigo_empresa;
+    final codigo_programacao = h_codigo_programacao;
+    final registro_colaborador = '008306'; // substituir por variavell global do Fernando
+    final identificacao_utilizador = 'SCHULER'; // substituir por variavell global do Fernando
+    final codigo_grupo = h_codigo_grupo;
+    final codigo_checklist = h_codigo_checklist;
+
+    debugPrint("2 codigo_empresa = " + codigo_empresa);
+    debugPrint("2 codigo_programacao = " + codigo_programacao.toString());
+    debugPrint("2 registro_colaborador = " + registro_colaborador.toString());
+    debugPrint("2 identificacao_utilizador = " + identificacao_utilizador.toString());
+    debugPrint("2 codigo_grupo = " + codigo_grupo);
+    debugPrint("2 codigo_checklist = " + codigo_checklist.toString());
 
     final SpsHttpQuestionarioItem objQuestionarioItemHttp =
         SpsHttpQuestionarioItem();

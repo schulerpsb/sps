@@ -1,21 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_item.dart';
-import 'package:grouped_checkbox/grouped_checkbox.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 
 class sps_questionario_cq_screen extends StatefulWidget {
-  //Teste Adriano.
-  //final String h_codigo_programacao;
-  //const sps_questionario_cq_screen({Key key, this.h_codigo_programacao}): super(key: key);
+  final String _codigo_empresa;
+  final int _codigo_programacao;
+  final String _codigo_grupo;
+  final int _codigo_checklist;
+  final String _descr_programacao;
+  final String _codigo_pedido;
+  final int _item_pedido;
+  final String _codigo_material;
+  final String _referencia_parceiro;
+  final String _codigo_projeto;
+
+  sps_questionario_cq_screen(
+      this._codigo_empresa,
+      this._codigo_programacao,
+      this._codigo_grupo,
+      this._codigo_checklist,
+      this._descr_programacao,
+      this._codigo_pedido,
+      this._item_pedido,
+      this._codigo_material,
+      this._referencia_parceiro,
+      this._codigo_projeto);
 
   @override
-  _sps_questionario_cq_screen createState() => _sps_questionario_cq_screen();
+  _sps_questionario_cq_screen createState() => _sps_questionario_cq_screen(
+      this._codigo_empresa,
+      this._codigo_programacao,
+      this._codigo_grupo,
+      this._codigo_checklist,
+      this._descr_programacao,
+      this._codigo_pedido,
+      this._item_pedido,
+      this._codigo_material,
+      this._referencia_parceiro,
+      this._codigo_projeto);
 }
 
 class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
   final SpsQuestionarioItem spsQuestionarioItem = SpsQuestionarioItem();
+
+  _sps_questionario_cq_screen(
+      _codigo_empresa,
+      _codigo_programacao,
+      _codigo_grupo,
+      _codigo_checklist,
+      _descr_programacao,
+      _codigo_pedido,
+      _item_pedido,
+      _codigo_material,
+      _referencia_parceiro,
+      codigo_projeto);
 
   var _singleValue = List();
 
@@ -32,7 +73,11 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
         centerTitle: true,
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: spsQuestionarioItem.listarQuestionarioItem(),
+        future: spsQuestionarioItem.listarQuestionarioItem(
+            this.widget._codigo_empresa,
+            this.widget._codigo_programacao,
+            this.widget._codigo_grupo,
+            this.widget._codigo_checklist),
         builder: (context, snapshot) {
           _singleValue.clear();
           debugPrint(snapshot.data.toString());
@@ -66,19 +111,19 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                             top: 5, left: 5, right: 5, bottom: 5),
                         color: Color(0xFF494d4a), // Cinza
                         child: Text(
-                            "descr_programacao" +
+                            this.widget._descr_programacao +
                                 "\n\n" +
                                 "PEDIDO: " +
-                                "codigo_pedido" +
+                                this.widget._codigo_pedido +
                                 "/" +
-                                "item_pedido" +
+                                this.widget._item_pedido.toString() +
                                 " (" +
-                                "codigo_material" +
+                                this.widget._codigo_material +
                                 ")\n" +
                                 "REFERÊNCIA: " +
-                                "referencia_parceiro" +
+                                this.widget._referencia_parceiro +
                                 "\nPROJETO: " +
-                                "codigo_projeto",
+                                this.widget._codigo_projeto,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),
@@ -113,15 +158,15 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                           color: Colors.white,
                           child: Column(children: <Widget>[
                             ListTile(
-                                title: Text(
-                                    '${snapshot.data[index]["seq_pergunta"]}' +
-                                        " - " +
-                                        '${snapshot.data[index]["descr_pergunta"]}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20)),
-                                subtitle: Text(""),
-                                trailing: Icon(Icons.collections),
+                              title: Text(
+                                  '${snapshot.data[index]["seq_pergunta"]}' +
+                                      " - " +
+                                      '${snapshot.data[index]["descr_pergunta"]}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20)),
+                              subtitle: Text(""),
+                              /*trailing: Icon(Icons.collections),
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -129,9 +174,15 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                         builder: (context) =>
                                             sps_questionario_cq_midia_screen()),
                                   );
-                                }),
+                                }*/
+                            ),
                             Row(children: <Widget>[
-                              Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 40)),
+                              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                              IconButton(
+                                  icon: Icon(Icons.info_outline, size: 20),
+                                  color: Colors.red,
+                                  onPressed: () => _popu_legenda(context)),
+                              Text(" "),
                               Container(
                                 color: Color(0xFF9fbded),
                                 child: CustomRadioWidget(
@@ -142,7 +193,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                   ),
                                 ),
                               ),
-                              Text("          "),
+                              Text("      "),
                               Container(
                                 color: Colors.red,
                                 child: CustomRadioWidget(
@@ -153,7 +204,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                   ),
                                 ),
                               ),
-                              Text("          "),
+                              Text("      "),
                               Container(
                                 color: Colors.orange,
                                 child: CustomRadioWidget(
@@ -164,7 +215,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                   ),
                                 ),
                               ),
-                              Text("          "),
+                              Text("      "),
                               Container(
                                 color: Colors.green,
                                 child: CustomRadioWidget(
@@ -175,7 +226,31 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                   ),
                                 ),
                               ),
-                              Text("          "),
+                              Text("      "),
+                              IconButton(
+                                icon: Icon(Icons.collections, size: 30),
+                                color: Colors.black,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            sps_questionario_cq_midia_screen()),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.comment, size: 30),
+                                color: Colors.black,
+                                onPressed: () {
+                                  /*Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            sps_questionario_cq_midia_screen()),
+                                  );*/
+                                },
+                              ),
                             ]),
                             Text(""),
                           ]),
@@ -197,6 +272,65 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
       ),
     );
   }
+
+  _popu_legenda(context) {
+    Alert(
+      context: context,
+      title: "LEGENDA\n",
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Row(
+            children: [
+              Container(
+                color: Color(0xFF9fbded),
+                child: CustomRadioWidget(groupValue: 1),
+              ),
+              Text(" NÃO SE APLICA"),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Container(
+                color: Colors.red,
+                child: CustomRadioWidget(groupValue: 1),
+              ),
+              Text(" REJEITADO"),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Container(
+                color: Colors.orange,
+                child: CustomRadioWidget(groupValue: 1),
+              ),
+              Text(" APROVADO PARCIAL"),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Container(
+                color: Colors.green,
+                child: CustomRadioWidget(groupValue: 1),
+              ),
+              Text(" APROVADO"),
+            ],
+          ),
+        ],
+      ),
+      buttons: [
+        DialogButton(
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop())
+      ],
+    ).show();
+  }
 }
 
 class CustomRadioWidget<T> extends StatelessWidget {
@@ -206,12 +340,17 @@ class CustomRadioWidget<T> extends StatelessWidget {
   final double width;
   final double height;
 
-  CustomRadioWidget({this.value, this.groupValue, this.onChanged, this.width = 32, this.height = 32});
+  CustomRadioWidget(
+      {this.value,
+      this.groupValue,
+      this.onChanged,
+      this.width = 28,
+      this.height = 28});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(6.0),
       child: GestureDetector(
         onTap: () {
           onChanged(this.value);
@@ -228,7 +367,6 @@ class CustomRadioWidget<T> extends StatelessWidget {
               ],
             ),
           ),
-
           child: Center(
             child: Container(
               height: this.height - 5,
@@ -236,13 +374,15 @@ class CustomRadioWidget<T> extends StatelessWidget {
               decoration: ShapeDecoration(
                 shape: CircleBorder(),
                 gradient: LinearGradient(
-                  colors: value == groupValue ? [
-                    Color(0xFFE13684),
-                    Color(0xFFFF6EEC),
-                  ] : [
-                    Theme.of(context).scaffoldBackgroundColor,
-                    Theme.of(context).scaffoldBackgroundColor,
-                  ],
+                  colors: value == groupValue
+                      ? [
+                          Color(0xFFE13684),
+                          Color(0xFFFF6EEC),
+                        ]
+                      : [
+                          Theme.of(context).scaffoldBackgroundColor,
+                          Theme.of(context).scaffoldBackgroundColor,
+                        ],
                 ),
               ),
             ),

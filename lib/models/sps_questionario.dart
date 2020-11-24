@@ -5,8 +5,8 @@ class SpsQuestionario {
   @override
   Future<List<Map<String, dynamic>>> listarQuestionario() async {
     final doc_action = 'PREENCHER_CQ';
-    final registro_colaborador = '008306';
-    final identificacao_utilizador = 'SCHULER';
+    final registro_colaborador = '008306'; // substituir por variavell global do Fernando
+    final identificacao_utilizador = 'SCHULER'; // substituir por variavell global do Fernando
     final tipo_frequencia = 'CONTROLE DE QUALIDADE';
     final tipo_checklist = 'CHECKLIST';
 

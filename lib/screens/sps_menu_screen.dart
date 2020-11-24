@@ -90,7 +90,7 @@ class sps_menu_screen extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 14.0),
                 textAlign: TextAlign.center,
               ),
-              padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
+              padding: EdgeInsets.fromLTRB(10, 40, 5, 30),
               textColor: Colors.white,
               splashColor: Colors.white,
               color: Color(0xFF004077),

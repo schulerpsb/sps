@@ -8,6 +8,8 @@ class SpsDaoQuestionario {
       'codigo_programacao INTEGER, '
       'registro_colaborador TEXT, '
       'identificacao_utilizador TEXT, '
+      'codigo_grupo TEXT, '
+      'codigo_checklist INTEGER, '
       'descr_programacao TEXT, '
       'dtfim_aplicacao DATE, '
       'percentual_evolucao FLOAT, '

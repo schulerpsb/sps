@@ -12,7 +12,7 @@ class SpsHttpQuestionarioItem {
 
   SpsHttpQuestionarioItem();
 
-  Future<List<Map<String, dynamic>>> listarQuestionarioItem(String acao, String sessao_checklist, String codigo_empresa, String codigo_programacao, String registro_colaborador, String identificacao_utilizador, String codigo_grupo, String codigo_checklist) async {
+  Future<List<Map<String, dynamic>>> listarQuestionarioItem(String acao, String sessao_checklist, String codigo_empresa, int codigo_programacao, String registro_colaborador, String identificacao_utilizador, String codigo_grupo, int codigo_checklist) async {
     final Map<String, dynamic> keyQuestionarioItem = {
       'acao': acao,
       'sessao_checklist': sessao_checklist,
