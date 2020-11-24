@@ -3,6 +3,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_item.dart';
+import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 
 class sps_questionario_cq_screen extends StatefulWidget {
@@ -153,7 +154,6 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                             break;
                         }
 
-                        debugPrint("tamanho:" + _singleValue.toString());
                         return Card(
                           color: Colors.white,
                           child: Column(children: <Widget>[
@@ -167,13 +167,17 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                       fontSize: 20)),
                               subtitle: Text(""),
                             ),
+
+                            // Legenda das opções
                             Row(children: <Widget>[
                               Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
                               IconButton(
                                   icon: Icon(Icons.info_outline, size: 20),
                                   color: Colors.red,
-                                  onPressed: () => _popu_legenda(context)),
+                                  onPressed: () => _popup_legenda(context)),
                               Text(" "),
+
+                              // Tratar Opções
                               Container(
                                 color: Color(0xFF9fbded),
                                 child: CustomRadioWidget(
@@ -218,6 +222,8 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                 ),
                               ),
                               Text("      "),
+
+                              //Tratar Mídias
                               IconButton(
                                 icon: Icon(Icons.collections, size: 30),
                                 color: Colors.black,
@@ -230,16 +236,25 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                   );
                                 },
                               ),
+
+                              //Tratar Comentários
                               IconButton(
                                 icon: Icon(Icons.comment, size: 30),
                                 color: Colors.black,
                                 onPressed: () {
-                                  /*Navigator.push(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            sps_questionario_cq_midia_screen()),
-                                  );*/
+                                      builder: (context) =>
+                                          sps_questionario_cq_comentarios_screen(
+                                        snapshot.data[index]["codigo_empresa"],
+                                        snapshot.data[index]
+                                            ["codigo_programacao"],
+                                        snapshot.data[index]["codigo_grupo"],
+                                        snapshot.data[index]
+                                            ["codigo_checklist"],                                      ),
+                                    ),
+                                  );
                                 },
                               ),
                             ]),
@@ -264,7 +279,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
     );
   }
 
-  _popu_legenda(context) {
+  _popup_legenda(context) {
     Alert(
       context: context,
       title: "LEGENDA\n",
