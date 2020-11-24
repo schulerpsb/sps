@@ -14,6 +14,7 @@ class SpsDaoQuestionarioItem {
       'codigo_checklist TEXT, '
       'seq_pergunta INTEGER, '
       'descr_pergunta TEXT, '
+      'resp_cq TEXT, '
       'PRIMARY KEY (acao, sessao_checklist, codigo_empresa, codigo_programacao, '
       '             registro_colaborador, identificacao_utilizador, codigo_grupo, '
       '             codigo_checklist))';

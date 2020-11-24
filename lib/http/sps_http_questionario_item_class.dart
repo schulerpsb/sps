@@ -50,6 +50,7 @@ class SpsHttpQuestionarioItem {
         'codigo_empresa': element['codigo_empresa'],
         'seq_pergunta': element['seq_pergunta'],
         'descr_pergunta': element['descr_pergunta'],
+        'resp_cq': element['resp_cq'],
       };
       transactionJsonItemOcorrencias.add(transactionJsonMap);
     }

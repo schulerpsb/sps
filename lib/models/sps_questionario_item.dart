@@ -13,8 +13,8 @@ class SpsQuestionarioItem {
     final sessao_checklist = '';
     final codigo_empresa = h_codigo_empresa;
     final codigo_programacao = h_codigo_programacao;
-    final registro_colaborador = '008306'; // substituir por variavell global do Fernando
-    final identificacao_utilizador = 'SCHULER'; // substituir por variavell global do Fernando
+    final registro_colaborador = '';
+    final identificacao_utilizador = '';
     final codigo_grupo = h_codigo_grupo;
     final codigo_checklist = h_codigo_checklist;
 
