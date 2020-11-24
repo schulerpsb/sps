@@ -70,12 +70,24 @@ class _sps_questionario_midia_screen
           source: source, maxDuration: const Duration(seconds: 10));
       await _playVideo(file);
     } else {
-      final pickedFile = await _picker.getImage(
-        source: source,
-        maxWidth: 0.0,
-        maxHeight: 0.0,
-        imageQuality: 0,
-      );
+      await _displayPickImageDialog(context,
+          (double maxWidth, double maxHeight, int quality) async {
+        try {
+          final pickedFile = await _picker.getImage(
+            source: source,
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: quality,
+          );
+          setState(() {
+            _imageFile = pickedFile;
+          });
+        } catch (e) {
+          setState(() {
+            _pickImageError = e;
+          });
+        }
+      });
     }
   }
 
@@ -191,7 +203,63 @@ class _sps_questionario_midia_screen
     return null;
   }
 
- Widget _bottomButtons(int index ) {
+  Future<void> _displayPickImageDialog(
+      BuildContext context, OnPickImageCallback onPick) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Add optional parameters'),
+            content: Column(
+              children: <Widget>[
+                TextField(
+                  controller: maxWidthController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration:
+                      InputDecoration(hintText: "Enter maxWidth if desired"),
+                ),
+                TextField(
+                  controller: maxHeightController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration:
+                      InputDecoration(hintText: "Enter maxHeight if desired"),
+                ),
+                TextField(
+                  controller: qualityController,
+                  keyboardType: TextInputType.number,
+                  decoration:
+                      InputDecoration(hintText: "Enter quality if desired"),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                  child: const Text('PICK'),
+                  onPressed: () {
+                    double width = maxWidthController.text.isNotEmpty
+                        ? double.parse(maxWidthController.text)
+                        : null;
+                    double height = maxHeightController.text.isNotEmpty
+                        ? double.parse(maxHeightController.text)
+                        : null;
+                    int quality = qualityController.text.isNotEmpty
+                        ? int.parse(qualityController.text)
+                        : null;
+                    onPick(width, height, quality);
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          );
+        });
+  }
+
+  Widget _bottomButtons(int index ) {
     switch(index) {
       case 0: // dashboard
         return FloatingActionButton(
