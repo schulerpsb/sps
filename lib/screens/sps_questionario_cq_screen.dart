@@ -135,7 +135,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                       padding: EdgeInsets.only(top: 5),
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
-                        switch (snapshot.data[index]["seq_pergunta"]) {
+                        switch (snapshot.data[index]["resp_cq"]) {
                           case 'NÃO SE APLICA':
                             _singleValue.add("NÃO SE APLICA");
                             break;
@@ -149,11 +149,11 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                             _singleValue.add("APROVADO");
                             break;
                           default:
-                            _singleValue.add("AA");
+                            _singleValue.add("");
                             break;
                         }
 
-                        debugPrint("tamanho:" + _singleValue.length.toString());
+                        debugPrint("tamanho:" + _singleValue.toString());
                         return Card(
                           color: Colors.white,
                           child: Column(children: <Widget>[
@@ -166,15 +166,6 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20)),
                               subtitle: Text(""),
-                              /*trailing: Icon(Icons.collections),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            sps_questionario_cq_midia_screen()),
-                                  );
-                                }*/
                             ),
                             Row(children: <Widget>[
                               Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
@@ -376,8 +367,8 @@ class CustomRadioWidget<T> extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: value == groupValue
                       ? [
-                          Color(0xFFE13684),
-                          Color(0xFFFF6EEC),
+                          Colors.black,
+                          Colors.blue,
                         ]
                       : [
                           Theme.of(context).scaffoldBackgroundColor,
