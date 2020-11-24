@@ -70,23 +70,14 @@ class _sps_questionario_midia_screen
           source: source, maxDuration: const Duration(seconds: 10));
       await _playVideo(file);
     } else {
-      await _displayPickImageDialog(context,
-          (double maxWidth, double maxHeight, int quality) async {
-        try {
-          final pickedFile = await _picker.getImage(
-            source: source,
-            maxWidth: maxWidth,
-            maxHeight: maxHeight,
-            imageQuality: quality,
-          );
-          setState(() {
-            _imageFile = pickedFile;
-          });
-        } catch (e) {
-          setState(() {
-            _pickImageError = e;
-          });
-        }
+      final pickedFile = await _picker.getImage(
+        source: source,
+        maxWidth: null,
+        maxHeight: null,
+        imageQuality: null,
+      );
+      setState(() {
+        _imageFile = pickedFile;
       });
     }
   }
