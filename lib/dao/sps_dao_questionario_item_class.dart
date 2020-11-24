@@ -8,6 +8,7 @@ class SpsDaoQuestionarioItem {
       'sessao_checklist TEXT, '
       'codigo_empresa TEXT, '
       'codigo_programacao INTEGER, '
+      'item_checklist INTEGER, '
       'registro_colaborador TEXT, '
       'identificacao_utilizador TEXT, '
       'codigo_grupo TEXT, '
@@ -15,6 +16,7 @@ class SpsDaoQuestionarioItem {
       'seq_pergunta INTEGER, '
       'descr_pergunta TEXT, '
       'resp_cq TEXT, '
+      'descr_comentarios TEXT, '
       'PRIMARY KEY (acao, sessao_checklist, codigo_empresa, codigo_programacao, '
       '             registro_colaborador, identificacao_utilizador, codigo_grupo, '
       '             codigo_checklist))';

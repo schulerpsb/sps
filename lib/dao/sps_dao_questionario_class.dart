@@ -10,6 +10,7 @@ class SpsDaoQuestionario {
       'identificacao_utilizador TEXT, '
       'codigo_grupo TEXT, '
       'codigo_checklist INTEGER, '
+      'item_checklist INTEGER, '
       'descr_programacao TEXT, '
       'dtfim_aplicacao DATE, '
       'percentual_evolucao FLOAT, '
@@ -20,6 +21,7 @@ class SpsDaoQuestionario {
       'codigo_projeto TEXT, '
       'descr_projeto TEXT, '
       'codigo_material TEXT, '
+      'descr_comentarios TEXT, '
       'PRIMARY KEY (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador))';
 
   Future<Database> getDatabase() async {

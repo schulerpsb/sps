@@ -11,24 +11,28 @@ class sps_questionario_cq_screen extends StatefulWidget {
   final int _codigo_programacao;
   final String _codigo_grupo;
   final int _codigo_checklist;
+  final int _item_checklist;
   final String _descr_programacao;
   final String _codigo_pedido;
   final int _item_pedido;
   final String _codigo_material;
   final String _referencia_parceiro;
   final String _codigo_projeto;
+  final String _descr_comentarios;
 
   sps_questionario_cq_screen(
       this._codigo_empresa,
       this._codigo_programacao,
       this._codigo_grupo,
       this._codigo_checklist,
+      this._item_checklist,
       this._descr_programacao,
       this._codigo_pedido,
       this._item_pedido,
       this._codigo_material,
       this._referencia_parceiro,
-      this._codigo_projeto);
+      this._codigo_projeto,
+      this._descr_comentarios);
 
   @override
   _sps_questionario_cq_screen createState() => _sps_questionario_cq_screen(
@@ -36,12 +40,14 @@ class sps_questionario_cq_screen extends StatefulWidget {
       this._codigo_programacao,
       this._codigo_grupo,
       this._codigo_checklist,
+      this._item_checklist,
       this._descr_programacao,
       this._codigo_pedido,
       this._item_pedido,
       this._codigo_material,
       this._referencia_parceiro,
-      this._codigo_projeto);
+      this._codigo_projeto,
+      this._descr_comentarios);
 }
 
 class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
@@ -52,12 +58,14 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
       _codigo_programacao,
       _codigo_grupo,
       _codigo_checklist,
+      _item_checklist,
       _descr_programacao,
       _codigo_pedido,
       _item_pedido,
       _codigo_material,
       _referencia_parceiro,
-      codigo_projeto);
+      _codigo_projeto,
+      _descr_comentarios);
 
   var _singleValue = List();
 
@@ -250,9 +258,10 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                         snapshot.data[index]["codigo_empresa"],
                                         snapshot.data[index]
                                             ["codigo_programacao"],
-                                        snapshot.data[index]["codigo_grupo"],
+                                        snapshot.data[index]["item_checklist"],
                                         snapshot.data[index]
-                                            ["codigo_checklist"],                                      ),
+                                            ["descr_comentarios"],
+                                      ),
                                     ),
                                   );
                                 },
