@@ -19,6 +19,8 @@ class sps_questionario_cq_screen extends StatefulWidget {
   final String _referencia_parceiro;
   final String _codigo_projeto;
   final String _descr_comentarios;
+  final String _status_resposta;
+  final String _status_aprovacao;
 
   sps_questionario_cq_screen(
       this._codigo_empresa,
@@ -32,7 +34,9 @@ class sps_questionario_cq_screen extends StatefulWidget {
       this._codigo_material,
       this._referencia_parceiro,
       this._codigo_projeto,
-      this._descr_comentarios);
+      this._descr_comentarios,
+      this._status_resposta,
+      this._status_aprovacao);
 
   @override
   _sps_questionario_cq_screen createState() => _sps_questionario_cq_screen(
@@ -47,7 +51,9 @@ class sps_questionario_cq_screen extends StatefulWidget {
       this._codigo_material,
       this._referencia_parceiro,
       this._codigo_projeto,
-      this._descr_comentarios);
+      this._descr_comentarios,
+      this._status_resposta,
+      this._status_aprovacao);
 }
 
 class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
@@ -65,7 +71,9 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
       _codigo_material,
       _referencia_parceiro,
       _codigo_projeto,
-      _descr_comentarios);
+      _descr_comentarios,
+      _status_resposta,
+      _status_aprovacao);
 
   var _singleValue = List();
 
@@ -109,6 +117,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
               }
               if (snapshot.data.isNotEmpty) {
                 return Column(children: <Widget>[
+                  //Tratar Cabeçalho
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 5, left: 3, right: 3, bottom: 0),
@@ -139,6 +148,8 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                       ),
                     ),
                   ),
+
+                  //Construir lista de opções
                   Expanded(
                     child: ListView.builder(
                       padding: EdgeInsets.only(top: 5),
@@ -162,113 +173,133 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                             break;
                         }
 
+                        //Tratar descrição da pergunta
                         return Card(
                           color: Colors.white,
-                          child: Column(children: <Widget>[
-                            ListTile(
-                              title: Text(
-                                  '${snapshot.data[index]["seq_pergunta"]}' +
-                                      " - " +
-                                      '${snapshot.data[index]["descr_pergunta"]}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20)),
-                              subtitle: Text(""),
-                            ),
-
-                            // Legenda das opções
-                            Row(children: <Widget>[
-                              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                              IconButton(
-                                  icon: Icon(Icons.info_outline, size: 20),
-                                  color: Colors.red,
-                                  onPressed: () => _popup_legenda(context)),
-                              Text(" "),
-
-                              // Tratar Opções
-                              Container(
-                                color: Color(0xFF9fbded),
-                                child: CustomRadioWidget(
-                                  value: "NÃO SE APLICA",
-                                  groupValue: _singleValue[index],
-                                  onChanged: (value) => setState(
-                                    () => _singleValue[index] = value,
-                                  ),
-                                ),
-                              ),
-                              Text("      "),
-                              Container(
-                                color: Colors.red,
-                                child: CustomRadioWidget(
-                                  value: "REJEITADO",
-                                  groupValue: _singleValue[index],
-                                  onChanged: (value) => setState(
-                                    () => _singleValue[index] = value,
-                                  ),
-                                ),
-                              ),
-                              Text("      "),
-                              Container(
-                                color: Colors.orange,
-                                child: CustomRadioWidget(
-                                  value: "APROVADO PARCIAL",
-                                  groupValue: _singleValue[index],
-                                  onChanged: (value) => setState(
-                                    () => _singleValue[index] = value,
-                                  ),
-                                ),
-                              ),
-                              Text("      "),
-                              Container(
-                                color: Colors.green,
-                                child: CustomRadioWidget(
-                                  value: "APROVADO",
-                                  groupValue: _singleValue[index],
-                                  onChanged: (value) => setState(
-                                    () => _singleValue[index] = value,
-                                  ),
-                                ),
-                              ),
-                              Text("      "),
-
-                              //Tratar Mídias
-                              IconButton(
-                                icon: Icon(Icons.collections, size: 30),
-                                color: Colors.black,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            sps_questionario_cq_midia_screen()),
-                                  );
-                                },
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                trailing: snapshot.data[index]
+                                            ["status_resposta"] ==
+                                        "PREENCHIDA"
+                                    ? Icon(Icons.check,
+                                        color: Colors.green, size: 40)
+                                    : null,
+                                title: Text(
+                                    '${snapshot.data[index]["seq_pergunta"]}' +
+                                        " - " +
+                                        '${snapshot.data[index]["descr_pergunta"]}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 20)),
+                                subtitle: Text(""),
                               ),
 
-                              //Tratar Comentários
-                              IconButton(
-                                icon: Icon(Icons.comment, size: 30),
-                                color: Colors.black,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          sps_questionario_cq_comentarios_screen(
-                                        snapshot.data[index]["codigo_empresa"],
-                                        snapshot.data[index]
-                                            ["codigo_programacao"],
-                                        snapshot.data[index]["item_checklist"],
-                                        snapshot.data[index]
-                                            ["descr_comentarios"],
-                                      ),
+                              // Tratar Legenda das opções
+                              Row(children: <Widget>[
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(5, 0, 0, 5)),
+                                IconButton(
+                                    icon: Icon(Icons.info_outline, size: 20),
+                                    color: Colors.red,
+                                    onPressed: () => _popup_legenda(context)),
+                                Text(" "),
+
+                                // Tratar Opções
+                                Container(
+                                  color: Color(0xFF9fbded),
+                                  child: CustomRadioWidget(
+                                    value: "NÃO SE APLICA",
+                                    groupValue: _singleValue[index],
+                                    onChanged: (value) => setState(
+                                      () => _singleValue[index] = value,
                                     ),
-                                  );
-                                },
-                              ),
-                            ]),
-                            Text(""),
-                          ]),
+                                  ),
+                                ),
+                                Text("     "),
+                                Container(
+                                  color: Colors.red,
+                                  child: CustomRadioWidget(
+                                    value: "REJEITADO",
+                                    groupValue: _singleValue[index],
+                                    onChanged: (value) => setState(
+                                      () => _singleValue[index] = value,
+                                    ),
+                                  ),
+                                ),
+                                Text("     "),
+                                Container(
+                                  color: Colors.orange,
+                                  child: CustomRadioWidget(
+                                    value: "APROVADO PARCIAL",
+                                    groupValue: _singleValue[index],
+                                    onChanged: (value) => setState(
+                                      () => _singleValue[index] = value,
+                                    ),
+                                  ),
+                                ),
+                                Text("     "),
+                                Container(
+                                  color: Colors.green,
+                                  child: CustomRadioWidget(
+                                    value: "APROVADO",
+                                    groupValue: _singleValue[index],
+                                    onChanged: (value) => setState(
+                                      () => _singleValue[index] = value,
+                                    ),
+                                  ),
+                                ),
+                                Text("     "),
+
+                                //Tratar Mídias
+                                IconButton(
+                                  icon: Icon(Icons.collections, size: 30),
+                                  color: Colors.black,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              sps_questionario_cq_midia_screen()),
+                                    );
+                                  },
+                                ),
+
+                                //Tratar Comentários
+                                IconButton(
+                                  icon: Icon(Icons.comment, size: 30),
+                                  color: Colors.black,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            sps_questionario_cq_comentarios_screen(
+                                          snapshot.data[index]
+                                              ["codigo_empresa"],
+                                          snapshot.data[index]
+                                              ["codigo_programacao"],
+                                          snapshot.data[index]
+                                              ["item_checklist"],
+                                          snapshot.data[index]
+                                              ["descr_comentarios"],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ]),
+
+                              snapshot.data[index]["status_aprovacao"] ==
+                                      "APROVADO"
+                                  ? Text("\nAPROVADO PELO FOLLOW UP\n",
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold))
+                                  : Text(""),
+                            ],
+                          ),
                         );
                       },
                     ),

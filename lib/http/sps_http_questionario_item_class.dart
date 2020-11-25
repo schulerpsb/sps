@@ -53,6 +53,8 @@ class SpsHttpQuestionarioItem {
         'descr_pergunta': element['descr_pergunta'],
         'resp_cq': element['resp_cq'],
         'descr_comentarios': element['descr_comentarios'],
+        'status_resposta': element['status_resposta'],
+        'status_aprovacao': element['status_aprovacao'],
       };
       transactionJsonItemOcorrencias.add(transactionJsonMap);
     }

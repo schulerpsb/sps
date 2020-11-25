@@ -17,6 +17,8 @@ class SpsDaoQuestionarioItem {
       'descr_pergunta TEXT, '
       'resp_cq TEXT, '
       'descr_comentarios TEXT, '
+      'status_resposta TEXT, '
+      'status_aprovacao TEXT, '
       'PRIMARY KEY (acao, sessao_checklist, codigo_empresa, codigo_programacao, '
       '             registro_colaborador, identificacao_utilizador, codigo_grupo, '
       '             codigo_checklist))';

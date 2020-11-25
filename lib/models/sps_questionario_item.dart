@@ -18,13 +18,6 @@ class SpsQuestionarioItem {
     final codigo_grupo = h_codigo_grupo;
     final codigo_checklist = h_codigo_checklist;
 
-    debugPrint("2 codigo_empresa = " + codigo_empresa);
-    debugPrint("2 codigo_programacao = " + codigo_programacao.toString());
-    debugPrint("2 registro_colaborador = " + registro_colaborador.toString());
-    debugPrint("2 identificacao_utilizador = " + identificacao_utilizador.toString());
-    debugPrint("2 codigo_grupo = " + codigo_grupo);
-    debugPrint("2 codigo_checklist = " + codigo_checklist.toString());
-
     final SpsHttpQuestionarioItem objQuestionarioItemHttp =
         SpsHttpQuestionarioItem();
     final List<Map<String, dynamic>> dadosQuestionarioItem =
