@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sps/models/sps_imageGrid.dart';
 import 'package:video_player/video_player.dart';
-import 'package:sps/components/centered_message.dart';
-import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_cq_midia.dart';
-import 'sps_questionario_cq_screen.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class sps_questionario_cq_midia_screen extends StatefulWidget {
   @override
@@ -36,6 +35,8 @@ class _sps_questionario_midia_screen
   final TextEditingController qualityController = TextEditingController();
 
   TabController controller;
+
+  final Directory _photoDir = new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures');
   //FIM - Declaração de variáveis da classe _sps_questionario_midia_screen
 
   //Métodos da classe _sps_questionario_midia_screen
@@ -148,7 +149,7 @@ class _sps_questionario_midia_screen
         // See https://pub.dev/packages/image_picker#getting-ready-for-the-web-platform
         return Image.network(_imageFile.path);
       } else {
-        debugPrint(_imageFile.path.toString());
+        //debugPrint(_imageFile.path.toString());
         return Semantics(
             child: Image.file(File(_imageFile.path)),
             label: 'image_picker_example_picked_image');
@@ -165,6 +166,7 @@ class _sps_questionario_midia_screen
       );
     }
   }
+
 
   Future<void> retrieveLostData() async {
     final LostData response = await _picker.getLostData();
@@ -194,6 +196,7 @@ class _sps_questionario_midia_screen
     }
     return null;
   }
+
 
   Widget _bottomButtons(int index ) {
     switch(index) {
@@ -276,7 +279,8 @@ class _sps_questionario_midia_screen
                                     textAlign: TextAlign.center,
                                   );
                                 case ConnectionState.done:
-                                  return _previewImage();
+                                  //return _previewImage();
+                                  return ImageGrid(directory: _photoDir, extensao: ".jpg");
                                 default:
                                   if (snapshot.hasError) {
                                     return Text(
@@ -312,6 +316,16 @@ class _sps_questionario_midia_screen
                               textAlign: TextAlign.center,
                             );
                           case ConnectionState.done:
+                            final uint8list = VideoThumbnail.thumbnailFile(
+                              video: '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/be4fff80-4f45-4828-8b15-1dffdf81a3525342915838841891007.mp4',
+                              imageFormat: ImageFormat.JPEG,
+                              maxWidth: 128, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+                              quality: 25,
+                            );
+                            debugPrint(uint8list.toString());
+                            //return Semantics(
+                                //child: Image.file(File(_imageFile.path)),
+                                //label: 'image_picker_example_picked_image');
                             return _previewVideo();
                           default:
                             if (snapshot.hasError) {
