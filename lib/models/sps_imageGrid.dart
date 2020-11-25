@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:thumbnails/thumbnails.dart';
 
 class ImageGrid extends StatelessWidget {
   final Directory directory;
@@ -22,6 +23,9 @@ class ImageGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         File file = new File(imageList[index]);
         String name = file.path.split('/').last;
+        if(extensao == ".mp4"){
+  //        imageList[index] = _noFolder(imageList[index]);
+        }
         return Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -54,4 +58,24 @@ class ImageGrid extends StatelessWidget {
       },
     );
   }
+
+  void _toUserFolder() async {
+    String thumb = await Thumbnails.getThumbnail(
+        thumbnailFolder: '/storage/emulated/0/Android/data/com.example.sps/files/Pictures',
+        videoFile: '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/be4fff80-4f45-4828-8b15-1dffdf81a3525342915838841891007.mp4',
+        imageType: ThumbFormat.PNG,
+        quality: 30);
+    print('path to File: $thumb');
+  }
+
+// when an output folder is not specified thumbnail are stored in app temporary directory
+  Future<String> _noFolder(path) async {
+    String thumb = await Thumbnails.getThumbnail(
+        videoFile: path,
+        imageType: ThumbFormat.JPEG,
+        quality: 30);
+    print('Path to cache folder $thumb');
+    return thumb.toString();
+  }
+
 }

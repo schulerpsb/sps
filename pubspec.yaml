@@ -34,7 +34,7 @@ dependencies:
   media_gallery: ^0.1.5
   transparent_image:
   permission_handler:
-  video_thumbnail: ^0.2.4
+  thumbnails: ^1.0.1
 
   # Dependências para o DB
   sqflite:
