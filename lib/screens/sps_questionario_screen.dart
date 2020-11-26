@@ -62,18 +62,24 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
                       color: Colors.white,
                       child: ListTile(
                         title: Text(
-                            '${snapshot.data[index]["codigo_programacao"]}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20)),
+                          int.parse(_wdtfim_aplicacao) > int.parse(_dataAtual)
+                              ? '${snapshot.data[index]["codigo_programacao"]}'
+                              : '${snapshot.data[index]["codigo_programacao"]}' +
+                                  " (PRAZO VENCIDO)",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: int.parse(_wdtfim_aplicacao) >
+                                      int.parse(_dataAtual)
+                                  ? Colors.black
+                                  : Colors.red),
+                        ),
                         subtitle: Text(
                             texto_principal
                                 .wtexto_principal(snapshot.data[index]),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: int.parse(_wdtfim_aplicacao) >
-                                        int.parse(_dataAtual)
-                                    ? Colors.black
-                                    : Colors.red)),
+                                color: Colors.black)),
                         trailing: snapshot.data[index]["status"] == "OK"
                             ? Icon(
                                 Icons.check,
@@ -172,47 +178,39 @@ class _sps_questionario_screen extends State<sps_questionario_screen> {
 
 class texto_principal {
   static String wtexto_principal(wsnapshot) {
+    String _texto_principal;
+
     final String _dtfim_aplicacao =
         wsnapshot["dtfim_aplicacao"].substring(8, 10) +
             "/" +
             wsnapshot["dtfim_aplicacao"].substring(5, 7) +
             "/" +
             wsnapshot["dtfim_aplicacao"].substring(0, 4);
-    return wsnapshot["status"] == "PARCIAL"
-        ? '${wsnapshot["descr_programacao"]}' +
-            "\n\n" +
-            "PEDIDO: " +
-            '${wsnapshot["codigo_pedido"]}' +
-            "/" +
-            '${wsnapshot["item_pedido"]}' +
-            " (" +
-            '${wsnapshot["codigo_material"]}' +
-            ")\n" +
-            "REFERÊNCIA: " +
-            '${wsnapshot["referencia_parceiro"]}' +
-            "\nPROJETO: " +
-            '${wsnapshot["codigo_projeto"]}' +
-            "\n\n" +
-            "PRAZO: " +
-            _dtfim_aplicacao +
-            "        EVOLUÇÃO: " +
-            wsnapshot["percentual_evolucao"].toStringAsPrecision(4).toString() +
-            " %"
-        : '${wsnapshot["descr_programacao"]}' +
-            "\n\n" +
-            "PEDIDO: " +
-            '${wsnapshot["codigo_pedido"]}' +
-            "/" +
-            '${wsnapshot["item_pedido"]}' +
-            " (" +
-            '${wsnapshot["codigo_material"]}' +
-            ")\n" +
-            "REFERÊNCIA: " +
-            '${wsnapshot["referencia_parceiro"]}' +
-            "\nPROJETO: " +
-            '${wsnapshot["codigo_projeto"]}' +
-            "\n\n" +
-            "PRAZO: " +
-            _dtfim_aplicacao;
+
+    _texto_principal = '${wsnapshot["descr_programacao"]}' +
+        "\n\n" +
+        "PEDIDO: " +
+        '${wsnapshot["codigo_pedido"]}' +
+        "/" +
+        '${wsnapshot["item_pedido"]}' +
+        " (" +
+        '${wsnapshot["codigo_material"]}' +
+        ")\n" +
+        "REFERÊNCIA: " +
+        '${wsnapshot["referencia_parceiro"]}' +
+        "\nPROJETO: " +
+        '${wsnapshot["codigo_projeto"]}' +
+        "\n\n" +
+        "PRAZO: " +
+        _dtfim_aplicacao;
+
+    if (wsnapshot["status"] == "PARCIAL") {
+      _texto_principal = _texto_principal +
+          "        EVOLUÇÃO: " +
+          wsnapshot["percentual_evolucao"].toStringAsPrecision(4).toString() +
+          " %";
+    }
+
+    return _texto_principal;
   }
 }

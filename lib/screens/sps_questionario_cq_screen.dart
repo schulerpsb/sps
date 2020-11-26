@@ -138,13 +138,38 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                 " (" +
                                 this.widget._codigo_material +
                                 ")\n" +
-                                "REFERÊNCIA: " +
-                                this.widget._referencia_parceiro +
-                                "\nPROJETO: " +
+                                "PROJETO: " +
                                 this.widget._codigo_projeto,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 0, left: 3, right: 3, bottom: 0),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                          minWidth: double.infinity, maxHeight: 100),
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            top: 0, left: 5, right: 5, bottom: 0),
+                        color: Color(0xFF494d4a), // Cinza
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "REFERÊNCIA: " + this.widget._referencia_parceiro,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                                icon: Icon(Icons.edit, size: 20),
+                                color: Colors.white,
+                                onPressed: () => _popup_referencia(this.widget._referencia_parceiro)),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -371,6 +396,29 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
         DialogButton(
             child: Text(
               "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop())
+      ],
+    ).show();
+  }
+
+  _popup_referencia(_wnovaReferencia) {
+    TextEditingController _popup_novaReferencia = TextEditingController();
+    _popup_novaReferencia.text = _wnovaReferencia;
+    Alert(
+      context: context,
+      title: "REFERÊNCIA DO FORNECEDOR\n",
+      content: TextField(
+        controller: _popup_novaReferencia,
+        textInputAction: TextInputAction.go,
+        keyboardType: TextInputType.numberWithOptions(),
+        decoration: InputDecoration(hintText: "Informe sua referência"),
+      ),
+      buttons: [
+        DialogButton(
+            child: Text(
+              "GRAVAR",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop())
