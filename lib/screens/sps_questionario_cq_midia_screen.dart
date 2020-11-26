@@ -6,7 +6,7 @@ import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sps/models/sps_imageGrid.dart';
-import 'package:thumbnails/thumbnails.dart';
+import 'package:sps/models/sps_criarThumbs.dart';
 import 'package:video_player/video_player.dart';
 import 'package:sps/models/sps_questionario_cq_midia.dart';
 
@@ -37,6 +37,8 @@ class _sps_questionario_midia_screen
   TabController controller;
 
   final Directory _photoDir = new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures');
+  final Directory _videoDir = new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs');
+
   //FIM - Declaração de variáveis da classe _sps_questionario_midia_screen
 
   //Métodos da classe _sps_questionario_midia_screen
@@ -79,6 +81,7 @@ class _sps_questionario_midia_screen
       );
       setState(() {
         _imageFile = pickedFile;
+        spsCriarThumbs.toUserFolder();
       });
     }
   }
@@ -211,6 +214,7 @@ class _sps_questionario_midia_screen
           child: const Icon(Icons.camera_alt),
         );
       case 1: // doctors
+        spsCriarThumbs.toUserFolder();
         return FloatingActionButton(
           backgroundColor: Colors.red,
           onPressed: () {
@@ -266,74 +270,13 @@ class _sps_questionario_midia_screen
             //Container com a galeria de imagens
             new Container(
               child: Center(
-                child:
-                    !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-                        ? FutureBuilder<void>(
-                            future: retrieveLostData(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<void> snapshot) {
-                              switch (snapshot.connectionState) {
-                                case ConnectionState.none:
-                                case ConnectionState.waiting:
-                                  return const Text(
-                                    'Nenhuma imagem disponível.',
-                                    textAlign: TextAlign.center,
-                                  );
-                                case ConnectionState.done:
-                                  //return _previewImage();
-                                  return ImageGrid(directory: _photoDir, extensao: ".jpg");
-                                default:
-                                  if (snapshot.hasError) {
-                                    return Text(
-                                      'Erro ao selecionar imagem. erro: ${snapshot.error}}',
-                                      textAlign: TextAlign.center,
-                                    );
-                                  } else {
-                                    return const Text(
-                                      'Nenhuma imagem disponível.',
-                                      textAlign: TextAlign.center,
-                                    );
-                                  }
-                              }
-                            },
-                          )
-                        : (_previewImage()),
+                child:  ImageGrid(directory: _photoDir, extensao: ".jpg"),
               ),
             ),
                 //Container com a galeria de vídeos
                 new Container(
                   child: Center(
-                    child:
-                    !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-                        ? FutureBuilder<void>(
-                      future: retrieveLostData(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<void> snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.none:
-                          case ConnectionState.waiting:
-                            return const Text(
-                              'Nenhum vídeo disponível.',
-                              textAlign: TextAlign.center,
-                            );
-                          case ConnectionState.done:
-                            return _previewVideo();
-                          default:
-                            if (snapshot.hasError) {
-                              return Text(
-                                'Erro ao selecionar vídeo. erro: ${snapshot.error}}',
-                                textAlign: TextAlign.center,
-                              );
-                            } else {
-                              return const Text(
-                                'Nenhum vídeo disponível.',
-                                textAlign: TextAlign.center,
-                              );
-                            }
-                        }
-                      },
-                    )
-                        : (_previewVideo()),
+                    child: ImageGrid(directory: _videoDir, extensao: ".jpg"),
                   ),
                 ),
             new Container(
