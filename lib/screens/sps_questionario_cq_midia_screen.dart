@@ -18,10 +18,11 @@ class sps_questionario_cq_midia_screen extends StatefulWidget {
 
 //Declaração da classe _sps_questionario_midia_screen
 class _sps_questionario_midia_screen
-    extends State<sps_questionario_cq_midia_screen> with TickerProviderStateMixin {
-
+    extends State<sps_questionario_cq_midia_screen>
+    with TickerProviderStateMixin {
   //Declaração de variáveis da classe _sps_questionario_midia_screen
-  final SpsQuestionarioCqMidia spsquestionariocqmidia = SpsQuestionarioCqMidia();
+  final SpsQuestionarioCqMidia spsquestionariocqmidia =
+      SpsQuestionarioCqMidia();
   PickedFile _imageFile;
   dynamic _pickImageError;
   bool isVideo = false;
@@ -36,8 +37,10 @@ class _sps_questionario_midia_screen
 
   TabController controller;
 
-  final Directory _photoDir = new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures');
-  final Directory _videoDir = new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs');
+  final Directory _photoDir = new Directory(
+      '/storage/emulated/0/Android/data/com.example.sps/files/Pictures');
+  final Directory _videoDir = new Directory(
+      '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs');
 
   //FIM - Declaração de variáveis da classe _sps_questionario_midia_screen
 
@@ -71,7 +74,8 @@ class _sps_questionario_midia_screen
     if (isVideo) {
       final PickedFile file = await _picker.getVideo(
           source: source, maxDuration: const Duration(seconds: 10));
-      await _playVideo(file);
+      spsCriarThumbs.toUserFolder();
+      //await _playVideo(file);
     } else {
       final pickedFile = await _picker.getImage(
         source: source,
@@ -80,16 +84,15 @@ class _sps_questionario_midia_screen
         imageQuality: null,
       );
       setState(() {
-        _imageFile = pickedFile;
-        spsCriarThumbs.toUserFolder();
+        //_imageFile = pickedFile;
       });
     }
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    controller = new TabController(vsync: this, length: 3);
+    controller = new TabController(vsync: this, length: 4);
     controller.addListener(updateIndex);
   }
 
@@ -170,7 +173,6 @@ class _sps_questionario_midia_screen
     }
   }
 
-
   Future<void> retrieveLostData() async {
     final LostData response = await _picker.getLostData();
     if (response.isEmpty) {
@@ -200,20 +202,20 @@ class _sps_questionario_midia_screen
     return null;
   }
 
-
-  Widget _bottomButtons(int index ) {
-    switch(index) {
-      case 0: // dashboard
+  Widget _bottomButtons(int index) {
+    switch (index) {
+      case 0: // Fotos
         return FloatingActionButton(
           onPressed: () {
             isVideo = false;
             _onImageButtonPressed(ImageSource.camera, context: context);
           },
           heroTag: 'image1',
-          tooltip: 'Take a Photo',
+          tooltip: 'Tirar uma foto',
           child: const Icon(Icons.camera_alt),
         );
-      case 1: // doctors
+        break;
+      case 1: // Vídeos
         spsCriarThumbs.toUserFolder();
         return FloatingActionButton(
           backgroundColor: Colors.red,
@@ -222,20 +224,27 @@ class _sps_questionario_midia_screen
             _onImageButtonPressed(ImageSource.camera);
           },
           heroTag: 'video1',
-          tooltip: 'Take a Video',
+          tooltip: 'Gravar um víceo',
           child: const Icon(Icons.videocam),
         );
         break;
-      case 2: // assistants
+      case 2: // audios
+        return FloatingActionButton(
+          onPressed: null,
+          heroTag: 'audio1',
+          tooltip: 'Gravar um audio',
+          child: const Icon(Icons.mic),
+        );
+        break;
+      case 3: // anexos
         return null;
         break;
     }
   }
 
+  //FIM - Métodos da classe _sps_questionario_midia_screen
 
- //FIM - Métodos da classe _sps_questionario_midia_screen
-
- //Widget Build da classe  _sps_questionario_midia_screen
+  //Widget Build da classe  _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -249,9 +258,7 @@ class _sps_questionario_midia_screen
               style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
-            bottom: TabBar(
-                controller: controller,
-                tabs: [
+            bottom: TabBar(controller: controller, tabs: [
               Tab(
                 icon: Icon(Icons.photo),
               ),
@@ -261,28 +268,39 @@ class _sps_questionario_midia_screen
               Tab(
                 icon: Icon(Icons.audiotrack),
               ),
+              Tab(
+                icon: Icon(Icons.library_books),
+              ),
             ]),
           ),
-          body: TabBarView(
-              controller: controller,
-              children: [
+          body: TabBarView(controller: controller, children: [
 //             any widget can work very well here <3
             //Container com a galeria de imagens
             new Container(
               child: Center(
-                child:  ImageGrid(directory: _photoDir, extensao: ".jpg"),
+                child: ImageGrid(directory: _photoDir, extensao: ".jpg"),
               ),
             ),
-                //Container com a galeria de vídeos
-                new Container(
-                  child: Center(
-                    child: ImageGrid(directory: _videoDir, extensao: ".jpg"),
-                  ),
-                ),
+            //Container com a galeria de vídeos
+            new Container(
+              child: Center(
+                child: ImageGrid(directory: _videoDir, extensao: ".jpg"),
+              ),
+            ),
             new Container(
               color: Color(0xFFe9eef7),
               child: Center(
-                child: Text('Nenhum áudio disponível.',
+                child: Text(
+                  'Nenhum áudio disponível.',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+            new Container(
+              color: Color(0xFFe9eef7),
+              child: Center(
+                child: Text(
+                  'Nenhum anexo disponível.',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
@@ -297,7 +315,6 @@ class _sps_questionario_midia_screen
 
 typedef void OnPickImageCallback(
     double maxWidth, double maxHeight, int quality);
-
 
 // Declaração da classe AspectRatioVideo
 class AspectRatioVideo extends StatefulWidget {
