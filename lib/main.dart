@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:sps/screens/sps_menu_screen.dart';
 import 'package:sps/screens/sps_login_screen.dart';
 
 void main() {
@@ -49,7 +48,7 @@ Widget _introScreen() {
   return Stack(
     children: <Widget>[
       SplashScreen(
-        seconds: 3,
+        seconds: 4,
         navigateAfterSeconds: SpsLoginScreen(),
         loaderColor: Colors.transparent,
       ),
