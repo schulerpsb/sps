@@ -48,6 +48,7 @@ class SpsHttpQuestionarioCqMidia {
         'codigo_programacao': element['codigo_programacao'],
         'registro_colaborador': element['registro_colaborador'],
         'identificacao_utilizador': element['identificacao_utilizador'],
+        'item_checklist': element['item_checklist'],
         'descr_programacao': element['descr_programacao'],
         'dtfim_aplicacao': element['dtfim_aplicacao'],
         'percentual_evolucao ': element['percentual_evolucao'],
@@ -58,6 +59,7 @@ class SpsHttpQuestionarioCqMidia {
         'codigo_projeto': element['codigo_projeto'],
         'descr_projeto': element['descr_projeto'],
         'codigo_material': element['codigo_material'],
+        'descr_comentarios': element['descr_comentarios'],
       };
       transactionJsonOcorrencias.add(transactionJsonMap);
     }

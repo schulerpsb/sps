@@ -8,6 +8,7 @@ class SpsDaoQuestionarioCqMidia {
       'codigo_programacao INTEGER, '
       'registro_colaborador TEXT, '
       'identificacao_utilizador TEXT, '
+      'item_checklist INTEGER, '
       'descr_programacao TEXT, '
       'dtfim_aplicacao DATE, '
       'percentual_evolucao FLOAT, '
@@ -18,6 +19,7 @@ class SpsDaoQuestionarioCqMidia {
       'codigo_projeto TEXT, '
       'descr_projeto TEXT, '
       'codigo_material TEXT, '
+      'descr_comentarios TEXT, '
       'PRIMARY KEY (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador))';
 
   Future<Database> getDatabase() async {

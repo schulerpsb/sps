@@ -3,6 +3,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_item.dart';
+import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 
 class sps_questionario_cq_screen extends StatefulWidget {
@@ -10,24 +11,32 @@ class sps_questionario_cq_screen extends StatefulWidget {
   final int _codigo_programacao;
   final String _codigo_grupo;
   final int _codigo_checklist;
+  final int _item_checklist;
   final String _descr_programacao;
   final String _codigo_pedido;
   final int _item_pedido;
   final String _codigo_material;
   final String _referencia_parceiro;
   final String _codigo_projeto;
+  final String _descr_comentarios;
+  final String _status_resposta;
+  final String _status_aprovacao;
 
   sps_questionario_cq_screen(
       this._codigo_empresa,
       this._codigo_programacao,
       this._codigo_grupo,
       this._codigo_checklist,
+      this._item_checklist,
       this._descr_programacao,
       this._codigo_pedido,
       this._item_pedido,
       this._codigo_material,
       this._referencia_parceiro,
-      this._codigo_projeto);
+      this._codigo_projeto,
+      this._descr_comentarios,
+      this._status_resposta,
+      this._status_aprovacao);
 
   @override
   _sps_questionario_cq_screen createState() => _sps_questionario_cq_screen(
@@ -35,12 +44,16 @@ class sps_questionario_cq_screen extends StatefulWidget {
       this._codigo_programacao,
       this._codigo_grupo,
       this._codigo_checklist,
+      this._item_checklist,
       this._descr_programacao,
       this._codigo_pedido,
       this._item_pedido,
       this._codigo_material,
       this._referencia_parceiro,
-      this._codigo_projeto);
+      this._codigo_projeto,
+      this._descr_comentarios,
+      this._status_resposta,
+      this._status_aprovacao);
 }
 
 class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
@@ -51,12 +64,16 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
       _codigo_programacao,
       _codigo_grupo,
       _codigo_checklist,
+      _item_checklist,
       _descr_programacao,
       _codigo_pedido,
       _item_pedido,
       _codigo_material,
       _referencia_parceiro,
-      codigo_projeto);
+      _codigo_projeto,
+      _descr_comentarios,
+      _status_resposta,
+      _status_aprovacao);
 
   var _singleValue = List();
 
@@ -100,6 +117,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
               }
               if (snapshot.data.isNotEmpty) {
                 return Column(children: <Widget>[
+                  //Tratar Cabeçalho
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 5, left: 3, right: 3, bottom: 0),
@@ -120,9 +138,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                                 " (" +
                                 this.widget._codigo_material +
                                 ")\n" +
-                                "REFERÊNCIA: " +
-                                this.widget._referencia_parceiro +
-                                "\nPROJETO: " +
+                                "PROJETO: " +
                                 this.widget._codigo_projeto,
                             style: TextStyle(
                                 color: Colors.white,
@@ -130,6 +146,35 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 0, left: 3, right: 3, bottom: 0),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                          minWidth: double.infinity, maxHeight: 100),
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            top: 0, left: 5, right: 5, bottom: 0),
+                        color: Color(0xFF494d4a), // Cinza
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "REFERÊNCIA: " + this.widget._referencia_parceiro,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                                icon: Icon(Icons.edit, size: 20),
+                                color: Colors.white,
+                                onPressed: () => _popup_referencia(this.widget._referencia_parceiro)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  //Construir lista de opções
                   Expanded(
                     child: ListView.builder(
                       padding: EdgeInsets.only(top: 5),
@@ -153,98 +198,133 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                             break;
                         }
 
-                        debugPrint("tamanho:" + _singleValue.toString());
+                        //Tratar descrição da pergunta
                         return Card(
                           color: Colors.white,
-                          child: Column(children: <Widget>[
-                            ListTile(
-                              title: Text(
-                                  '${snapshot.data[index]["seq_pergunta"]}' +
-                                      " - " +
-                                      '${snapshot.data[index]["descr_pergunta"]}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20)),
-                              subtitle: Text(""),
-                            ),
-                            Row(children: <Widget>[
-                              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                              IconButton(
-                                  icon: Icon(Icons.info_outline, size: 20),
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                trailing: snapshot.data[index]
+                                            ["status_resposta"] ==
+                                        "PREENCHIDA"
+                                    ? Icon(Icons.check,
+                                        color: Colors.green, size: 40)
+                                    : null,
+                                title: Text(
+                                    '${snapshot.data[index]["seq_pergunta"]}' +
+                                        " - " +
+                                        '${snapshot.data[index]["descr_pergunta"]}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 20)),
+                                subtitle: Text(""),
+                              ),
+
+                              // Tratar Legenda das opções
+                              Row(children: <Widget>[
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(5, 0, 0, 5)),
+                                IconButton(
+                                    icon: Icon(Icons.info_outline, size: 20),
+                                    color: Colors.red,
+                                    onPressed: () => _popup_legenda(context)),
+                                Text(" "),
+
+                                // Tratar Opções
+                                Container(
+                                  color: Color(0xFF9fbded),
+                                  child: CustomRadioWidget(
+                                    value: "NÃO SE APLICA",
+                                    groupValue: _singleValue[index],
+                                    onChanged: (value) => setState(
+                                      () => _singleValue[index] = value,
+                                    ),
+                                  ),
+                                ),
+                                Text("     "),
+                                Container(
                                   color: Colors.red,
-                                  onPressed: () => _popu_legenda(context)),
-                              Text(" "),
-                              Container(
-                                color: Color(0xFF9fbded),
-                                child: CustomRadioWidget(
-                                  value: "NÃO SE APLICA",
-                                  groupValue: _singleValue[index],
-                                  onChanged: (value) => setState(
-                                    () => _singleValue[index] = value,
+                                  child: CustomRadioWidget(
+                                    value: "REJEITADO",
+                                    groupValue: _singleValue[index],
+                                    onChanged: (value) => setState(
+                                      () => _singleValue[index] = value,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text("      "),
-                              Container(
-                                color: Colors.red,
-                                child: CustomRadioWidget(
-                                  value: "REJEITADO",
-                                  groupValue: _singleValue[index],
-                                  onChanged: (value) => setState(
-                                    () => _singleValue[index] = value,
+                                Text("     "),
+                                Container(
+                                  color: Colors.orange,
+                                  child: CustomRadioWidget(
+                                    value: "APROVADO PARCIAL",
+                                    groupValue: _singleValue[index],
+                                    onChanged: (value) => setState(
+                                      () => _singleValue[index] = value,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text("      "),
-                              Container(
-                                color: Colors.orange,
-                                child: CustomRadioWidget(
-                                  value: "APROVADO PARCIAL",
-                                  groupValue: _singleValue[index],
-                                  onChanged: (value) => setState(
-                                    () => _singleValue[index] = value,
+                                Text("     "),
+                                Container(
+                                  color: Colors.green,
+                                  child: CustomRadioWidget(
+                                    value: "APROVADO",
+                                    groupValue: _singleValue[index],
+                                    onChanged: (value) => setState(
+                                      () => _singleValue[index] = value,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text("      "),
-                              Container(
-                                color: Colors.green,
-                                child: CustomRadioWidget(
-                                  value: "APROVADO",
-                                  groupValue: _singleValue[index],
-                                  onChanged: (value) => setState(
-                                    () => _singleValue[index] = value,
-                                  ),
+                                Text("     "),
+
+                                //Tratar Mídias
+                                IconButton(
+                                  icon: Icon(Icons.collections, size: 30),
+                                  color: Colors.black,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              sps_questionario_cq_midia_screen()),
+                                    );
+                                  },
                                 ),
-                              ),
-                              Text("      "),
-                              IconButton(
-                                icon: Icon(Icons.collections, size: 30),
-                                color: Colors.black,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
+
+                                //Tratar Comentários
+                                IconButton(
+                                  icon: Icon(Icons.comment, size: 30),
+                                  color: Colors.black,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
                                         builder: (context) =>
-                                            sps_questionario_cq_midia_screen()),
-                                  );
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.comment, size: 30),
-                                color: Colors.black,
-                                onPressed: () {
-                                  /*Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            sps_questionario_cq_midia_screen()),
-                                  );*/
-                                },
-                              ),
-                            ]),
-                            Text(""),
-                          ]),
+                                            sps_questionario_cq_comentarios_screen(
+                                          snapshot.data[index]
+                                              ["codigo_empresa"],
+                                          snapshot.data[index]
+                                              ["codigo_programacao"],
+                                          snapshot.data[index]
+                                              ["item_checklist"],
+                                          snapshot.data[index]
+                                              ["descr_comentarios"],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ]),
+
+                              snapshot.data[index]["status_aprovacao"] ==
+                                      "APROVADO"
+                                  ? Text("\nAPROVADO PELO FOLLOW UP\n",
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold))
+                                  : Text(""),
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -264,7 +344,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
     );
   }
 
-  _popu_legenda(context) {
+  _popup_legenda(context) {
     Alert(
       context: context,
       title: "LEGENDA\n",
@@ -316,6 +396,29 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
         DialogButton(
             child: Text(
               "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop())
+      ],
+    ).show();
+  }
+
+  _popup_referencia(_wnovaReferencia) {
+    TextEditingController _popup_novaReferencia = TextEditingController();
+    _popup_novaReferencia.text = _wnovaReferencia;
+    Alert(
+      context: context,
+      title: "REFERÊNCIA DO FORNECEDOR\n",
+      content: TextField(
+        controller: _popup_novaReferencia,
+        textInputAction: TextInputAction.go,
+        keyboardType: TextInputType.numberWithOptions(),
+        decoration: InputDecoration(hintText: "Informe sua referência"),
+      ),
+      buttons: [
+        DialogButton(
+            child: Text(
+              "GRAVAR",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop())
