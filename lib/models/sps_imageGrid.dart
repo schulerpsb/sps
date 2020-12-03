@@ -12,9 +12,10 @@ class ImageGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    String fileWithExtensionpath = "";
+    //var fileWithExtensionpath = List();
+    String teste = "";
     var refreshGridView;
+    int indicemedia;
     var imageList = directory
         .listSync()
         .map((item) => item.path)
@@ -25,14 +26,9 @@ class ImageGrid extends StatelessWidget {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3, childAspectRatio: 3.0 / 4.6),
         itemBuilder: (context, index) {
+          indicemedia = index;
           File file = new File(imageList[index]);
           String name = file.path.split('/').last;
-          if(tipo == 'video'){
-            String dir_video = file.path.split('thumbs').first;
-            String fileWithoutExtension = name.split('.').first;
-            String fileWithExtension = fileWithoutExtension + '.mp4';
-            fileWithExtensionpath = dir_video + fileWithExtension;
-          }
           return Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
@@ -44,7 +40,7 @@ class ImageGrid extends StatelessWidget {
                   refreshGridView = Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => sps_mediaPlayer_screen(fileWithExtensionpath, tipo)),
+                        builder: (context) => sps_mediaPlayer_screen(imageList[index], tipo)),
                   ).then((refreshGridView) {
                     if (refreshGridView != null) {
                       build(context);

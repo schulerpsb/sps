@@ -25,16 +25,19 @@ class _sps_mediaPlayer_screen extends State<sps_mediaPlayer_screen> {
   @override
   void initState() {
     super.initState();
-    //if(this.widget._filePath == "video") {
-      initializePlayer();
-    //}
+    if(this.widget._fileType == "video") {
+      initializeVideoPlayer();
+    }
   }
 
-  Future<void> initializePlayer() async {
+  Future<void> initializeVideoPlayer() async {
     //var file = new File(
     //    '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/c851fff0-b5a0-447f-ac20-95d8ad642a281692029997891007171.mp4');
-    debugPrint(this.widget._filePath);
-    var file = new File(this.widget._filePath);
+    String videoPath;
+    videoPath = this.widget._filePath.replaceAll('.jpg', '.mp4');
+    videoPath = videoPath.replaceAll('/thumbs/', '/');
+    debugPrint(videoPath);
+    var file = new File(videoPath);
     _videoPlayerController1 = VideoPlayerController.file(file);
     await _videoPlayerController1.initialize();
     _chewieController = ChewieController(
