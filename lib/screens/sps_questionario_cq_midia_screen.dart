@@ -45,27 +45,6 @@ class _sps_questionario_midia_screen
   //FIM - Declaração de variáveis da classe _sps_questionario_midia_screen
 
   //Métodos da classe _sps_questionario_midia_screen
-  Future<void> _playVideo(PickedFile file) async {
-    if (file != null && mounted) {
-      await _disposeVideoController();
-      if (kIsWeb) {
-        _controller = VideoPlayerController.network(file.path);
-        // In web, most browsers won't honor a programmatic call to .play
-        // if the video has a sound track (and is not muted).
-        // Mute the video so it auto-plays in web!
-        // This is not needed if the call to .play is the result of user
-        // interaction (clicking on a "play" button, for example).
-        await _controller.setVolume(0.0);
-      } else {
-        _controller = VideoPlayerController.file(File(file.path));
-        await _controller.setVolume(1.0);
-      }
-      await _controller.initialize();
-      await _controller.setLooping(true);
-      await _controller.play();
-      setState(() {});
-    }
-  }
 
   void _onImageButtonPressed(ImageSource source, {BuildContext context}) async {
     if (_controller != null) {
@@ -76,6 +55,10 @@ class _sps_questionario_midia_screen
           source: source, maxDuration: const Duration(seconds: 10));
       spsCriarThumbs.toUserFolder();
       //await _playVideo(file);
+      //Comando para atualizar a tela da galeria
+      setState(() {
+
+      });
     } else {
       final pickedFile = await _picker.getImage(
         source: source,
@@ -83,6 +66,7 @@ class _sps_questionario_midia_screen
         maxHeight: null,
         imageQuality: null,
       );
+      //Comando para atualizar a tela da galeria
       setState(() {
         //_imageFile = pickedFile;
       });
@@ -173,26 +157,6 @@ class _sps_questionario_midia_screen
     }
   }
 
-  Future<void> retrieveLostData() async {
-    final LostData response = await _picker.getLostData();
-    if (response.isEmpty) {
-      return;
-    }
-    if (response.file != null) {
-      if (response.type == RetrieveType.video) {
-        isVideo = true;
-        await _playVideo(response.file);
-      } else {
-        isVideo = false;
-        setState(() {
-          _imageFile = response.file;
-        });
-      }
-    } else {
-      _retrieveDataError = response.exception.code;
-    }
-  }
-
   Text _getRetrieveErrorWidget() {
     if (_retrieveDataError != null) {
       final Text result = Text(_retrieveDataError);
@@ -216,7 +180,6 @@ class _sps_questionario_midia_screen
         );
         break;
       case 1: // Vídeos
-        spsCriarThumbs.toUserFolder();
         return FloatingActionButton(
           backgroundColor: Colors.red,
           onPressed: () {
@@ -247,6 +210,7 @@ class _sps_questionario_midia_screen
   //Widget Build da classe  _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
+    new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
     return DefaultTabController(
         length: 3,
         child: new Scaffold(
@@ -278,13 +242,13 @@ class _sps_questionario_midia_screen
             //Container com a galeria de imagens
             new Container(
               child: Center(
-                child: ImageGrid(directory: _photoDir, extensao: ".jpg"),
+                child: ImageGrid(directory: _photoDir, extensao: ".jpg",tipo: "image"),
               ),
             ),
             //Container com a galeria de vídeos
             new Container(
               child: Center(
-                child: ImageGrid(directory: _videoDir, extensao: ".jpg"),
+                child: ImageGrid(directory: _videoDir, extensao: ".jpg",tipo: "video"),
               ),
             ),
             new Container(
@@ -297,13 +261,7 @@ class _sps_questionario_midia_screen
               ),
             ),
             new Container(
-              color: Color(0xFFe9eef7),
-              child: Center(
-                child: Text(
-                  'Nenhum anexo disponível.',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
+
             ),
           ]),
           floatingActionButton: _bottomButtons(controller.index),

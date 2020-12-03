@@ -1,7 +1,7 @@
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
 
-class SpsQuestionario {
+class MediaPlayer {
   @override
   Future<List<Map<String, dynamic>>> listarQuestionario() async {
     final doc_action = 'PREENCHER_CQ';

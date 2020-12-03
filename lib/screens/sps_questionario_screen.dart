@@ -12,7 +12,7 @@ class sps_questionario_screen extends StatefulWidget {
 }
 
 class _sps_questionario_screen extends State<sps_questionario_screen> {
-  final SpsQuestionario spsquestionario = SpsQuestionario();
+  final MediaPlayer spsquestionario = MediaPlayer();
 
   @override
   Widget build(BuildContext context) {
