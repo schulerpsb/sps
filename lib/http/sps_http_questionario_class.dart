@@ -50,7 +50,6 @@ class SpsHttpQuestionario {
         'identificacao_utilizador': element['identificacao_utilizador'],
         'codigo_grupo': element['codigo_grupo'],
         'codigo_checklist': element['codigo_checklist'],
-        'item_checklist': element['item_checklist'],
         'descr_programacao': element['descr_programacao'],
         'dtfim_aplicacao': element['dtfim_aplicacao'],
         'percentual_evolucao ': element['percentual_evolucao'],

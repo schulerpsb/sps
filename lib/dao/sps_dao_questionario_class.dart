@@ -10,7 +10,6 @@ class SpsDaoQuestionario {
       'identificacao_utilizador TEXT, '
       'codigo_grupo TEXT, '
       'codigo_checklist INTEGER, '
-      'item_checklist INTEGER, '
       'descr_programacao TEXT, '
       'dtfim_aplicacao DATE, '
       'percentual_evolucao FLOAT, '
@@ -22,6 +21,7 @@ class SpsDaoQuestionario {
       'descr_projeto TEXT, '
       'codigo_material TEXT, '
       'descr_comentarios TEXT, '
+      'sincronizado TEXT, '
       'PRIMARY KEY (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador))';
 
   Future<Database> getDatabase() async {
@@ -54,6 +54,15 @@ class SpsDaoQuestionario {
       debugPrint("Gravando lista_checklist => " + dadosQuestionario[windex].toString());
       windex = windex + 1;
     }
+    return null;
+  }
+
+  Future<int> update_referencia(_hcodigoEmpresa, _hcodigoProgramacao, _hreferencia) async {
+    final Database db = await getDatabase();
+    var _query = 'update lista_checklist set referencia_parceiro = "'+_hreferencia+'", sincronizado = "N" where codigo_empresa = "'+_hcodigoEmpresa+'" and codigo_programacao = '+_hcodigoProgramacao.toString();
+    debugPrint("query => "+_query);
+    db.rawUpdate(_query);
+    debugPrint("Alterado referencia (lista_checklist) => "+_hreferencia);
     return null;
   }
 

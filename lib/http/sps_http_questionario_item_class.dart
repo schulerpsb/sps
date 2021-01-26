@@ -48,6 +48,9 @@ class SpsHttpQuestionarioItem {
     for (Map<String, dynamic> element in transactionJsonList) {
       transactionJsonMap = {
         'codigo_empresa': element['codigo_empresa'],
+        'codigo_programacao': element['codigo_programacao'],
+        'registro_colaborador': element['registro_colaborador'],
+        'identificacao_utilizador': element['identificacao_utilizador'],
         'item_checklist': element['item_checklist'],
         'seq_pergunta': element['seq_pergunta'],
         'descr_pergunta': element['descr_pergunta'],

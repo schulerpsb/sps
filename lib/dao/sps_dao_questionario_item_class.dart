@@ -4,13 +4,11 @@ import 'package:sqflite/sqflite.dart';
 
 class SpsDaoQuestionarioItem {
   static final String tableSql = 'CREATE TABLE IF NOT EXISTS checklist_item('
-      'acao TEXT, '
-      'sessao_checklist TEXT, '
       'codigo_empresa TEXT, '
       'codigo_programacao INTEGER, '
-      'item_checklist INTEGER, '
       'registro_colaborador TEXT, '
       'identificacao_utilizador TEXT, '
+      'item_checklist INTEGER, '
       'codigo_grupo TEXT, '
       'codigo_checklist TEXT, '
       'seq_pergunta INTEGER, '
@@ -19,9 +17,9 @@ class SpsDaoQuestionarioItem {
       'descr_comentarios TEXT, '
       'status_resposta TEXT, '
       'status_aprovacao TEXT, '
-      'PRIMARY KEY (acao, sessao_checklist, codigo_empresa, codigo_programacao, '
-      '             registro_colaborador, identificacao_utilizador, codigo_grupo, '
-      '             codigo_checklist))';
+      'sincronizado TEXT, '
+      'PRIMARY KEY (codigo_empresa, codigo_programacao, '
+      '             registro_colaborador, identificacao_utilizador, item_checklist))';
 
   Future<Database> getDatabase() async {
     final String dbPath = await getDatabasesPath();
@@ -54,6 +52,24 @@ class SpsDaoQuestionarioItem {
           dadosQuestionarioItem[windex].toString());
       windex = windex + 1;
     }
+    return null;
+  }
+
+  Future<int> update_opcao(_hcodigoEmpresa, _hcodigoProgramacao, _hregistroColaborador, _hidentificacaoUtilizador, _hitemChecklist, _hrespCq) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_item set resp_cq = "'+_hrespCq+'", sincronizado = "N" where codigo_empresa = "'+_hcodigoEmpresa+'" and codigo_programacao = '+_hcodigoProgramacao.toString()+' and registro_colaborador = "'+_hregistroColaborador +'" and identificacao_utilizador = "'+_hidentificacaoUtilizador+'" and item_checklist = '+_hitemChecklist.toString();
+    debugPrint("query => "+_query);
+    db.rawUpdate(_query);
+    debugPrint("Alterado referencia (checklist_item) => "+_hrespCq);
+    return null;
+  }
+
+  Future<int> update_comentarios(_hcodigoEmpresa, _hcodigoProgramacao, _hitemChecklist, _hdescrComentarios) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_item set descr_comentarios = "'+_hdescrComentarios+'", sincronizado = "N" where codigo_empresa = "'+_hcodigoEmpresa+'" and codigo_programacao = '+_hcodigoProgramacao.toString()+' and item_checklist = '+_hitemChecklist.toString();
+    debugPrint("query => "+_query);
+    db.rawUpdate(_query);
+    debugPrint("Alterado comentários (checklist_item) => "+_hdescrComentarios);
     return null;
   }
 
