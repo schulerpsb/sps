@@ -24,7 +24,7 @@ class SpsDaoQuestionarioItem {
   Future<Database> getDatabase() async {
     final String dbPath = await getDatabasesPath();
     final String path = join(dbPath, 'sps.db');
-    debugPrint('path: $path');
+    //debugPrint('path: $path');
     return openDatabase(
       path,
       onCreate: (db, version) {
@@ -73,9 +73,9 @@ class SpsDaoQuestionarioItem {
     return null;
   }
 
-  Future<int> emptyTable() async {
+  Future<int> emptyTable(_hcodigoEmpresa, _hcodigoProgramacao) async {
     final Database db = await getDatabase();
-    return db.rawDelete('delete from checklist_item');
+    return db.rawDelete('delete from checklist_item where codigo_empresa = '+_hcodigoEmpresa+' and codigo_programacao = '+_hcodigoProgramacao.toString());
   }
 
   Future<List<Map<String, dynamic>>> listarQuestionarioItemLocal() async {

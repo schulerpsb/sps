@@ -4,6 +4,7 @@ import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
+import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/models/sps_questionario_item.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
@@ -148,7 +149,7 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
                               top: 5, left: 5, right: 5, bottom: 5),
                           color: Color(0xFF494d4a), // Cinza
                           child: Text(
-                              this.widget._descr_programacao +
+                              "("+this.widget._codigo_programacao.toString()+") "+this.widget._descr_programacao +
                                   "\n\n" +
                                   "PEDIDO: " +
                                   this.widget._codigo_pedido +
@@ -501,9 +502,30 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
   _gravar_referencia(
       _wcodigoEmpresa, _wcodigoProgramacao, _wnovaReferencia) async {
     debugPrint('referencia => ' + _wnovaReferencia);
+
+    var _wsincronizado = "";
+
+    //Gravar PostgreSQL (API REST)
+    final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
+    final retorno = await objQuestionarioHttp.QuestionarioSaveReferencia(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao,
+        _wnovaReferencia,
+        '#usuario#'); //Verificar com Fernando
+    if (retorno == true) {
+      _wsincronizado = "";
+      debugPrint("registro gravado PostgreSQL: " + _wcodigoEmpresa + "/" + _wcodigoProgramacao.toString() + "/" + _wnovaReferencia);
+    } else {
+      _wsincronizado = "N";
+      debugPrint(
+          "ERRO => registro gravado PostgreSQL: " + _wcodigoEmpresa + "/" + _wcodigoProgramacao.toString() + "/" + _wnovaReferencia);
+    }
+
+    //Gravar SQlite
     final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
     final int resultupdate = await objQuestionarioDao.update_referencia(
-        _wcodigoEmpresa, _wcodigoProgramacao, _wnovaReferencia);
+        _wcodigoEmpresa, _wcodigoProgramacao, _wnovaReferencia, _wsincronizado);
+
     Navigator.of(context, rootNavigator: true).pop();
     this.widget._referencia_parceiro = _wnovaReferencia;
     setState(() {});

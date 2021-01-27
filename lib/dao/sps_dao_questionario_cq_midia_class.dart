@@ -3,7 +3,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SpsDaoQuestionarioCqMidia {
-  static final String tableSql = 'CREATE TABLE IF NOT EXISTS lista_checklist('
+  static final String tableSql = 'CREATE TABLE IF NOT EXISTS checklist_lista('
       'codigo_empresa TEXT, '
       'codigo_programacao INTEGER, '
       'registro_colaborador TEXT, '
@@ -25,7 +25,7 @@ class SpsDaoQuestionarioCqMidia {
   Future<Database> getDatabase() async {
     final String dbPath = await getDatabasesPath();
     final String path = join(dbPath, 'sps.db');
-    debugPrint('path: $path');
+    //debugPrint('path: $path');
     return openDatabase(
       path,
       onCreate: (db, version) {
@@ -40,7 +40,7 @@ class SpsDaoQuestionarioCqMidia {
   Future<int> create_table() async {
     final Database db = await getDatabase();
     db.execute(SpsDaoQuestionarioCqMidia.tableSql);
-    debugPrint('Tabela (lista_checklist) criada com sucesso ou já existente!');
+    debugPrint('Tabela (checklist_lista) criada com sucesso ou já existente!');
   }
 
   Future<int> save(List<Map<String, dynamic>> dadosQuestionario) async {
@@ -48,8 +48,8 @@ class SpsDaoQuestionarioCqMidia {
     var wregistros = dadosQuestionario.length;
     var windex = 0;
     while (windex < wregistros) {
-      db.insert('lista_checklist', dadosQuestionario[windex]);
-      debugPrint("Gravando lista_checklist => " + dadosQuestionario[windex].toString());
+      db.insert('checklist_lista', dadosQuestionario[windex]);
+      debugPrint("Gravando checklist_lista => " + dadosQuestionario[windex].toString());
       windex = windex + 1;
     }
     return null;
@@ -57,12 +57,12 @@ class SpsDaoQuestionarioCqMidia {
 
   Future<int> emptyTable() async {
     final Database db = await getDatabase();
-    return db.rawDelete('delete from lista_checklist');
+    return db.rawDelete('delete from checklist_lista');
   }
 
   Future<List<Map<String, dynamic>>> listarQuestionarioCqMidia() async {
     final Database db = await getDatabase();
-    final List<Map<String, dynamic>> result = await db.query('lista_checklist');
+    final List<Map<String, dynamic>> result = await db.query('checklist_lista');
     return result;
   }
 }

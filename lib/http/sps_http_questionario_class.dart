@@ -5,10 +5,12 @@ import 'Json_interceptor.dart';
 
 class SpsHttpQuestionario {
   //Servidor de produção
-  //static const baseUrl = 'https://teklist.schuler.de/webapi/api/questionario/read.php';
+  //static const baseUrl_read = 'https://teklist.schuler.de/webapi/api/questionario/read.php';
+  //static const baseUrl_read = 'https://teklist.schuler.de/webapi/api/questionario/save_referencia.php';
 
   //Servidor DEV
-  static const baseUrl = 'http://10.17.20.45/webapi/api/questionario/read.php';
+  static const baseUrl_read = 'http://10.17.20.45/webapi/api/questionario/read.php';
+  static const baseUrl_saveReferencia = 'http://10.17.20.45/webapi/api/questionario/save_referencia.php';
 
   SpsHttpQuestionario();
 
@@ -29,7 +31,7 @@ class SpsHttpQuestionario {
 
     final Response response = await client
         .post(
-          baseUrl,
+          baseUrl_read,
           headers: {'Content-type': 'application/json'},
           body: dadosQuestionarioJson,
         )
@@ -65,5 +67,34 @@ class SpsHttpQuestionario {
       transactionJsonOcorrencias.add(transactionJsonMap);
     }
     return transactionJsonOcorrencias;
+  }
+
+  Future QuestionarioSaveReferencia(String codigo_empresa, int codigo_programacao, String referencia_parceiro, String usuresponsavel) async {
+    final Map<String, dynamic> fieldQuestionario = {
+      'codigo_empresa': codigo_empresa,
+      'codigo_programacao': codigo_programacao,
+      'referencia_parceiro': referencia_parceiro,
+      'usuresponsavel': usuresponsavel, //verificcar com Fernando
+    };
+
+    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      baseUrl_saveReferencia,
+      headers: {'Content-type': 'application/json'},
+      body: dadosQuestionarioJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+
+    return true;
   }
 }

@@ -34,7 +34,7 @@ class SpsQuestionarioItem {
       final SpsDaoQuestionarioItem objQuestionarioItemDao =
           SpsDaoQuestionarioItem();
       final int resulcreate = await objQuestionarioItemDao.create_table();
-      final int resullimpar = await objQuestionarioItemDao.emptyTable();
+      final int resullimpar = await objQuestionarioItemDao.emptyTable(h_codigo_empresa, h_codigo_programacao);
       final int resultsave =
           await objQuestionarioItemDao.save(dadosQuestionarioItem);
       final List<Map<String, dynamic>> DadosSessao =
