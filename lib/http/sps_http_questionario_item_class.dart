@@ -5,10 +5,14 @@ import 'Json_interceptor.dart';
 
 class SpsHttpQuestionarioItem {
   //Servidor de produção
-  //static const baseUrl = 'https://teklist.schuler.de/webapi/api/questionario/read.php';
+  //static const baseUrl_read = 'https://teklist.schuler.de/webapi/api/questionario/read_item.php';
+  //static const baseUrl_saveOpcao = 'https://teklist.schuler.de/webapi/api/questionario/save_opcao.php';
+  //static const baseUrl_saveComentarios = 'http://teklist.schuler.de/webapi/api/questionario/save_comentarios.php';
 
   //Servidor DEV
-  static const baseUrl = 'http://10.17.20.45/webapi/api/questionario/read_item.php';
+  static const baseUrl_read = 'http://10.17.20.45/webapi/api/questionario/read_item.php';
+  static const baseUrl_saveOpcao = 'http://10.17.20.45/webapi/api/questionario/save_opcao.php';
+  static const baseUrl_saveComentarios = 'http://10.17.20.45/webapi/api/questionario/save_comentarios.php';
 
   SpsHttpQuestionarioItem();
 
@@ -32,7 +36,7 @@ class SpsHttpQuestionarioItem {
 
     final Response response = await client
         .post(
-          baseUrl,
+          baseUrl_read,
           headers: {'Content-type': 'application/json'},
           body: dadosQuestionarioItemJson,
         )
@@ -62,5 +66,67 @@ class SpsHttpQuestionarioItem {
       transactionJsonItemOcorrencias.add(transactionJsonMap);
     }
     return transactionJsonItemOcorrencias;
+  }
+
+  Future QuestionarioSaveOpcao(String codigo_empresa, String codigo_programacao, String registro_colaborador, String identificacao_utilizador, String item_checklist, String resp_cq, String usuresponsavel) async {
+    final Map<String, dynamic> fieldQuestionario = {
+      'codigo_empresa': codigo_empresa,
+      'codigo_programacao': codigo_programacao,
+      'registro_colaborador': registro_colaborador,
+      'identificacao_utilizador': identificacao_utilizador,
+      'item_checklist': item_checklist,
+      'resp_cq': resp_cq,
+      'usuresponsavel': usuresponsavel, //verificcar com Fernando
+    };
+    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      baseUrl_saveOpcao,
+      headers: {'Content-type': 'application/json'},
+      body: dadosQuestionarioJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+
+    return true;
+  }
+
+  Future QuestionarioSaveComentario(String codigo_empresa, String codigo_programacao, String registro_colaborador, String identificacao_utilizador, String item_checklist, String descr_comentarios, String usuresponsavel) async {
+    final Map<String, dynamic> fieldQuestionario = {
+      'codigo_empresa': codigo_empresa,
+      'codigo_programacao': codigo_programacao,
+      'registro_colaborador': registro_colaborador,
+      'identificacao_utilizador': identificacao_utilizador,
+      'item_checklist': item_checklist,
+      'descr_comentarios': descr_comentarios,
+      'usuresponsavel': usuresponsavel, //verificar com Fernando
+    };
+    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      baseUrl_saveComentarios,
+      headers: {'Content-type': 'application/json'},
+      body: dadosQuestionarioJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+
+    return true;
   }
 }

@@ -5,10 +5,12 @@ import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
+import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_questionario_item.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_screen.dart';
+import 'Dart:io';
 
 class sps_questionario_cq_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -403,6 +405,48 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
   _gravar_opcao(_wcodigoEmpresa, _wcodigoProgramacao, _wregistroColaborador,
       _widentificacaoUtilizador, _witemChecklist, _wrespCq, _windex) async {
     debugPrint('opcao => ' + _wrespCq);
+
+    var _wservidor_conectado = false;
+    var _wsincronizado = "";
+
+    //Verificar se existe conexão
+    try {
+      final result = await InternetAddress.lookup('10.17.20.45');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _wservidor_conectado = true;
+        debugPrint('STATUS DA CONEXÃO -> connected');
+      }
+    } on SocketException catch (_) {
+      _wservidor_conectado = false;
+      debugPrint('STATUS DA CONEXÃO -> not connected');
+    }
+
+    if (_wservidor_conectado == true) {
+      //Gravar PostgreSQL (API REST)
+      final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
+      final retorno = await objQuestionarioItemHttp.QuestionarioSaveOpcao(
+          _wcodigoEmpresa,
+          _wcodigoProgramacao,
+          _wregistroColaborador,
+          _widentificacaoUtilizador,
+          _witemChecklist,
+          _wrespCq,
+          '#usuario#'); //Verificar com Fernando*/
+      if (retorno == true) {
+        _wsincronizado = "";
+        debugPrint("registro gravado PostgreSQL: " + _wcodigoEmpresa + "/" +
+            _wcodigoProgramacao.toString() + "/" + _wregistroColaborador + "/" + _widentificacaoUtilizador + "/" + _witemChecklist.toString()  + "/" + _wrespCq);
+      } else {
+        _wsincronizado = "N";
+        debugPrint(
+            "ERRO => registro gravado PostgreSQL: " + _wcodigoEmpresa + "/" +
+                _wcodigoProgramacao.toString() + "/" + _wregistroColaborador + "/" + _widentificacaoUtilizador + "/" + _witemChecklist.toString()  + "/" + _wrespCq);
+      }
+    }else{
+      _wsincronizado = "N";
+    }
+
+    //Gravar SQlite
     final SpsDaoQuestionarioItem objQuestionarioItemDao =
         SpsDaoQuestionarioItem();
     final int resultupdate = await objQuestionarioItemDao.update_opcao(
@@ -411,7 +455,8 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
         _wregistroColaborador,
         _widentificacaoUtilizador,
         _witemChecklist,
-        _wrespCq);
+        _wrespCq,
+        _wsincronizado);
     setState(() {});
     _singleValue[_windex] = _wrespCq;
   }
@@ -503,22 +548,41 @@ class _sps_questionario_cq_screen extends State<sps_questionario_cq_screen> {
       _wcodigoEmpresa, _wcodigoProgramacao, _wnovaReferencia) async {
     debugPrint('referencia => ' + _wnovaReferencia);
 
+    var _wservidor_conectado = false;
     var _wsincronizado = "";
 
-    //Gravar PostgreSQL (API REST)
-    final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
-    final retorno = await objQuestionarioHttp.QuestionarioSaveReferencia(
-        _wcodigoEmpresa,
-        _wcodigoProgramacao,
-        _wnovaReferencia,
-        '#usuario#'); //Verificar com Fernando
-    if (retorno == true) {
-      _wsincronizado = "";
-      debugPrint("registro gravado PostgreSQL: " + _wcodigoEmpresa + "/" + _wcodigoProgramacao.toString() + "/" + _wnovaReferencia);
-    } else {
+    //Verificar se existe conexão
+    try {
+      final result = await InternetAddress.lookup('10.17.20.45');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        _wservidor_conectado = true;
+        debugPrint('STATUS DA CONEXÃO -> connected');
+      }
+    } on SocketException catch (_) {
+      _wservidor_conectado = false;
+      debugPrint('STATUS DA CONEXÃO -> not connected');
+    }
+
+    if (_wservidor_conectado == true) {
+      //Gravar PostgreSQL (API REST)
+      final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
+      final retorno = await objQuestionarioHttp.QuestionarioSaveReferencia(
+          _wcodigoEmpresa,
+          _wcodigoProgramacao,
+          _wnovaReferencia,
+          '#usuario#'); //Verificar com Fernando
+      if (retorno == true) {
+        _wsincronizado = "";
+        debugPrint("registro gravado PostgreSQL: " + _wcodigoEmpresa + "/" +
+            _wcodigoProgramacao.toString() + "/" + _wnovaReferencia);
+      } else {
+        _wsincronizado = "N";
+        debugPrint(
+            "ERRO => registro gravado PostgreSQL: " + _wcodigoEmpresa + "/" +
+                _wcodigoProgramacao.toString() + "/" + _wnovaReferencia);
+      }
+    }else{
       _wsincronizado = "N";
-      debugPrint(
-          "ERRO => registro gravado PostgreSQL: " + _wcodigoEmpresa + "/" + _wcodigoProgramacao.toString() + "/" + _wnovaReferencia);
     }
 
     //Gravar SQlite

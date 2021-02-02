@@ -226,9 +226,10 @@ class texto_principal {
         _dtfim_aplicacao;
 
     if (wsnapshot["status"] == "PARCIAL") {
+      var formato = new NumberFormat("##0.00", "en_US");
       _texto_principal = _texto_principal +
           "        EVOLUÇÃO: " +
-          wsnapshot["percentual_evolucao"].toStringAsPrecision(4).toString() +
+          formato.format(wsnapshot["percentual_evolucao"]).toString() +
           " %";
     }
 

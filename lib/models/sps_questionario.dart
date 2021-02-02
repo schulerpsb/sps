@@ -9,10 +9,8 @@ class SpsQuestionario {
     var _wservidor_conectado = false;
 
     final doc_action = 'PREENCHER_CQ';
-    final registro_colaborador =
-        '008306'; // substituir por variavell global do Fernando
-    final identificacao_utilizador =
-        'SCHULER'; // substituir por variavell global do Fernando
+    final registro_colaborador = '008306'; // substituir por variavell global do Fernando
+    final identificacao_utilizador = 'SCHULER'; // substituir por variavell global do Fernando
     final tipo_frequencia = 'CONTROLE DE QUALIDADE';
     final tipo_checklist = 'CHECKLIST';
 
@@ -30,17 +28,13 @@ class SpsQuestionario {
 
     //Quando existir conexão
     if (_wservidor_conectado == true) {
-      debugPrint(
-          "=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) =============================================");
+      debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) =============================================");
       //Ler dados não sincronizados do SQlite
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> result =
           await objQuestionarioDao.select_sincronizacao();
       var _wregistros = result.length;
-      debugPrint(
-          "Ler dados não sincronizados do SQlite (quantidade de registro: " +
-              _wregistros.toString() +
-              ")");
+      debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " + _wregistros.toString() + ")");
       var windex = 0;
       while (windex < _wregistros) {
         var _wsincronizado = "";
@@ -61,8 +55,7 @@ class SpsQuestionario {
       }
 
       //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
-      debugPrint(
-          "Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
+      debugPrint("Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
       final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
       final List<Map<String, dynamic>> dadosQuestionario =
           await objQuestionarioHttp.listarQuestionario(
@@ -77,8 +70,7 @@ class SpsQuestionario {
         final int resullimpar = await objQuestionarioDao.emptyTable();
         final int resultsave = await objQuestionarioDao.save(dadosQuestionario);
       }
-      debugPrint(
-          "=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
+      debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
     }
 
     //Ler dados do SQlite
