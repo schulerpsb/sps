@@ -5,7 +5,7 @@ import 'sps_cotacao_screen.dart';
 import 'sps_feedback_screen.dart';
 
 class sps_menu_screen extends StatelessWidget {
-  String _tipoUsuario = "INTERNO"; //substituir por variavel global do Fernando
+  String _origemUsuario = "EXTERNO"; //substituir por variavel global do Fernando
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class sps_menu_screen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => _tipoUsuario == "EXTERNO"
+                                builder: (context) => _origemUsuario == "EXTERNO"
                                     ? sps_questionario_ext_filtro_screen()
                                     : sps_questionario_int_filtro_screen()),
                           );
