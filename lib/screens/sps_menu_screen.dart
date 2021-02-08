@@ -5,7 +5,7 @@ import 'sps_cotacao_screen.dart';
 import 'sps_feedback_screen.dart';
 
 class sps_menu_screen extends StatelessWidget {
-  String _tipoUsuario = "EXTERNO"; //substituir por variavel global do Fernando
+  String _tipoUsuario = "INTERNO"; //substituir por variavel global do Fernando
 
   @override
   Widget build(BuildContext context) {

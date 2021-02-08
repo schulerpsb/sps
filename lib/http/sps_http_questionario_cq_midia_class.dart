@@ -51,7 +51,7 @@ class SpsHttpQuestionarioCqMidia {
         'item_checklist': element['item_checklist'],
         'descr_programacao': element['descr_programacao'],
         'dtfim_aplicacao': element['dtfim_aplicacao'],
-        'percentual_evolucao ': element['percentual_evolucao'],
+        'percentual_evolucao': element['percentual_evolucao'],
         'status': element['status'],
         'referencia_parceiro': element['referencia_parceiro'],
         'codigo_pedido': element['codigo_pedido'],

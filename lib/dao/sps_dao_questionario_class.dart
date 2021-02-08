@@ -50,8 +50,8 @@ class SpsDaoQuestionario {
     var wregistros = dadosQuestionario.length;
     var windex = 0;
     while (windex < wregistros) {
-      db.insert('checklist_lista', dadosQuestionario[windex]);
-      debugPrint("Gravando checklist_lista => " + dadosQuestionario[windex].toString());
+      var _query = 'insert into checklist_lista values ("'+dadosQuestionario[windex]['codigo_empresa'].toString()+'",'+dadosQuestionario[windex]['codigo_programacao'].toString()+',"'+dadosQuestionario[windex]['registro_colaborador'].toString()+'","'+dadosQuestionario[windex]['identificacao_utilizador'].toString()+'","'+dadosQuestionario[windex]['codigo_grupo'].toString()+'",'+dadosQuestionario[windex]['codigo_checklist'].toString()+',"'+dadosQuestionario[windex]['descr_programacao'].toString()+'","'+dadosQuestionario[windex]['dtfim_aplicacao'].toString()+'","'+dadosQuestionario[windex]['percentual_evolucao'].toString()+'","'+dadosQuestionario[windex]['status'].toString()+'","'+dadosQuestionario[windex]['referencia_parceiro'].toString()+'","'+dadosQuestionario[windex]['codigo_pedido'].toString()+'",'+ dadosQuestionario[windex]['item_pedido'].toString()+',"'+dadosQuestionario[windex]['codigo_projeto'].toString()+'","'+dadosQuestionario[windex]['descr_projeto'].toString()+'","'+dadosQuestionario[windex]['codigo_material'].toString()+'","'+dadosQuestionario[windex]['descr_comentarios'].toString()+'","'+dadosQuestionario[windex]['sincronizado'].toString()+'")';
+      db.rawInsert(_query);
       windex = windex + 1;
     }
     return null;
@@ -79,14 +79,18 @@ class SpsDaoQuestionario {
     return db.rawDelete('delete from checklist_lista');
   }
 
-  Future<List<Map<String, dynamic>>> listarQuestionarioGeral(_filtro, _filtroReferenciaParceiro) async {
+  Future<List<Map<String, dynamic>>> listarQuestionarioGeral(_filtro, _filtroReferenciaProjeto, _origemUsuario) async {
     final Database db = await getDatabase();
     var _query = 'SELECT * FROM checklist_lista ';
     if (_filtro.toString() != "" && _filtro.toString() != "null") {
       _query = _query+" where status = '"+_filtro.toString()+"'";
     }
-    if (_filtroReferenciaParceiro.toString() != "" && _filtroReferenciaParceiro.toString() != "null") {
-      _query = _query+" where referencia_parceiro like '%"+_filtroReferenciaParceiro.toString()+"%'";
+    if (_filtroReferenciaProjeto.toString() != "" && _filtroReferenciaProjeto.toString() != "null") {
+      if (_origemUsuario == "EXTERNO") {
+        _query = _query + " where referencia_parceiro like '%" + _filtroReferenciaProjeto.toString() + "%'";
+      }else{
+        _query = _query+" where codigo_projeto like '%"+_filtroReferenciaProjeto.toString()+"%'";
+      }
     }
     debugPrint("query => "+_query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);

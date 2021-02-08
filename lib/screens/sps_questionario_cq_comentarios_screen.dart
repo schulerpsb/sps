@@ -26,7 +26,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
   final String _status_aprovacao;
   final String _origemUsuario;
   final String _filtro;
-  final String _filtroReferenciaParceiro;
+  final String _filtroReferenciaProjeto;
 
   sps_questionario_cq_comentarios_screen(
       this._codigo_empresa,
@@ -47,7 +47,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
       this._status_aprovacao,
       this._origemUsuario,
       this._filtro,
-      this._filtroReferenciaParceiro);
+      this._filtroReferenciaProjeto);
 
   @override
   _sps_questionario_cq_comentarios_screen createState() =>
@@ -70,7 +70,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
           this._status_aprovacao,
           this._origemUsuario,
           this._filtro,
-          this._filtroReferenciaParceiro);
+          this._filtroReferenciaProjeto);
 }
 
 class _sps_questionario_cq_comentarios_screen
@@ -97,7 +97,7 @@ class _sps_questionario_cq_comentarios_screen
       _status_aprovacao,
       _origemUsuario,
       _filtro,
-      _filtroReferenciaParceiro);
+      _filtroReferenciaProjeto);
 
   //Executar Scrolling automático
   ScrollController _controller;
@@ -164,7 +164,7 @@ class _sps_questionario_cq_comentarios_screen
                                     this.widget._status_aprovacao,
                                     this.widget._origemUsuario,
                                     this.widget._filtro,
-                                    this.widget._filtroReferenciaParceiro)
+                                    this.widget._filtroReferenciaProjeto)
                                 : sps_questionario_cq_int_item_screen(
                                     this.widget._codigo_empresa,
                                     this.widget._codigo_programacao,
@@ -182,7 +182,7 @@ class _sps_questionario_cq_comentarios_screen
                                     this.widget._status_aprovacao,
                                     this.widget._origemUsuario,
                                     this.widget._filtro,
-                                    this.widget._filtroReferenciaParceiro)),
+                                    this.widget._filtroReferenciaProjeto)),
                   );
                 },
               );
