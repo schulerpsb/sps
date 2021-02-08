@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'sps_questionario_screen.dart';
+import 'package:sps/screens/sps_questionario_ext_filtro_screen.dart';
+import 'package:sps/screens/sps_questionario_int_filtro_screen.dart';
 import 'sps_cotacao_screen.dart';
 import 'sps_feedback_screen.dart';
 
 class sps_menu_screen extends StatelessWidget {
+  String _tipoUsuario = "EXTERNO"; //substituir por variavel global do Fernando
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,8 +36,9 @@ class sps_menu_screen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    sps_questionario_screen()),
+                                builder: (context) => _tipoUsuario == "EXTERNO"
+                                    ? sps_questionario_ext_filtro_screen()
+                                    : sps_questionario_int_filtro_screen()),
                           );
                         },
                         shape: RoundedRectangleBorder(
@@ -116,7 +120,21 @@ class sps_menu_screen extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  'Developed by Prensas Schuler Brasil\n',
+                  'Developed by Prensas Schuler Brasil',
+                  style: TextStyle(
+                    color: Color(0xFF004077),
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ), // Your footer widget
+            ),
+            Container(
+              height: 50,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  'Version 1.0\n',
                   style: TextStyle(
                     color: Color(0xFF004077),
                     fontSize: 15.0,

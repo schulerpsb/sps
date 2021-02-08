@@ -68,7 +68,9 @@ class SpsDaoQuestionario {
 
   Future<List<Map<String, dynamic>>> select_sincronizacao() async {
     final Database db = await getDatabase();
-    final List<Map<String, dynamic>> result = await db.rawQuery('SELECT * FROM checklist_lista where sincronizado = "N"');
+    var _query = 'SELECT * FROM checklist_lista where sincronizado = "N"';
+    debugPrint("query => "+_query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
 
@@ -77,9 +79,25 @@ class SpsDaoQuestionario {
     return db.rawDelete('delete from checklist_lista');
   }
 
-  Future<List<Map<String, dynamic>>> listarQuestionarioLocal() async {
+  Future<List<Map<String, dynamic>>> listarQuestionarioGeral(_filtro, _filtroReferenciaParceiro) async {
     final Database db = await getDatabase();
-    final List<Map<String, dynamic>> result = await db.query('checklist_lista');
+    var _query = 'SELECT * FROM checklist_lista ';
+    if (_filtro.toString() != "" && _filtro.toString() != "null") {
+      _query = _query+" where status = '"+_filtro.toString()+"'";
+    }
+    if (_filtroReferenciaParceiro.toString() != "" && _filtroReferenciaParceiro.toString() != "null") {
+      _query = _query+" where referencia_parceiro like '%"+_filtroReferenciaParceiro.toString()+"%'";
+    }
+    debugPrint("query => "+_query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> contarQuestionarioGeral() async {
+    final Database db = await getDatabase();
+    var _query = 'SELECT status, count(*) as contador FROM checklist_lista group by status';
+    debugPrint("query => "+_query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
 }

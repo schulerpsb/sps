@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
-import 'package:sps/models/sps_questionario_item.dart';
-import 'package:sps/screens/sps_questionario_cq_screen.dart';
+import 'package:sps/models/sps_questionario_item_cq.dart';
+import 'package:sps/screens/sps_questionario_cq_ext_item_screen.dart';
 import 'package:intl/intl.dart';
 import 'Dart:io';
+import 'package:sps/screens/sps_questionario_cq_int_item_screen.dart';
 
 class sps_questionario_cq_comentarios_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -22,6 +23,10 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
   final String _referencia_parceiro;
   final String _codigo_projeto;
   final String _sincronizado;
+  final String _status_aprovacao;
+  final String _origemUsuario;
+  final String _filtro;
+  final String _filtroReferenciaParceiro;
 
   sps_questionario_cq_comentarios_screen(
       this._codigo_empresa,
@@ -38,7 +43,11 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
       this._codigo_material,
       this._referencia_parceiro,
       this._codigo_projeto,
-      this._sincronizado);
+      this._sincronizado,
+      this._status_aprovacao,
+      this._origemUsuario,
+      this._filtro,
+      this._filtroReferenciaParceiro);
 
   @override
   _sps_questionario_cq_comentarios_screen createState() =>
@@ -57,12 +66,17 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
           this._codigo_material,
           this._referencia_parceiro,
           this._codigo_projeto,
-          this._sincronizado);
+          this._sincronizado,
+          this._status_aprovacao,
+          this._origemUsuario,
+          this._filtro,
+          this._filtroReferenciaParceiro);
 }
 
 class _sps_questionario_cq_comentarios_screen
     extends State<sps_questionario_cq_comentarios_screen> {
-  final SpsQuestionarioItem spsQuestionarioItem = SpsQuestionarioItem();
+  final SpsQuestionarioItem_cq spsQuestionarioItem_cq =
+      SpsQuestionarioItem_cq();
 
   _sps_questionario_cq_comentarios_screen(
       _codigo_empresa,
@@ -79,7 +93,11 @@ class _sps_questionario_cq_comentarios_screen
       _codigo_material,
       _referencia_parceiro,
       _codigo_projeto,
-      _sincronizado);
+      _sincronizado,
+      _status_aprovacao,
+      _origemUsuario,
+      _filtro,
+      _filtroReferenciaParceiro);
 
   //Executar Scrolling automático
   ScrollController _controller;
@@ -94,9 +112,8 @@ class _sps_questionario_cq_comentarios_screen
             .animateTo(_controller.position.maxScrollExtent,
                 duration: Duration(seconds: 1), curve: Curves.ease)
             .then(
-          (value) async {
-          },
-        );
+              (value) async {},
+            );
       },
     );
   }
@@ -128,20 +145,44 @@ class _sps_questionario_cq_comentarios_screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => sps_questionario_cq_screen(
-                            this.widget._codigo_empresa,
-                            this.widget._codigo_programacao,
-                            this.widget._registro_colaborador,
-                            this.widget._identificacao_utilizador,
-                            this.widget._codigo_grupo,
-                            this.widget._codigo_checklist,
-                            this.widget._descr_programacao,
-                            this.widget._codigo_pedido,
-                            this.widget._item_pedido,
-                            this.widget._codigo_material,
-                            this.widget._referencia_parceiro,
-                            this.widget._codigo_projeto,
-                            this.widget._sincronizado)),
+                        builder: (context) =>
+                            this.widget._origemUsuario == "EXTERNO"
+                                ? sps_questionario_cq_ext_item_screen(
+                                    this.widget._codigo_empresa,
+                                    this.widget._codigo_programacao,
+                                    this.widget._registro_colaborador,
+                                    this.widget._identificacao_utilizador,
+                                    this.widget._codigo_grupo,
+                                    this.widget._codigo_checklist,
+                                    this.widget._descr_programacao,
+                                    this.widget._codigo_pedido,
+                                    this.widget._item_pedido,
+                                    this.widget._codigo_material,
+                                    this.widget._referencia_parceiro,
+                                    this.widget._codigo_projeto,
+                                    this.widget._sincronizado,
+                                    this.widget._status_aprovacao,
+                                    this.widget._origemUsuario,
+                                    this.widget._filtro,
+                                    this.widget._filtroReferenciaParceiro)
+                                : sps_questionario_cq_int_item_screen(
+                                    this.widget._codigo_empresa,
+                                    this.widget._codigo_programacao,
+                                    this.widget._registro_colaborador,
+                                    this.widget._identificacao_utilizador,
+                                    this.widget._codigo_grupo,
+                                    this.widget._codigo_checklist,
+                                    this.widget._descr_programacao,
+                                    this.widget._codigo_pedido,
+                                    this.widget._item_pedido,
+                                    this.widget._codigo_material,
+                                    this.widget._referencia_parceiro,
+                                    this.widget._codigo_projeto,
+                                    this.widget._sincronizado,
+                                    this.widget._status_aprovacao,
+                                    this.widget._origemUsuario,
+                                    this.widget._filtro,
+                                    this.widget._filtroReferenciaParceiro)),
                   );
                 },
               );
@@ -205,48 +246,72 @@ class _sps_questionario_cq_comentarios_screen
                     top: 5, left: 10, right: 10, bottom: 10),
                 child: Column(
                   children: <Widget>[
-                    Text("Adicionar comentários",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
-                    Card(
-                      color: Colors.white,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          children: <Widget>[
-                            TextField(
-                              controller: _novoComentario,
-                              maxLines: 4,
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Digite seu comentário'),
+                    this.widget._status_aprovacao == "PENDENTE"
+                        ? Text("Adicionar comentários",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20))
+                        : Text(""),
+                    this.widget._status_aprovacao == "PENDENTE"
+                        ? Card(
+                            color: Colors.white,
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Column(
+                                children: <Widget>[
+                                  TextField(
+                                    controller: _novoComentario,
+                                    maxLines: 4,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Digite seu comentário'),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          )
+                        : Text(""),
                     SizedBox(
                       height: 5.0,
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: FloatingActionButton(
-                        onPressed: () => _gravar_comentario(
-                            this.widget._codigo_empresa,
-                            this.widget._codigo_programacao,
-                            this.widget._registro_colaborador,
-                            this.widget._identificacao_utilizador,
-                            this.widget._item_checklist,
-                            this.widget._descr_comentarios +
-                                "<b><font color=blue>" +
-                                "#Usuário#" +
-                                " em " +
-                                obter_datahora() +
-                                "</font></b>||" +
-                                _novoComentario.text +
-                                "<br>||"),
-                        child: const Icon(Icons.add),
-                      ),
+                      child: this.widget._status_aprovacao == "PENDENTE"
+                          ? FloatingActionButton(
+                              onPressed: () => this.widget._origemUsuario ==
+                                      "EXTERNO"
+                                  ? _gravar_comentario(
+                                      "EXTERNO",
+                                      this.widget._codigo_empresa,
+                                      this.widget._codigo_programacao,
+                                      this.widget._registro_colaborador,
+                                      this.widget._identificacao_utilizador,
+                                      this.widget._item_checklist,
+                                      this.widget._descr_comentarios +
+                                          "<b><font color=blue>" +
+                                          "#Usuário#" +
+                                          " em " +
+                                          obter_datahora() +
+                                          "</font></b>||" +
+                                          _novoComentario.text +
+                                          "<br>||")
+                                  : _gravar_comentario(
+                                      "INTERNO",
+                                      this.widget._codigo_empresa,
+                                      this.widget._codigo_programacao,
+                                      this.widget._registro_colaborador,
+                                      this.widget._identificacao_utilizador,
+                                      this.widget._item_checklist,
+                                      this.widget._descr_comentarios +
+                                          "<b><font color=green>[APROVADOR] " +
+                                          "#Usuário#" +
+                                          " em " +
+                                          obter_datahora() +
+                                          "</font></b>||" +
+                                          _novoComentario.text +
+                                          "<br>||"),
+                              child: const Icon(Icons.add),
+                            )
+                          : Text(""),
                     ),
                   ],
                 ),
@@ -259,6 +324,7 @@ class _sps_questionario_cq_comentarios_screen
   }
 
   _gravar_comentario(
+      _worigemUsuario,
       _wcodigoEmpresa,
       _wcodigoProgramacao,
       _wregistroColaborador,
@@ -287,13 +353,14 @@ class _sps_questionario_cq_comentarios_screen
       final SpsHttpQuestionarioItem objQuestionarioItemHttp =
           SpsHttpQuestionarioItem();
       final retorno = await objQuestionarioItemHttp.QuestionarioSaveComentario(
+          _worigemUsuario,
           _wcodigoEmpresa,
           _wcodigoProgramacao.toString(),
           _wregistroColaborador,
           _widentificacaoUtilizador,
           _witemChecklist.toString(),
           _wdescrComentarios,
-          '#usuario#'); //Verificar com Fernando*/
+          '#usuario#'); //substituir por variavel global do Fernando
       if (retorno == true) {
         _wsincronizado = "";
         debugPrint("registro gravado PostgreSQL: " +

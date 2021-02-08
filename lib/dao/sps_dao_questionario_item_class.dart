@@ -64,6 +64,15 @@ class SpsDaoQuestionarioItem {
     return null;
   }
 
+  Future<int> update_aprovacao(_hcodigoEmpresa, _hcodigoProgramacao, _hitemChecklist, _hstatusAprovacao, _hsincronizado) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_item set status_aprovacao = "'+_hstatusAprovacao+'", sincronizado = "'+_hsincronizado+'" where codigo_empresa = "'+_hcodigoEmpresa+'" and codigo_programacao = '+_hcodigoProgramacao.toString()+' and item_checklist = '+_hitemChecklist.toString();
+    debugPrint("query => "+_query);
+    db.rawUpdate(_query);
+    debugPrint("Alterado referencia (checklist_item) => "+_hstatusAprovacao);
+    return null;
+  }
+
   Future<int> update_comentarios(_hcodigoEmpresa, _hcodigoProgramacao, _hregistroColaborador, _hidentificacaoUtilizador, _hitemChecklist, _hdescrComentarios) async {
     final Database db = await getDatabase();
     var _query = 'update checklist_item set descr_comentarios = "'+_hdescrComentarios.toString()+'", sincronizado = "N" where codigo_empresa = "'+_hcodigoEmpresa.toString()+'" and codigo_programacao = '+_hcodigoProgramacao.toString()+' and registro_colaborador = "'+_hregistroColaborador.toString() +'" and identificacao_utilizador = "'+_hidentificacaoUtilizador.toString()+'" and item_checklist = '+_hitemChecklist.toString();
@@ -93,7 +102,6 @@ class SpsDaoQuestionarioItem {
     var _query = 'SELECT * FROM checklist_item where codigo_empresa = "'+_hcodigoEmpresa+'" and codigo_programacao = '+_hcodigoProgramacao.toString();
     debugPrint("query => "+_query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
-    debugPrint('==>' + result.toString());
     return result;
   }
 }

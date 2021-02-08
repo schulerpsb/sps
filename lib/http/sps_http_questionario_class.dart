@@ -5,22 +5,25 @@ import 'Json_interceptor.dart';
 
 class SpsHttpQuestionario {
   //Servidor de produção
-  //static const baseUrl_read = 'https://teklist.schuler.de/webapi/api/questionario/read.php';
-  //static const baseUrl_read = 'https://teklist.schuler.de/webapi/api/questionario/save_referencia.php';
+  //static const baseUrl_read_cq_ext = 'https://teklist.schuler.de/webapi/api/questionario/read_cq_ext.php';
+  //static const baseUrl_read_cq_int = 'https://teklist.schuler.de/webapi/api/questionario/read_cq_int.php';
+  //static const baseUrl_saveReferencia = 'https://teklist.schuler.de/webapi/api/questionario/save_referencia.php';
 
   //Servidor DEV
-  static const baseUrl_read = 'http://10.17.20.45/webapi/api/questionario/read.php';
+  static const baseUrl_read_cq_ext = 'http://10.17.20.45/webapi/api/questionario/read_cq_ext.php';
+  static const baseUrl_read_cq_int = 'http://10.17.20.45/webapi/api/questionario/read_cq_int.php';
   static const baseUrl_saveReferencia = 'http://10.17.20.45/webapi/api/questionario/save_referencia.php';
 
   SpsHttpQuestionario();
 
-  Future<List<Map<String, dynamic>>> listarQuestionario(String doc_action, String registro_colaborador, String identificacao_utilizador, String tipo_frequencia, String tipo_checklist) async {
+  Future<List<Map<String, dynamic>>> httplistarQuestionario(String origem_usuario, String doc_action, String registro_colaborador, String identificacao_utilizador, String tipo_frequencia, String tipo_checklist, String registro_aprovador) async {
     final Map<String, dynamic> keyQuestionario = {
       'doc_action': doc_action,
       'registro_colaborador': registro_colaborador,
       'identificacao_utilizador': identificacao_utilizador,
       'tipo_frequencia': tipo_frequencia,
       'tipo_checklist': tipo_checklist,
+      'registro_aprovador': registro_aprovador,
     };
 
     final String dadosQuestionarioJson = jsonEncode(keyQuestionario);
@@ -31,7 +34,7 @@ class SpsHttpQuestionario {
 
     final Response response = await client
         .post(
-          baseUrl_read,
+          origem_usuario == "EXTERNO" ? baseUrl_read_cq_ext : baseUrl_read_cq_int,
           headers: {'Content-type': 'application/json'},
           body: dadosQuestionarioJson,
         )
@@ -74,7 +77,7 @@ class SpsHttpQuestionario {
       'codigo_empresa': codigo_empresa,
       'codigo_programacao': codigo_programacao,
       'referencia_parceiro': referencia_parceiro,
-      'usuresponsavel': usuresponsavel, //verificcar com Fernando
+      'usuresponsavel': usuresponsavel, //substituir por variavel global do Fernando
     };
 
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
