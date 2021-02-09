@@ -44,7 +44,7 @@ class _sps_questionario_cq_lista_screen
           // Azul Schuler
           title: Text(
             'FOLLOW UP',
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           automaticallyImplyLeading: false,
@@ -73,7 +73,6 @@ class _sps_questionario_cq_lista_screen
               this.widget._filtro,
               this.widget._filtroReferenciaProjeto),
           builder: (context, snapshot) {
-            print ("adriano 1");
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
               case ConnectionState.none:
@@ -92,14 +91,10 @@ class _sps_questionario_cq_lista_screen
                     icon: Icons.error,
                   );
                 }
-                print ("adriano 2");
                 if (snapshot.data.isNotEmpty) {
-                  print ("adriano 3");
                   final DateFormat formatter = DateFormat('yyyyMMdd');
-                  print ("adriano 31");
                   final String _dataAtual =
                       formatter.format(DateTime.now()).toString();
-                  print ("adriano 32");
                   return ListView.builder(
                     padding: EdgeInsets.only(top: 5),
                     itemCount: snapshot.data.length,
@@ -107,7 +102,6 @@ class _sps_questionario_cq_lista_screen
                       String _wdtfim_aplicacao = snapshot.data[index]
                               ["dtfim_aplicacao"]
                           .replaceAll("-", "");
-                      print ("adriano 33");
                       return Card(
                         color: Colors.white,
                         child: ListTile(
@@ -118,7 +112,7 @@ class _sps_questionario_cq_lista_screen
                                     " (PRAZO VENCIDO)",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                                fontSize: 15,
                                 color: int.parse(_wdtfim_aplicacao) >
                                         int.parse(_dataAtual)
                                     ? Colors.black
@@ -233,9 +227,7 @@ class _sps_questionario_cq_lista_screen
                       );
                     },
                   );
-                  print ("adriano 4");
                 } else {
-                  print ("adriano 5");
                   return CenteredMessage(
                     'Checklist não encontrado.',
                     icon: Icons.warning,
@@ -258,14 +250,14 @@ class _sps_questionario_cq_lista_screen
         children: [
           Text(
               "Prazo para preenchimento está vencido.\n\nEntre em contato com o responsável na PRENSAS SCHULER.",
-              style: TextStyle(color: Colors.red, fontSize: 20)),
+              style: TextStyle(color: Colors.red, fontSize: 15)),
         ],
       ),
       buttons: [
         DialogButton(
             child: Text(
               "OK",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: Colors.white, fontSize: 15),
             ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop())
       ],
@@ -302,13 +294,11 @@ class texto_principal {
         _dtfim_aplicacao;
 
     if (wsnapshot["status"] == "PARCIAL") {
-      print ("adriano 934");
       var formato = new NumberFormat("##0.00", "en_US");
       _texto_principal = _texto_principal +
           "        EVOLUÇÃO: " +
           formato.format(wsnapshot["percentual_evolucao"]).toString() +
           " %";
-      print ("adriano 935");
     }
 
     return _texto_principal;

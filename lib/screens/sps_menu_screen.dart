@@ -34,10 +34,10 @@ class sps_menu_screen extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0))),
                         icon: Icon(Icons.receipt,
-                            color: Colors.white, size: 30.0),
+                            color: Colors.white, size: 25.0),
                         label: Text(
                           'SISTEMA CHECKLIST (FOLLOW UP)           ',
-                          style: TextStyle(color: Colors.white, fontSize: 15.0),
+                          style: TextStyle(color: Colors.white, fontSize: 12.0),
                           textAlign: TextAlign.center,
                         ),
                         padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
@@ -61,10 +61,10 @@ class sps_menu_screen extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0))),
                         icon: Icon(Icons.equalizer,
-                            color: Colors.white, size: 30.0),
+                            color: Colors.white, size: 25.0),
                         label: Text(
                           'GESTÃO DE FORNECEDORES (FEEDBACK)',
-                          style: TextStyle(color: Colors.white, fontSize: 15.0),
+                          style: TextStyle(color: Colors.white, fontSize: 12.0),
                           textAlign: TextAlign.center,
                         ),
                         padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
@@ -88,10 +88,10 @@ class sps_menu_screen extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0))),
                         icon: Icon(Icons.monetization_on,
-                            color: Colors.white, size: 30.0),
+                            color: Colors.white, size: 25.0),
                         label: Text(
                           'GESTÃO DE FORNECEDORES (COTAÇÃO) ',
-                          style: TextStyle(color: Colors.white, fontSize: 15.0),
+                          style: TextStyle(color: Colors.white, fontSize: 12.0),
                           textAlign: TextAlign.center,
                         ),
                         padding: EdgeInsets.fromLTRB(10, 40, 5, 30),
@@ -112,7 +112,7 @@ class sps_menu_screen extends StatelessWidget {
                   'Developed by Prensas Schuler Brasil',
                   style: TextStyle(
                     color: Color(0xFF004077),
-                    fontSize: 15.0,
+                    fontSize: 12.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -126,7 +126,7 @@ class sps_menu_screen extends StatelessWidget {
                   'Version 1.0.0\n',
                   style: TextStyle(
                     color: Color(0xFF004077),
-                    fontSize: 15.0,
+                    fontSize: 12.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
