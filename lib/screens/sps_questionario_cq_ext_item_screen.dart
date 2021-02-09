@@ -11,7 +11,6 @@ import 'package:sps/models/sps_questionario_item_cq.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
-import 'Dart:io';
 
 class sps_questionario_cq_ext_item_screen extends StatefulWidget {
   final String _codigo_empresa;
