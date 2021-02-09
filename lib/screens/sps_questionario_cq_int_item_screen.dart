@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
-import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'package:sps/http/sps_http_questionario_class.dart';
+import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
@@ -112,7 +110,7 @@ class _sps_questionario_cq_int_item_screen
           backgroundColor: Color(0xFF004077),
           title: Text(
             'APROVAÇÃO',
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           automaticallyImplyLeading: false,
@@ -275,7 +273,7 @@ class _sps_questionario_cq_int_item_screen
                                           '${snapshot.data[index]["descr_pergunta"]}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal,
-                                          fontSize: 20)),
+                                          fontSize: 15)),
                                   subtitle: Text(""),
                                 ),
 
@@ -283,12 +281,12 @@ class _sps_questionario_cq_int_item_screen
                                 Text("Resposta do parceiro: ",
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 20,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold)),
                                 Text(snapshot.data[index]["resp_cq"] + "\n",
                                     style: TextStyle(
                                         color: _resp_cq_cor,
-                                        fontSize: 20,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold)),
                                 Row(children: <Widget>[
                                   // Tratar Opções
@@ -325,7 +323,7 @@ class _sps_questionario_cq_int_item_screen
                                       ? Text(" PENDENTE",
                                           style: TextStyle(
                                               color: Colors.orange,
-                                              fontSize: 16,
+                                              fontSize: 10,
                                               fontWeight: FontWeight.bold))
                                       : Text(""),
                                   Text("     "),
@@ -361,7 +359,7 @@ class _sps_questionario_cq_int_item_screen
                                       ? Text(" APROVADO",
                                           style: TextStyle(
                                               color: Colors.green,
-                                              fontSize: 16,
+                                              fontSize: 10,
                                               fontWeight: FontWeight.bold))
                                       : Text(""),
                                   Text("    "),
@@ -450,22 +448,12 @@ class _sps_questionario_cq_int_item_screen
       _wregistroAprovador, _wstatusAprovacao, _windex) async {
     debugPrint('opcao => ' + _wstatusAprovacao);
 
-    var _wservidor_conectado = false;
     var _wsincronizado = "";
 
     //Verificar se existe conexão
-    try {
-      final result = await InternetAddress.lookup('10.17.20.45');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _wservidor_conectado = true;
-        debugPrint('STATUS DA CONEXÃO -> connected');
-      }
-    } on SocketException catch (_) {
-      _wservidor_conectado = false;
-      debugPrint('STATUS DA CONEXÃO -> not connected');
-    }
-
-    if (_wservidor_conectado == true) {
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
       //Gravar PostgreSQL (API REST)
       final SpsHttpQuestionarioItem objQuestionarioItemHttp =
           SpsHttpQuestionarioItem();

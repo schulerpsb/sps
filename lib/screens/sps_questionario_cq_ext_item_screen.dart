@@ -4,6 +4,7 @@ import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
+import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
@@ -111,7 +112,7 @@ class _sps_questionario_cq_ext_item_screen
           backgroundColor: Color(0xFF004077),
           title: Text(
             'QUESTIONÁRIO',
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           automaticallyImplyLeading: false,
@@ -268,7 +269,7 @@ class _sps_questionario_cq_ext_item_screen
                                           '${snapshot.data[index]["descr_pergunta"]}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal,
-                                          fontSize: 20)),
+                                          fontSize: 15)),
                                   subtitle: Text(""),
                                 ),
 
@@ -302,7 +303,7 @@ class _sps_questionario_cq_ext_item_screen
                                           : {},
                                     ),
                                   ),
-                                  Text("     "),
+                                  Text("  "),
                                   Container(
                                     color: Colors.red,
                                     child: CustomRadioWidget(
@@ -322,7 +323,7 @@ class _sps_questionario_cq_ext_item_screen
                                           : {},
                                     ),
                                   ),
-                                  Text("     "),
+                                  Text("  "),
                                   Container(
                                     color: Colors.orange,
                                     child: CustomRadioWidget(
@@ -342,7 +343,7 @@ class _sps_questionario_cq_ext_item_screen
                                           : {},
                                     ),
                                   ),
-                                  Text("     "),
+                                  Text("  "),
                                   Container(
                                     color: Colors.green,
                                     child: CustomRadioWidget(
@@ -362,7 +363,7 @@ class _sps_questionario_cq_ext_item_screen
                                           : {},
                                     ),
                                   ),
-                                  Text("     "),
+                                  Text("  "),
 
                                   //Tratar Mídias
                                   IconButton(
@@ -428,7 +429,7 @@ class _sps_questionario_cq_ext_item_screen
                                     ? Text("\nAPROVADO PELO FOLLOW UP\n",
                                         style: TextStyle(
                                             color: Colors.green,
-                                            fontSize: 20,
+                                            fontSize: 15,
                                             fontWeight: FontWeight.bold))
                                     : Text(""),
                               ],
@@ -457,22 +458,12 @@ class _sps_questionario_cq_ext_item_screen
       _widentificacaoUtilizador, _witemChecklist, _wrespCq, _windex) async {
     debugPrint('opcao => ' + _wrespCq);
 
-    var _wservidor_conectado = false;
     var _wsincronizado = "";
 
     //Verificar se existe conexão
-    try {
-      final result = await InternetAddress.lookup('10.17.20.45');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _wservidor_conectado = true;
-        debugPrint('STATUS DA CONEXÃO -> connected');
-      }
-    } on SocketException catch (_) {
-      _wservidor_conectado = false;
-      debugPrint('STATUS DA CONEXÃO -> not connected');
-    }
-
-    if (_wservidor_conectado == true) {
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
       //Gravar PostgreSQL (API REST)
       final SpsHttpQuestionarioItem objQuestionarioItemHttp =
           SpsHttpQuestionarioItem();
@@ -584,7 +575,7 @@ class _sps_questionario_cq_ext_item_screen
         DialogButton(
             child: Text(
               "OK",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: Colors.white, fontSize: 15),
             ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop())
       ],
@@ -600,14 +591,14 @@ class _sps_questionario_cq_ext_item_screen
       content: TextField(
         controller: _popup_novaReferencia,
         textInputAction: TextInputAction.go,
-        keyboardType: TextInputType.numberWithOptions(),
+        keyboardType: TextInputType.text,
         decoration: InputDecoration(hintText: "Informe sua referência"),
       ),
       buttons: [
         DialogButton(
             child: Text(
               "GRAVAR",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: Colors.white, fontSize: 15),
             ),
             onPressed: () => _gravar_referencia(_wcodigoEmpresa,
                 _wcodigoProgramacao, _popup_novaReferencia.text)),
@@ -619,22 +610,12 @@ class _sps_questionario_cq_ext_item_screen
       _wcodigoEmpresa, _wcodigoProgramacao, _wnovaReferencia) async {
     debugPrint('referencia => ' + _wnovaReferencia);
 
-    var _wservidor_conectado = false;
     var _wsincronizado = "";
 
     //Verificar se existe conexão
-    try {
-      final result = await InternetAddress.lookup('10.17.20.45');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _wservidor_conectado = true;
-        debugPrint('STATUS DA CONEXÃO -> connected');
-      }
-    } on SocketException catch (_) {
-      _wservidor_conectado = false;
-      debugPrint('STATUS DA CONEXÃO -> not connected');
-    }
-
-    if (_wservidor_conectado == true) {
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
       //Gravar PostgreSQL (API REST)
       final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
       final retorno = await objQuestionarioHttp.QuestionarioSaveReferencia(

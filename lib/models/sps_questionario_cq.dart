@@ -1,42 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
+import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
 import 'Dart:io';
 
 class SpsQuestionario_cq {
   @override
-  Future<List<Map<String, dynamic>>> listarQuestionario_cq(_origemUsuario, _parametro, _filtro, _filtroReferenciaProjeto) async {
-    var _wservidor_conectado = false;
+  Future<List<Map<String, dynamic>>> listarQuestionario_cq(
+      _origemUsuario, _parametro, _filtro, _filtroReferenciaProjeto) async {
 
     final origem_usuario = _origemUsuario;
     final doc_action = 'PREENCHER_CQ';
-    final registro_colaborador = '008306'; // substituir por variavel global do Fernando
-    final identificacao_utilizador = 'SCHULER'; // substituir por variavel global do Fernando
+    final registro_colaborador =
+        '008306'; // substituir por variavel global do Fernando
+    final identificacao_utilizador =
+        'SCHULER'; // substituir por variavel global do Fernando
     final tipo_frequencia = 'CONTROLE DE QUALIDADE';
     final tipo_checklist = 'CHECKLIST';
-    final registro_aprovador = '008306'; // substituir por variavel global do Fernando
+    final registro_aprovador =
+        '008306'; // substituir por variavel global do Fernando
 
     //Verificar se existe conexão
-    try {
-      final result = await InternetAddress.lookup('10.17.20.45');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _wservidor_conectado = true;
-        debugPrint('STATUS DA CONEXÃO -> connected');
-      }
-    } on SocketException catch (_) {
-      _wservidor_conectado = false;
-      debugPrint('STATUS DA CONEXÃO -> not connected');
-    }
-
-    //Quando existir conexão
-    if (_wservidor_conectado == true) {
-      debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) =============================================");
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
+      debugPrint(
+          "=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) =============================================");
       //Ler dados não sincronizados do SQlite
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> result =
           await objQuestionarioDao.select_sincronizacao();
       var _wregistros = result.length;
-      debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " + _wregistros.toString() + ")");
+      debugPrint(
+          "Ler dados não sincronizados do SQlite (quantidade de registro: " +
+              _wregistros.toString() +
+              ")");
       var windex = 0;
       while (windex < _wregistros) {
         var _wsincronizado = "";
@@ -57,7 +55,8 @@ class SpsQuestionario_cq {
       }
 
       //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
-      debugPrint("Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
+      debugPrint(
+          "Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
       final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
       final List<Map<String, dynamic>> dadosQuestionario =
           await objQuestionarioHttp.httplistarQuestionario(
@@ -74,7 +73,8 @@ class SpsQuestionario_cq {
         final int resullimpar = await objQuestionarioDao.emptyTable();
         final int resultsave = await objQuestionarioDao.save(dadosQuestionario);
       }
-      debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
+      debugPrint(
+          "=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
     }
 
     //Ler dados do SQlite (contar)
@@ -82,7 +82,7 @@ class SpsQuestionario_cq {
       debugPrint("Ler dados do SQlite (Tabela: checklist_lista) contador");
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> DadosSessao =
-      await objQuestionarioDao.contarQuestionarioGeral();
+          await objQuestionarioDao.contarQuestionarioGeral();
       return DadosSessao;
     }
 
@@ -91,7 +91,8 @@ class SpsQuestionario_cq {
       debugPrint("Ler dados do SQlite (Tabela: checklist_lista) contador");
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> DadosSessao =
-      await objQuestionarioDao.listarQuestionarioGeral(_filtro, _filtroReferenciaProjeto, _origemUsuario);
+          await objQuestionarioDao.listarQuestionarioGeral(
+              _filtro, _filtroReferenciaProjeto, _origemUsuario);
       return DadosSessao;
     }
   }

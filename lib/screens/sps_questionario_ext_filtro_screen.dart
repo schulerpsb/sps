@@ -32,7 +32,7 @@ class _sps_questionario_ext_filtro_screen
           // Azul Schuler
           title: Text(
             'CHECKLIST',
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           automaticallyImplyLeading: false,
@@ -87,7 +87,7 @@ class _sps_questionario_ext_filtro_screen
                           alignment: Alignment.topCenter,
                           child: Text("FOLLOW UP",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                                  fontWeight: FontWeight.bold, fontSize: 15)),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
@@ -111,7 +111,7 @@ class _sps_questionario_ext_filtro_screen
                                             )
                                           },
                                 color: Colors.purple,
-                                padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
+                                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5.0)),
                                 splashColor: Colors.grey,
@@ -130,7 +130,7 @@ class _sps_questionario_ext_filtro_screen
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
+                                                fontSize: 15)))
                                   ],
                                 ),
                               ),
@@ -153,7 +153,7 @@ class _sps_questionario_ext_filtro_screen
                                             )
                                           },
                                 color: Colors.orange,
-                                padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
+                                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5.0)),
                                 splashColor: Colors.grey,
@@ -167,7 +167,7 @@ class _sps_questionario_ext_filtro_screen
                                                 .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
+                                                fontSize: 15)))
                                   ],
                                 ),
                               ),
@@ -190,7 +190,7 @@ class _sps_questionario_ext_filtro_screen
                                             )
                                           },
                                 color: Colors.green,
-                                padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
+                                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5.0)),
                                 splashColor: Colors.grey,
@@ -204,7 +204,7 @@ class _sps_questionario_ext_filtro_screen
                                                 .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
+                                                fontSize: 15)))
                                   ],
                                 ),
                               ),
@@ -219,7 +219,7 @@ class _sps_questionario_ext_filtro_screen
                               Text("Referência do parceiro",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20)),
+                                      fontSize: 15)),
                               Card(
                                 color: Colors.white,
                                 child: Align(

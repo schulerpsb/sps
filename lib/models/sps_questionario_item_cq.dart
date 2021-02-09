@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
+import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'Dart:io';
 
@@ -12,11 +13,8 @@ class SpsQuestionarioItem_cq {
       h_codigo_grupo,
       h_codigo_checklist) async {
 
-    var _wservidor_conectado = false;
-
     final acao = 'PROXIMO';
     final sessao_checklist = '';
-    final origem_usuario = h_origem_usuario;
     final codigo_empresa = h_codigo_empresa;
     final codigo_programacao = h_codigo_programacao;
     final registro_colaborador = '';
@@ -25,19 +23,9 @@ class SpsQuestionarioItem_cq {
     final codigo_checklist = h_codigo_checklist;
 
     //Verificar se existe conexão
-    try {
-      final result = await InternetAddress.lookup('10.17.20.45');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _wservidor_conectado = true;
-        debugPrint('STATUS DA CONEXÃO -> connected');
-      }
-    } on SocketException catch (_) {
-      _wservidor_conectado = false;
-      debugPrint('STATUS DA CONEXÃO -> not connected');
-    }
-
-    //Quando existir conexão
-    if (_wservidor_conectado == true) {
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
       debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
       //Criar tabela caso não exista
       final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();

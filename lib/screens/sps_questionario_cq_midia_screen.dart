@@ -219,7 +219,7 @@ class _sps_questionario_midia_screen
             backgroundColor: Color(0xFF004077),
             title: Text(
               'QUESTIONÁRIO - MÍDIA',
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
             bottom: TabBar(controller: controller, tabs: [
