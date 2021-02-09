@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
+import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_cq.dart';
+import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import 'package:sps/screens/sps_menu_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
@@ -15,6 +17,9 @@ class sps_questionario_ext_filtro_screen extends StatefulWidget {
 class _sps_questionario_ext_filtro_screen
     extends State<sps_questionario_ext_filtro_screen> {
   final SpsQuestionario_cq spsquestionario = SpsQuestionario_cq();
+
+  final SpsLogin spslogin = SpsLogin();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +56,7 @@ class _sps_questionario_ext_filtro_screen
             },
           ),
         ),
+        endDrawer: sps_drawer(spslogin: spslogin),
 
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: spsquestionario.listarQuestionario_cq(

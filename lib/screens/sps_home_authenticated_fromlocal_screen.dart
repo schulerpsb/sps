@@ -25,7 +25,6 @@ class _HomeSpsAuthenticatedFromLocalState
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
-  String textHolder = '';
 
   @override
   Widget build(BuildContext context) {

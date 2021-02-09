@@ -28,6 +28,7 @@ class SpsQuestionario_cq {
           "=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) =============================================");
       //Ler dados não sincronizados do SQlite
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+      final int resulcreate = await objQuestionarioDao.create_table();
       final List<Map<String, dynamic>> result =
           await objQuestionarioDao.select_sincronizacao();
       var _wregistros = result.length;
@@ -69,7 +70,6 @@ class SpsQuestionario_cq {
               registro_aprovador);
       if (dadosQuestionario != null) {
         final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-        final int resulcreate = await objQuestionarioDao.create_table();
         final int resullimpar = await objQuestionarioDao.emptyTable();
         final int resultsave = await objQuestionarioDao.save(dadosQuestionario);
       }
