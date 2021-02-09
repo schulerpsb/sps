@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:sps/screens/sps_login_screen.dart';
+import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 
 void main() {
   //runApp(Sps(),
@@ -49,7 +49,7 @@ Widget _introScreen() {
     children: <Widget>[
       SplashScreen(
         seconds: 4,
-        navigateAfterSeconds: SpsLoginScreen(),
+        navigateAfterSeconds: HomeSpsAuthenticatedFromLocal(),
         loaderColor: Colors.transparent,
       ),
       Container(

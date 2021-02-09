@@ -93,12 +93,6 @@ class _sps_mediaPlayer_screen extends State<sps_mediaPlayer_screen> {
                       ),
               ),
             ),
-            FlatButton(
-              onPressed: () {
-                _chewieController.enterFullScreen();
-              },
-              child: const Text('Fullscreen'),
-            ),
           ],
         ),
       ),

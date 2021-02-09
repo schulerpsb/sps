@@ -11,14 +11,12 @@ class SpsHttpLogin {
   //Servidor DEV
   static const baseUrl = 'http://10.17.20.45/webapi/api/login/read.php';
 
-  //..static const baseUrl = 'https://teklist.schuler.de/webapi/api/post/read.php';
-
   SpsHttpLogin(this.usuario, this.senha);
 
   Future<Map<String, dynamic>> efetuaLogin(String usuario, String senha) async {
     final Map<String, dynamic> dadosParaLogon = {
-      'usuario': usuario,
-      'senha': senha,
+      'codigo_usuario': usuario,
+      'senha_usuario': senha,
     };
 
     final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
@@ -42,22 +40,34 @@ class SpsHttpLogin {
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
     Map<String, dynamic> transactionJsonMap = null;
     for (Map<String, dynamic> element in transactionJsonList) {
-      transactionJsonMap = {
-        'nmusuario': element['nmusuario'].trim(),
-        'cdnivel': element['cdnivel'],
-        'nrregistro': element['nrregistro'],
-        'cddepartam': element['cddepartam'],
-        'nmfunciona': element['nmfunciona'],
-        'cdcentcust': element['cdcentcust'],
-        'datainclus': element['datainclus'],
-        'dataaltera': element['dataaltera'],
-        'nmusuaralt': element['nmusuaralt'],
-        'dtvalidade': element['dtvalidade'],
-        'nmmaquina': element['nmmaquina'],
-        'nmusuariorede': element['nmusuariorede'],
-        'nmusuariosap': element['nmusuariosap'],
-        'dthratualizacao': element['dthratualizacao'],
-      };
+      if(element['mensagem'].trim() != ""){
+        transactionJsonMap = {
+          'mensagem': element['mensagem'].trim()
+        };
+      }else{
+        transactionJsonMap = {
+          'codigo_usuario': element['codigo_usuario'].trim(),
+          'nome_usuario': element['nome_usuario'].trim(),
+          'telefone_usuario': element['telefone_usuario'].trim(),
+          'email_usuario': element['email_usuario'].trim(),
+          'cargo_usuario': element['cargo_usuario'].trim(),
+          'pais_usuario': element['pais_usuario'].trim(),
+          'lingua_usuario': element['lingua_usuario'].trim(),
+          'senha_usuario': element['senha_usuario'].trim(),
+          'status_usuario': element['status_usuario'].trim(),
+          'dt_validade_senha': element['dt_validade_senha'].trim(),
+          'qtd_tentativas_senha': element['qtd_tentativas_senha'].trim(),
+          'codigo_planta': element['codigo_planta'].trim(),
+          'dthratualizacao': element['dthratualizacao'].trim(),
+          'chave': element['chave'].trim(),
+          'status_token': element['status_token'].trim(),
+          'dt_validade_usuario': element['dt_validade_usuario'].trim(),
+          'dt_reset_senha': element['dt_reset_senha'].trim(),
+          'tipo': element['tipo'].trim(),
+          'registro_usuario': element['registro_usuario'].trim(),
+          'mensagem': element['mensagem'].trim()
+        };
+      }
     }
     return transactionJsonMap;
   }

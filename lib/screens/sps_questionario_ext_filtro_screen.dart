@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_questionario_cq.dart';
+import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import 'package:sps/screens/sps_menu_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
 
@@ -43,7 +44,7 @@ class _sps_questionario_ext_filtro_screen
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => sps_menu_screen()),
+                    MaterialPageRoute(builder: (context) => HomeSpsAuthenticatedFromLocal()),
                   );
                 },
               );

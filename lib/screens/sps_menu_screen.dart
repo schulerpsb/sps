@@ -9,18 +9,7 @@ class sps_menu_screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
-        appBar: AppBar(
-          backgroundColor: Color(0xFF004077),
-          title: Text(
-            'FORNECEDORES - APLICATIVOS',
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-        ),
-        body: Column(
+    return Column(
           children: <Widget>[
             Expanded(
               child: SingleChildScrollView(
@@ -134,7 +123,7 @@ class sps_menu_screen extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  'Version 1.0\n',
+                  'Version 1.0.0\n',
                   style: TextStyle(
                     color: Color(0xFF004077),
                     fontSize: 15.0,
@@ -144,8 +133,6 @@ class sps_menu_screen extends StatelessWidget {
               ), // Your footer widget
             ),
           ],
-        ),
-      ),
-    );
+        );
   }
 }
