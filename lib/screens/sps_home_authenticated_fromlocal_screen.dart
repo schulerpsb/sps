@@ -5,6 +5,7 @@ import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_login_class.dart';
 import 'package:sps/http/sps_http_login_class.dart';
 import 'package:sps/models/sps_login.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromserver_screen.dart';
 import 'package:sps/screens/sps_menu_screen.dart';
@@ -78,6 +79,8 @@ class _HomeSpsAuthenticatedFromLocalState
                   if (snapshot.data.isNotEmpty) {
                     //Usuário ja tem usuário local autenticado
                     //Ir direto para o menu
+                    //final dadossessao = sps_usuario();
+                    //dadossessao.name = snapshot.data[0]['codigo_usuario'].toString();
                     return sps_menu_screen();
                   } else {
                     return Container(
