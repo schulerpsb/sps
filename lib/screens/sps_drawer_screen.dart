@@ -48,7 +48,7 @@ class sps_drawer extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 40.0,
+                      height: 45.0,
                       child: ListTile(
                         title: Text("Usuário: "+snapshot.data[0]['codigo_usuario'].toString()),
                         onTap: () {
@@ -57,7 +57,7 @@ class sps_drawer extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 40.0,
+                      height: 45.0,
                       child: ListTile(
                         title: Text("Nome: "+snapshot.data[0]['nome_usuario'].toString()),
                         onTap: () {
@@ -66,7 +66,7 @@ class sps_drawer extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 40.0,
+                      height: 45.0,
                       child: ListTile(
                         title: Text("E-mail: "+snapshot.data[0]['email_usuario'].toString()),
                         onTap: () {
