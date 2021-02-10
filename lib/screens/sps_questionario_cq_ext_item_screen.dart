@@ -7,12 +7,16 @@ import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
+import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
+import 'package:sps/models/sps_usuario_class.dart';
+import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
 
 class sps_questionario_cq_ext_item_screen extends StatefulWidget {
+
   final String _codigo_empresa;
   final int _codigo_programacao;
   final String _registro_colaborador;
@@ -31,6 +35,8 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
   final String _filtro;
   final String _filtroReferenciaProjeto;
 
+  final sps_usuario usuarioAtual;
+
   sps_questionario_cq_ext_item_screen(
       this._codigo_empresa,
       this._codigo_programacao,
@@ -48,7 +54,8 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
       this._status_aprovacao,
       this._origemUsuario,
       this._filtro,
-      this._filtroReferenciaProjeto);
+      this._filtroReferenciaProjeto,
+      {this.usuarioAtual = null});
 
   @override
   _sps_questionario_cq_ext_item_screen createState() =>
@@ -69,13 +76,17 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
           this._status_aprovacao,
           this._origemUsuario,
           this._filtro,
-          this._filtroReferenciaProjeto);
+          this._filtroReferenciaProjeto,
+      );
 }
 
 class _sps_questionario_cq_ext_item_screen
     extends State<sps_questionario_cq_ext_item_screen> {
   final SpsQuestionarioItem_cq spsQuestionarioItem_cq =
       SpsQuestionarioItem_cq();
+
+  final SpsLogin spslogin = SpsLogin();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
 
   _sps_questionario_cq_ext_item_screen(
       _codigo_empresa,
@@ -133,6 +144,7 @@ class _sps_questionario_cq_ext_item_screen
             },
           ),
         ),
+        endDrawer: sps_drawer(spslogin: spslogin),
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: spsQuestionarioItem_cq.listarQuestionarioItem_cq(
               this.widget._origemUsuario,

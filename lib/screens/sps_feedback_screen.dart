@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sps/models/sps_login.dart';
+import 'package:sps/screens/sps_drawer_screen.dart';
 
 class sps_feedback_screen extends StatelessWidget {
+
+  final SpsLogin spslogin = SpsLogin();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,6 +19,7 @@ class sps_feedback_screen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+      endDrawer: sps_drawer(spslogin: spslogin),
       body: Column(
         children: <Widget>[
           Padding(

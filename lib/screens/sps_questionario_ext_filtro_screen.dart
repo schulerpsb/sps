@@ -3,6 +3,7 @@ import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_cq.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import 'package:sps/screens/sps_menu_screen.dart';
@@ -12,7 +13,7 @@ class sps_questionario_ext_filtro_screen extends StatefulWidget {
   @override
   _sps_questionario_ext_filtro_screen createState() =>
       _sps_questionario_ext_filtro_screen();
-}
+  }
 
 class _sps_questionario_ext_filtro_screen
     extends State<sps_questionario_ext_filtro_screen> {
@@ -21,9 +22,10 @@ class _sps_questionario_ext_filtro_screen
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
+
   @override
   Widget build(BuildContext context) {
-    debugPrint("TELA => SPS_QUESTIONARIO_EXT_FILTRO_SCREEN");
+    debugPrint("TELA => SPS_QUESTIONARIO_EXT_FILTRO_SCREEN ");
 
     TextEditingController _filtroReferenciaProjeto = TextEditingController();
 

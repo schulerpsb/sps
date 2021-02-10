@@ -1,6 +1,7 @@
 class sps_usuario {
-  String _name;
-  String _codigo_usuario;
+  static final sps_usuario _sps_usuario = new sps_usuario._internal();//  String codigo_usuario;
+
+  String codigo_usuario;
   String nome_usuario;
   String telefone_usuario;
   String email_usuario;
@@ -21,10 +22,9 @@ class sps_usuario {
   String registro_usuario;
   String mensagem;
 
-  String get name => _name;
-
-  set name(String name) {
-    _name = name;
+  factory sps_usuario() {
+    return _sps_usuario;
   }
-
+  sps_usuario._internal();
 }
+final usuarioAtual = sps_usuario();
