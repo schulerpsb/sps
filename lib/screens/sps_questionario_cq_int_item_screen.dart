@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
@@ -408,7 +409,7 @@ class _sps_questionario_cq_int_item_screen
                                             this.widget._referencia_parceiro,
                                             this.widget._codigo_projeto,
                                             this.widget._sincronizado,
-                                                snapshot.data[index]
+                                            snapshot.data[index]
                                                 ["status_aprovacao"],
                                             this.widget._origemUsuario,
                                             this.widget._filtro,

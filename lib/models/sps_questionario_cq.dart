@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
@@ -30,7 +32,7 @@ class SpsQuestionario_cq {
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final int resulcreate = await objQuestionarioDao.create_table();
       final List<Map<String, dynamic>> result =
-          await objQuestionarioDao.select_sincronizacao();
+      await objQuestionarioDao.select_sincronizacao();
       var _wregistros = result.length;
       debugPrint(
           "Ler dados não sincronizados do SQlite (quantidade de registro: " +
@@ -60,14 +62,14 @@ class SpsQuestionario_cq {
           "Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
       final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
       final List<Map<String, dynamic>> dadosQuestionario =
-          await objQuestionarioHttp.httplistarQuestionario(
-              origem_usuario,
-              doc_action,
-              registro_colaborador,
-              identificacao_utilizador,
-              tipo_frequencia,
-              tipo_checklist,
-              registro_aprovador);
+      await objQuestionarioHttp.httplistarQuestionario(
+          origem_usuario,
+          doc_action,
+          registro_colaborador,
+          identificacao_utilizador,
+          tipo_frequencia,
+          tipo_checklist,
+          registro_aprovador);
       if (dadosQuestionario != null) {
         final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
         final int resullimpar = await objQuestionarioDao.emptyTable();

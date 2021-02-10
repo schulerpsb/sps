@@ -409,7 +409,7 @@ class _sps_questionario_cq_ext_item_screen
                                             this.widget._referencia_parceiro,
                                             this.widget._codigo_projeto,
                                             this.widget._sincronizado,
-                                                snapshot.data[index]
+                                            snapshot.data[index]
                                                 ["status_aprovacao"],
                                             this.widget._origemUsuario,
                                             this.widget._filtro,
