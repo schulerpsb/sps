@@ -4,7 +4,9 @@ import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
+import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
+import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
@@ -75,6 +77,9 @@ class _sps_questionario_cq_int_item_screen
   final SpsQuestionarioItem_cq spsQuestionarioItem_cq =
       SpsQuestionarioItem_cq();
 
+  final SpsLogin spslogin = SpsLogin();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
+
   _sps_questionario_cq_int_item_screen(
       _codigo_empresa,
       _codigo_programacao,
@@ -132,6 +137,7 @@ class _sps_questionario_cq_int_item_screen
             },
           ),
         ),
+        endDrawer: sps_drawer(spslogin: spslogin),
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: spsQuestionarioItem_cq.listarQuestionarioItem_cq(
               this.widget._origemUsuario,

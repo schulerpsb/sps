@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sps/models/sps_login.dart';
+import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class sps_mediaPlayer_screen extends StatefulWidget {
@@ -21,6 +23,8 @@ class _sps_mediaPlayer_screen extends State<sps_mediaPlayer_screen> {
   VideoPlayerController _videoPlayerController1;
   ChewieController _chewieController;
 
+  final SpsLogin spslogin = SpsLogin();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
   void initState() {
@@ -72,6 +76,7 @@ class _sps_mediaPlayer_screen extends State<sps_mediaPlayer_screen> {
         ),
         centerTitle: true,
       ),
+      endDrawer: sps_drawer(spslogin: spslogin),
       body: Center(
         child: Column(
           children: <Widget>[

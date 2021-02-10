@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
+import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
+import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_ext_item_screen.dart';
 import 'package:intl/intl.dart';
 import 'Dart:io';
@@ -78,6 +80,9 @@ class _sps_questionario_cq_comentarios_screen
     extends State<sps_questionario_cq_comentarios_screen> {
   final SpsQuestionarioItem_cq spsQuestionarioItem_cq =
       SpsQuestionarioItem_cq();
+
+  final SpsLogin spslogin = SpsLogin();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
 
   _sps_questionario_cq_comentarios_screen(
       _codigo_empresa,
@@ -190,6 +195,7 @@ class _sps_questionario_cq_comentarios_screen
             },
           ),
         ),
+        endDrawer: sps_drawer(spslogin: spslogin),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

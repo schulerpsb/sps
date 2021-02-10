@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
+import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_cq.dart';
+import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_int_item_screen.dart';
 import 'package:sps/screens/sps_questionario_ext_filtro_screen.dart';
 import 'package:sps/screens/sps_questionario_int_filtro_screen.dart';
@@ -26,6 +28,9 @@ class sps_questionario_cq_lista_screen extends StatefulWidget {
 class _sps_questionario_cq_lista_screen
     extends State<sps_questionario_cq_lista_screen> {
   final SpsQuestionario_cq spsquestionario_cq = SpsQuestionario_cq();
+
+  final SpsLogin spslogin = SpsLogin();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
 
   _sps_questionario_cq_lista_screen(
       _origemUsuario, _filtro, _filtroReferenciaProjeto);
@@ -66,6 +71,7 @@ class _sps_questionario_cq_lista_screen
             },
           ),
         ),
+        endDrawer: sps_drawer(spslogin: spslogin),
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: spsquestionario_cq.listarQuestionario_cq(
               this.widget._origemUsuario,

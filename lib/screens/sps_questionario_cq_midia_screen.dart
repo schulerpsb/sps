@@ -7,6 +7,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sps/models/sps_imageGrid.dart';
 import 'package:sps/models/sps_criarThumbs.dart';
+import 'package:sps/models/sps_login.dart';
+import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:sps/models/sps_questionario_cq_midia.dart';
 
@@ -41,6 +43,9 @@ class _sps_questionario_midia_screen
       '/storage/emulated/0/Android/data/com.example.sps/files/Pictures');
   final Directory _videoDir = new Directory(
       '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs');
+
+  final SpsLogin spslogin = SpsLogin();
+  GlobalKey<ScaffoldState> _key = GlobalKey();
 
   //FIM - Declaração de variáveis da classe _sps_questionario_midia_screen
 
@@ -237,6 +242,7 @@ class _sps_questionario_midia_screen
               ),
             ]),
           ),
+          endDrawer: sps_drawer(spslogin: spslogin),
           body: TabBarView(controller: controller, children: [
 //             any widget can work very well here <3
             //Container com a galeria de imagens
