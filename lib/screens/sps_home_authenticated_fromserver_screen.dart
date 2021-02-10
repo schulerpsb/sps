@@ -44,44 +44,6 @@ class _HomeSpsAuthenticatedFromServerState
                 fit: BoxFit.contain,
                 height: 32,
               ),
-              IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("SPS App"),
-                        content:
-                        Text("Deseja realmente trocar de usuário?"),
-                        actions: [
-                          FlatButton(
-                            child: Text("Cancelar"),
-                            onPressed: () {
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop();
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("Sair"),
-                            onPressed: () {
-                              spslogin.logoutUser();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return HomeSpsAuthenticatedFromLocal();
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
             ],
           ),
         leading: Builder(
@@ -109,8 +71,29 @@ class _HomeSpsAuthenticatedFromServerState
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              debugPrint(snapshot.hasError.toString());
               if (snapshot.hasError) {
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) => showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("SPS App"),
+                      content:
+                      Text("O servidor não está disponível no momento!\nPor favor verifique sua conexão de internet e tente mais tarde."),
+                      actions: [
+                        FlatButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomeSpsAuthenticatedFromLocal()),
+                            );
+                          },
+                        )
+                      ],
+                    );
+                  },
+                ));
                 return CenteredMessage(
                   'Falha de conexão!',
                   icon: Icons.error,
