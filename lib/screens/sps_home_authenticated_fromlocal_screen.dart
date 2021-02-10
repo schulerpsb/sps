@@ -79,7 +79,14 @@ class _HomeSpsAuthenticatedFromLocalState
                     //Usuário ja tem usuário local autenticado
                     //Ir direto para o menu
                     //final dadossessao = sps_usuario();
-                    //dadossessao.name = snapshot.data[0]['codigo_usuario'].toString();
+                    //final usuarioAtual = sps_usuario(codigo_usuario:snapshot.data[0]['codigo_usuario'],nome_usuario:snapshot.data[0]['nome_usuario'],email_usuario:snapshot.data[0]['email_usuario'],lingua_usuario:snapshot.data[0]['lingua_usuario'],status_usuario:snapshot.data[0]['status_usuario'],tipo:snapshot.data[0]['tipo'],registro_usuario:snapshot.data[0]['registro_usuario']);
+                    usuarioAtual.codigo_usuario = snapshot.data[0]['codigo_usuario'];
+                    usuarioAtual.nome_usuario = snapshot.data[0]['nome_usuario'];
+                    usuarioAtual.email_usuario = snapshot.data[0]['email_usuario'];
+                    usuarioAtual.lingua_usuario = snapshot.data[0]['lingua_usuario'];
+                    usuarioAtual.status_usuario = snapshot.data[0]['status_usuario'];
+                    usuarioAtual.tipo = snapshot.data[0]['tipo'];
+                    usuarioAtual.registro_usuario =snapshot.data[0]['registro_usuario'];
                     return sps_menu_screen();
                   } else {
                     return Container(

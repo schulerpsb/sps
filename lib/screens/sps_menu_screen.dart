@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_questionario_ext_filtro_screen.dart';
 import 'package:sps/screens/sps_questionario_int_filtro_screen.dart';
 import 'sps_cotacao_screen.dart';
 import 'sps_feedback_screen.dart';
 
 class sps_menu_screen extends StatelessWidget {
+//  final sps_usuario usuarioAtual;
+//  sps_menu_screen({this.usuarioAtual});
+
   String _origemUsuario = "EXTERNO"; //substituir por variavel global do Fernando
 
   @override
   Widget build(BuildContext context) {
+    print("Estou aqui no menu");
     return Column(
           children: <Widget>[
             Expanded(

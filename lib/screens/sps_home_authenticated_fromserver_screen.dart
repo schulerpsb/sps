@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_login.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import 'package:sps/screens/sps_menu_screen.dart';
@@ -119,6 +120,13 @@ class _HomeSpsAuthenticatedFromServerState
                 if(snapshot.data[0]['mensagem'] == null){
                   //Usuário ja tem usuário autenticado pelo servidor
                   //Ir direto para o menu
+                  usuarioAtual.codigo_usuario = snapshot.data[0]['codigo_usuario'];
+                  usuarioAtual.nome_usuario = snapshot.data[0]['nome_usuario'];
+                  usuarioAtual.email_usuario = snapshot.data[0]['email_usuario'];
+                  usuarioAtual.lingua_usuario = snapshot.data[0]['lingua_usuario'];
+                  usuarioAtual.status_usuario = snapshot.data[0]['status_usuario'];
+                  usuarioAtual.tipo = snapshot.data[0]['tipo'];
+                  usuarioAtual.registro_usuario =snapshot.data[0]['registro_usuario'];
                   WidgetsBinding.instance
                       .addPostFrameCallback((_) =>
                       Navigator.push(
