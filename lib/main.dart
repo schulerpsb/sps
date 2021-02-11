@@ -48,7 +48,7 @@ Widget _introScreen() {
   return Stack(
     children: <Widget>[
       SplashScreen(
-        seconds: 2,
+        seconds: 3,
         navigateAfterSeconds: HomeSpsAuthenticatedFromLocal(),
         loaderColor: Colors.transparent,
       ),

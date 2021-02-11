@@ -460,7 +460,7 @@ class _sps_questionario_cq_ext_item_screen
                     ]);
                   } else {
                     return CenteredMessage(
-                      'NÃO FOI ENCONTRADO NENHUM REGISTRO! \n VOCÊ PODE ESTAR NO MODO OFFLINE SEM TER CARREGADO PREVIAMENTE OS DADOS, CASO NÃO SEJA ISSO FAVOR RELATAR O PROBLEMA PARA O SEU CONTATO NA PRENSAS SCHULER',
+                      'NÃO FOI ENCONTRADO NENHUM REGISTRO!',
                       icon: Icons.warning,
                     );
                   }

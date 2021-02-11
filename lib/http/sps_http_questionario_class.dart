@@ -26,6 +26,7 @@ class SpsHttpQuestionario {
       'registro_aprovador': registro_aprovador,
     };
 
+    print ("adriano 11 " + origem_usuario);
     final String dadosQuestionarioJson = jsonEncode(keyQuestionario);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
@@ -44,31 +45,44 @@ class SpsHttpQuestionario {
           ),
         );
 
+    print ("adriano 12 => "+ jsonDecode(response.body).toString());
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
+    print ("adriano 121");
     final List<Map<String, dynamic>> transactionJsonOcorrencias = [];
     Map<String, dynamic> transactionJsonMap = null;
+    print ("adriano 122");
     for (Map<String, dynamic> element in transactionJsonList) {
-      transactionJsonMap = {
-        'codigo_empresa': element['codigo_empresa'].trim(),
-        'codigo_programacao': element['codigo_programacao'],
-        'registro_colaborador': element['registro_colaborador'],
-        'identificacao_utilizador': element['identificacao_utilizador'],
-        'codigo_grupo': element['codigo_grupo'],
-        'codigo_checklist': element['codigo_checklist'],
-        'descr_programacao': element['descr_programacao'],
-        'dtfim_aplicacao': element['dtfim_aplicacao'],
-        'percentual_evolucao': element['percentual_evolucao'],
-        'status': element['status'],
-        'referencia_parceiro': element['referencia_parceiro'],
-        'codigo_pedido': element['codigo_pedido'],
-        'item_pedido': element['item_pedido'],
-        'codigo_projeto': element['codigo_projeto'],
-        'descr_projeto': element['descr_projeto'],
-        'codigo_material': element['codigo_material'],
-        'descr_comentarios': element['descr_comentarios'],
-      };
-      transactionJsonOcorrencias.add(transactionJsonMap);
+      print("adriano 123");
+      if (element['mensagem'].trim() == "Data not found") {
+        print("adriano 123a");
+        transactionJsonMap = {};
+      } else {
+        print("adriano 123b");
+        transactionJsonMap = {
+          'codigo_empresa': element['codigo_empresa'].trim(),
+          'codigo_programacao': element['codigo_programacao'],
+          'registro_colaborador': element['registro_colaborador'],
+          'identificacao_utilizador': element['identificacao_utilizador'],
+          'codigo_grupo': element['codigo_grupo'],
+          'codigo_checklist': element['codigo_checklist'],
+          'descr_programacao': element['descr_programacao'],
+          'dtfim_aplicacao': element['dtfim_aplicacao'],
+          'percentual_evolucao': element['percentual_evolucao'],
+          'status': element['status'],
+          'referencia_parceiro': element['referencia_parceiro'],
+          'codigo_pedido': element['codigo_pedido'],
+          'item_pedido': element['item_pedido'],
+          'codigo_projeto': element['codigo_projeto'],
+          'descr_projeto': element['descr_projeto'],
+          'codigo_material': element['codigo_material'],
+          'descr_comentarios': element['descr_comentarios'],
+        };
+        print("adriano 124");
+        transactionJsonOcorrencias.add(transactionJsonMap);
+        print("adriano 125");
+      }
     }
+    print ("adriano 13");
     return transactionJsonOcorrencias;
   }
 

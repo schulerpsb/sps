@@ -12,13 +12,11 @@ class sps_menu_screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print ("tipo: " + usuarioAtual.tipo);
     if (usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA") { //"INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS ")
       _origemUsuario = "INTERNO";
     }else{
       _origemUsuario = "EXTERNO";
     }
-    print ("tipo2: " + _origemUsuario);
 
     return Column(
       children: <Widget>[

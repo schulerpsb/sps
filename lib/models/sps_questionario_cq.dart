@@ -70,6 +70,7 @@ class SpsQuestionario_cq {
       //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
       debugPrint(
           "Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
+      print ("adriano 1");
       final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
       final List<Map<String, dynamic>> dadosQuestionario =
       await objQuestionarioHttp.httplistarQuestionario(
@@ -80,11 +81,17 @@ class SpsQuestionario_cq {
           tipo_frequencia,
           tipo_checklist,
           registro_aprovador);
+      print ("adriano 2");
       if (dadosQuestionario != null) {
+        print ("adriano 3");
         final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+        print ("adriano 4");
         final int resullimpar = await objQuestionarioDao.emptyTable();
+        print ("adriano 5");
         final int resultsave = await objQuestionarioDao.save(dadosQuestionario);
+        print ("adriano 6");
       }
+      print ("adriano 7");
       debugPrint(
           "=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
     }
