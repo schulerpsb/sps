@@ -1,11 +1,12 @@
 import 'package:sps/dao/sps_dao_questionario_cq_midia_class.dart';
 import 'package:sps/http/sps_http_questionario_cq_midia_class.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 
 class SpsQuestionarioCqMidia {
   @override
   Future<List<Map<String, dynamic>>> listarQuestionarioCqMidia() async {
     final doc_action = 'PREENCHER_CQ';
-    final registro_colaborador = '008306';
+    final registro_colaborador = sps_usuario().registro_usuario;
     final identificacao_utilizador = 'SCHULER';
     final tipo_frequencia = 'CONTROLE DE QUALIDADE';
     final tipo_checklist = 'CHECKLIST';

@@ -4,16 +4,19 @@ import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
+import 'package:sps/models/sps_erro_conexao_class.dart';
 
 class SpsVerificarConexao {
   Future<bool> verificar_conexao() async {
     bool _wrede_conectada = false;
     bool _wservidor_conectado = false;
-    String _msg;
+    String _msg_erro_conexao = "";
+
+    erroConexao.msg_erro_conexao = "";
 
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {
-      //_wrede_conectada = true;
+      _wrede_conectada = true;
       print("3G/4G");
       debugPrint('STATUS DA CONEXÃO -> not connected');
     } else {
@@ -42,10 +45,9 @@ class SpsVerificarConexao {
           } else {
             _wservidor_conectado = false;
             debugPrint('STATUS DA CONEXÃO -> not connected');
-            _msg =
-                "Estamos com problemas nas conexões com nossos servidores, sugerimos colocar o aparelho em modo avião para trabalhar offline, dentro de alguns minutos o problema será resolvido e as informações serão sincronizadas automaticamente com nossos serviores. Pedimos desculpas pelo inconveniente.";
-            print(_msg);
-
+            _msg_erro_conexao =
+                "Estamos com problemas na conexão com nossos servidores!\n\n Sugerimos colocar o aparelho em modo avião para trabalhar normalmente em offline, dentro de alguns minutos o problema será resolvido, você poderá desativar o modo avião e as informações serão sincronizadas automaticamente com nossos serviores.\n\n Pedimos desculpas pelo transtorno.";
+            erroConexao.msg_erro_conexao = _msg_erro_conexao;
             return _wservidor_conectado;
           }
         }

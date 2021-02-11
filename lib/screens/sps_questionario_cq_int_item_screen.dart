@@ -3,8 +3,9 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'package:sps/dao/sps_verificar_conexao_class.dart';
+import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
+import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
@@ -165,279 +166,290 @@ class _sps_questionario_cq_int_item_screen
                     icon: Icons.error,
                   );
                 }
-                if (snapshot.data.isNotEmpty) {
-                  return Column(children: <Widget>[
-                    //Tratar Cabeçalho
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 5, left: 3, right: 3, bottom: 0),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                            minWidth: double.infinity, maxHeight: 100),
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              top: 5, left: 5, right: 5, bottom: 5),
-                          color: Color(0xFF494d4a), // Cinza
-                          child: Text(
-                              "(" +
-                                  this.widget._codigo_programacao.toString() +
-                                  ") " +
-                                  this.widget._descr_programacao +
-                                  "\n\n" +
-                                  "PEDIDO: " +
-                                  this.widget._codigo_pedido +
-                                  "/" +
-                                  this.widget._item_pedido.toString() +
-                                  " (" +
-                                  this.widget._codigo_material +
-                                  ")\n" +
-                                  "PROJETO: " +
-                                  this.widget._codigo_projeto,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 0, left: 3, right: 3, bottom: 0),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                            minWidth: double.infinity, maxHeight: 100),
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              top: 0, left: 5, right: 5, bottom: 0),
-                          color: Color(0xFF494d4a), // Cinza
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                "REFERÊNCIA: " +
-                                    this.widget._referencia_parceiro,
+                if (erroConexao.msg_erro_conexao.toString() == "") {
+                  if (snapshot.data.isNotEmpty) {
+                    return Column(children: <Widget>[
+                      //Tratar Cabeçalho
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 5, left: 3, right: 3, bottom: 0),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                              minWidth: double.infinity, maxHeight: 100),
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                top: 5, left: 5, right: 5, bottom: 5),
+                            color: Color(0xFF494d4a), // Cinza
+                            child: Text(
+                                "(" +
+                                    this.widget._codigo_programacao.toString() +
+                                    ") " +
+                                    this.widget._descr_programacao +
+                                    "\n\n" +
+                                    "PEDIDO: " +
+                                    this.widget._codigo_pedido +
+                                    "/" +
+                                    this.widget._item_pedido.toString() +
+                                    " (" +
+                                    this.widget._codigo_material +
+                                    ")\n" +
+                                    "PROJETO: " +
+                                    this.widget._codigo_projeto,
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                                    fontWeight: FontWeight.bold)),
                           ),
                         ),
                       ),
-                    ),
-
-                    //Construir lista de opções
-                    Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(top: 5),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          switch (snapshot.data[index]["status_aprovacao"]) {
-                            case 'PENDENTE':
-                              _singleValue.add("PENDENTE");
-                              break;
-                            case 'APROVADO':
-                              _singleValue.add("APROVADO");
-                              break;
-                            default:
-                              _singleValue.add("");
-                              break;
-                          }
-
-                          //Definir cor do texto p/ resposta do questionarioa (resp_cq)
-                          switch (snapshot.data[index]["resp_cq"]) {
-                            case 'NÃO SE APLICA':
-                              _resp_cq_cor = Color(0xFF9fbded);
-                              break;
-                            case 'REJEITADO':
-                              _resp_cq_cor = Colors.red;
-                              break;
-                            case 'APROVADO PARCIAL':
-                              _resp_cq_cor = Colors.orange;
-                              break;
-                            case 'APROVADO':
-                              _resp_cq_cor = Colors.green;
-                              break;
-                            default:
-                              _resp_cq_cor = Colors.white;
-                              break;
-                          }
-
-                          return Card(
-                            color: Colors.white,
-                            child: Column(
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 0, left: 3, right: 3, bottom: 0),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                              minWidth: double.infinity, maxHeight: 100),
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                top: 0, left: 5, right: 5, bottom: 0),
+                            color: Color(0xFF494d4a), // Cinza
+                            child: Row(
                               children: <Widget>[
-                                //Tratar descrição da pergunta
-                                ListTile(
-                                  trailing: snapshot.data[index]
-                                              ["status_resposta"] ==
-                                          "PREENCHIDA"
-                                      ? Icon(Icons.check,
-                                          color: Colors.green, size: 40)
-                                      : null,
-                                  title: Text(
-                                      '${snapshot.data[index]["seq_pergunta"]}' +
-                                          " - " +
-                                          '${snapshot.data[index]["descr_pergunta"]}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 15)),
-                                  subtitle: Text(""),
+                                Text(
+                                  "REFERÊNCIA: " +
+                                      this.widget._referencia_parceiro,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                 ),
-
-                                // Tratar estatus da resposa do parceiro (resp_cq)
-                                Text("Resposta do parceiro: ",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold)),
-                                Text(snapshot.data[index]["resp_cq"] + "\n",
-                                    style: TextStyle(
-                                        color: _resp_cq_cor,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold)),
-                                Row(children: <Widget>[
-                                  // Tratar Opções
-                                  Text("     "),
-                                  (snapshot.data[index]["resp_cq"] ==
-                                                  "NÃO SE APLICA" ||
-                                              snapshot.data[index]["resp_cq"] ==
-                                                  "APROVADO") &&
-                                          snapshot.data[index]
-                                                  ["status_resposta"] ==
-                                              "PREENCHIDA"
-                                      ? Container(
-                                          color: Colors.orange,
-                                          child: CustomRadioWidget(
-                                            value: "PENDENTE",
-                                            groupValue: _singleValue[index],
-                                            onChanged: (value) => _gravar_aprovacao(
-                                                '${snapshot.data[index]["codigo_empresa"]}',
-                                                '${snapshot.data[index]["codigo_programacao"]}',
-                                                '${snapshot.data[index]["item_checklist"]}',
-                                                '${snapshot.data[index]["registro_aprovador"]}',
-                                                value,
-                                                index),
-                                          ),
-                                        )
-                                      : Text(""),
-                                  (snapshot.data[index]["resp_cq"] ==
-                                                  "NÃO SE APLICA" ||
-                                              snapshot.data[index]["resp_cq"] ==
-                                                  "APROVADO") &&
-                                          snapshot.data[index]
-                                                  ["status_resposta"] ==
-                                              "PREENCHIDA"
-                                      ? Text(" PENDENTE",
-                                          style: TextStyle(
-                                              color: Colors.orange,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold))
-                                      : Text(""),
-                                  Text("     "),
-                                  (snapshot.data[index]["resp_cq"] ==
-                                                  "NÃO SE APLICA" ||
-                                              snapshot.data[index]["resp_cq"] ==
-                                                  "APROVADO") &&
-                                          snapshot.data[index]
-                                                  ["status_resposta"] ==
-                                              "PREENCHIDA"
-                                      ? Container(
-                                          color: Colors.green,
-                                          child: CustomRadioWidget(
-                                            value: "APROVADO",
-                                            groupValue: _singleValue[index],
-                                            onChanged: (value) => _gravar_aprovacao(
-                                                '${snapshot.data[index]["codigo_empresa"]}',
-                                                '${snapshot.data[index]["codigo_programacao"]}',
-                                                '${snapshot.data[index]["item_checklist"]}',
-                                                '${snapshot.data[index]["registro_aprovador"]}',
-                                                value,
-                                                index),
-                                          ),
-                                        )
-                                      : Text(""),
-                                  (snapshot.data[index]["resp_cq"] ==
-                                                  "NÃO SE APLICA" ||
-                                              snapshot.data[index]["resp_cq"] ==
-                                                  "APROVADO") &&
-                                          snapshot.data[index]
-                                                  ["status_resposta"] ==
-                                              "PREENCHIDA"
-                                      ? Text(" APROVADO",
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold))
-                                      : Text(""),
-                                  Text("    "),
-
-                                  //Tratar Mídias
-                                  IconButton(
-                                    icon: Icon(Icons.collections, size: 30),
-                                    color: Colors.black,
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                sps_questionario_cq_midia_screen()),
-                                      );
-                                    },
-                                  ),
-
-                                  //Tratar Comentários
-                                  IconButton(
-                                    icon: Icon(Icons.comment, size: 30),
-                                    color: Colors.black,
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              sps_questionario_cq_comentarios_screen(
-                                            snapshot.data[index]
-                                                ["codigo_empresa"],
-                                            snapshot.data[index]
-                                                ["codigo_programacao"],
-                                            snapshot.data[index]
-                                                ["item_checklist"],
-                                            snapshot.data[index]
-                                                ["descr_comentarios"],
-                                            this.widget._registro_colaborador,
-                                            this
-                                                .widget
-                                                ._identificacao_utilizador,
-                                            this.widget._codigo_grupo,
-                                            this.widget._codigo_checklist,
-                                            this.widget._descr_programacao,
-                                            this.widget._codigo_pedido,
-                                            this.widget._item_pedido,
-                                            this.widget._codigo_material,
-                                            this.widget._referencia_parceiro,
-                                            this.widget._codigo_projeto,
-                                            this.widget._sincronizado,
-                                            snapshot.data[index]
-                                                ["status_aprovacao"],
-                                            this.widget._origemUsuario,
-                                            this.widget._filtro,
-                                            this
-                                                .widget
-                                                ._filtroReferenciaProjeto,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ])
                               ],
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
-                    ),
-                  ]);
+
+                      //Construir lista de opções
+                      Expanded(
+                        child: ListView.builder(
+                          padding: EdgeInsets.only(top: 5),
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            switch (snapshot.data[index]["status_aprovacao"]) {
+                              case 'PENDENTE':
+                                _singleValue.add("PENDENTE");
+                                break;
+                              case 'APROVADO':
+                                _singleValue.add("APROVADO");
+                                break;
+                              default:
+                                _singleValue.add("");
+                                break;
+                            }
+
+                            //Definir cor do texto p/ resposta do questionarioa (resp_cq)
+                            switch (snapshot.data[index]["resp_cq"]) {
+                              case 'NÃO SE APLICA':
+                                _resp_cq_cor = Color(0xFF9fbded);
+                                break;
+                              case 'REJEITADO':
+                                _resp_cq_cor = Colors.red;
+                                break;
+                              case 'APROVADO PARCIAL':
+                                _resp_cq_cor = Colors.orange;
+                                break;
+                              case 'APROVADO':
+                                _resp_cq_cor = Colors.green;
+                                break;
+                              default:
+                                _resp_cq_cor = Colors.white;
+                                break;
+                            }
+
+                            return Card(
+                              color: Colors.white,
+                              child: Column(
+                                children: <Widget>[
+                                  //Tratar descrição da pergunta
+                                  ListTile(
+                                    trailing: snapshot.data[index]
+                                                ["status_resposta"] ==
+                                            "PREENCHIDA"
+                                        ? Icon(Icons.check,
+                                            color: Colors.green, size: 40)
+                                        : null,
+                                    title: Text(
+                                        '${snapshot.data[index]["seq_pergunta"]}' +
+                                            " - " +
+                                            '${snapshot.data[index]["descr_pergunta"]}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15)),
+                                    subtitle: Text(""),
+                                  ),
+
+                                  // Tratar estatus da resposa do parceiro (resp_cq)
+                                  Text("Resposta do parceiro: ",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
+                                  Text(snapshot.data[index]["resp_cq"] + "\n",
+                                      style: TextStyle(
+                                          color: _resp_cq_cor,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
+                                  Row(children: <Widget>[
+                                    // Tratar Opções
+                                    Text("     "),
+                                    (snapshot.data[index]["resp_cq"] ==
+                                                    "NÃO SE APLICA" ||
+                                                snapshot.data[index]
+                                                        ["resp_cq"] ==
+                                                    "APROVADO") &&
+                                            snapshot.data[index]
+                                                    ["status_resposta"] ==
+                                                "PREENCHIDA"
+                                        ? Container(
+                                            color: Colors.orange,
+                                            child: CustomRadioWidget(
+                                              value: "PENDENTE",
+                                              groupValue: _singleValue[index],
+                                              onChanged: (value) => _gravar_aprovacao(
+                                                  '${snapshot.data[index]["codigo_empresa"]}',
+                                                  '${snapshot.data[index]["codigo_programacao"]}',
+                                                  '${snapshot.data[index]["item_checklist"]}',
+                                                  '${snapshot.data[index]["registro_aprovador"]}',
+                                                  value,
+                                                  index),
+                                            ),
+                                          )
+                                        : Text(""),
+                                    (snapshot.data[index]["resp_cq"] ==
+                                                    "NÃO SE APLICA" ||
+                                                snapshot.data[index]
+                                                        ["resp_cq"] ==
+                                                    "APROVADO") &&
+                                            snapshot.data[index]
+                                                    ["status_resposta"] ==
+                                                "PREENCHIDA"
+                                        ? Text(" PENDENTE",
+                                            style: TextStyle(
+                                                color: Colors.orange,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold))
+                                        : Text(""),
+                                    Text("     "),
+                                    (snapshot.data[index]["resp_cq"] ==
+                                                    "NÃO SE APLICA" ||
+                                                snapshot.data[index]
+                                                        ["resp_cq"] ==
+                                                    "APROVADO") &&
+                                            snapshot.data[index]
+                                                    ["status_resposta"] ==
+                                                "PREENCHIDA"
+                                        ? Container(
+                                            color: Colors.green,
+                                            child: CustomRadioWidget(
+                                              value: "APROVADO",
+                                              groupValue: _singleValue[index],
+                                              onChanged: (value) => _gravar_aprovacao(
+                                                  '${snapshot.data[index]["codigo_empresa"]}',
+                                                  '${snapshot.data[index]["codigo_programacao"]}',
+                                                  '${snapshot.data[index]["item_checklist"]}',
+                                                  '${snapshot.data[index]["registro_aprovador"]}',
+                                                  value,
+                                                  index),
+                                            ),
+                                          )
+                                        : Text(""),
+                                    (snapshot.data[index]["resp_cq"] ==
+                                                    "NÃO SE APLICA" ||
+                                                snapshot.data[index]
+                                                        ["resp_cq"] ==
+                                                    "APROVADO") &&
+                                            snapshot.data[index]
+                                                    ["status_resposta"] ==
+                                                "PREENCHIDA"
+                                        ? Text(" APROVADO",
+                                            style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold))
+                                        : Text(""),
+                                    Text("    "),
+
+                                    //Tratar Mídias
+                                    IconButton(
+                                      icon: Icon(Icons.collections, size: 30),
+                                      color: Colors.black,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  sps_questionario_cq_midia_screen()),
+                                        );
+                                      },
+                                    ),
+
+                                    //Tratar Comentários
+                                    IconButton(
+                                      icon: Icon(Icons.comment, size: 30),
+                                      color: Colors.black,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                sps_questionario_cq_comentarios_screen(
+                                              snapshot.data[index]
+                                                  ["codigo_empresa"],
+                                              snapshot.data[index]
+                                                  ["codigo_programacao"],
+                                              snapshot.data[index]
+                                                  ["item_checklist"],
+                                              snapshot.data[index]
+                                                  ["descr_comentarios"],
+                                              this.widget._registro_colaborador,
+                                              this
+                                                  .widget
+                                                  ._identificacao_utilizador,
+                                              this.widget._codigo_grupo,
+                                              this.widget._codigo_checklist,
+                                              this.widget._descr_programacao,
+                                              this.widget._codigo_pedido,
+                                              this.widget._item_pedido,
+                                              this.widget._codigo_material,
+                                              this.widget._referencia_parceiro,
+                                              this.widget._codigo_projeto,
+                                              this.widget._sincronizado,
+                                              snapshot.data[index]
+                                                  ["status_aprovacao"],
+                                              this.widget._origemUsuario,
+                                              this.widget._filtro,
+                                              this
+                                                  .widget
+                                                  ._filtroReferenciaProjeto,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ])
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ]);
+                  } else {
+                    return CenteredMessage(
+                      'NÃO FOI ENCONTRADO NENHUM REGISTRO! \n VOCÊ PODE ESTAR NO MODO OFFLINE SEM TER CARREGADO PREVIAMENTE OS DADOS, CASO NÃO SEJA ISSO FAVOR RELATAR O PROBLEMA PARA O SEU CONTATO NA PRENSAS SCHULER',
+                      icon: Icons.warning,
+                    );
+                  }
                 } else {
                   return CenteredMessage(
-                    'No transaction found!',
+                    erroConexao.msg_erro_conexao.toString(),
                     icon: Icons.warning,
                   );
                 }

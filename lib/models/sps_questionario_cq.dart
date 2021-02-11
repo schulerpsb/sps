@@ -2,25 +2,37 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
-import 'package:sps/dao/sps_verificar_conexao_class.dart';
+import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
 import 'Dart:io';
+import 'package:sps/models/sps_usuario_class.dart';
 
 class SpsQuestionario_cq {
   @override
   Future<List<Map<String, dynamic>>> listarQuestionario_cq(
       _origemUsuario, _parametro, _filtro, _filtroReferenciaProjeto) async {
 
+    //Tipos de usuário: "INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS
+
+    String registro_colaborador;
+    String identificacao_utilizador;
+
     final origem_usuario = _origemUsuario;
     final doc_action = 'PREENCHER_CQ';
-    final registro_colaborador =
-        '008306'; // substituir por variavel global do Fernando
-    final identificacao_utilizador =
-        'SCHULER'; // substituir por variavel global do Fernando
+    if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+      registro_colaborador = sps_usuario().registro_usuario;
+      identificacao_utilizador = 'SCHULER';
+    }else{
+      registro_colaborador = "";
+      identificacao_utilizador = sps_usuario().codigo_usuario;
+    }
     final tipo_frequencia = 'CONTROLE DE QUALIDADE';
     final tipo_checklist = 'CHECKLIST';
-    final registro_aprovador =
-        '008306'; // substituir por variavel global do Fernando
+    final registro_aprovador = sps_usuario().registro_usuario;
+
+    //Criar tabela "checklist_lista" caso não exista
+    final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+    final int resulcreate = await objQuestionarioDao.create_table();
 
     //Verificar se existe conexão
     final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
@@ -29,8 +41,6 @@ class SpsQuestionario_cq {
       debugPrint(
           "=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) =============================================");
       //Ler dados não sincronizados do SQlite
-      final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-      final int resulcreate = await objQuestionarioDao.create_table();
       final List<Map<String, dynamic>> result =
       await objQuestionarioDao.select_sincronizacao();
       var _wregistros = result.length;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
+import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_cq.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
@@ -49,7 +50,8 @@ class _sps_questionario_int_filtro_screen
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeSpsAuthenticatedFromLocal()),
+                    MaterialPageRoute(
+                        builder: (context) => HomeSpsAuthenticatedFromLocal()),
                   );
                 },
               );
@@ -79,179 +81,32 @@ class _sps_questionario_int_filtro_screen
                     icon: Icons.error,
                   );
                 }
-                if (snapshot.data.isNotEmpty) {
-                  return SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10, bottom: 10),
-                        ),
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Text("FOLLOW UP (APROVAÇÂO)",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              RaisedButton(
-                                onPressed: () =>
-                                    _obter_contador(snapshot, "PENDENTE") == 0
-                                        ? {}
-                                        : {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      sps_questionario_cq_lista_screen(
-                                                          "INTERNO",
-                                                          "PENDENTE",
-                                                          null)),
-                                            )
-                                          },
-                                color: Colors.purple,
-                                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                splashColor: Colors.grey,
-                                child: Column(
-                                  // Replace with a Row for horizontal icon + text
-                                  children: <Widget>[
-                                    Center(
-                                        child: Text(" PENDENTE \n",
-                                            style: TextStyle(
-                                                color: Colors.white))),
-                                    Center(
-                                        child: Text(
-                                            _obter_contador(
-                                                    snapshot, "PENDENTE")
-                                                .toString(),
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15)))
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              RaisedButton(
-                                onPressed: () =>
-                                    _obter_contador(snapshot, "PARCIAL") == 0
-                                        ? {}
-                                        : {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      sps_questionario_cq_lista_screen(
-                                                          "INTERNO",
-                                                          "PARCIAL",
-                                                          null)),
-                                            )
-                                          },
-                                color: Colors.orange,
-                                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                splashColor: Colors.grey,
-                                child: Column(
-                                  // Replace with a Row for horizontal icon + text
-                                  children: <Widget>[
-                                    Center(child: Text("   PARCIAL   \n")),
-                                    Center(
-                                        child: Text(
-                                            _obter_contador(snapshot, "PARCIAL")
-                                                .toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15)))
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              RaisedButton(
-                                onPressed: () =>
-                                    _obter_contador(snapshot, "OK") == 0
-                                        ? {}
-                                        : {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      sps_questionario_cq_lista_screen(
-                                                          "INTERNO",
-                                                          "OK",
-                                                          null)),
-                                            )
-                                          },
-                                color: Colors.green,
-                                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                splashColor: Colors.grey,
-                                child: Column(
-                                  // Replace with a Row for horizontal icon + text
-                                  children: <Widget>[
-                                    Center(child: Text("CONCLUÍDO\n")),
-                                    Center(
-                                        child: Text(
-                                            _obter_contador(snapshot, "OK")
-                                                .toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15)))
-                                  ],
-                                ),
-                              ),
-                            ],
+                if (erroConexao.msg_erro_conexao.toString() == "") {
+                  if (snapshot.data.isNotEmpty) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10, left: 10, right: 10, bottom: 10),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 5, left: 10, right: 10, bottom: 10),
-                          child: Column(
-                            children: <Widget>[
-                              Text("Código do projeto",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15)),
-                              Card(
-                                color: Colors.white,
-                                child: Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Column(
-                                    children: <Widget>[
-                                      TextField(
-                                        controller: _filtroReferenciaProjeto,
-                                        maxLines: 1,
-                                        decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText:
-                                                'Informe o código do projeto (WBS)'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5.0,
-                              ),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: FloatingActionButton(
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Text("FOLLOW UP (APROVAÇÂO)",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10, left: 10, right: 10, bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                RaisedButton(
                                   onPressed: () =>
-                                      _filtroReferenciaProjeto.text == ""
+                                      _obter_contador(snapshot, "PENDENTE") == 0
                                           ? {}
                                           : {
                                               Navigator.push(
@@ -260,23 +115,178 @@ class _sps_questionario_int_filtro_screen
                                                     builder: (context) =>
                                                         sps_questionario_cq_lista_screen(
                                                             "INTERNO",
-                                                            null,
-                                                            _filtroReferenciaProjeto
-                                                                .text)),
+                                                            "PENDENTE",
+                                                            null)),
                                               )
                                             },
-                                  child: const Icon(Icons.search),
+                                  color: Colors.purple,
+                                  padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  splashColor: Colors.grey,
+                                  child: Column(
+                                    // Replace with a Row for horizontal icon + text
+                                    children: <Widget>[
+                                      Center(
+                                          child: Text(" PENDENTE \n",
+                                              style: TextStyle(
+                                                  color: Colors.white))),
+                                      Center(
+                                          child: Text(
+                                              _obter_contador(
+                                                      snapshot, "PENDENTE")
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15)))
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                RaisedButton(
+                                  onPressed: () =>
+                                      _obter_contador(snapshot, "PARCIAL") == 0
+                                          ? {}
+                                          : {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        sps_questionario_cq_lista_screen(
+                                                            "INTERNO",
+                                                            "PARCIAL",
+                                                            null)),
+                                              )
+                                            },
+                                  color: Colors.orange,
+                                  padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  splashColor: Colors.grey,
+                                  child: Column(
+                                    // Replace with a Row for horizontal icon + text
+                                    children: <Widget>[
+                                      Center(child: Text("   PARCIAL   \n")),
+                                      Center(
+                                          child: Text(
+                                              _obter_contador(
+                                                      snapshot, "PARCIAL")
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15)))
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                RaisedButton(
+                                  onPressed: () =>
+                                      _obter_contador(snapshot, "OK") == 0
+                                          ? {}
+                                          : {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        sps_questionario_cq_lista_screen(
+                                                            "INTERNO",
+                                                            "OK",
+                                                            null)),
+                                              )
+                                            },
+                                  color: Colors.green,
+                                  padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  splashColor: Colors.grey,
+                                  child: Column(
+                                    // Replace with a Row for horizontal icon + text
+                                    children: <Widget>[
+                                      Center(child: Text("CONCLUÍDO\n")),
+                                      Center(
+                                          child: Text(
+                                              _obter_contador(snapshot, "OK")
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15)))
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 5, left: 10, right: 10, bottom: 10),
+                            child: Column(
+                              children: <Widget>[
+                                Text("Código do projeto",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15)),
+                                Card(
+                                  color: Colors.white,
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Column(
+                                      children: <Widget>[
+                                        TextField(
+                                          controller: _filtroReferenciaProjeto,
+                                          maxLines: 1,
+                                          decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText:
+                                                  'Informe o código do projeto (WBS)'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: FloatingActionButton(
+                                    onPressed: () =>
+                                        _filtroReferenciaProjeto.text == ""
+                                            ? {}
+                                            : {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          sps_questionario_cq_lista_screen(
+                                                              "INTERNO",
+                                                              null,
+                                                              _filtroReferenciaProjeto
+                                                                  .text)),
+                                                )
+                                              },
+                                    child: const Icon(Icons.search),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return CenteredMessage(
+                      'NÃO FOI ENCONTRADO NENHUM REGISTRO! \n VOCÊ PODE ESTAR NO MODO OFFLINE SEM TER CARREGADO PREVIAMENTE OS DADOS, CASO NÃO SEJA ISSO FAVOR RELATAR O PROBLEMA PARA O SEU CONTATO NA PRENSAS SCHULER',
+                      icon: Icons.warning,
+                    );
+                  }
                 } else {
                   return CenteredMessage(
-                    'No transaction found!',
+                    erroConexao.msg_erro_conexao.toString(),
                     icon: Icons.warning,
                   );
                 }

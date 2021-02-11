@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'package:sps/dao/sps_verificar_conexao_class.dart';
+import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'Dart:io';
 
@@ -23,17 +23,17 @@ class SpsQuestionarioItem_cq {
     final codigo_grupo = h_codigo_grupo;
     final codigo_checklist = h_codigo_checklist;
 
+    //Criar tabela "checklist_item" caso não exista
+    final SpsDaoQuestionarioItem objQuestionarioItemDao =
+    SpsDaoQuestionarioItem();
+    final int resulcreate = await objQuestionarioItemDao.create_table();
+
     //Verificar se existe conexão
     final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
     final bool result = await ObjVerificarConexao.verificar_conexao();
     if (result == true) {
       debugPrint(
           "=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
-      //Criar tabela caso não exista
-      final SpsDaoQuestionarioItem objQuestionarioItemDao =
-          SpsDaoQuestionarioItem();
-      final int resulcreate = await objQuestionarioItemDao.create_table();
-
       //Ler dados não sincronizados do SQlite
       final List<Map<String, dynamic>> result = await objQuestionarioItemDao
           .select_sincronizacao(h_codigo_empresa, h_codigo_programacao);
@@ -113,8 +113,6 @@ class SpsQuestionarioItem_cq {
 
     //Ler dados do SQlite
     debugPrint("Ler dados do SQlite (Tabela: checklist_item)");
-    final SpsDaoQuestionarioItem objQuestionarioItemDao =
-        SpsDaoQuestionarioItem();
     final List<Map<String, dynamic>> DadosSessao = await objQuestionarioItemDao
         .listarQuestionarioItemLocal(h_codigo_empresa, h_codigo_programacao);
     return DadosSessao;
