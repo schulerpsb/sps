@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_login_class.dart';
-import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_login_class.dart';
+import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 
 class SpsLogin {
