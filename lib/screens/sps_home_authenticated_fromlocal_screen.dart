@@ -130,6 +130,11 @@ class _HomeSpsAuthenticatedFromLocalState
                                 style: TextStyle(
                                   fontSize: 24.8,
                                 ),
+
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.black26)
                               ),
                               onPressed: () {
                                 if (_controladorusuario != null &&
