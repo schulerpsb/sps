@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_login_class.dart';
 import 'package:sps/dao/sps_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_login_class.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 
 class SpsLogin {
 
@@ -64,9 +65,10 @@ class SpsLogin {
             final List<Map<String, dynamic>> DadosSessao = await objLoginDao
                 .listaUsuarioLocal();
             if (DadosSessao != null && DadosSessao.length > 0) {
-              print("RETORNA DADOS DE USUARIO DO SQLITE JA ATUALIZADOS ========>");
+              usuarioAtual.mensagem = 'permitir_trocar';
               return DadosSessao;
             } else {
+              usuarioAtual.mensagem = 'permitir_trocar';
               return DadosSessao;
             }
           }else{
@@ -78,6 +80,7 @@ class SpsLogin {
           }
         }else{
           print("O CELULAR NÃO ESTA CONECTADO AO SERVIDOR - OFFLINE SEGUINDO COM DADOS DE LOGON DO SQLITE ========>");
+          usuarioAtual.mensagem = 'nao_permitir_trocar';
           return DadosSessao;
         }
       } else {

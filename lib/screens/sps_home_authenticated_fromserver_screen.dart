@@ -157,7 +157,7 @@ class _HomeSpsAuthenticatedFromServerState
                           return AlertDialog(
                             title: Text("SPS App"),
                             content:
-                            Text("Seu usuário Foi bloqueado por escesso de tentativas!"),
+                            Text("Seu usuário Foi bloqueado por escesso de tentativas!\n Selecione a opção 'Esqueci minha senha/usuário bloqueado."),
                             actions: [
                               FlatButton(
                                 child: Text("OK"),

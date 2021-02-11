@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_login.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 
 class sps_drawer extends StatelessWidget {
@@ -42,8 +43,38 @@ class sps_drawer extends StatelessWidget {
                     SizedBox(
                       height: 88.0,
                       child: new DrawerHeader(
-                        child: new Text('Schuler Production system - App',
-                            style: TextStyle(color: Colors.white)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return HomeSpsAuthenticatedFromLocal();
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Text("Schuler production system",style: TextStyle(color: Colors.white)),
+                            ),
+                            usuarioAtual.mensagem == "nao_permitir_trocar" ?
+                            IconButton(
+                              icon: const Icon(Icons.cloud_off, color: Colors.white),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return HomeSpsAuthenticatedFromLocal();
+                                    },
+                                  ),
+                                );
+                              },
+                            ): Text(''),
+                          ],
+                        ),
                         decoration: new BoxDecoration(color: Color(0xFF004077)),
                       ),
                     ),
@@ -83,6 +114,7 @@ class sps_drawer extends StatelessWidget {
                         },
                       ),
                     ),
+                    usuarioAtual.mensagem == "permitir_trocar" ?
                     SizedBox(
                       height: 40.0,
                       child: Row(
@@ -118,7 +150,7 @@ class sps_drawer extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
+                    ) : Text(''),
                     SizedBox(
                       height: 40.0,
                       child: Row(
