@@ -94,5 +94,14 @@ class SpsLogin {
       final int resullimpar = await objLoginDao.deleteLocalUser();
   }
 
+  Future<Map<String, dynamic>> esqueciMinhaSenha(
+      String usuario,
+) async {
+
+    final SpsHttpLogin objLoginHttp = SpsHttpLogin(usuario,'');
+    final Map<String, dynamic> dadosUsuario = await objLoginHttp.esqueciMinhaSenha(usuario);
+    return dadosUsuario;
+  }
+
 
 }

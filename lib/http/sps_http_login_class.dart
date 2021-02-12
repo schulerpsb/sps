@@ -11,6 +11,7 @@ class SpsHttpLogin {
   //Servidor DEV
   static const baseUrlAutentica = 'http://10.17.20.45/webapi/api/login/read.php';
   static const baseUrlListaUsuario = 'http://10.17.20.45/webapi/api/login/read_usuario.php';
+  static const baseUrlLEsqueciMinhaSenha = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';
 
   SpsHttpLogin(this.usuario, this.senha);
 
@@ -131,4 +132,39 @@ class SpsHttpLogin {
     return transactionJsonMap;
   }
 
+  Future<Map<String, dynamic>> esqueciMinhaSenha(String usuario) async {
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuario,
+    };
+
+    final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      baseUrlLEsqueciMinhaSenha,
+      headers: {'Content-type': 'application/json'},
+      body: dadosParaLogonJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+
+    final List<dynamic> transactionJsonList = jsonDecode(response.body);
+    Map<String, dynamic> transactionJsonMap = null;
+    for (Map<String, dynamic> element in transactionJsonList) {
+        transactionJsonMap = {
+          'mensagem': element['mensagem'].trim()
+        };
+      }
+    return transactionJsonMap;
+  }
+
 }
+
+
