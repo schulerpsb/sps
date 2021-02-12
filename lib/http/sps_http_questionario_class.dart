@@ -48,26 +48,30 @@ class SpsHttpQuestionario {
     final List<Map<String, dynamic>> transactionJsonOcorrencias = [];
     Map<String, dynamic> transactionJsonMap = null;
     for (Map<String, dynamic> element in transactionJsonList) {
-      transactionJsonMap = {
-        'codigo_empresa': element['codigo_empresa'].trim(),
-        'codigo_programacao': element['codigo_programacao'],
-        'registro_colaborador': element['registro_colaborador'],
-        'identificacao_utilizador': element['identificacao_utilizador'],
-        'codigo_grupo': element['codigo_grupo'],
-        'codigo_checklist': element['codigo_checklist'],
-        'descr_programacao': element['descr_programacao'],
-        'dtfim_aplicacao': element['dtfim_aplicacao'],
-        'percentual_evolucao': element['percentual_evolucao'],
-        'status': element['status'],
-        'referencia_parceiro': element['referencia_parceiro'],
-        'codigo_pedido': element['codigo_pedido'],
-        'item_pedido': element['item_pedido'],
-        'codigo_projeto': element['codigo_projeto'],
-        'descr_projeto': element['descr_projeto'],
-        'codigo_material': element['codigo_material'],
-        'descr_comentarios': element['descr_comentarios'],
-      };
-      transactionJsonOcorrencias.add(transactionJsonMap);
+      if (element['mensagem'].trim() == "Data not found") {
+        transactionJsonMap = {};
+      } else {
+        transactionJsonMap = {
+          'codigo_empresa': element['codigo_empresa'].trim(),
+          'codigo_programacao': element['codigo_programacao'],
+          'registro_colaborador': element['registro_colaborador'],
+          'identificacao_utilizador': element['identificacao_utilizador'],
+          'codigo_grupo': element['codigo_grupo'],
+          'codigo_checklist': element['codigo_checklist'],
+          'descr_programacao': element['descr_programacao'],
+          'dtfim_aplicacao': element['dtfim_aplicacao'],
+          'percentual_evolucao': element['percentual_evolucao'],
+          'status': element['status'],
+          'referencia_parceiro': element['referencia_parceiro'],
+          'codigo_pedido': element['codigo_pedido'],
+          'item_pedido': element['item_pedido'],
+          'codigo_projeto': element['codigo_projeto'],
+          'descr_projeto': element['descr_projeto'],
+          'codigo_material': element['codigo_material'],
+          'descr_comentarios': element['descr_comentarios'],
+        };
+        transactionJsonOcorrencias.add(transactionJsonMap);
+      }
     }
     return transactionJsonOcorrencias;
   }
