@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
@@ -76,114 +77,137 @@ class _HomeSpsAuthenticatedFromLocalState
                       icon: Icons.error,
                     );
                   }
-                  print("adriano 9");
-                  if (erroConexao.msg_erro_conexao.toString() == "") {
-                    if (snapshot.data.isNotEmpty) {
-                      //Usuário ja tem usuário local autenticado
-                      //Ir direto para o menu
-                      //final dadossessao = sps_usuario();
-                      //final usuarioAtual = sps_usuario(codigo_usuario:snapshot.data[0]['codigo_usuario'],nome_usuario:snapshot.data[0]['nome_usuario'],email_usuario:snapshot.data[0]['email_usuario'],lingua_usuario:snapshot.data[0]['lingua_usuario'],status_usuario:snapshot.data[0]['status_usuario'],tipo:snapshot.data[0]['tipo'],registro_usuario:snapshot.data[0]['registro_usuario']);
-                      usuarioAtual.codigo_usuario =
-                          snapshot.data[0]['codigo_usuario'];
-                      usuarioAtual.nome_usuario =
-                          snapshot.data[0]['nome_usuario'];
-                      usuarioAtual.email_usuario =
-                          snapshot.data[0]['email_usuario'];
-                      usuarioAtual.lingua_usuario =
-                          snapshot.data[0]['lingua_usuario'];
-                      usuarioAtual.status_usuario =
-                          snapshot.data[0]['status_usuario'];
-                      usuarioAtual.tipo = snapshot.data[0]['tipo'];
-                      usuarioAtual.registro_usuario =
-                          snapshot.data[0]['registro_usuario'];
-                      return sps_menu_screen();
-                    } else {
-                      return Container(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: _controladorusuario,
+                  if (snapshot.data.isNotEmpty) {
+                    //Usuário ja tem usuário local autenticado
+                    //Ir direto para o menu
+                    //final dadossessao = sps_usuario();
+                    //final usuarioAtual = sps_usuario(codigo_usuario:snapshot.data[0]['codigo_usuario'],nome_usuario:snapshot.data[0]['nome_usuario'],email_usuario:snapshot.data[0]['email_usuario'],lingua_usuario:snapshot.data[0]['lingua_usuario'],status_usuario:snapshot.data[0]['status_usuario'],tipo:snapshot.data[0]['tipo'],registro_usuario:snapshot.data[0]['registro_usuario']);
+                    usuarioAtual.codigo_usuario =
+                        snapshot.data[0]['codigo_usuario'];
+                    usuarioAtual.nome_usuario =
+                        snapshot.data[0]['nome_usuario'];
+                    usuarioAtual.email_usuario =
+                        snapshot.data[0]['email_usuario'];
+                    usuarioAtual.lingua_usuario =
+                        snapshot.data[0]['lingua_usuario'];
+                    usuarioAtual.status_usuario =
+                        snapshot.data[0]['status_usuario'];
+                    usuarioAtual.tipo = snapshot.data[0]['tipo'];
+                    usuarioAtual.registro_usuario =
+                        snapshot.data[0]['registro_usuario'];
+                    return sps_menu_screen();
+                  } else {
+                    return Container(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _controladorusuario,
+                              style: TextStyle(
+                                fontSize: 24.8,
+                              ),
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.person),
+                                labelText: 'Usuário',
+                                hintText: 'Digite o Usuário',
+                              ),
+                              keyboardType: TextInputType.text,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _controladorsenha,
+                              style: TextStyle(
+                                fontSize: 24.8,
+                              ),
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.vpn_key),
+                                labelText: 'Senha',
+                                hintText: 'Digite a senha',
+                              ),
+                              keyboardType: TextInputType.text,
+                            ),
+                          ),
+                          Builder(builder: (context) {
+                            return RaisedButton(
+                              child: Text(
+                                'Entrar',
                                 style: TextStyle(
                                   fontSize: 24.8,
                                 ),
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.person),
-                                  labelText: 'Usuário',
-                                  hintText: 'Digite o Usuário',
-                                ),
-                                keyboardType: TextInputType.text,
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: _controladorsenha,
-                                style: TextStyle(
-                                  fontSize: 24.8,
-                                ),
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.vpn_key),
-                                  labelText: 'Senha',
-                                  hintText: 'Digite a senha',
-                                ),
-                                keyboardType: TextInputType.text,
-                              ),
-                            ),
-                            Builder(builder: (context) {
-                              return RaisedButton(
-                                child: Text(
-                                  'Entrar',
-                                  style: TextStyle(
-                                    fontSize: 24.8,
-                                  ),
-                                ),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(color: Colors.black26)),
-                                onPressed: () {
-                                  if (_controladorusuario != null &&
-                                      _controladorsenha != null &&
-                                      _controladorusuario.text != "" &&
-                                      _controladorsenha.text != "") {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return HomeSpsAuthenticatedFromServer(
-                                              _controladorusuario,
-                                              _controladorsenha);
-                                        },
-                                      ),
-                                    );
-                                  } else {
-                                    final snackBar = SnackBar(
-                                      content: Text(
-                                          'Favor Preencher usuário e senha!'),
-                                      action: SnackBarAction(
-                                        label: 'Undo',
-                                        onPressed: () {
-                                          // Some code to undo the change.
-                                        },
-                                      ),
-                                    );
-                                    // Find the Scaffold in the widget tree and use
-                                    // it to show a SnackBar.
-                                    Scaffold.of(context).showSnackBar(snackBar);
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.black26)),
+                              onPressed: () {
+                                if (_controladorusuario != null &&
+                                    _controladorsenha != null &&
+                                    _controladorusuario.text != "" &&
+                                    _controladorsenha.text != "") {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return HomeSpsAuthenticatedFromServer(
+                                            _controladorusuario,
+                                            _controladorsenha);
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  mensagemNaBarra(context,'Favor Preencher usuário e senha!');
+                                }
+                              },
+                            );
+                          }),
+                          Expanded(
+                            child: Align(
+                              alignment: FractionalOffset.bottomCenter,
+                              child: MaterialButton(
+                                onPressed: () => {
+                                  if (_controladorusuario != null && _controladorusuario.text != ""){
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                          title: Text("SPS App"),
+                                          content: Text(
+                                              "As intruções para redefinição da senha serão enviadas para seu e-mail cadastrado. Deseja continuar?"),
+                                          actions: [
+                                            FlatButton(
+                                              child: Text("Cancelar"),
+                                              onPressed: () {
+                                                Navigator.of(context,
+                                                    rootNavigator: true).pop();
+                                              },
+                                            ),
+                                            FlatButton(
+                                                child: Text("Sim"),
+                                                onPressed: () {
+                                                  print('enviar senha');
+                                                  Navigator.of(context,
+                                                      rootNavigator: true).pop();
+                                                  _showAlert(context, "As intruções para redefinição da form enviadas para seu e-mail cadastrado.");
+                                                  spslogin.esqueciMinhaSenha(_controladorusuario.text).then((retorno) => null);
+                                                }
+                                            ),
+                                          ]
+                                      );
+                                    }
+                                  )
+                                  }else{
+                                    mensagemNaBarra(context,'Favor Preencher o usuário!'),
                                   }
                                 },
-                              );
-                            }),
-                          ],
-                        ),
-                      );
-                    }
-                  } else {
-                    return CenteredMessage(
-                      erroConexao.msg_erro_conexao.toString(),
-                      icon: Icons.warning,
+                                child: Text('Esqueci minha senha'),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   }
                   break;
@@ -193,4 +217,37 @@ class _HomeSpsAuthenticatedFromLocalState
           ),
         ));
   }
+
+  void mensagemNaBarra(BuildContext context, String texto) {
+    final snackBar = SnackBar(
+      content: Text(
+          texto),
+      action: SnackBarAction(
+        label: 'voltar',
+        onPressed: () {
+          // Some code to undo the change.
+        },
+      ),
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void _showAlert(BuildContext context, String texto) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("SPS App"),
+          content: Text(texto),
+          actions: [
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        )
+    );
+  }
+
 }
