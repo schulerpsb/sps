@@ -499,7 +499,7 @@ class _sps_questionario_cq_ext_item_screen
           _widentificacaoUtilizador,
           _witemChecklist,
           _wrespCq,
-          '#usuario#'); //substituir por variavel global do Fernando
+          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
       if (retorno == true) {
         _wsincronizado = "";
         debugPrint("registro gravado PostgreSQL: " +
@@ -647,7 +647,7 @@ class _sps_questionario_cq_ext_item_screen
           _wcodigoEmpresa,
           _wcodigoProgramacao,
           _wnovaReferencia,
-          '#usuario#'); //substituir por variavel global do Fernando
+          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
       if (retorno == true) {
         _wsincronizado = "";
         debugPrint("registro gravado PostgreSQL: " +

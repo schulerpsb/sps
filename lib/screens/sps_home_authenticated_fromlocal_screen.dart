@@ -4,6 +4,7 @@ import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_login_class.dart';
 import 'package:sps/http/sps_http_login_class.dart';
+import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
@@ -75,102 +76,114 @@ class _HomeSpsAuthenticatedFromLocalState
                       icon: Icons.error,
                     );
                   }
-                  if (snapshot.data.isNotEmpty) {
-                    //Usuário ja tem usuário local autenticado
-                    //Ir direto para o menu
-                    //final dadossessao = sps_usuario();
-                    //final usuarioAtual = sps_usuario(codigo_usuario:snapshot.data[0]['codigo_usuario'],nome_usuario:snapshot.data[0]['nome_usuario'],email_usuario:snapshot.data[0]['email_usuario'],lingua_usuario:snapshot.data[0]['lingua_usuario'],status_usuario:snapshot.data[0]['status_usuario'],tipo:snapshot.data[0]['tipo'],registro_usuario:snapshot.data[0]['registro_usuario']);
-                    usuarioAtual.codigo_usuario = snapshot.data[0]['codigo_usuario'];
-                    usuarioAtual.nome_usuario = snapshot.data[0]['nome_usuario'];
-                    usuarioAtual.email_usuario = snapshot.data[0]['email_usuario'];
-                    usuarioAtual.lingua_usuario = snapshot.data[0]['lingua_usuario'];
-                    usuarioAtual.status_usuario = snapshot.data[0]['status_usuario'];
-                    usuarioAtual.tipo = snapshot.data[0]['tipo'];
-                    usuarioAtual.registro_usuario =snapshot.data[0]['registro_usuario'];
-                    return sps_menu_screen();
-                  } else {
-                    return Container(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: _controladorusuario,
-                              style: TextStyle(
-                                fontSize: 24.8,
-                              ),
-                              decoration: InputDecoration(
-                                icon: Icon(Icons.person),
-                                labelText: 'Usuário',
-                                hintText: 'Digite o Usuário',
-                              ),
-                              keyboardType: TextInputType.text,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: _controladorsenha,
-                              style: TextStyle(
-                                fontSize: 24.8,
-                              ),
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                icon: Icon(Icons.vpn_key),
-                                labelText: 'Senha',
-                                hintText: 'Digite a senha',
-                              ),
-                              keyboardType: TextInputType.text,
-                            ),
-                          ),
-                          Builder(builder: (context) {
-                            return RaisedButton(
-                              child: Text(
-                                'Entrar',
+                  print("adriano 9");
+                  if (erroConexao.msg_erro_conexao.toString() == "") {
+                    if (snapshot.data.isNotEmpty) {
+                      //Usuário ja tem usuário local autenticado
+                      //Ir direto para o menu
+                      //final dadossessao = sps_usuario();
+                      //final usuarioAtual = sps_usuario(codigo_usuario:snapshot.data[0]['codigo_usuario'],nome_usuario:snapshot.data[0]['nome_usuario'],email_usuario:snapshot.data[0]['email_usuario'],lingua_usuario:snapshot.data[0]['lingua_usuario'],status_usuario:snapshot.data[0]['status_usuario'],tipo:snapshot.data[0]['tipo'],registro_usuario:snapshot.data[0]['registro_usuario']);
+                      usuarioAtual.codigo_usuario =
+                          snapshot.data[0]['codigo_usuario'];
+                      usuarioAtual.nome_usuario =
+                          snapshot.data[0]['nome_usuario'];
+                      usuarioAtual.email_usuario =
+                          snapshot.data[0]['email_usuario'];
+                      usuarioAtual.lingua_usuario =
+                          snapshot.data[0]['lingua_usuario'];
+                      usuarioAtual.status_usuario =
+                          snapshot.data[0]['status_usuario'];
+                      usuarioAtual.tipo = snapshot.data[0]['tipo'];
+                      usuarioAtual.registro_usuario =
+                          snapshot.data[0]['registro_usuario'];
+                      return sps_menu_screen();
+                    } else {
+                      return Container(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: _controladorusuario,
                                 style: TextStyle(
                                   fontSize: 24.8,
                                 ),
-
+                                decoration: InputDecoration(
+                                  icon: Icon(Icons.person),
+                                  labelText: 'Usuário',
+                                  hintText: 'Digite o Usuário',
+                                ),
+                                keyboardType: TextInputType.text,
                               ),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.black26)
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: _controladorsenha,
+                                style: TextStyle(
+                                  fontSize: 24.8,
+                                ),
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  icon: Icon(Icons.vpn_key),
+                                  labelText: 'Senha',
+                                  hintText: 'Digite a senha',
+                                ),
+                                keyboardType: TextInputType.text,
                               ),
-                              onPressed: () {
-                                if (_controladorusuario != null &&
-                                    _controladorsenha != null &&
-                                    _controladorusuario.text != "" &&
-                                    _controladorsenha.text != "") {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return HomeSpsAuthenticatedFromServer(
-                                            _controladorusuario,
-                                            _controladorsenha);
-                                      },
-                                    ),
-                                  );
-                                } else {
-                                  final snackBar = SnackBar(
-                                    content: Text(
-                                        'Favor Preencher usuário e senha!'),
-                                    action: SnackBarAction(
-                                      label: 'Undo',
-                                      onPressed: () {
-                                        // Some code to undo the change.
-                                      },
-                                    ),
-                                  );
-                                  // Find the Scaffold in the widget tree and use
-                                  // it to show a SnackBar.
-                                  Scaffold.of(context).showSnackBar(snackBar);
-                                }
-                              },
-                            );
-                          }),
-                        ],
-                      ),
+                            ),
+                            Builder(builder: (context) {
+                              return RaisedButton(
+                                child: Text(
+                                  'Entrar',
+                                  style: TextStyle(
+                                    fontSize: 24.8,
+                                  ),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.black26)),
+                                onPressed: () {
+                                  if (_controladorusuario != null &&
+                                      _controladorsenha != null &&
+                                      _controladorusuario.text != "" &&
+                                      _controladorsenha.text != "") {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return HomeSpsAuthenticatedFromServer(
+                                              _controladorusuario,
+                                              _controladorsenha);
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    final snackBar = SnackBar(
+                                      content: Text(
+                                          'Favor Preencher usuário e senha!'),
+                                      action: SnackBarAction(
+                                        label: 'Undo',
+                                        onPressed: () {
+                                          // Some code to undo the change.
+                                        },
+                                      ),
+                                    );
+                                    // Find the Scaffold in the widget tree and use
+                                    // it to show a SnackBar.
+                                    Scaffold.of(context).showSnackBar(snackBar);
+                                  }
+                                },
+                              );
+                            }),
+                          ],
+                        ),
+                      );
+                    }
+                  } else {
+                    return CenteredMessage(
+                      erroConexao.msg_erro_conexao.toString(),
+                      icon: Icons.warning,
                     );
                   }
                   break;
@@ -181,5 +194,3 @@ class _HomeSpsAuthenticatedFromLocalState
         ));
   }
 }
-
-

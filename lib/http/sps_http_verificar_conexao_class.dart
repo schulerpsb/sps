@@ -36,27 +36,22 @@ class SpsVerificarConexao {
           print("Verificar conexão com o servidor de API´s");
           final response =
               //await http.head('http://teklist.schuler.de/webapi/api/questionario/read_cq_ext.php'); //Pode ser utilizado qualquer URL
-              await http.get(
-                  'http://10.17.20.45/webapi/api/questionario/read_cq_ext.php'); //Pode ser utilizado qualquer URL
+              await http.get('http://10.17.20.45/webapi/api/questionario/read_cq_ext.php'); //Pode ser utilizado qualquer URL
           print("Retorno da verificação => " + response.statusCode.toString());
           if (response.statusCode == 200) {
             _wservidor_conectado = true;
             debugPrint('STATUS DA CONEXÃO -> connected');
-          } else {
-            _wservidor_conectado = false;
-            debugPrint('STATUS DA CONEXÃO -> not connected');
-            _msg_erro_conexao =
-                "Estamos com problemas na conexão com nossos servidores!\n\n Sugerimos colocar o aparelho em modo avião para trabalhar normalmente em offline, dentro de alguns minutos o problema será resolvido, você poderá desativar o modo avião e as informações serão sincronizadas automaticamente com nossos serviores.\n\n Pedimos desculpas pelo transtorno.";
-            erroConexao.msg_erro_conexao = _msg_erro_conexao;
             return _wservidor_conectado;
           }
         }
       } on SocketException catch (_) {
-        _wservidor_conectado = false;
-        debugPrint('STATUS DA CONEXÃO -> not connected');
       }
+      debugPrint('STATUS DA CONEXÃO -> not connected');
+      _msg_erro_conexao =
+      "Estamos com problemas na conexão com nossos servidores!\n\n Favor colocar o aparelho em modo avião para trabalhar normalmente em offline, dentro de alguns minutos o problema será resolvido!\n Ao desativar o modo avião as informações serão sincronizadas automaticamente com nossos serviores.\n\n Pedimos desculpas pelo transtorno.";
+      erroConexao.msg_erro_conexao = _msg_erro_conexao;
+      return _wservidor_conectado;
     }
-
     print("retorno conexao: " + _wservidor_conectado.toString());
     return _wservidor_conectado;
   }

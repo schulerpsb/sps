@@ -5,6 +5,7 @@ import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'Dart:io';
+import 'package:sps/models/sps_usuario_class.dart';
 
 class SpsQuestionarioItem_cq {
   @override
@@ -55,7 +56,7 @@ class SpsQuestionarioItem_cq {
             result[windex]["identificacao_utilizador"],
             result[windex]["item_checklist"].toString(),
             result[windex]["resp_cq"],
-            '#usuario#'); //substituir por variavel global do Fernando
+            usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
         if (retorno1.toString() == true) {
           debugPrint("registro sincronizado: " + result[windex].toString());
         } else {
@@ -73,7 +74,7 @@ class SpsQuestionarioItem_cq {
                 result[windex]["identificacao_utilizador"],
                 result[windex]["item_checklist"].toString(),
                 result[windex]["descr_comentarios"],
-                '#usuario#'); //substituir por variavel global do Fernando
+                usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
         if (retorno2.toString() == true) {
           debugPrint("registro sincronizado: " + result[windex].toString());
         } else {

@@ -3,6 +3,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/http/sps_http_verificar_conexao_class.dart';
+import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_cq.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
@@ -98,153 +99,155 @@ class _sps_questionario_cq_lista_screen
                     icon: Icons.error,
                   );
                 }
-                if (snapshot.data.isNotEmpty) {
-                  final DateFormat formatter = DateFormat('yyyyMMdd');
-                  final String _dataAtual =
-                      formatter.format(DateTime.now()).toString();
+                if (erroConexao.msg_erro_conexao.toString() == "") {
+                  if (snapshot.data.isNotEmpty) {
+                    final DateFormat formatter = DateFormat('yyyyMMdd');
+                    final String _dataAtual =
+                        formatter.format(DateTime.now()).toString();
 
-                  return ListView.builder(
-                          padding: EdgeInsets.only(top: 5),
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            String _wdtfim_aplicacao = snapshot.data[index]
-                                    ["dtfim_aplicacao"]
-                                .replaceAll("-", "");
-                            return Card(
-                              color: Colors.white,
-                              child: ListTile(
-                                title: Text(
-                                  int.parse(_wdtfim_aplicacao) >
+                    return ListView.builder(
+                      padding: EdgeInsets.only(top: 5),
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        String _wdtfim_aplicacao = snapshot.data[index]
+                                ["dtfim_aplicacao"]
+                            .replaceAll("-", "");
+                        return Card(
+                          color: Colors.white,
+                          child: ListTile(
+                            title: Text(
+                              int.parse(_wdtfim_aplicacao) >
+                                      int.parse(_dataAtual)
+                                  ? '${snapshot.data[index]["codigo_programacao"]}'
+                                  : '${snapshot.data[index]["codigo_programacao"]}' +
+                                      " (PRAZO VENCIDO)",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: int.parse(_wdtfim_aplicacao) >
                                           int.parse(_dataAtual)
-                                      ? '${snapshot.data[index]["codigo_programacao"]}'
-                                      : '${snapshot.data[index]["codigo_programacao"]}' +
-                                          " (PRAZO VENCIDO)",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: int.parse(_wdtfim_aplicacao) >
-                                              int.parse(_dataAtual)
-                                          ? Colors.black
-                                          : Colors.red),
-                                ),
-                                subtitle: Text(
-                                    texto_principal
-                                        .wtexto_principal(snapshot.data[index]),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black)),
-                                trailing: snapshot.data[index]["status"] == "OK"
+                                      ? Colors.black
+                                      : Colors.red),
+                            ),
+                            subtitle: Text(
+                                texto_principal
+                                    .wtexto_principal(snapshot.data[index]),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                            trailing: snapshot.data[index]["status"] == "OK"
+                                ? Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                    size: 40,
+                                  )
+                                : snapshot.data[index]["status"] == "PARCIAL"
                                     ? Icon(
-                                        Icons.check,
-                                        color: Colors.green,
+                                        Icons.play_circle_outline,
+                                        color: Colors.yellow,
                                         size: 40,
                                       )
-                                    : snapshot.data[index]["status"] ==
-                                            "PARCIAL"
-                                        ? Icon(
-                                            Icons.play_circle_outline,
-                                            color: Colors.yellow,
-                                            size: 40,
-                                          )
-                                        : Icon(
-                                            Icons.timer,
-                                            color: Colors.red,
-                                            size: 40,
-                                          ),
-                                onTap: () {
-                                  int.parse(_wdtfim_aplicacao) >
-                                          int.parse(_dataAtual)
-                                      ? Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => this
-                                                          .widget
-                                                          ._origemUsuario ==
-                                                      "EXTERNO"
-                                                  ? sps_questionario_cq_ext_item_screen(
-                                                      snapshot.data[index]
-                                                          ["codigo_empresa"],
-                                                      snapshot.data[index][
-                                                          "codigo_programacao"],
-                                                      snapshot.data[index][
-                                                          "registro_colaborador"],
-                                                      snapshot.data[index][
-                                                          "identificacao_utilizador"],
-                                                      snapshot.data[index]
-                                                          ["codigo_grupo"],
-                                                      snapshot.data[index]
-                                                          ["codigo_checklist"],
-                                                      snapshot.data[index]
-                                                          ["descr_programacao"],
-                                                      snapshot.data[index]
-                                                          ["codigo_pedido"],
-                                                      snapshot.data[index]
-                                                          ["item_pedido"],
-                                                      snapshot.data[index]
-                                                          ["codigo_material"],
-                                                      snapshot.data[index][
-                                                          "referencia_parceiro"],
-                                                      snapshot.data[index]
-                                                          ["codigo_projeto"],
-                                                      snapshot.data[index]
-                                                          ["sincronizado"],
-                                                      snapshot.data[index]
-                                                          ["status_aprovacao"],
-                                                      this
-                                                          .widget
-                                                          ._origemUsuario,
-                                                      this.widget._filtro,
-                                                      this
-                                                          .widget
-                                                          ._filtroReferenciaProjeto,
-                                                    )
-                                                  : sps_questionario_cq_int_item_screen(
-                                                      snapshot.data[index]
-                                                          ["codigo_empresa"],
-                                                      snapshot.data[index][
-                                                          "codigo_programacao"],
-                                                      snapshot.data[index][
-                                                          "registro_colaborador"],
-                                                      snapshot.data[index][
-                                                          "identificacao_utilizador"],
-                                                      snapshot.data[index]
-                                                          ["codigo_grupo"],
-                                                      snapshot.data[index]
-                                                          ["codigo_checklist"],
-                                                      snapshot.data[index]
-                                                          ["descr_programacao"],
-                                                      snapshot.data[index]
-                                                          ["codigo_pedido"],
-                                                      snapshot.data[index]
-                                                          ["item_pedido"],
-                                                      snapshot.data[index]
-                                                          ["codigo_material"],
-                                                      snapshot.data[index][
-                                                          "referencia_parceiro"],
-                                                      snapshot.data[index]
-                                                          ["codigo_projeto"],
-                                                      snapshot.data[index]
-                                                          ["sincronizado"],
-                                                      snapshot.data[index]
-                                                          ["status_aprovacao"],
-                                                      this
-                                                          .widget
-                                                          ._origemUsuario,
-                                                      this.widget._filtro,
-                                                      this
-                                                          .widget
-                                                          ._filtroReferenciaProjeto,
-                                                    )),
-                                        )
-                                      : _popup_vencido(context);
-                                },
-                              ),
-                            );
-                          },
+                                    : Icon(
+                                        Icons.timer,
+                                        color: Colors.red,
+                                        size: 40,
+                                      ),
+                            onTap: () {
+                              int.parse(_wdtfim_aplicacao) >
+                                      int.parse(_dataAtual)
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => this
+                                                      .widget
+                                                      ._origemUsuario ==
+                                                  "EXTERNO"
+                                              ? sps_questionario_cq_ext_item_screen(
+                                                  snapshot.data[index]
+                                                      ["codigo_empresa"],
+                                                  snapshot.data[index]
+                                                      ["codigo_programacao"],
+                                                  snapshot.data[index]
+                                                      ["registro_colaborador"],
+                                                  snapshot.data[index][
+                                                      "identificacao_utilizador"],
+                                                  snapshot.data[index]
+                                                      ["codigo_grupo"],
+                                                  snapshot.data[index]
+                                                      ["codigo_checklist"],
+                                                  snapshot.data[index]
+                                                      ["descr_programacao"],
+                                                  snapshot.data[index]
+                                                      ["codigo_pedido"],
+                                                  snapshot.data[index]
+                                                      ["item_pedido"],
+                                                  snapshot.data[index]
+                                                      ["codigo_material"],
+                                                  snapshot.data[index]
+                                                      ["referencia_parceiro"],
+                                                  snapshot.data[index]
+                                                      ["codigo_projeto"],
+                                                  snapshot.data[index]
+                                                      ["sincronizado"],
+                                                  snapshot.data[index]
+                                                      ["status_aprovacao"],
+                                                  this.widget._origemUsuario,
+                                                  this.widget._filtro,
+                                                  this
+                                                      .widget
+                                                      ._filtroReferenciaProjeto,
+                                                )
+                                              : sps_questionario_cq_int_item_screen(
+                                                  snapshot.data[index]
+                                                      ["codigo_empresa"],
+                                                  snapshot.data[index]
+                                                      ["codigo_programacao"],
+                                                  snapshot.data[index]
+                                                      ["registro_colaborador"],
+                                                  snapshot.data[index][
+                                                      "identificacao_utilizador"],
+                                                  snapshot.data[index]
+                                                      ["codigo_grupo"],
+                                                  snapshot.data[index]
+                                                      ["codigo_checklist"],
+                                                  snapshot.data[index]
+                                                      ["descr_programacao"],
+                                                  snapshot.data[index]
+                                                      ["codigo_pedido"],
+                                                  snapshot.data[index]
+                                                      ["item_pedido"],
+                                                  snapshot.data[index]
+                                                      ["codigo_material"],
+                                                  snapshot.data[index]
+                                                      ["referencia_parceiro"],
+                                                  snapshot.data[index]
+                                                      ["codigo_projeto"],
+                                                  snapshot.data[index]
+                                                      ["sincronizado"],
+                                                  snapshot.data[index]
+                                                      ["status_aprovacao"],
+                                                  this.widget._origemUsuario,
+                                                  this.widget._filtro,
+                                                  this
+                                                      .widget
+                                                      ._filtroReferenciaProjeto,
+                                                )),
+                                    )
+                                  : _popup_vencido(context);
+                            },
+                          ),
                         );
+                      },
+                    );
+                  } else {
+                    return CenteredMessage(
+                      'Checklist não encontrado.',
+                      icon: Icons.warning,
+                    );
+                  }
                 } else {
                   return CenteredMessage(
-                    'Checklist não encontrado.',
+                    erroConexao.msg_erro_conexao.toString(),
                     icon: Icons.warning,
                   );
                 }
