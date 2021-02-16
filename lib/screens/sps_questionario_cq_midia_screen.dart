@@ -187,9 +187,38 @@ class _sps_questionario_midia_screen
         maxHeight: null,
         imageQuality: null,
       );
-      //Comando para atualizar a tela da galeria
+      DateTime now = DateTime.now();
+      DateTime _currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
+      //Arquivo de imagem capturado
+      //Montagem do arquivo de dados para processamento do arquivo.
+      Map<String,dynamic> _dadosArquivo = new Map<String,dynamic>();
+      _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
+      _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
+      _dadosArquivo['item_checklist'] = this.widget._item_checklist;
+      _dadosArquivo['arquivo'] = pickedFile.path.toString();
+      if(usuarioAtual.tipo == "INTERNO"){
+        _dadosArquivo['registro_colaborador'] = usuarioAtual.senha_usuario;
+        _dadosArquivo['identificacao_utilizador'] = '';
+      }else{
+        _dadosArquivo['registro_colaborador'] = '';
+        _dadosArquivo['identificacao_utilizador'] = usuarioAtual.codigo_usuario;
+      }
+      _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
+      _dadosArquivo['dthratualizacao'] = _currentTime.toString();
+      _dadosArquivo['dthranexo'] = _currentTime.toString();
+
+      //Processamento do arquivo capturado - Renomear - mover.
+      final String arquivoMovido = await spsMidiaUtils.processarArquivoCapturado(tipo: ".jpg", dadosArquivo: _dadosArquivo);
+
+      _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
+      _dadosArquivo['item_anexo'] = (_dadosArquivo['nome_arquivo'].split('_')[3]).split('.').first;
+
+      List _listaArquivos = new List();
+      _listaArquivos.add(arquivoMovido);
+      //Gravação do registro na tabela de anexos do SQLITE
+      SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioCqMidia();
+      final int registroGravado = await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(dadosArquivo: _dadosArquivo);
       setState(() {
-        //_imageFile = pickedFile;
       });
     }
   }

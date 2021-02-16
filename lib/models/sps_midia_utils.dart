@@ -36,7 +36,6 @@ class spsMidiaUtils {
   }
 
   static Future<String> processarArquivoCapturado({String tipo = "", Map<String,dynamic> dadosArquivo = null}) async {
-    final Directory _thumbspath = new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs');
     File sourceFile = new File(dadosArquivo['arquivo']);
     String _extensaoArquivo = sourceFile.path.split('.').last;
     final SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioCqMidia();
