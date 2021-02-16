@@ -77,7 +77,7 @@ class _HomeSpsAuthenticatedFromLocalState
                       icon: Icons.error,
                     );
                   }
-                  if (erroConexao.msg_erro_conexao.toString() == "") {
+                  //if (erroConexao.msg_erro_conexao.toString() == "") {
                     if (snapshot.data.isNotEmpty) {
                       //Usuário ja tem usuário local autenticado
                       //Ir direto para o menu
@@ -224,12 +224,12 @@ class _HomeSpsAuthenticatedFromLocalState
                         ),
                       );
                     }
-                  } else {
-                    return CenteredMessage(
-                      erroConexao.msg_erro_conexao.toString(),
-                      icon: Icons.warning,
-                    );
-                  }
+//                  } else {
+//                    return CenteredMessage(
+//                      'Falha de conexão!',
+//                      icon: Icons.warning,
+//                    );
+//                  }
                   break;
               }
               return Text('Unkown error');

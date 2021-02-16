@@ -4,27 +4,17 @@ import 'package:sps/models/sps_usuario_class.dart';
 
 class SpsQuestionarioCqMidia {
   @override
-  Future<List<Map<String, dynamic>>> listarQuestionarioCqMidia() async {
-    final doc_action = 'PREENCHER_CQ';
-    final registro_colaborador = sps_usuario().registro_usuario;
-    final identificacao_utilizador = 'SCHULER';
-    final tipo_frequencia = 'CONTROLE DE QUALIDADE';
-    final tipo_checklist = 'CHECKLIST';
-
-    final SpsHttpQuestionarioCqMidia objQuestionarioCqMidiaHttp = SpsHttpQuestionarioCqMidia();
-    final List<Map<String, dynamic>> dadosQuestionario = await objQuestionarioCqMidiaHttp.listarMidia(doc_action, registro_colaborador, identificacao_utilizador, tipo_frequencia, tipo_checklist);
-    if (dadosQuestionario != null) {
+  Future<List<Map<String, dynamic>>> listarQuestionarioCqMidia({String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0}) async {
       final SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioCqMidia();
       final int resulcreate = await objQuestionarioCqMidiaDao.create_table();
-      final int resullimpar = await objQuestionarioCqMidiaDao.emptyTable();
-      final int resultsave = await objQuestionarioCqMidiaDao.save(dadosQuestionario);
+      //final int resullimpar = await objQuestionarioCqMidiaDao.emptyTable();
+      //final int resultsave = await objQuestionarioCqMidiaDao.save(dadosQuestionario);
       final List<Map<String, dynamic>> DadosSessao = await objQuestionarioCqMidiaDao
-          .listarQuestionarioCqMidia();
+          .listarQuestionarioCqMidia(codigo_empresa: codigo_empresa,codigo_programacao: codigo_programacao,item_checklist: item_checklist);
       if (DadosSessao != null) {
         return DadosSessao;
       } else {
         return DadosSessao;
       }
-    };
   }
 }

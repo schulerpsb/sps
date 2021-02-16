@@ -386,7 +386,8 @@ class _sps_questionario_cq_int_item_screen
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  sps_questionario_cq_midia_screen()),
+                                                  null ),
+                                                  //sps_questionario_cq_midia_screen()),
                                         );
                                       },
                                     ),
