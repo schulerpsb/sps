@@ -13,6 +13,7 @@ import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:sps/models/sps_questionario_cq_midia.dart';
+import 'package:flutter/painting.dart';
 
 class sps_questionario_cq_midia_screen extends StatefulWidget {
 
@@ -361,6 +362,7 @@ class _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
     new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
+    imageCache.clear();
     return DefaultTabController(
         length: 3,
         child: new Scaffold(

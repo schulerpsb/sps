@@ -8,6 +8,7 @@ import 'package:sps/models/sps_questionario_cq_midia.dart';
 import 'package:sps/screens/sps_imagePlayer_screen.dart';
 import 'package:sps/screens/sps_videoPlayer_screen.dart';
 import 'dart:io' as io;
+import 'package:flutter/painting.dart';
 
 class ImageGrid extends StatelessWidget {
   final Directory directory;

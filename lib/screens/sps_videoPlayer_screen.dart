@@ -72,7 +72,7 @@ class _sps_mediaPlayer_screen extends State<sps_videoPlayer_screen> {
         backgroundColor: Color(0xFF004077), // Azul Schuler
         title: Text(
           'VISUALIZADOR DE VIDEOS',
-          style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),

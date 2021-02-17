@@ -1,13 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
-import 'package:video_player/video_player.dart';
-
 import 'package:extended_image/extended_image.dart';
+import 'package:exif/exif.dart';
+import 'package:image/image.dart' as img;
 
 class sps_imagePlayer_screen extends StatefulWidget {
   final String _filePath;
@@ -24,15 +22,19 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
   GlobalKey<ScaffoldState> _key = GlobalKey();
   final GlobalKey<ExtendedImageEditorState> editorKey =
   GlobalKey<ExtendedImageEditorState>();
+
+  File _teste;
+
   @override
   Widget build(BuildContext context) {
+    imageCache.clear();
     return Scaffold(
       backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
       appBar: AppBar(
         backgroundColor: Color(0xFF004077), // Azul Schuler
         title: Text(
-          'VISUALIZADOR DE IMAGEM',
-          style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+          'VISUALIZADOR DE IMAGENS',
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -45,8 +47,6 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
           slideType: SlideType.onlyImage,
           child: ExtendedImage.file(
             File(this.widget._filePath),
-//            'https://photo.tuchong.com/4870004/f/298584322.jpg',
-            //this.widget._filePath,
             fit: BoxFit.contain,
             mode: ExtendedImageMode.editor,
             extendedImageEditorKey: editorKey,
@@ -98,15 +98,33 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
   }
 
   void _girarDireita() {
-    editorKey.currentState.rotate(right: true);
+    fixExifRotation(this.widget._filePath, 90).then((value){
+      editorKey.currentState.rotate(right: true);
+    });
   }
 
   void _girarEsquerda() {
-    editorKey.currentState.rotate(right: false);
+    fixExifRotation(this.widget._filePath, -90).then((value){
+      editorKey.currentState.rotate(right: false);
+    });
   }
 
   void _reset() {
     editorKey.currentState.reset();
+  }
+
+  Future<File> fixExifRotation(String imagePath, int degree) async {
+    final originalFile = File(imagePath);
+    List<int> imageBytes = await originalFile.readAsBytes();
+    final originalImage = img.decodeImage(imageBytes);
+
+    img.Image fixedImage;
+
+    fixedImage = img.copyRotate(originalImage, degree);
+
+    final fixedFile = await originalFile.writeAsBytes(img.encodeJpg(fixedImage));
+
+    return fixedFile;
   }
 
 }
