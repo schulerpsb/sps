@@ -5,7 +5,8 @@ import 'package:sps/components/media.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_cq_midia_class.dart';
 import 'package:sps/models/sps_questionario_cq_midia.dart';
-import 'package:sps/screens/sps_mediaPlayer_screen.dart';
+import 'package:sps/screens/sps_imagePlayer_screen.dart';
+import 'package:sps/screens/sps_videoPlayer_screen.dart';
 import 'dart:io' as io;
 
 class ImageGrid extends StatelessWidget {
@@ -114,7 +115,7 @@ class ImageGrid extends StatelessWidget {
                                   refreshGridView = Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => sps_mediaPlayer_screen(_listaArquivos[index]['caminho'], tipo)),
+                                        builder: (context) => tipo == 'video' ? sps_videoPlayer_screen(_listaArquivos[index]['caminho'], tipo) : sps_imagePlayer_screen(_listaArquivos[index]['caminho'], tipo)),
                                   ).then((refreshGridView) {
                                     if (refreshGridView != null) {
                                       build(context);
