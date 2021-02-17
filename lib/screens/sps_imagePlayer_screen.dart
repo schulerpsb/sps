@@ -43,8 +43,9 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
         child: ExtendedImageSlidePage(
           slideAxis: SlideAxis.both,
           slideType: SlideType.onlyImage,
-          child: ExtendedImage.network(
-            'https://photo.tuchong.com/4870004/f/298584322.jpg',
+          child: ExtendedImage.file(
+            File(this.widget._filePath),
+//            'https://photo.tuchong.com/4870004/f/298584322.jpg',
             //this.widget._filePath,
             fit: BoxFit.contain,
             mode: ExtendedImageMode.editor,
