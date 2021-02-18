@@ -188,6 +188,9 @@ class _sps_questionario_midia_screen
         maxHeight: null,
         imageQuality: null,
       );
+      spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
+      File arquivoNormalizado = await objspsMidiaUtils.normalizarArquivo(pickedFile.path.toString());
+
       DateTime now = DateTime.now();
       DateTime _currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
       //Arquivo de imagem capturado
@@ -196,7 +199,7 @@ class _sps_questionario_midia_screen
       _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
       _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
       _dadosArquivo['item_checklist'] = this.widget._item_checklist;
-      _dadosArquivo['arquivo'] = pickedFile.path.toString();
+      _dadosArquivo['arquivo'] = arquivoNormalizado.path.toString();
       if(usuarioAtual.tipo == "INTERNO"){
         _dadosArquivo['registro_colaborador'] = usuarioAtual.senha_usuario;
         _dadosArquivo['identificacao_utilizador'] = '';
