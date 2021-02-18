@@ -27,7 +27,7 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
 
   @override
   Widget build(BuildContext context) {
-    imageCache.clear();
+    //imageCache.clear();
     return Scaffold(
       backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
       appBar: AppBar(
@@ -45,30 +45,7 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
         child: ExtendedImageSlidePage(
           slideAxis: SlideAxis.both,
           slideType: SlideType.onlyImage,
-          child: ExtendedImage.file(
-            File(this.widget._filePath),
-            fit: BoxFit.contain,
-            mode: ExtendedImageMode.editor,
-            extendedImageEditorKey: editorKey,
-            initEditorConfigHandler: (state) {
-              return EditorConfig(
-                  editorMaskColorHandler:
-                      (BuildContext context, bool pointerDown) {
-                    return pointerDown
-                        ? Colors.transparent
-                        : Colors.transparent;
-                  },
-                  lineColor: Colors.transparent,
-                  maxScale: 8.0,
-                  cropRectPadding: EdgeInsets.all(0.0),
-                  cornerPainter:
-                      ExtendedImageCropLayerPainterNinetyDegreesCorner(
-                          color: Colors.transparent,
-                          cornerSize: Size(30.0, 3.0)),
-                  hitTestSize: 20.0,
-                  cropAspectRatio: 0.0);
-            },
-          ),
+          child: buildExtendedImage(),
         ),
       ),
       floatingActionButton: Row(
@@ -97,15 +74,45 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
     );
   }
 
+  ExtendedImage buildExtendedImage() {
+    imageCache.clear();
+    return ExtendedImage.file(
+          File(this.widget._filePath),
+          fit: BoxFit.contain,
+          mode: ExtendedImageMode.editor,
+          extendedImageEditorKey: editorKey,
+          initEditorConfigHandler: (state) {
+            return EditorConfig(
+                editorMaskColorHandler:
+                    (BuildContext context, bool pointerDown) {
+                  return pointerDown
+                      ? Colors.transparent
+                      : Colors.transparent;
+                },
+                lineColor: Colors.transparent,
+                maxScale: 8.0,
+                cropRectPadding: EdgeInsets.all(0.0),
+                cornerPainter:
+                    ExtendedImageCropLayerPainterNinetyDegreesCorner(
+                        color: Colors.transparent,
+                        cornerSize: Size(30.0, 3.0)),
+                hitTestSize: 20.0,
+                cropAspectRatio: 0.0);
+          },
+        );
+  }
+
   void _girarDireita() {
     fixExifRotation(this.widget._filePath, 90).then((value){
       editorKey.currentState.rotate(right: true);
+      imageCache.clear();
     });
   }
 
   void _girarEsquerda() {
     fixExifRotation(this.widget._filePath, -90).then((value){
       editorKey.currentState.rotate(right: false);
+      imageCache.clear();
     });
   }
 

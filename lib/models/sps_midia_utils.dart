@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_questionario_cq_midia_class.dart';
 import 'package:thumbnails/thumbnails.dart';
+import 'package:exif/exif.dart';
+import 'package:image/image.dart' as img;
 
 class spsMidiaUtils {
 
@@ -71,6 +73,59 @@ class spsMidiaUtils {
       await sourceFile.delete();
       return newFile;
     }
+  }
+
+  Future<File> normalizarArquivo(String imagePath) async {
+    final originalFile = File(imagePath);
+    List<int> imageBytes = await originalFile.readAsBytes();
+
+    final originalImage = img.decodeImage(imageBytes);
+
+    final originalHeight = originalImage.height;
+    final originalWidth = originalImage.width;
+
+    print('Resolução original ==>width: '+originalWidth.toString()+' original height: '+originalHeight.toString());
+
+    img.Image fixedImage;
+
+//    if (originalHeight < originalWidth) {
+//      print('Rotação necessária');
+//      final exifData = await readExifFromBytes(imageBytes);
+//      if (exifData['Image Orientation'].printable.contains('Horizontal')) {
+//        fixedImage = img.copyRotate(originalImage, 90);
+//        print('Rotação necessária 90');
+//      } else if (exifData['Image Orientation'].printable.contains('180')) {
+//        fixedImage = img.copyRotate(originalImage, -90);
+//        print('Rotação necessária -90');
+//      } else if (exifData['Image Orientation'].printable.contains('CCW')) {
+//        fixedImage = img.copyRotate(originalImage, 180);
+//        print('Rotação necessária 180');
+//      } else {
+//        fixedImage = img.copyRotate(originalImage, 0);
+//        print('Rotação necessária 0');
+//      }
+//    }else{
+      fixedImage = originalImage;
+//    }
+
+    final fixedHeight = fixedImage.height;
+    final fixedWidth = fixedImage.width;
+
+    if (fixedHeight <= 1024) {
+      print('Arquivo mantido ==>width: '+fixedWidth.toString()+' original height: '+fixedHeight.toString());
+    }else{
+      final porcentagemReducao = 102400 / fixedHeight;
+      print('Reduzir==>'+porcentagemReducao.toInt().toString());
+      final newHeight = fixedHeight * porcentagemReducao.toInt() / 100;
+      final newWidth = fixedWidth * porcentagemReducao.toInt() / 100;
+      print('Arquivo NOVO redimensionado ==>width: '+newWidth.toString()+' original height: '+newHeight.toString());
+      fixedImage = img.copyResize(fixedImage, height: newHeight.toInt());
+    }
+
+    final fixedFile = await originalFile.writeAsBytes(img.encodeJpg(fixedImage));
+
+    return fixedFile;
+
   }
 
 }

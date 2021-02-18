@@ -129,7 +129,8 @@ class ImageGrid extends StatelessWidget {
                                   padding: new EdgeInsets.all(0.0),
                                   child: Image.file(
                                     File(_listaArquivos[index]['caminho']),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.contain,
+                                    height: 156,
                                   ),
                                 ),
                               ),
