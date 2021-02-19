@@ -236,6 +236,32 @@ class ImageGrid extends StatelessWidget {
                                                 size: 20,
                                               ),
                                               onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                          title: Text("SPS App"),
+                                                          content: Text(
+                                                              "Deseja realmente apagar o arquivo?"),
+                                                          actions: [
+                                                            FlatButton(
+                                                              child: Text("Cancelar"),
+                                                              onPressed: () {
+                                                                Navigator.of(context,
+                                                                    rootNavigator:
+                                                                    true)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                            FlatButton(
+                                                                child: Text("Sim"),
+                                                                onPressed: () {
+                                                                  objSpsQuestionarioCqMidia.deletarQuestionarioCqMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
+                                                                    _sps_questionario_cq_midia_screen.refresh();
+                                                                  });
+                                                                }),
+                                                          ]);
+                                                    });
                                               },
                                             ),
                                           ),
@@ -251,8 +277,7 @@ class ImageGrid extends StatelessWidget {
                                                 color: Color(0xFF004077),
                                                 size: 20,
                                               ),
-                                              onPressed: () {
-                                              },
+                                              onPressed: () {},
                                             ),
                                           ),
                                         ),
@@ -263,11 +288,27 @@ class ImageGrid extends StatelessWidget {
                                 child: Text(
                                     _listaArquivos[index]['titulo_arquivo']
                                                 .toString()
-                                                .length <= 0
+                                                .length <=
+                                            0
                                         ? ''
-                                        : _listaArquivos[index]['titulo_arquivo'].toString().length >= 45
-                                            ? _listaArquivos[index]['titulo_arquivo'].toString().substring(1, 45)
-                                            : _listaArquivos[index]['titulo_arquivo'].toString().substring(1,_listaArquivos[index]['titulo_arquivo'].toString().length),
+                                        : _listaArquivos[index]
+                                                        ['titulo_arquivo']
+                                                    .toString()
+                                                    .length >=
+                                                45
+                                            ? _listaArquivos[index]
+                                                    ['titulo_arquivo']
+                                                .toString()
+                                                .substring(1, 45)
+                                            : _listaArquivos[index]
+                                                    ['titulo_arquivo']
+                                                .toString()
+                                                .substring(
+                                                    1,
+                                                    _listaArquivos[index]
+                                                            ['titulo_arquivo']
+                                                        .toString()
+                                                        .length),
                                     style: TextStyle(
                                         fontSize: 10,
                                         color: Colors.black,

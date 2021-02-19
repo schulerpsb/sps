@@ -124,6 +124,7 @@ class _sps_questionario_midia_screen
   final TextEditingController maxHeightController = TextEditingController();
   final TextEditingController qualityController = TextEditingController();
 
+
   TabController controller;
 
   final Directory _photoDir = new Directory(
@@ -482,5 +483,10 @@ class AspectRatioVideoState extends State<AspectRatioVideo> {
       return Container();
     }
   }
+
+  refresh() {
+    setState(() {});
+  }
+
 }
 // FIM - Declaração da classe AspectRatioVideoState

@@ -75,6 +75,17 @@ class spsMidiaUtils {
     }
   }
 
+  Future<void> deleteFile(String arquivo) async {
+    File file = File(arquivo);
+    try {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      // Error in getting access to the file.
+    }
+  }
+
   Future<File> normalizarArquivo(String imagePath) async {
     final originalFile = File(imagePath);
     List<int> imageBytes = await originalFile.readAsBytes();
