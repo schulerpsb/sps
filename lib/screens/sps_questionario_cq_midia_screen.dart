@@ -14,6 +14,7 @@ import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:sps/models/sps_questionario_cq_midia.dart';
 import 'package:flutter/painting.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 class sps_questionario_cq_midia_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -110,6 +111,9 @@ class _sps_questionario_midia_screen
       _filtro,
       _filtroReferenciaProjeto);
 
+  // manage state of modal progress HUD widget
+  bool _isLoading = false;
+
   PickedFile _imageFile;
   dynamic _pickImageError;
   bool isVideo = false;
@@ -185,7 +189,9 @@ class _sps_questionario_midia_screen
         final int registroGravado =
             await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(
                 dadosArquivo: _dadosArquivo);
-        setState(() {});
+        setState(() {
+          _isLoading = false;
+        });
       });
     } else {
       final pickedFile = await _picker.getImage(
@@ -194,6 +200,9 @@ class _sps_questionario_midia_screen
         maxHeight: null,
         imageQuality: null,
       );
+      setState(() {
+        _isLoading = true;
+      });
       spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
       File arquivoNormalizado =
           await objspsMidiaUtils.normalizarArquivo(pickedFile.path.toString());
@@ -235,7 +244,9 @@ class _sps_questionario_midia_screen
       final int registroGravado =
           await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(
               dadosArquivo: _dadosArquivo);
-      setState(() {});
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -409,55 +420,62 @@ class _sps_questionario_midia_screen
             ]),
           ),
           endDrawer: sps_drawer(spslogin: spslogin),
-          body: TabBarView(controller: controller, children: [
+          body: LoadingOverlay(
+            child:           TabBarView(controller: controller, children: [
 //             any widget can work very well here <3
-            //Container com a galeria de imagens
-            new Container(
-              child: Center(
-                child: ImageGrid(
+              //Container com a galeria de imagens
+              new Container(
+                child: Center(
+                  child: ImageGrid(
                       funCallback: () {
-                      setState(() {
-                        //limpar cache de imagem
-                        imageCache.clear();
-                      });
-                    },
-                    directory: _photoDir,
-                    extensao: ".jpg",
-                    tipo: "image",
-                    codigo_empresa: this.widget._codigo_empresa,
-                    codigo_programacao: this.widget._codigo_programacao,
-                    item_checklist: this.widget._item_checklist),
-              ),
-            ),
-            //Container com a galeria de vídeos
-            new Container(
-              child: Center(
-                child: ImageGrid(
-                    funCallback: () {
-                      setState(() {
-                        //limpar cache de imagem
-                        imageCache.clear();
-                      });
-                    },
-                    directory: _videoDir,
-                    extensao: ".jpg",
-                    tipo: "video",
-                    codigo_empresa: this.widget._codigo_empresa,
-                    codigo_programacao: this.widget._codigo_programacao,
-                    item_checklist: this.widget._item_checklist),
-              ),
-            ),
-            new Container(
-              color: Color(0xFFe9eef7),
-              child: Center(
-                child: Text(
-                  'Nenhum áudio disponível.',
-                  style: TextStyle(color: Colors.black),
+                        setState(() {
+                          //limpar cache de imagem
+                          imageCache.clear();
+                        });
+                      },
+                      directory: _photoDir,
+                      extensao: ".jpg",
+                      tipo: "image",
+                      codigo_empresa: this.widget._codigo_empresa,
+                      codigo_programacao: this.widget._codigo_programacao,
+                      item_checklist: this.widget._item_checklist),
                 ),
               ),
-            ),
-            new Container(),
-          ]),
+              //Container com a galeria de vídeos
+              new Container(
+                child: Center(
+                  child: ImageGrid(
+                      funCallback: () {
+                        setState(() {
+                          //limpar cache de imagem
+                          imageCache.clear();
+                        });
+                      },
+                      directory: _videoDir,
+                      extensao: ".jpg",
+                      tipo: "video",
+                      codigo_empresa: this.widget._codigo_empresa,
+                      codigo_programacao: this.widget._codigo_programacao,
+                      item_checklist: this.widget._item_checklist),
+                ),
+              ),
+              new Container(
+                color: Color(0xFFe9eef7),
+                child: Center(
+                  child: Text(
+                    'Nenhum áudio disponível.',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              new Container(),
+            ]),
+            isLoading: _isLoading,
+            // demo of some additional parameters
+            opacity: 0.5,
+            progressIndicator: CircularProgressIndicator(),
+            color: Colors.white,
+          ),
           floatingActionButton: _bottomButtons(controller.index),
         ));
   }

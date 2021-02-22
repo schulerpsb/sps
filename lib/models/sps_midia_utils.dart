@@ -122,10 +122,10 @@ class spsMidiaUtils {
     final fixedHeight = fixedImage.height;
     final fixedWidth = fixedImage.width;
 
-    if (fixedHeight <= 1024) {
+    if (fixedHeight <= 1920) {
       print('Arquivo mantido ==>width: '+fixedWidth.toString()+' original height: '+fixedHeight.toString());
     }else{
-      final porcentagemReducao = 102400 / fixedHeight;
+      final porcentagemReducao = 192000 / fixedHeight;
       print('Reduzir==>'+porcentagemReducao.toInt().toString());
       final newHeight = fixedHeight * porcentagemReducao.toInt() / 100;
       final newWidth = fixedWidth * porcentagemReducao.toInt() / 100;

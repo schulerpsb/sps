@@ -324,7 +324,7 @@ class ImageGrid extends StatelessWidget {
                                     ),
                                   ]),
                               Align(
-                                alignment: Alignment.centerLeft,
+                                alignment: Alignment.center,
                                 child: SizedBox(
                                   child: Text(
                                       _listaArquivos[index]['titulo_arquivo']

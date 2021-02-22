@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
+import 'package:loading_overlay/loading_overlay.dart';
 
 class sps_imagePlayer_screen extends StatefulWidget {
   final String _filePath;
@@ -19,6 +18,9 @@ class sps_imagePlayer_screen extends StatefulWidget {
 }
 
 class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
+  // manage state of modal progress HUD widget
+  bool _isLoading = false;
+
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
   final GlobalKey<ExtendedImageEditorState> editorKey =
@@ -28,7 +30,8 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
 
   @override
   Widget build(BuildContext context) {
-    //imageCache.clear();
+    imageCache.clear();
+    imageCache.clearLiveImages();
     return Scaffold(
       backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
       appBar: AppBar(
@@ -40,14 +43,21 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
         centerTitle: true,
       ),
       endDrawer: sps_drawer(spslogin: spslogin),
-      body: SizedBox.expand(
-        // child: Hero(
-        // tag: heroTag,
-        child: ExtendedImageSlidePage(
-          slideAxis: SlideAxis.both,
-          slideType: SlideType.onlyImage,
-          child: buildExtendedImage(),
+      body: LoadingOverlay(
+        child: SizedBox.expand(
+          // child: Hero(
+          // tag: heroTag,
+          child: ExtendedImageSlidePage(
+            slideAxis: SlideAxis.both,
+            slideType: SlideType.onlyImage,
+            child: buildExtendedImage(),
+          ),
         ),
+        isLoading: _isLoading,
+        // demo of some additional parameters
+        opacity: 0.5,
+        progressIndicator: CircularProgressIndicator(),
+        color: Colors.white,
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -77,6 +87,7 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
 
   ExtendedImage buildExtendedImage() {
     imageCache.clear();
+    imageCache.clearLiveImages();
     return ExtendedImage.file(
           File(this.widget._filePath),
           fit: BoxFit.contain,
@@ -104,23 +115,42 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
   }
 
   void _girarDireita() {
+    setState(() {
+      _isLoading = true;
+    });
     fixExifRotation(this.widget._filePath, 90).then((value){
       editorKey.currentState.rotate(right: true);
-      //limpar cache de imagem
-      imageCache.clear();
+      setState(() {
+        //limpar cache de imagem
+        imageCache.clear();
+        imageCache.clearLiveImages();
+        _isLoading = false;
+      });
     });
   }
 
   void _girarEsquerda() {
+    setState(() {
+      _isLoading = true;
+    });
     fixExifRotation(this.widget._filePath, -90).then((value){
       editorKey.currentState.rotate(right: false);
-      //limpar cache de imagem
-      imageCache.clear();
+      setState(() {
+        //limpar cache de imagem
+        imageCache.clear();
+        imageCache.clearLiveImages();
+        _isLoading = false;
+      });
     });
   }
 
   void _reset() {
     editorKey.currentState.reset();
+    setState(() {
+      //limpar cache de imagem
+      imageCache.clear();
+      imageCache.clearLiveImages();
+    });
   }
 
   Future<File> fixExifRotation(String imagePath, int degree) async {
