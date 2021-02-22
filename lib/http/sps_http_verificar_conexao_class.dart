@@ -36,7 +36,7 @@ class SpsVerificarConexao {
           print("Verificar conexão com o servidor de API´s");
           final response =
               //await http.head('http://teklist.schuler.de/webapi/api/questionario/read_cq_ext.php'); //Pode ser utilizado qualquer URL
-              await http.get('http://10.17.20.45/webapi/api/questionario/read_cq_ext.php'); //Pode ser utilizado qualquer URL
+              await http.get('http://10.17.20.45/webapi/api/login/read.php'); //Pode ser utilizado qualquer URL
           print("Retorno da verificação => " + response.statusCode.toString());
           if (response.statusCode == 200) {
             _wservidor_conectado = true;

@@ -376,10 +376,11 @@ class _sps_questionario_midia_screen
   //Widget Build da classe  _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
+    //limpar cache de imagem
+    imageCache.clear();
     new Directory(
             '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs')
         .create();
-    imageCache.clear();
     return DefaultTabController(
         length: 3,
         child: new Scaffold(
@@ -416,6 +417,8 @@ class _sps_questionario_midia_screen
                 child: ImageGrid(
                       funCallback: () {
                       setState(() {
+                        //limpar cache de imagem
+                        imageCache.clear();
                       });
                     },
                     directory: _photoDir,
@@ -432,6 +435,8 @@ class _sps_questionario_midia_screen
                 child: ImageGrid(
                     funCallback: () {
                       setState(() {
+                        //limpar cache de imagem
+                        imageCache.clear();
                       });
                     },
                     directory: _videoDir,
@@ -513,10 +518,6 @@ class AspectRatioVideoState extends State<AspectRatioVideo> {
     } else {
       return Container();
     }
-  }
-
-  refresh() {
-    setState(() {});
   }
 }
 // FIM - Declaração da classe AspectRatioVideoState

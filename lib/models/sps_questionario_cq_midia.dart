@@ -32,4 +32,17 @@ class SpsQuestionarioCqMidia {
     }
   }
 
+  Future<int> salvarTituloQuestionarioCqMidia({String titulo_arquivo = "", String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0, int item_anexo = 0}) async {
+    final spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
+    final SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioCqMidia();
+    final titulo = await objQuestionarioCqMidiaDao
+        .updateTituloQuestionarioCqMidia(titulo_arquivo: titulo_arquivo, codigo_empresa: codigo_empresa,codigo_programacao: codigo_programacao,item_checklist: item_checklist, item_anexo: item_anexo);
+    if (titulo == 1) {
+      print('titulo editado com sucesso!');
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
 }

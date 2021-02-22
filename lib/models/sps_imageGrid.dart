@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/media.dart';
 import 'package:sps/components/progress.dart';
@@ -38,6 +39,40 @@ class ImageGrid extends StatelessWidget {
     var refreshGridView;
     int indicemedia;
     final objSpsQuestionarioCqMidia = SpsQuestionarioCqMidia();
+
+
+    _popup_titulo(String titulo_arquivo, String codigo_empresa, int codigo_programacao, int item_checklist, int item_anexo) {
+      TextEditingController _novotitulo = TextEditingController();
+      _novotitulo.text = titulo_arquivo;
+      Alert(
+        context: context,
+        title: "Título do arquivo.\n",
+        content: TextField(
+          controller: _novotitulo,
+          maxLengthEnforced: true,
+          maxLength: 45,
+          textInputAction: TextInputAction.go,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(hintText: "Informe um título para o arquivo."),
+        ),
+        buttons: [
+          DialogButton(
+              child: Text(
+                "GRAVAR",
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              onPressed: (){
+                objSpsQuestionarioCqMidia.salvarTituloQuestionarioCqMidia(titulo_arquivo: _novotitulo.text, codigo_empresa: codigo_empresa, codigo_programacao: codigo_programacao, item_checklist: item_checklist, item_anexo: item_anexo).then((value){
+                  Navigator.of(context,
+                      rootNavigator:
+                      true)
+                      .pop();
+                  funCallback();
+                });
+              }),
+        ],
+      ).show();
+    }
 
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: objSpsQuestionarioCqMidia.listarQuestionarioCqMidia(
@@ -163,12 +198,6 @@ class ImageGrid extends StatelessWidget {
                 }
               }
               print('LISTA DE ARQUVIOS ' + _listaArquivos.toString());
-//                var imageList = directory
-//                    .listSync()
-//                    .map((item) => item.path)
-//                    .where((item) => item.endsWith(extensao))
-//                    .toList(growable: false);
-
               if (_listaArquivos.length >= 1) {
                 return GridView.builder(
                     itemCount: _listaArquivos.length,
@@ -286,37 +315,7 @@ class ImageGrid extends StatelessWidget {
                                                 size: 15,
                                               ),
                                               onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext context) {
-                                                      return AlertDialog(
-                                                          title: Text("SPS App"),
-                                                          content: Text(
-                                                              "Deseja realmente apagar o arquivo?"),
-                                                          actions: [
-                                                            FlatButton(
-                                                              child: Text("Cancelar"),
-                                                              onPressed: () {
-                                                                Navigator.of(context,
-                                                                    rootNavigator:
-                                                                    true)
-                                                                    .pop();
-                                                              },
-                                                            ),
-                                                            FlatButton(
-                                                                child: Text("Sim"),
-                                                                onPressed: () {
-                                                                  objSpsQuestionarioCqMidia.deletarQuestionarioCqMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
-                                                                    print('Feito');
-                                                                    Navigator.of(context,
-                                                                        rootNavigator:
-                                                                        true)
-                                                                        .pop();
-                                                                    funCallback();
-                                                                  });
-                                                                }),
-                                                          ]);
-                                                    });
+                                                _popup_titulo(_listaArquivos[index]['titulo_arquivo'].toString(),_listaArquivos[index]['codigo_empresa'],  int.parse(_listaArquivos[index]['codigo_programacao']), int.parse(_listaArquivos[index]['item_checklist']) ,int.parse(_listaArquivos[index]['item_anexo']));
                                               },
                                             ),
                                           ),
@@ -324,35 +323,38 @@ class ImageGrid extends StatelessWidget {
                                       ],
                                     ),
                                   ]),
-                              SizedBox(
-                                child: Text(
-                                    _listaArquivos[index]['titulo_arquivo']
-                                                .toString()
-                                                .length <=
-                                            0
-                                        ? ''
-                                        : _listaArquivos[index]
-                                                        ['titulo_arquivo']
-                                                    .toString()
-                                                    .length >=
-                                                45
-                                            ? _listaArquivos[index]
-                                                    ['titulo_arquivo']
-                                                .toString()
-                                                .substring(1, 45)
-                                            : _listaArquivos[index]
-                                                    ['titulo_arquivo']
-                                                .toString()
-                                                .substring(
-                                                    1,
-                                                    _listaArquivos[index]
-                                                            ['titulo_arquivo']
-                                                        .toString()
-                                                        .length),
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.black,
-                                        backgroundColor: Colors.white)),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: SizedBox(
+                                  child: Text(
+                                      _listaArquivos[index]['titulo_arquivo']
+                                                  .toString()
+                                                  .length <=
+                                              0
+                                          ? ''
+                                          : _listaArquivos[index]
+                                                          ['titulo_arquivo']
+                                                      .toString()
+                                                      .length >=
+                                                  45
+                                              ? _listaArquivos[index]
+                                                      ['titulo_arquivo']
+                                                  .toString()
+                                                  .substring(0, 45)
+                                              : _listaArquivos[index]
+                                                      ['titulo_arquivo']
+                                                  .toString()
+                                                  .substring(
+                                                      0,
+                                                      _listaArquivos[index]
+                                                              ['titulo_arquivo']
+                                                          .toString()
+                                                          .length),
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.black,
+                                          backgroundColor: Colors.white)),
+                                ),
                               ),
                             ],
                           ),
@@ -379,5 +381,7 @@ class ImageGrid extends StatelessWidget {
         return Text('Erro desconhecido');
       },
     );
+
   }
+
 }

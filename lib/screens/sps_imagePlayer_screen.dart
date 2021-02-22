@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:extended_image/extended_image.dart';
@@ -105,6 +106,7 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
   void _girarDireita() {
     fixExifRotation(this.widget._filePath, 90).then((value){
       editorKey.currentState.rotate(right: true);
+      //limpar cache de imagem
       imageCache.clear();
     });
   }
@@ -112,6 +114,7 @@ class _sps_imagePlayer_screen extends State<sps_imagePlayer_screen> {
   void _girarEsquerda() {
     fixExifRotation(this.widget._filePath, -90).then((value){
       editorKey.currentState.rotate(right: false);
+      //limpar cache de imagem
       imageCache.clear();
     });
   }
