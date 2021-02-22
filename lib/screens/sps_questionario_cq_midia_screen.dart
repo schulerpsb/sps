@@ -16,7 +16,6 @@ import 'package:sps/models/sps_questionario_cq_midia.dart';
 import 'package:flutter/painting.dart';
 
 class sps_questionario_cq_midia_screen extends StatefulWidget {
-
   final String _codigo_empresa;
   final int _codigo_programacao;
   final int _item_checklist;
@@ -79,8 +78,7 @@ class sps_questionario_cq_midia_screen extends StatefulWidget {
           this._status_aprovacao,
           this._origemUsuario,
           this._filtro,
-          this._filtroReferenciaProjeto
-      );
+          this._filtroReferenciaProjeto);
 }
 
 //Declaração da classe _sps_questionario_midia_screen
@@ -124,7 +122,6 @@ class _sps_questionario_midia_screen
   final TextEditingController maxHeightController = TextEditingController();
   final TextEditingController qualityController = TextEditingController();
 
-
   TabController controller;
 
   final Directory _photoDir = new Directory(
@@ -144,43 +141,51 @@ class _sps_questionario_midia_screen
       await _controller.setVolume(0.0);
     }
     if (isVideo) {
-      _picker.getVideo(
-          source: source, maxDuration: const Duration(seconds: 60)).then((final PickedFile file) async {
-              DateTime now = DateTime.now();
-              DateTime _currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
-              //Arquivo de video capturado
-              //Montagem do arquivo de dados para processamento do arquivo.
-              Map<String,dynamic> _dadosArquivo = new Map<String,dynamic>();
-              _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
-              _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
-              _dadosArquivo['item_checklist'] = this.widget._item_checklist;
-              _dadosArquivo['arquivo'] = file.path.toString();
-              if(usuarioAtual.tipo == "INTERNO"){
-                _dadosArquivo['registro_colaborador'] = usuarioAtual.senha_usuario;
-                _dadosArquivo['identificacao_utilizador'] = '';
-              }else{
-                _dadosArquivo['registro_colaborador'] = '';
-                _dadosArquivo['identificacao_utilizador'] = usuarioAtual.codigo_usuario;
-              }
-              _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
-              _dadosArquivo['dthratualizacao'] = _currentTime.toString();
-              _dadosArquivo['dthranexo'] = _currentTime.toString();
+      _picker
+          .getVideo(source: source, maxDuration: const Duration(seconds: 60))
+          .then((final PickedFile file) async {
+        DateTime now = DateTime.now();
+        DateTime _currentTime = new DateTime(
+            now.year, now.month, now.day, now.hour, now.minute, now.second);
+        //Arquivo de video capturado
+        //Montagem do arquivo de dados para processamento do arquivo.
+        Map<String, dynamic> _dadosArquivo = new Map<String, dynamic>();
+        _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
+        _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
+        _dadosArquivo['item_checklist'] = this.widget._item_checklist;
+        _dadosArquivo['arquivo'] = file.path.toString();
+        if (usuarioAtual.tipo == "INTERNO") {
+          _dadosArquivo['registro_colaborador'] = usuarioAtual.senha_usuario;
+          _dadosArquivo['identificacao_utilizador'] = '';
+        } else {
+          _dadosArquivo['registro_colaborador'] = '';
+          _dadosArquivo['identificacao_utilizador'] =
+              usuarioAtual.codigo_usuario;
+        }
+        _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
+        _dadosArquivo['dthratualizacao'] = _currentTime.toString();
+        _dadosArquivo['dthranexo'] = _currentTime.toString();
 
-              //Processamento do arquivo capturado - Renomear - mover.
-              final String arquivoMovido = await spsMidiaUtils.processarArquivoCapturado(tipo: ".mp4", dadosArquivo: _dadosArquivo);
+        //Processamento do arquivo capturado - Renomear - mover.
+        final String arquivoMovido =
+            await spsMidiaUtils.processarArquivoCapturado(
+                tipo: ".mp4", dadosArquivo: _dadosArquivo);
 
-              _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
-              _dadosArquivo['item_anexo'] = (_dadosArquivo['nome_arquivo'].split('_')[3]).split('.').first;
+        _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
+        _dadosArquivo['item_anexo'] =
+            (_dadosArquivo['nome_arquivo'].split('_')[3]).split('.').first;
 
-              List _listaArquivos = new List();
-              _listaArquivos.add(arquivoMovido);
-              //Processamento do arquivo capturado - Gerar thumbnail.
-              await spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos);
-              SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioCqMidia();
-              //Gravação do registro na tabela de anexos do SQLITE
-              final int registroGravado = await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(dadosArquivo: _dadosArquivo);
-              setState(() {
-              });
+        List _listaArquivos = new List();
+        _listaArquivos.add(arquivoMovido);
+        //Processamento do arquivo capturado - Gerar thumbnail.
+        await spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos);
+        SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao =
+            SpsDaoQuestionarioCqMidia();
+        //Gravação do registro na tabela de anexos do SQLITE
+        final int registroGravado =
+            await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(
+                dadosArquivo: _dadosArquivo);
+        setState(() {});
       });
     } else {
       final pickedFile = await _picker.getImage(
@@ -190,21 +195,23 @@ class _sps_questionario_midia_screen
         imageQuality: null,
       );
       spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
-      File arquivoNormalizado = await objspsMidiaUtils.normalizarArquivo(pickedFile.path.toString());
+      File arquivoNormalizado =
+          await objspsMidiaUtils.normalizarArquivo(pickedFile.path.toString());
 
       DateTime now = DateTime.now();
-      DateTime _currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
+      DateTime _currentTime = new DateTime(
+          now.year, now.month, now.day, now.hour, now.minute, now.second);
       //Arquivo de imagem capturado
       //Montagem do arquivo de dados para processamento do arquivo.
-      Map<String,dynamic> _dadosArquivo = new Map<String,dynamic>();
+      Map<String, dynamic> _dadosArquivo = new Map<String, dynamic>();
       _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
       _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
       _dadosArquivo['item_checklist'] = this.widget._item_checklist;
       _dadosArquivo['arquivo'] = arquivoNormalizado.path.toString();
-      if(usuarioAtual.tipo == "INTERNO"){
+      if (usuarioAtual.tipo == "INTERNO") {
         _dadosArquivo['registro_colaborador'] = usuarioAtual.senha_usuario;
         _dadosArquivo['identificacao_utilizador'] = '';
-      }else{
+      } else {
         _dadosArquivo['registro_colaborador'] = '';
         _dadosArquivo['identificacao_utilizador'] = usuarioAtual.codigo_usuario;
       }
@@ -213,18 +220,22 @@ class _sps_questionario_midia_screen
       _dadosArquivo['dthranexo'] = _currentTime.toString();
 
       //Processamento do arquivo capturado - Renomear - mover.
-      final String arquivoMovido = await spsMidiaUtils.processarArquivoCapturado(tipo: ".jpg", dadosArquivo: _dadosArquivo);
+      final String arquivoMovido = await spsMidiaUtils
+          .processarArquivoCapturado(tipo: ".jpg", dadosArquivo: _dadosArquivo);
 
       _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
-      _dadosArquivo['item_anexo'] = (_dadosArquivo['nome_arquivo'].split('_')[3]).split('.').first;
+      _dadosArquivo['item_anexo'] =
+          (_dadosArquivo['nome_arquivo'].split('_')[3]).split('.').first;
 
       List _listaArquivos = new List();
       _listaArquivos.add(arquivoMovido);
       //Gravação do registro na tabela de anexos do SQLITE
-      SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioCqMidia();
-      final int registroGravado = await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(dadosArquivo: _dadosArquivo);
-      setState(() {
-      });
+      SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao =
+          SpsDaoQuestionarioCqMidia();
+      final int registroGravado =
+          await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(
+              dadosArquivo: _dadosArquivo);
+      setState(() {});
     }
   }
 
@@ -365,12 +376,15 @@ class _sps_questionario_midia_screen
   //Widget Build da classe  _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
-    new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
+    new Directory(
+            '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs')
+        .create();
     imageCache.clear();
     return DefaultTabController(
         length: 3,
         child: new Scaffold(
-          backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
+          backgroundColor: Color(0xFFe9eef7),
+          // Cinza Azulado
           appBar: AppBar(
             backgroundColor: Color(0xFF004077),
             title: Text(
@@ -394,19 +408,38 @@ class _sps_questionario_midia_screen
             ]),
           ),
           endDrawer: sps_drawer(spslogin: spslogin),
-          body:
-          TabBarView(controller: controller, children: [
+          body: TabBarView(controller: controller, children: [
 //             any widget can work very well here <3
             //Container com a galeria de imagens
             new Container(
               child: Center(
-                child: ImageGrid(directory: _photoDir, extensao: ".jpg",tipo: "image", codigo_empresa: this.widget._codigo_empresa, codigo_programacao: this.widget._codigo_programacao, item_checklist: this.widget._item_checklist),
+                child: ImageGrid(
+                      funCallback: () {
+                      setState(() {
+                      });
+                    },
+                    directory: _photoDir,
+                    extensao: ".jpg",
+                    tipo: "image",
+                    codigo_empresa: this.widget._codigo_empresa,
+                    codigo_programacao: this.widget._codigo_programacao,
+                    item_checklist: this.widget._item_checklist),
               ),
             ),
             //Container com a galeria de vídeos
             new Container(
               child: Center(
-                child: ImageGrid(directory: _videoDir, extensao: ".jpg",tipo: "video", codigo_empresa: this.widget._codigo_empresa, codigo_programacao: this.widget._codigo_programacao, item_checklist: this.widget._item_checklist),
+                child: ImageGrid(
+                    funCallback: () {
+                      setState(() {
+                      });
+                    },
+                    directory: _videoDir,
+                    extensao: ".jpg",
+                    tipo: "video",
+                    codigo_empresa: this.widget._codigo_empresa,
+                    codigo_programacao: this.widget._codigo_programacao,
+                    item_checklist: this.widget._item_checklist),
               ),
             ),
             new Container(
@@ -418,9 +451,7 @@ class _sps_questionario_midia_screen
                 ),
               ),
             ),
-            new Container(
-
-            ),
+            new Container(),
           ]),
           floatingActionButton: _bottomButtons(controller.index),
         ));
@@ -487,6 +518,5 @@ class AspectRatioVideoState extends State<AspectRatioVideo> {
   refresh() {
     setState(() {});
   }
-
 }
 // FIM - Declaração da classe AspectRatioVideoState

@@ -17,9 +17,12 @@ class ImageGrid extends StatelessWidget {
   final String codigo_empresa;
   final int codigo_programacao;
   final int item_checklist;
+  final Function() funCallback;
+
 
   const ImageGrid(
-      {Key key,
+      {this.funCallback,
+      Key key,
       this.directory,
       this.extensao,
       this.tipo,
@@ -227,13 +230,13 @@ class ImageGrid extends StatelessWidget {
                                         Align(
                                           alignment: Alignment.bottomCenter,
                                           child: CircleAvatar(
-                                            radius: 18,
+                                            radius: 15,
                                             backgroundColor: Colors.white,
                                             child: IconButton(
                                               icon: Icon(
                                                 Icons.delete,
                                                 color: Color(0xFF004077),
-                                                size: 20,
+                                                size: 15,
                                               ),
                                               onPressed: () {
                                                 showDialog(
@@ -257,7 +260,12 @@ class ImageGrid extends StatelessWidget {
                                                                 child: Text("Sim"),
                                                                 onPressed: () {
                                                                   objSpsQuestionarioCqMidia.deletarQuestionarioCqMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
-                                                                    _sps_questionario_cq_midia_screen.refresh();
+                                                                    print('Feito');
+                                                                    Navigator.of(context,
+                                                                        rootNavigator:
+                                                                        true)
+                                                                        .pop();
+                                                                        funCallback();
                                                                   });
                                                                 }),
                                                           ]);
@@ -269,15 +277,47 @@ class ImageGrid extends StatelessWidget {
                                         Align(
                                           alignment: Alignment.bottomCenter,
                                           child: CircleAvatar(
-                                            radius: 18,
+                                            radius: 15,
                                             backgroundColor: Colors.white,
                                             child: IconButton(
                                               icon: Icon(
                                                 Icons.edit,
                                                 color: Color(0xFF004077),
-                                                size: 20,
+                                                size: 15,
                                               ),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                          title: Text("SPS App"),
+                                                          content: Text(
+                                                              "Deseja realmente apagar o arquivo?"),
+                                                          actions: [
+                                                            FlatButton(
+                                                              child: Text("Cancelar"),
+                                                              onPressed: () {
+                                                                Navigator.of(context,
+                                                                    rootNavigator:
+                                                                    true)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                            FlatButton(
+                                                                child: Text("Sim"),
+                                                                onPressed: () {
+                                                                  objSpsQuestionarioCqMidia.deletarQuestionarioCqMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
+                                                                    print('Feito');
+                                                                    Navigator.of(context,
+                                                                        rootNavigator:
+                                                                        true)
+                                                                        .pop();
+                                                                    funCallback();
+                                                                  });
+                                                                }),
+                                                          ]);
+                                                    });
+                                              },
                                             ),
                                           ),
                                         ),
