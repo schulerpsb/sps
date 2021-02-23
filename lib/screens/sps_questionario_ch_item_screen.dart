@@ -336,7 +336,30 @@ class _sps_questionario_ch_item_screen
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  sps_questionario_midia_screen()),
+                                                  sps_questionario_midia_screen(snapshot.data[index]
+                                                  ["codigo_empresa"],
+                                                    snapshot.data[index]
+                                                    ["codigo_programacao"],
+                                                    snapshot.data[index]
+                                                    ["item_checklist"],
+                                                    snapshot.data[index]
+                                                    ["descr_comentarios"],
+                                                    this.widget._registro_colaborador,
+                                                    this.widget._identificacao_utilizador,
+                                                    this.widget._codigo_grupo,
+                                                    this.widget._codigo_checklist,
+                                                    this.widget._descr_programacao,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    this.widget._sincronizado,
+                                                    snapshot.data[index]
+                                                    ["status_aprovacao"],
+                                                    null,
+                                                    this.widget._filtro,
+                                                    this.widget._filtroReferenciaProjeto)),
                                         );
                                       },
                                     ),
