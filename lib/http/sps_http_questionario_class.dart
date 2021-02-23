@@ -10,7 +10,7 @@ class SpsHttpQuestionario {
   //static const baseUrl_saveReferencia = 'https://teklist.schuler.de/webapi/api/questionario/save_referencia.php';
 
   //Servidor DEV
-  static const baseUrl_read_cq_ext = 'http://10.17.20.45/webapi/api/questionario/read_cq_ext.php';
+  static const baseUrl_read_cq_ext = 'http://10.17.20.45/webapi/api/questionario/read_lista.php';
   static const baseUrl_read_cq_int = 'http://10.17.20.45/webapi/api/questionario/read_cq_int.php';
   static const baseUrl_saveReferencia = 'http://10.17.20.45/webapi/api/questionario/save_referencia.php';
 
