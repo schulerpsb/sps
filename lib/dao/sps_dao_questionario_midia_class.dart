@@ -88,6 +88,7 @@ class SpsDaoQuestionarioMidia {
     debugPrint("query deletar registro=> "+_query);
     final int result = await db.rawDelete(_query);
     return result;
+
   }
 
   Future<int> updateTituloQuestionarioMidia({String titulo_arquivo = "", String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0, int item_anexo = 0}) async {
@@ -96,6 +97,7 @@ class SpsDaoQuestionarioMidia {
     debugPrint("query atualizar titulo do arquivo=> "+_query);
     final int result = await db.rawUpdate(_query);
     return result;
+
   }
 
 }
