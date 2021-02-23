@@ -239,10 +239,10 @@ class _sps_questionario_midia_screen
       List _listaArquivos = new List();
       _listaArquivos.add(arquivoMovido);
 
-
       //Gravação do registro na tabela de anexos do SQLITE
       SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
       final int registroGravado = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+
 
       setState(() {
         _isLoading = false;
