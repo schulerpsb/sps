@@ -147,7 +147,9 @@ class _sps_questionario_cq_int_item_screen
               this.widget._codigo_empresa,
               this.widget._codigo_programacao,
               this.widget._codigo_grupo,
-              this.widget._codigo_checklist),
+              this.widget._codigo_checklist,
+              'PROXIMO',
+              ''),
           builder: (context, snapshot) {
             _singleValue.clear();
             debugPrint(snapshot.data.toString());

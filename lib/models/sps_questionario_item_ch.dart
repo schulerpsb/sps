@@ -14,9 +14,11 @@ class SpsQuestionarioItem_ch {
       h_codigo_empresa,
       h_codigo_programacao,
       h_codigo_grupo,
-      h_codigo_checklist) async {
-    final acao = 'PROXIMO';
-    final sessao_checklist = '';
+      h_codigo_checklist,
+      h_acao,
+      h_sessao_checklist) async {
+    final acao = h_acao;
+    final sessao_checklist = h_sessao_checklist;
     final codigo_empresa = h_codigo_empresa;
     final codigo_programacao = h_codigo_programacao;
     final registro_colaborador = '';
@@ -115,17 +117,7 @@ class SpsQuestionarioItem_ch {
     //Ler dados do SQlite
     debugPrint("Ler dados do SQlite (Tabela: checklist_item)");
     final List<Map<String, dynamic>> DadosSessao = await objQuestionarioItemDao
-        .listarQuestionarioItemLocal(h_codigo_empresa, h_codigo_programacao);
-
-
-//    SpsDaoQuestionarioMidia objSpsDaoQuestionarioMidia = new SpsDaoQuestionarioMidia();
-//    var _wregistrosDadosSessao = DadosSessao.length;
-//    var windexDadosSessao = 0;
-//    while (windexDadosSessao < _wregistrosDadosSessao) {
-//      var itemChecklist = await objSpsDaoQuestionarioMidia.listarQuestionarioMidia(codigo_empresa: snapshot.data[index]["codigo_empresa"] ,codigo_programacao: snapshot.data[index]["codigo_programacao"], item_checklist: snapshot.data[index]["item_checklist"]);
-//      windexDadosSessao = windexDadosSessao + 1;
-//    }
-
+        .listarQuestionarioItemLocal(h_codigo_empresa, h_codigo_programacao, h_acao, h_sessao_checklist);
     return DadosSessao;
   }
 }
