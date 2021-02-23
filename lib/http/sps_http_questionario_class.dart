@@ -44,8 +44,6 @@ class SpsHttpQuestionario {
           ),
         );
 
-    print ("Adriano=>"+dadosQuestionarioJson.toString());
-
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
     final List<Map<String, dynamic>> transactionJsonOcorrencias = [];
     Map<String, dynamic> transactionJsonMap = null;
