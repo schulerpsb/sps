@@ -8,20 +8,22 @@ class SpsHttpQuestionarioMidia {
   //static const baseUrl = 'https://teklist.schuler.de/webapi/api/questionario/read.php';
 
   //Servidor DEV
-  static const baseUrl = 'http://10.17.20.45/webapi/api/questionario/read.php';
+  static const UrlIsertMidia = 'http://10.17.20.45/webapi/api/midia/create.php';
+  static const UrlReadMidia = 'http://10.17.20.45/webapi/api/midia/read.php';
 
   SpsHttpQuestionarioMidia();
 
-  Future<List<Map<String, dynamic>>> listarMidia(String doc_action, String registro_colaborador, String identificacao_utilizador, String tipo_frequencia, String tipo_checklist) async {
-    final Map<String, dynamic> keyQuestionario = {
-      'doc_action': doc_action,
-      'registro_colaborador': registro_colaborador,
-      'identificacao_utilizador': identificacao_utilizador,
-      'tipo_frequencia': tipo_frequencia,
-      'tipo_checklist': tipo_checklist,
+  Future<List<Map<String, dynamic>>> listarMidia({Map<String, dynamic> dadosArquivo}) async {
+    final Map<String, dynamic> keyMidia = {
+      'codigo_empresa': dadosArquivo['codigo_empresa'],
+      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+      'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
+      'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
+      'item_checklist': dadosArquivo['item_checklist'].toString(),
+      'item_anexo': dadosArquivo['item_anexo'].toString(),
     };
 
-    final String dadosQuestionarioJson = jsonEncode(keyQuestionario);
+    final String dadosMidiaJson = jsonEncode(keyMidia);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -29,15 +31,15 @@ class SpsHttpQuestionarioMidia {
 
     final Response response = await client
         .post(
-          baseUrl,
-          headers: {'Content-type': 'application/json'},
-          body: dadosQuestionarioJson,
-        )
+      UrlReadMidia,
+      headers: {'Content-type': 'application/json'},
+      body: dadosMidiaJson,
+    )
         .timeout(
-          Duration(
-            seconds: 5,
-          ),
-        );
+      Duration(
+        seconds: 5,
+      ),
+    );
 
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
     final List<Map<String, dynamic>> transactionJsonOcorrencias = [];
@@ -46,23 +48,61 @@ class SpsHttpQuestionarioMidia {
       transactionJsonMap = {
         'codigo_empresa': element['codigo_empresa'].trim(),
         'codigo_programacao': element['codigo_programacao'],
-        'registro_colaborador': element['registro_colaborador'],
-        'identificacao_utilizador': element['identificacao_utilizador'],
+        'registro_colaborador': element['registro_colaborador'].trim(),
+        'identificacao_utilizador': element['identificacao_utilizador'].trim(),
         'item_checklist': element['item_checklist'],
-        'descr_programacao': element['descr_programacao'],
-        'dtfim_aplicacao': element['dtfim_aplicacao'],
-        'percentual_evolucao': element['percentual_evolucao'],
-        'status': element['status'],
-        'referencia_parceiro': element['referencia_parceiro'],
-        'codigo_pedido': element['codigo_pedido'],
-        'item_pedido': element['item_pedido'],
-        'codigo_projeto': element['codigo_projeto'],
-        'descr_projeto': element['descr_projeto'],
-        'codigo_material': element['codigo_material'],
-        'descr_comentarios': element['descr_comentarios'],
+        'item_anexo': element['item_anexo'],
+        'nome_arquivo': element['nome_arquivo'].trim(),
+        'titulo_arquivo': element['nome_arquivo'].trim(),
+        'usuresponsavel': element['usuresponsavel'].trim(),
+        'dthratualizacao': element['dthratualizacao'].trim(),
+        'dthranexo': element['dthranexo'].trim(),
       };
       transactionJsonOcorrencias.add(transactionJsonMap);
     }
     return transactionJsonOcorrencias;
   }
+
+  Future<int> InserirQuestionarioMidia({Map<String, dynamic> dadosArquivo}) async {
+    final Map<String, dynamic> keyMidia = {
+      'codigo_empresa': dadosArquivo['codigo_empresa'],
+      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+      'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
+      'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
+      'item_checklist': dadosArquivo['item_checklist'].toString(),
+      'item_anexo': dadosArquivo['item_anexo'].toString(),
+      'nome_arquivo': dadosArquivo['nome_arquivo'].toString(),
+      'titulo_arquivo': '',
+      'usuresponsavel': dadosArquivo['usuresponsavel'].toString(),
+      'dthratualizacao': dadosArquivo['dthratualizacao'].toString(),
+      'dthranexo': dadosArquivo['dthranexo'].toString(),
+    };
+
+    final String dadosMidiaJson = jsonEncode(keyMidia);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      UrlIsertMidia,
+      headers: {'Content-type': 'application/json'},
+      body: dadosMidiaJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+
+    final int transactionJson = jsonDecode(response.body);
+    if(transactionJson == 1){
+      return 1;
+    }else{
+      return 0;
+    }
+  }
+
+
 }

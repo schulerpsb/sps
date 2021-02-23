@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SpsDaoQuestionarioItem {
@@ -121,7 +122,8 @@ class SpsDaoQuestionarioItem {
 
   Future<List<Map<String, dynamic>>> listarQuestionarioItemLocal(_hcodigoEmpresa, _hcodigoProgramacao) async {
     final Database db = await getDatabase();
-//    var _query = 'SELECT * FROM checklist_item where codigo_empresa = "'+_hcodigoEmpresa+'" and codigo_programacao = '+_hcodigoProgramacao.toString();
+    final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+    await objQuestionarioCqMidiaDao.create_table();
     var _query = 'SELECT *, (select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist) as anexos FROM checklist_item item where codigo_empresa = "'+_hcodigoEmpresa+'" and codigo_programacao = '+_hcodigoProgramacao.toString();
     debugPrint("query => "+_query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);

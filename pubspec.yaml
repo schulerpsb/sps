@@ -61,6 +61,7 @@ dev_dependencies:
   extended_image: ^1.5.0
   image: any
   loading_overlay: ^0.2.1
+  badges: ^1.1.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

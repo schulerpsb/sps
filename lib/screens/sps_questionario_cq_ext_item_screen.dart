@@ -5,7 +5,7 @@ import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
-import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
+import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
@@ -16,6 +16,7 @@ import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
+import 'package:badges/badges.dart';
 
 class sps_questionario_cq_ext_item_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -382,10 +383,17 @@ class _sps_questionario_cq_ext_item_screen
                                       ),
                                     ),
                                     Text("  "),
-
                                     //Tratar Mídias
                                     IconButton(
-                                      icon: Icon(Icons.collections, size: 30),
+                                      icon: Badge(
+                                        badgeContent: Text(snapshot.data[index]["anexos"].toString(), style: TextStyle(color: Colors.white, fontSize: 8)),
+                                        showBadge: snapshot.data[index]
+                                        ["anexos"] > 0
+                                            ? true
+                                            : false,
+                                        badgeColor: Color(0xFF004077),
+                                        child: Icon(Icons.collections, size: 30),
+                                      ),
                                       color: snapshot.data[index]
                                       ["anexos"] > 0
                                           ? Colors.blue

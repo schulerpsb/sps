@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
+import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:thumbnails/thumbnails.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
@@ -42,12 +43,22 @@ class spsMidiaUtils {
     String _extensaoArquivo = sourceFile.path.split('.').last;
     final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
     List<Map<String, dynamic>> arquivosArmazenados = await objQuestionarioCqMidiaDao.listarQuestionarioMidia(codigo_empresa: dadosArquivo['codigo_empresa'], codigo_programacao: dadosArquivo['codigo_programacao'], item_checklist:dadosArquivo['item_checklist']);
+
     int _proximoRegistro;
+    //Verificar se existe conexão
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
+
+    }else{
+
+    }
     if(arquivosArmazenados.length < 1){
-       _proximoRegistro = 1;
-     }else{
-       _proximoRegistro = arquivosArmazenados[0]['item_anexo'] + 1;
-     }
+      _proximoRegistro = 1;
+    }else{
+      _proximoRegistro = arquivosArmazenados[0]['item_anexo'] + 1;
+    }
+
     String _nomeArquivo = dadosArquivo['codigo_empresa']+'_'+dadosArquivo['codigo_programacao'].toString()+'_'+dadosArquivo['item_checklist'].toString()+'_'+_proximoRegistro.toString()+'.'+_extensaoArquivo.toString();
     String newPath = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/'+_nomeArquivo.toString();
     final util  = new spsMidiaUtils();
@@ -99,25 +110,7 @@ class spsMidiaUtils {
 
     img.Image fixedImage;
 
-//    if (originalHeight < originalWidth) {
-//      print('Rotação necessária');
-//      final exifData = await readExifFromBytes(imageBytes);
-//      if (exifData['Image Orientation'].printable.contains('Horizontal')) {
-//        fixedImage = img.copyRotate(originalImage, 90);
-//        print('Rotação necessária 90');
-//      } else if (exifData['Image Orientation'].printable.contains('180')) {
-//        fixedImage = img.copyRotate(originalImage, -90);
-//        print('Rotação necessária -90');
-//      } else if (exifData['Image Orientation'].printable.contains('CCW')) {
-//        fixedImage = img.copyRotate(originalImage, 180);
-//        print('Rotação necessária 180');
-//      } else {
-//        fixedImage = img.copyRotate(originalImage, 0);
-//        print('Rotação necessária 0');
-//      }
-//    }else{
-      fixedImage = originalImage;
-//    }
+     fixedImage = originalImage;
 
     final fixedHeight = fixedImage.height;
     final fixedWidth = fixedImage.width;

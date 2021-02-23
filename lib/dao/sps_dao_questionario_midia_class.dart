@@ -66,7 +66,7 @@ class SpsDaoQuestionarioMidia {
 
   Future<int> InserirQuestionarioMidia({Map<String, dynamic> dadosArquivo}) async {
     final Database db = await getDatabase();
-    var _queryinsert = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES ("+dadosArquivo['codigo_empresa']+", '"+dadosArquivo['codigo_programacao'].toString()+"', '"+dadosArquivo['registro_colaborador'].toString()+"' , '"+dadosArquivo['identificacao_utilizador'].toString()+"', "+dadosArquivo['item_checklist'].toString()+", "+dadosArquivo['item_anexo'].toString()+", '"+dadosArquivo['nome_arquivo'].toString()+"' , '', '"+dadosArquivo['usuresponsavel'].toString()+"', '"+dadosArquivo['dthratualizacao'].toString()+"', '"+dadosArquivo['dthranexo'].toString()+"', 'N')";
+    var _queryinsert = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES ("+dadosArquivo['codigo_empresa']+", '"+dadosArquivo['codigo_programacao'].toString()+"', '"+dadosArquivo['registro_colaborador'].toString()+"' , '"+dadosArquivo['identificacao_utilizador'].toString()+"', "+dadosArquivo['item_checklist'].toString()+", "+dadosArquivo['item_anexo'].toString()+", '"+dadosArquivo['nome_arquivo'].toString()+"' , '', '"+dadosArquivo['usuresponsavel'].toString()+"', '"+dadosArquivo['dthratualizacao'].toString()+"', '"+dadosArquivo['dthranexo'].toString()+"', '"+dadosArquivo['sincronizado'].toString()+"')";
     debugPrint("query inserir registro=> "+_queryinsert);
     final int result = await db.rawInsert(_queryinsert);
     return result;
@@ -75,9 +75,9 @@ class SpsDaoQuestionarioMidia {
 
   Future<int> deletarQuestionarioMidia({String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0, int item_anexo = 0}) async {
     final Database db = await getDatabase();
-    var _query = 'Delete FROM sps_checklist_tb_resp_anexo where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' and item_anexo = '+item_anexo.toString();
+    var _query = 'update sps_checklist_tb_resp_anexo set sincronizado = "D" where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' and item_anexo = '+item_anexo.toString();
     debugPrint("query deletar registro=> "+_query);
-    final int result = await db.rawDelete(_query);
+    final int result = await db.rawUpdate(_query);
     return result;
 
   }
