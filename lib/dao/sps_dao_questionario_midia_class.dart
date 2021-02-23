@@ -58,15 +58,6 @@ class SpsDaoQuestionarioMidia {
 
   Future<List<Map<String, dynamic>>> listarQuestionarioMidia({String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0}) async {
     final Database db = await getDatabase();
-//    var _queryinsert1 = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES('7000', 1010, '', 'FFERNANDO', 1, 1, '7000_1010_1_1.mp4', 'Video de teste 1', 'FFERNANDO', '2021-05-15 00:00:00', '2021-05-15 00:00:00', 'N')";
-//    var _queryinsert2 = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES('7000', 1010, '', 'FFERNANDO', 1, 2, '7000_1010_1_2.mp4', 'Video de teste 2', 'FFERNANDO', '2021-05-15 00:00:00', '2021-05-15 00:00:00', 'N')";
-//    var _queryinsert3 = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES('7000', 1010, '', 'FFERNANDO', 1, 3, '7000_1010_1_3.jpg', 'imagem de teste 3', 'FFERNANDO', '2021-05-15 00:00:00', '2021-05-15 00:00:00', 'N')";
-//    var _queryinsert4 = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES('7000', 1010, '', 'FFERNANDO', 1, 4, '7000_1010_1_4.jpg', 'imagem de teste 4', 'FFERNANDO', '2021-05-15 00:00:00', '2021-05-15 00:00:00', 'N')";
-//    final List<Map<String, dynamic>> result1 = await db.rawQuery(_queryinsert1);
-//    final List<Map<String, dynamic>> result2 = await db.rawQuery(_queryinsert2);
-//    final List<Map<String, dynamic>> result3 = await db.rawQuery(_queryinsert3);
-//    final List<Map<String, dynamic>> result4 = await db.rawQuery(_queryinsert4);
-
     var _query = 'SELECT * FROM sps_checklist_tb_resp_anexo where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' order by item_anexo desc';
     debugPrint("query sss=> "+_query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);

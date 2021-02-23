@@ -4,6 +4,7 @@ import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
+import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
@@ -238,7 +239,6 @@ class _sps_questionario_cq_ext_item_screen
                           ),
                         ),
                       ),
-
                       //Construir lista de opções
                       Expanded(
                         child: ListView.builder(
@@ -262,7 +262,6 @@ class _sps_questionario_cq_ext_item_screen
                                 _singleValue.add("");
                                 break;
                             }
-
                             return Card(
                               color: Colors.white,
                               child: Column(
@@ -387,7 +386,10 @@ class _sps_questionario_cq_ext_item_screen
                                     //Tratar Mídias
                                     IconButton(
                                       icon: Icon(Icons.collections, size: 30),
-                                      color: Colors.black,
+                                      color: snapshot.data[index]
+                                      ["anexos"] > 0
+                                          ? Colors.blue
+                                          : Colors.black,
                                       onPressed: () {
                                         Navigator.push(
                                           context,

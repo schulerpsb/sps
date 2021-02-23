@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
+import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'Dart:io';
@@ -115,6 +116,16 @@ class SpsQuestionarioItem_ch {
     debugPrint("Ler dados do SQlite (Tabela: checklist_item)");
     final List<Map<String, dynamic>> DadosSessao = await objQuestionarioItemDao
         .listarQuestionarioItemLocal(h_codigo_empresa, h_codigo_programacao);
+
+
+//    SpsDaoQuestionarioMidia objSpsDaoQuestionarioMidia = new SpsDaoQuestionarioMidia();
+//    var _wregistrosDadosSessao = DadosSessao.length;
+//    var windexDadosSessao = 0;
+//    while (windexDadosSessao < _wregistrosDadosSessao) {
+//      var itemChecklist = await objSpsDaoQuestionarioMidia.listarQuestionarioMidia(codigo_empresa: snapshot.data[index]["codigo_empresa"] ,codigo_programacao: snapshot.data[index]["codigo_programacao"], item_checklist: snapshot.data[index]["item_checklist"]);
+//      windexDadosSessao = windexDadosSessao + 1;
+//    }
+
     return DadosSessao;
   }
 }
