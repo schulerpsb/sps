@@ -386,7 +386,32 @@ class _sps_questionario_cq_int_item_screen
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  sps_questionario_midia_screen()),
+                                                  sps_questionario_midia_screen(
+                                                    snapshot.data[index]
+                                                    ["codigo_empresa"],
+                                                    snapshot.data[index]
+                                                    ["codigo_programacao"],
+                                                    snapshot.data[index]
+                                                    ["item_checklist"],
+                                                    snapshot.data[index]
+                                                    ["descr_comentarios"],
+                                                    this.widget._registro_colaborador,
+                                                    this.widget._identificacao_utilizador,
+                                                    this.widget._codigo_grupo,
+                                                    this.widget._codigo_checklist,
+                                                    this.widget._descr_programacao,
+                                                    this.widget._codigo_pedido,
+                                                    this.widget._item_pedido,
+                                                    this.widget._codigo_material,
+                                                    this.widget._referencia_parceiro,
+                                                    this.widget._codigo_projeto,
+                                                    this.widget._sincronizado,
+                                                    snapshot.data[index]
+                                                    ["status_aprovacao"],
+                                                    this.widget._origemUsuario,
+                                                    this.widget._filtro,
+                                                    this.widget._filtroReferenciaProjeto,
+                                                  )),
                                         );
                                       },
                                     ),

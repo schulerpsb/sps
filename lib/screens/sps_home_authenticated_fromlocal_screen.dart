@@ -224,12 +224,12 @@ class _HomeSpsAuthenticatedFromLocalState
                         ),
                       );
                     }
-                  /*} else {
-                    return CenteredMessage(
-                      erroConexao.msg_erro_conexao.toString(),
-                      icon: Icons.warning,
-                    );
-                  }*/
+//                  } else {
+//                    return CenteredMessage(
+//                      'Falha de conexão!',
+//                      icon: Icons.warning,
+//                    );
+//                  }
                   break;
               }
               return Text('Unkown error');

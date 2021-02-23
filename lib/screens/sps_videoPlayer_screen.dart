@@ -7,18 +7,18 @@ import 'package:sps/models/sps_login.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
 
-class sps_mediaPlayer_screen extends StatefulWidget {
+class sps_videoPlayer_screen extends StatefulWidget {
   final String _filePath;
   final String _fileType;
 
-  sps_mediaPlayer_screen(this._filePath, this._fileType);
+  sps_videoPlayer_screen(this._filePath, this._fileType);
 
   @override
   _sps_mediaPlayer_screen createState() =>
       _sps_mediaPlayer_screen();
 }
 
-class _sps_mediaPlayer_screen extends State<sps_mediaPlayer_screen> {
+class _sps_mediaPlayer_screen extends State<sps_videoPlayer_screen> {
   TargetPlatform _platform;
   VideoPlayerController _videoPlayerController1;
   ChewieController _chewieController;
@@ -71,8 +71,8 @@ class _sps_mediaPlayer_screen extends State<sps_mediaPlayer_screen> {
       appBar: AppBar(
         backgroundColor: Color(0xFF004077), // Azul Schuler
         title: Text(
-          'MEDIA PLAYER',
-          style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+          'VISUALIZADOR DE VIDEOS',
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
