@@ -3,14 +3,14 @@ import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
 import 'Json_interceptor.dart';
 
-class SpsHttpQuestionarioCqMidia {
+class SpsHttpQuestionarioMidia {
   //Servidor de produção
   //static const baseUrl = 'https://teklist.schuler.de/webapi/api/questionario/read.php';
 
   //Servidor DEV
   static const baseUrl = 'http://10.17.20.45/webapi/api/questionario/read.php';
 
-  SpsHttpQuestionarioCqMidia();
+  SpsHttpQuestionarioMidia();
 
   Future<List<Map<String, dynamic>>> listarMidia(String doc_action, String registro_colaborador, String identificacao_utilizador, String tipo_frequencia, String tipo_checklist) async {
     final Map<String, dynamic> keyQuestionario = {

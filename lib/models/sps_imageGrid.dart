@@ -4,8 +4,8 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/media.dart';
 import 'package:sps/components/progress.dart';
-import 'package:sps/dao/sps_dao_questionario_cq_midia_class.dart';
-import 'package:sps/models/sps_questionario_cq_midia.dart';
+import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
+import 'package:sps/models/sps_questionario_midia.dart';
 import 'package:sps/screens/sps_imagePlayer_screen.dart';
 import 'package:sps/screens/sps_videoPlayer_screen.dart';
 import 'dart:io' as io;
@@ -38,7 +38,7 @@ class ImageGrid extends StatelessWidget {
     String teste = "";
     var refreshGridView;
     int indicemedia;
-    final objSpsQuestionarioCqMidia = SpsQuestionarioCqMidia();
+    final objSpsQuestionarioCqMidia = SpsQuestionarioMidia();
 
 
     _popup_titulo(String titulo_arquivo, String codigo_empresa, int codigo_programacao, int item_checklist, int item_anexo) {
@@ -62,7 +62,7 @@ class ImageGrid extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
               onPressed: (){
-                objSpsQuestionarioCqMidia.salvarTituloQuestionarioCqMidia(titulo_arquivo: _novotitulo.text, codigo_empresa: codigo_empresa, codigo_programacao: codigo_programacao, item_checklist: item_checklist, item_anexo: item_anexo).then((value){
+                objSpsQuestionarioCqMidia.salvarTituloQuestionarioMidia(titulo_arquivo: _novotitulo.text, codigo_empresa: codigo_empresa, codigo_programacao: codigo_programacao, item_checklist: item_checklist, item_anexo: item_anexo).then((value){
                   Navigator.of(context,
                       rootNavigator:
                       true)
@@ -75,7 +75,7 @@ class ImageGrid extends StatelessWidget {
     }
 
     return FutureBuilder<List<Map<String, dynamic>>>(
-      future: objSpsQuestionarioCqMidia.listarQuestionarioCqMidia(
+      future: objSpsQuestionarioCqMidia.listarQuestionarioMidia(
           codigo_empresa: this.codigo_empresa,
           codigo_programacao: this.codigo_programacao,
           item_checklist: this.item_checklist),
@@ -139,11 +139,11 @@ class ImageGrid extends StatelessWidget {
                               '.jpg';
                       _listaArquivos.add(_registroArquivo);
                     } else {
-                      final SpsDaoQuestionarioCqMidia
+                      final SpsDaoQuestionarioMidia
                           objQuestionarioCqMidiaDao =
-                          SpsDaoQuestionarioCqMidia();
+                          SpsDaoQuestionarioMidia();
                       objQuestionarioCqMidiaDao
-                          .deletarQuestionarioCqMidia(
+                          .deletarQuestionarioMidia(
                               codigo_empresa:
                                   snapshot.data[i]['codigo_empresa'].toString(),
                               codigo_programacao: snapshot.data[i]
@@ -180,11 +180,11 @@ class ImageGrid extends StatelessWidget {
                               snapshot.data[i]['nome_arquivo'].toString();
                       _listaArquivos.add(_registroArquivo);
                     } else {
-                      final SpsDaoQuestionarioCqMidia
+                      final SpsDaoQuestionarioMidia
                           objQuestionarioCqMidiaDao =
-                          SpsDaoQuestionarioCqMidia();
+                          SpsDaoQuestionarioMidia();
                       objQuestionarioCqMidiaDao
-                          .deletarQuestionarioCqMidia(
+                          .deletarQuestionarioMidia(
                               codigo_empresa:
                                   snapshot.data[i]['codigo_empresa'].toString(),
                               codigo_programacao: snapshot.data[i]
@@ -288,7 +288,7 @@ class ImageGrid extends StatelessWidget {
                                                             FlatButton(
                                                                 child: Text("Sim"),
                                                                 onPressed: () {
-                                                                  objSpsQuestionarioCqMidia.deletarQuestionarioCqMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
+                                                                  objSpsQuestionarioCqMidia.deletarQuestionarioMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
                                                                     print('Feito');
                                                                     Navigator.of(context,
                                                                         rootNavigator:

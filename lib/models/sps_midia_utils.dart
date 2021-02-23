@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:sps/dao/sps_dao_questionario_cq_midia_class.dart';
+import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:thumbnails/thumbnails.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
@@ -40,8 +40,8 @@ class spsMidiaUtils {
   static Future<String> processarArquivoCapturado({String tipo = "", Map<String,dynamic> dadosArquivo = null}) async {
     File sourceFile = new File(dadosArquivo['arquivo']);
     String _extensaoArquivo = sourceFile.path.split('.').last;
-    final SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioCqMidia();
-    List<Map<String, dynamic>> arquivosArmazenados = await objQuestionarioCqMidiaDao.listarQuestionarioCqMidia(codigo_empresa: dadosArquivo['codigo_empresa'], codigo_programacao: dadosArquivo['codigo_programacao'], item_checklist:dadosArquivo['item_checklist']);
+    final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+    List<Map<String, dynamic>> arquivosArmazenados = await objQuestionarioCqMidiaDao.listarQuestionarioMidia(codigo_empresa: dadosArquivo['codigo_empresa'], codigo_programacao: dadosArquivo['codigo_programacao'], item_checklist:dadosArquivo['item_checklist']);
     int _proximoRegistro;
     if(arquivosArmazenados.length < 1){
        _proximoRegistro = 1;

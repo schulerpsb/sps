@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sps/dao/sps_dao_questionario_cq_midia_class.dart';
+import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sps/models/sps_imageGrid.dart';
 import 'package:sps/models/sps_midia_utils.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
-import 'package:sps/models/sps_questionario_cq_midia.dart';
+import 'package:sps/models/sps_questionario_midia.dart';
 import 'package:flutter/painting.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
-class sps_questionario_cq_midia_screen extends StatefulWidget {
+class sps_questionario_midia_screen extends StatefulWidget {
   final String _codigo_empresa;
   final int _codigo_programacao;
   final int _item_checklist;
@@ -37,7 +37,7 @@ class sps_questionario_cq_midia_screen extends StatefulWidget {
   final String _filtro;
   final String _filtroReferenciaProjeto;
 
-  sps_questionario_cq_midia_screen(
+  sps_questionario_midia_screen(
       this._codigo_empresa,
       this._codigo_programacao,
       this._item_checklist,
@@ -84,11 +84,11 @@ class sps_questionario_cq_midia_screen extends StatefulWidget {
 
 //Declaração da classe _sps_questionario_midia_screen
 class _sps_questionario_midia_screen
-    extends State<sps_questionario_cq_midia_screen>
+    extends State<sps_questionario_midia_screen>
     with TickerProviderStateMixin {
   //Declaração de variáveis da classe _sps_questionario_midia_screen
-  final SpsQuestionarioCqMidia spsquestionariocqmidia =
-      SpsQuestionarioCqMidia();
+  final SpsQuestionarioMidia spsquestionariocqmidia =
+      SpsQuestionarioMidia();
 
   _sps_questionario_midia_screen(
       _codigo_empresa,
@@ -183,11 +183,11 @@ class _sps_questionario_midia_screen
         _listaArquivos.add(arquivoMovido);
         //Processamento do arquivo capturado - Gerar thumbnail.
         await spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos);
-        SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao =
-            SpsDaoQuestionarioCqMidia();
+        SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao =
+            SpsDaoQuestionarioMidia();
         //Gravação do registro na tabela de anexos do SQLITE
         final int registroGravado =
-            await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(
+            await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(
                 dadosArquivo: _dadosArquivo);
         setState(() {
           _isLoading = false;
@@ -239,10 +239,10 @@ class _sps_questionario_midia_screen
       List _listaArquivos = new List();
       _listaArquivos.add(arquivoMovido);
       //Gravação do registro na tabela de anexos do SQLITE
-      SpsDaoQuestionarioCqMidia objQuestionarioCqMidiaDao =
-          SpsDaoQuestionarioCqMidia();
+      SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao =
+          SpsDaoQuestionarioMidia();
       final int registroGravado =
-          await objQuestionarioCqMidiaDao.InserirQuestionarioCqMidia(
+          await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(
               dadosArquivo: _dadosArquivo);
       setState(() {
         _isLoading = false;

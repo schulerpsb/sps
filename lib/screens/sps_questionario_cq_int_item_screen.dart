@@ -11,7 +11,7 @@ import 'package:sps/models/sps_questionario_item_cq.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
+import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
 
 class sps_questionario_cq_int_item_screen extends StatefulWidget {
@@ -386,7 +386,7 @@ class _sps_questionario_cq_int_item_screen
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  sps_questionario_cq_midia_screen(
+                                                  sps_questionario_midia_screen(
                                                     snapshot.data[index]
                                                     ["codigo_empresa"],
                                                     snapshot.data[index]
