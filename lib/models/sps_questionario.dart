@@ -7,28 +7,43 @@ import 'package:sps/http/sps_http_questionario_class.dart';
 import 'Dart:io';
 import 'package:sps/models/sps_usuario_class.dart';
 
-class SpsQuestionario_cq {
+class SpsQuestionario {
   @override
-  Future<List<Map<String, dynamic>>> listarQuestionario_cq(
-      _origemUsuario, _parametro, _filtro, _filtroReferenciaProjeto) async {
+  Future<List<Map<String, dynamic>>> listarQuestionario(
+      _origemUsuario, _tipoChecklist, _parametro, _filtro, _filtroReferenciaProjeto) async {
 
     //Tipos de usuário: "INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS
 
     String registro_colaborador;
     String identificacao_utilizador;
+    String tipo_checklist;
+    String tipo_frequencia;
+    String registro_aprovador;
 
     final origem_usuario = _origemUsuario;
-    final doc_action = 'PREENCHER_CQ';
-    if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
-      registro_colaborador = sps_usuario().registro_usuario;
-      identificacao_utilizador = 'SCHULER';
-    }else{
-      registro_colaborador = "";
-      identificacao_utilizador = sps_usuario().codigo_usuario;
+
+    String doc_action;
+    if (_tipoChecklist == "CONTROLE DE QUALIDADE") {
+      doc_action = 'PREENCHER_CQ';
+      tipo_checklist = 'CHECKLIST';
+      tipo_frequencia = 'CONTROLE DE QUALIDADE';
+      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+        registro_colaborador = sps_usuario().registro_usuario;
+        identificacao_utilizador = 'SCHULER';
+      }else{
+        registro_colaborador = '';
+        identificacao_utilizador = sps_usuario().codigo_usuario;
+      }
+      registro_aprovador = sps_usuario().registro_usuario;
     }
-    final tipo_frequencia = 'CONTROLE DE QUALIDADE';
-    final tipo_checklist = 'CHECKLIST';
-    final registro_aprovador = sps_usuario().registro_usuario;
+    if (_tipoChecklist == "CHECKLIST") {
+      doc_action = 'PREENCHER_CHECKLIST';
+      tipo_checklist = 'CHECKLIST';
+      tipo_frequencia = 'ESPORADICA';
+      registro_colaborador = sps_usuario().registro_usuario;
+      identificacao_utilizador = '';
+      registro_aprovador = '';
+    }
 
     //Criar tabela "checklist_lista" caso não exista
     final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();

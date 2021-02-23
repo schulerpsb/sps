@@ -2,44 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
-import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_int_item_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_ext_filtro_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_int_filtro_screen.dart';
-import 'sps_questionario_cq_ext_item_screen.dart';
+import 'package:sps/screens/sps_questionario_ch_item_screen.dart';
+import 'package:sps/screens/sps_questionario_ch_filtro_screen.dart';
+import 'sps_questionario_ch_item_screen.dart';
 import 'package:intl/intl.dart';
 
-class sps_questionario_cq_lista_screen extends StatefulWidget {
-  final String _origemUsuario;
+class sps_questionario_ch_lista_screen extends StatefulWidget {
   final String _filtro;
-  final String _filtroReferenciaProjeto;
+  final String _filtroDescrProgramacao;
 
-  sps_questionario_cq_lista_screen(
-      this._origemUsuario, this._filtro, this._filtroReferenciaProjeto);
+  sps_questionario_ch_lista_screen(
+      this._filtro, this._filtroDescrProgramacao);
 
   @override
-  _sps_questionario_cq_lista_screen createState() =>
-      _sps_questionario_cq_lista_screen(
-          this._origemUsuario, this._filtro, this._filtroReferenciaProjeto);
+  _sps_questionario_ch_lista_screen createState() =>
+      _sps_questionario_ch_lista_screen(
+          this._filtro, this._filtroDescrProgramacao);
 }
 
-class _sps_questionario_cq_lista_screen
-    extends State<sps_questionario_cq_lista_screen> {
-  final SpsQuestionario spsquestionario_cq = SpsQuestionario();
+class _sps_questionario_ch_lista_screen
+    extends State<sps_questionario_ch_lista_screen> {
+  final SpsQuestionario spsquestionario = SpsQuestionario();
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
-  _sps_questionario_cq_lista_screen(
-      _origemUsuario, _filtro, _filtroReferenciaProjeto);
+  _sps_questionario_ch_lista_screen(
+      _filtro, _filtroDescrProgramacao);
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("TELA => SPS_QUESTIONARIO_CQ_SCREEN");
+    debugPrint("TELA => SPS_QUESTIONARIO_CH_SCREEN");
     return WillPopScope(
       onWillPop: () {
         return new Future(() => false);
@@ -50,7 +47,7 @@ class _sps_questionario_cq_lista_screen
           backgroundColor: Color(0xFF004077),
           // Azul Schuler
           title: Text(
-            'FOLLOW UP',
+            'CHECKLIST',
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -64,9 +61,7 @@ class _sps_questionario_cq_lista_screen
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            this.widget._origemUsuario == "EXTERNO"
-                                ? sps_questionario_cq_ext_filtro_screen()
-                                : sps_questionario_cq_int_filtro_screen()),
+                            sps_questionario_ch_filtro_screen()),
                   );
                 },
               );
@@ -75,12 +70,12 @@ class _sps_questionario_cq_lista_screen
         ),
         endDrawer: sps_drawer(spslogin: spslogin),
         body: FutureBuilder<List<Map<String, dynamic>>>(
-          future: spsquestionario_cq.listarQuestionario(
-              this.widget._origemUsuario,
-              'CONTROLE DE QUALIDADE',
+          future: spsquestionario.listarQuestionario(
+              null,
+              'CHECKLIST',
               'LISTAR',
               this.widget._filtro,
-              this.widget._filtroReferenciaProjeto),
+              this.widget._filtroDescrProgramacao),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
@@ -159,80 +154,31 @@ class _sps_questionario_cq_lista_screen
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => this
-                                                      .widget
-                                                      ._origemUsuario ==
-                                                  "EXTERNO"
-                                              ? sps_questionario_cq_ext_item_screen(
-                                                  snapshot.data[index]
-                                                      ["codigo_empresa"],
-                                                  snapshot.data[index]
-                                                      ["codigo_programacao"],
-                                                  snapshot.data[index]
-                                                      ["registro_colaborador"],
-                                                  snapshot.data[index][
-                                                      "identificacao_utilizador"],
-                                                  snapshot.data[index]
-                                                      ["codigo_grupo"],
-                                                  snapshot.data[index]
-                                                      ["codigo_checklist"],
-                                                  snapshot.data[index]
-                                                      ["descr_programacao"],
-                                                  snapshot.data[index]
-                                                      ["codigo_pedido"],
-                                                  snapshot.data[index]
-                                                      ["item_pedido"],
-                                                  snapshot.data[index]
-                                                      ["codigo_material"],
-                                                  snapshot.data[index]
-                                                      ["referencia_parceiro"],
-                                                  snapshot.data[index]
-                                                      ["codigo_projeto"],
-                                                  snapshot.data[index]
-                                                      ["sincronizado"],
-                                                  snapshot.data[index]
-                                                      ["status_aprovacao"],
-                                                  this.widget._origemUsuario,
-                                                  this.widget._filtro,
-                                                  this
-                                                      .widget
-                                                      ._filtroReferenciaProjeto,
-                                                )
-                                              : sps_questionario_cq_int_item_screen(
-                                                  snapshot.data[index]
-                                                      ["codigo_empresa"],
-                                                  snapshot.data[index]
-                                                      ["codigo_programacao"],
-                                                  snapshot.data[index]
-                                                      ["registro_colaborador"],
-                                                  snapshot.data[index][
-                                                      "identificacao_utilizador"],
-                                                  snapshot.data[index]
-                                                      ["codigo_grupo"],
-                                                  snapshot.data[index]
-                                                      ["codigo_checklist"],
-                                                  snapshot.data[index]
-                                                      ["descr_programacao"],
-                                                  snapshot.data[index]
-                                                      ["codigo_pedido"],
-                                                  snapshot.data[index]
-                                                      ["item_pedido"],
-                                                  snapshot.data[index]
-                                                      ["codigo_material"],
-                                                  snapshot.data[index]
-                                                      ["referencia_parceiro"],
-                                                  snapshot.data[index]
-                                                      ["codigo_projeto"],
-                                                  snapshot.data[index]
-                                                      ["sincronizado"],
-                                                  snapshot.data[index]
-                                                      ["status_aprovacao"],
-                                                  this.widget._origemUsuario,
-                                                  this.widget._filtro,
-                                                  this
-                                                      .widget
-                                                      ._filtroReferenciaProjeto,
-                                                )),
+                                          builder: (context) =>
+                                              sps_questionario_ch_item_screen(
+                                                snapshot.data[index]
+                                                    ["codigo_empresa"],
+                                                snapshot.data[index]
+                                                    ["codigo_programacao"],
+                                                snapshot.data[index]
+                                                    ["registro_colaborador"],
+                                                snapshot.data[index][
+                                                    "identificacao_utilizador"],
+                                                snapshot.data[index]
+                                                    ["codigo_grupo"],
+                                                snapshot.data[index]
+                                                    ["codigo_checklist"],
+                                                snapshot.data[index]
+                                                    ["descr_programacao"],
+                                                snapshot.data[index]
+                                                    ["sincronizado"],
+                                                snapshot.data[index]
+                                                    ["status_aprovacao"],
+                                                this.widget._filtro,
+                                                this
+                                                    .widget
+                                                    ._filtroDescrProgramacao,
+                                              )),
                                     )
                                   : _popup_vencido(context);
                             },
@@ -296,18 +242,6 @@ class texto_principal {
             wsnapshot["dtfim_aplicacao"].substring(0, 4);
 
     _texto_principal = '${wsnapshot["descr_programacao"]}' +
-        "\n\n" +
-        "PEDIDO: " +
-        '${wsnapshot["codigo_pedido"]}' +
-        "/" +
-        '${wsnapshot["item_pedido"]}' +
-        " (" +
-        '${wsnapshot["codigo_material"]}' +
-        ")\n" +
-        "REFERÊNCIA: " +
-        '${wsnapshot["referencia_parceiro"]}' +
-        "\nPROJETO: " +
-        '${wsnapshot["codigo_projeto"]}' +
         "\n\n" +
         "PRAZO: " +
         _dtfim_aplicacao;

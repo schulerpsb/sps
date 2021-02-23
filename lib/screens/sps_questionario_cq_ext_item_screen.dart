@@ -12,8 +12,8 @@ import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_midia_screen.dart';
+import 'package:sps/screens/sps_questionario_comentarios_screen.dart';
+import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
 
 class sps_questionario_cq_ext_item_screen extends StatefulWidget {
@@ -82,8 +82,8 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
 
 class _sps_questionario_cq_ext_item_screen
     extends State<sps_questionario_cq_ext_item_screen> {
-  final SpsQuestionarioItem_cq spsQuestionarioItem_cq =
-      SpsQuestionarioItem_cq();
+  final SpsQuestionarioItem spsQuestionarioItem =
+      SpsQuestionarioItem();
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -146,7 +146,7 @@ class _sps_questionario_cq_ext_item_screen
         ),
         endDrawer: sps_drawer(spslogin: spslogin),
         body: FutureBuilder<List<Map<String, dynamic>>>(
-          future: spsQuestionarioItem_cq.listarQuestionarioItem_cq(
+          future: spsQuestionarioItem.listarQuestionarioItem(
               this.widget._origemUsuario,
               this.widget._codigo_empresa,
               this.widget._codigo_programacao,
@@ -393,7 +393,7 @@ class _sps_questionario_cq_ext_item_screen
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  sps_questionario_cq_midia_screen()),
+                                                  sps_questionario_midia_screen()),
                                         );
                                       },
                                     ),
@@ -401,7 +401,10 @@ class _sps_questionario_cq_ext_item_screen
                                     //Tratar Comentários
                                     IconButton(
                                       icon: Icon(Icons.comment, size: 30),
-                                      color: Colors.black,
+                                      color: snapshot.data[index]
+                                                  ["descr_comentarios"] == ""
+                                          ? Colors.black
+                                          : Colors.blue,
                                       onPressed: () {
                                         Navigator.push(
                                           context,
@@ -499,7 +502,10 @@ class _sps_questionario_cq_ext_item_screen
           _widentificacaoUtilizador,
           _witemChecklist,
           _wrespCq,
-          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
+          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
+              ? usuarioAtual.registro_usuario
+              : usuarioAtual
+                  .codigo_usuario); //substituir por variavel global do Fernando
       if (retorno == true) {
         _wsincronizado = "";
         debugPrint("registro gravado PostgreSQL: " +
@@ -647,7 +653,10 @@ class _sps_questionario_cq_ext_item_screen
           _wcodigoEmpresa,
           _wcodigoProgramacao,
           _wnovaReferencia,
-          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
+          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
+              ? usuarioAtual.registro_usuario
+              : usuarioAtual
+                  .codigo_usuario); //substituir por variavel global do Fernando
       if (retorno == true) {
         _wsincronizado = "";
         debugPrint("registro gravado PostgreSQL: " +

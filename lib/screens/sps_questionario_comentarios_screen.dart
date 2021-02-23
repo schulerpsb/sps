@@ -80,8 +80,8 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
 
 class _sps_questionario_cq_comentarios_screen
     extends State<sps_questionario_cq_comentarios_screen> {
-  final SpsQuestionarioItem_cq spsQuestionarioItem_cq =
-      SpsQuestionarioItem_cq();
+  final SpsQuestionarioItem spsQuestionarioItem =
+      SpsQuestionarioItem();
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -293,12 +293,10 @@ class _sps_questionario_cq_comentarios_screen
                                       "EXTERNO",
                                       this.widget._codigo_empresa,
                                       this.widget._codigo_programacao,
-                                      this.widget._registro_colaborador,
-                                      this.widget._identificacao_utilizador,
                                       this.widget._item_checklist,
                                       this.widget._descr_comentarios +
                                           "<b><font color=blue>" +
-                                          "#Usuário#" +
+                                          sps_usuario().nome_usuario +
                                           " em " +
                                           obter_datahora() +
                                           "</font></b>||" +
@@ -308,12 +306,10 @@ class _sps_questionario_cq_comentarios_screen
                                       "INTERNO",
                                       this.widget._codigo_empresa,
                                       this.widget._codigo_programacao,
-                                      this.widget._registro_colaborador,
-                                      this.widget._identificacao_utilizador,
                                       this.widget._item_checklist,
                                       this.widget._descr_comentarios +
                                           "<b><font color=green>[APROVADOR] " +
-                                          "#Usuário#" +
+                                          sps_usuario().nome_usuario +
                                           " em " +
                                           obter_datahora() +
                                           "</font></b>||" +
@@ -337,8 +333,6 @@ class _sps_questionario_cq_comentarios_screen
       _worigemUsuario,
       _wcodigoEmpresa,
       _wcodigoProgramacao,
-      _wregistroColaborador,
-      _widentificacaoUtilizador,
       _witemChecklist,
       _wdescrComentarios) async {
     debugPrint('comentário => ' + _wdescrComentarios);
@@ -356,8 +350,8 @@ class _sps_questionario_cq_comentarios_screen
           _worigemUsuario,
           _wcodigoEmpresa,
           _wcodigoProgramacao.toString(),
-          _wregistroColaborador,
-          _widentificacaoUtilizador,
+          null,
+          null,
           _witemChecklist.toString(),
           _wdescrComentarios,
           usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
@@ -368,10 +362,6 @@ class _sps_questionario_cq_comentarios_screen
             "/" +
             _wcodigoProgramacao.toString() +
             "/" +
-            _wregistroColaborador.toString() +
-            "/" +
-            _widentificacaoUtilizador.toString() +
-            "/" +
             _witemChecklist.toString() +
             "/" +
             _wdescrComentarios.toString());
@@ -381,10 +371,6 @@ class _sps_questionario_cq_comentarios_screen
             _wcodigoEmpresa.toString() +
             "/" +
             _wcodigoProgramacao.toString() +
-            "/" +
-            _wregistroColaborador.toString() +
-            "/" +
-            _widentificacaoUtilizador.toString() +
             "/" +
             _witemChecklist.toString() +
             "/" +
@@ -400,8 +386,8 @@ class _sps_questionario_cq_comentarios_screen
     final int resultupdate = await objQuestionarioDaoItem.update_comentarios(
         _wcodigoEmpresa,
         _wcodigoProgramacao,
-        _wregistroColaborador,
-        _widentificacaoUtilizador,
+        null,
+        null,
         _witemChecklist,
         _wdescrComentarios);
     this.widget._descr_comentarios = _wdescrComentarios;

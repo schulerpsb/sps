@@ -7,10 +7,9 @@ import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'Dart:io';
 import 'package:sps/models/sps_usuario_class.dart';
 
-class SpsQuestionarioItem {
+class SpsQuestionarioItem_ch {
   @override
-  Future<List<Map<String, dynamic>>> listarQuestionarioItem(
-      h_origem_usuario,
+  Future<List<Map<String, dynamic>>> listarQuestionarioItem_ch(
       h_codigo_empresa,
       h_codigo_programacao,
       h_codigo_grupo,
@@ -46,10 +45,10 @@ class SpsQuestionarioItem {
       var windex = 0;
       while (windex < _wregistros) {
         var _wsincronizado = "";
-        //Atualizar registro no PostgreSQL (via API REST) campo RESP_CQ
+        //Atualizar registro no PostgreSQL (via API REST) resposta do questionario
         final SpsHttpQuestionarioItem objQuestionarioItemHttp =
             SpsHttpQuestionarioItem();
-        final retorno1 = await objQuestionarioItemHttp.QuestionarioSaveOpcao(
+        final retorno1 = await objQuestionarioItemHttp.QuestionarioSave(
             result[windex]["codigo_empresa"],
             result[windex]["codigo_programacao"].toString(),
             result[windex]["registro_colaborador"],
@@ -67,7 +66,7 @@ class SpsQuestionarioItem {
         //Atualizar registro no PostgreSQL (via API REST) campo DESCR_COMENTARIOS
         final retorno2 =
             await objQuestionarioItemHttp.QuestionarioSaveComentario(
-                h_origem_usuario,
+                null,
                 result[windex]["codigo_empresa"],
                 result[windex]["codigo_programacao"].toString(),
                 result[windex]["registro_colaborador"],

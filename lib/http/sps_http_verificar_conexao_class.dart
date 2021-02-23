@@ -31,17 +31,22 @@ class SpsVerificarConexao {
 
     if (_wrede_conectada == true) {
       try {
+        print("Verificar conexão com o servidor de aplicação");
         final result = await InternetAddress.lookup('teklist.schuler.de');
         if (result.isNotEmpty) {
-          print("Verificar conexão com o servidor de API´s");
-          final response =
-              //await http.head('http://teklist.schuler.de/webapi/api/questionario/read_cq_ext.php'); //Pode ser utilizado qualquer URL
-              await http.get('http://10.17.20.45/webapi/api/questionario/read_cq_ext.php'); //Pode ser utilizado qualquer URL
-          print("Retorno da verificação => " + response.statusCode.toString());
-          if (response.statusCode == 200) {
-            _wservidor_conectado = true;
-            debugPrint('STATUS DA CONEXÃO -> connected');
-            return _wservidor_conectado;
+          print("Verificar conexão com o servidor de banco de dados");
+          final result = await InternetAddress.lookup('10.17.20.45');
+          if (result.isNotEmpty) {
+            print("Verificar conexão com o servidor de API´s");
+            final response =
+                //await http.head('http://teklist.schuler.de/webapi/api/questionario/read_lista.php'); //Pode ser utilizado qualquer URL
+                await http.get('http://10.17.20.45/webapi/api/questionario/read_lista.php'); //Pode ser utilizado qualquer URL
+            print("Retorno da verificação => " + response.statusCode.toString());
+            if (response.statusCode == 200) {
+              _wservidor_conectado = true;
+              debugPrint('STATUS DA CONEXÃO -> connected');
+              return _wservidor_conectado;
+            }
           }
         }
       } on SocketException catch (_) {

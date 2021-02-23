@@ -1,35 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
-import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
-import 'package:sps/models/sps_questionario_cq.dart';
-import 'package:sps/models/sps_usuario_class.dart';
+import 'package:sps/models/sps_questionario.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
-import 'package:sps/screens/sps_menu_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
+import 'package:sps/screens/sps_questionario_ch_lista_screen.dart';
 
-class sps_questionario_ext_filtro_screen extends StatefulWidget {
+class sps_questionario_ch_filtro_screen extends StatefulWidget {
   @override
-  _sps_questionario_ext_filtro_screen createState() =>
-      _sps_questionario_ext_filtro_screen();
+  _sps_questionario_ch_filtro_screen createState() =>
+      _sps_questionario_ch_filtro_screen();
 }
 
-class _sps_questionario_ext_filtro_screen
-    extends State<sps_questionario_ext_filtro_screen> {
-  final SpsQuestionario_cq spsquestionario = SpsQuestionario_cq();
+class _sps_questionario_ch_filtro_screen
+    extends State<sps_questionario_ch_filtro_screen> {
+  final SpsQuestionario spsquestionario = SpsQuestionario();
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("TELA => SPS_QUESTIONARIO_EXT_FILTRO_SCREEN ");
+    debugPrint("TELA => SPS_QUESTIONARIO_CH_FILTRO_SCREEN");
 
-    TextEditingController _filtroReferenciaProjeto = TextEditingController();
+    TextEditingController _filtroDescrProgramacao = TextEditingController();
 
     return WillPopScope(
       onWillPop: () {
@@ -62,10 +58,9 @@ class _sps_questionario_ext_filtro_screen
           ),
         ),
         endDrawer: sps_drawer(spslogin: spslogin),
-
         body: FutureBuilder<List<Map<String, dynamic>>>(
-          future: spsquestionario.listarQuestionario_cq(
-              'EXTERNO', 'CONTAR', null, null),
+          future: spsquestionario.listarQuestionario(
+              'INTERNO', 'CHECKLIST', 'CONTAR', null, null),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
@@ -96,12 +91,6 @@ class _sps_questionario_ext_filtro_screen
                             padding: const EdgeInsets.only(
                                 top: 10, left: 10, right: 10, bottom: 10),
                           ),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Text("FOLLOW UP (PARCEIRO)",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15)),
-                          ),
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 10, left: 10, right: 10, bottom: 10),
@@ -117,9 +106,8 @@ class _sps_questionario_ext_filtro_screen
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        sps_questionario_cq_lista_screen(
-                                                            "EXTERNO",
-                                                            "PENDENTE",
+                                                        sps_questionario_ch_lista_screen(
+                                                              "PENDENTE",
                                                             null)),
                                               )
                                             },
@@ -159,9 +147,8 @@ class _sps_questionario_ext_filtro_screen
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        sps_questionario_cq_lista_screen(
-                                                            "EXTERNO",
-                                                            "PARCIAL",
+                                                        sps_questionario_ch_lista_screen(
+                                                             "PARCIAL",
                                                             null)),
                                               )
                                             },
@@ -197,9 +184,8 @@ class _sps_questionario_ext_filtro_screen
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        sps_questionario_cq_lista_screen(
-                                                            "EXTERNO",
-                                                            "OK",
+                                                        sps_questionario_ch_lista_screen(
+                                                              "OK",
                                                             null)),
                                               )
                                             },
@@ -230,7 +216,7 @@ class _sps_questionario_ext_filtro_screen
                                 top: 5, left: 10, right: 10, bottom: 10),
                             child: Column(
                               children: <Widget>[
-                                Text("Referência do parceiro",
+                                Text("Descrição do checklist",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15)),
@@ -241,12 +227,12 @@ class _sps_questionario_ext_filtro_screen
                                     child: Column(
                                       children: <Widget>[
                                         TextField(
-                                          controller: _filtroReferenciaProjeto,
+                                          controller: _filtroDescrProgramacao,
                                           maxLines: 1,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
                                               hintText:
-                                                  'Informa a referência do parceiro'),
+                                                  'Informe a descrição'),
                                         ),
                                       ],
                                     ),
@@ -259,17 +245,16 @@ class _sps_questionario_ext_filtro_screen
                                   alignment: Alignment.bottomCenter,
                                   child: FloatingActionButton(
                                     onPressed: () =>
-                                        _filtroReferenciaProjeto.text == ""
+                                        _filtroDescrProgramacao.text == ""
                                             ? {}
                                             : {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          sps_questionario_cq_lista_screen(
-                                                              "EXTERNO",
+                                                          sps_questionario_ch_lista_screen(
                                                               null,
-                                                              _filtroReferenciaProjeto
+                                                              _filtroDescrProgramacao
                                                                   .text)),
                                                 )
                                               },

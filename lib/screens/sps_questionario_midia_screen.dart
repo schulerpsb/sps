@@ -10,9 +10,9 @@ import 'package:sps/models/sps_criarThumbs.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
-import 'package:sps/models/sps_questionario_cq_midia.dart';
+import 'package:sps/models/sps_questionario_midia.dart';
 
-class sps_questionario_cq_midia_screen extends StatefulWidget {
+class sps_questionario_midia_screen extends StatefulWidget {
   @override
   _sps_questionario_midia_screen createState() =>
       _sps_questionario_midia_screen();
@@ -20,11 +20,11 @@ class sps_questionario_cq_midia_screen extends StatefulWidget {
 
 //Declaração da classe _sps_questionario_midia_screen
 class _sps_questionario_midia_screen
-    extends State<sps_questionario_cq_midia_screen>
+    extends State<sps_questionario_midia_screen>
     with TickerProviderStateMixin {
   //Declaração de variáveis da classe _sps_questionario_midia_screen
-  final SpsQuestionarioCqMidia spsquestionariocqmidia =
-      SpsQuestionarioCqMidia();
+  final SpsQuestionarioMidia spsquestionariomidia =
+      SpsQuestionarioMidia();
   PickedFile _imageFile;
   dynamic _pickImageError;
   bool isVideo = false;

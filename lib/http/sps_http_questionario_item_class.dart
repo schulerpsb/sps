@@ -77,7 +77,38 @@ class SpsHttpQuestionarioItem {
       'identificacao_utilizador': identificacao_utilizador,
       'item_checklist': item_checklist,
       'resp_cq': resp_cq,
-      'usuresponsavel': usuresponsavel, //substituir por variavel global do Fernando
+      'usuresponsavel': usuresponsavel,
+    };
+    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      baseUrl_saveOpcao,
+      headers: {'Content-type': 'application/json'},
+      body: dadosQuestionarioJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+
+    return true;
+  }
+
+  Future QuestionarioSave(String codigo_empresa, String codigo_programacao, String registro_colaborador, String identificacao_utilizador, String item_checklist, String resp_cq, String usuresponsavel) async {
+    final Map<String, dynamic> fieldQuestionario = {
+      'codigo_empresa': codigo_empresa,
+      'codigo_programacao': codigo_programacao,
+      'registro_colaborador': registro_colaborador,
+      'identificacao_utilizador': identificacao_utilizador,
+      'item_checklist': item_checklist,
+      'resp_cq': resp_cq,
+      'usuresponsavel': usuresponsavel,
     };
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
 
@@ -106,7 +137,7 @@ class SpsHttpQuestionarioItem {
       'codigo_programacao': codigo_programacao,
       'item_checklist': item_checklist,
       'status_aprovacao': status_aprovacao,
-      'usuresponsavel': usuresponsavel, //substituir por variavel global do Fernando
+      'usuresponsavel': usuresponsavel,
     };
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
 
@@ -138,9 +169,12 @@ class SpsHttpQuestionarioItem {
       'identificacao_utilizador': identificacao_utilizador,
       'item_checklist': item_checklist,
       'descr_comentarios': descr_comentarios,
-      'usuresponsavel': usuresponsavel, //substituir por variavel global do Fernando
+      'usuresponsavel': usuresponsavel,
     };
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+
+    print ("Origem:"+origem_usuario);
+    print ("Save comentario:"+dadosQuestionarioJson.toString());
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),

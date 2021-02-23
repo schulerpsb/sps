@@ -5,13 +5,13 @@ import 'Json_interceptor.dart';
 
 class SpsHttpQuestionario {
   //Servidor de produção
-  //static const baseUrl_read_cq_ext = 'https://teklist.schuler.de/webapi/api/questionario/read_cq_ext.php';
-  //static const baseUrl_read_cq_int = 'https://teklist.schuler.de/webapi/api/questionario/read_cq_int.php';
+  //static const baseUrl_read_lista = 'https://teklist.schuler.de/webapi/api/questionario/read_lista.php';
+  //static const baseUrl_read_lista_cq_int = 'https://teklist.schuler.de/webapi/api/questionario/read_lista_cq_int.php';
   //static const baseUrl_saveReferencia = 'https://teklist.schuler.de/webapi/api/questionario/save_referencia.php';
 
   //Servidor DEV
-  static const baseUrl_read_cq_ext = 'http://10.17.20.45/webapi/api/questionario/read_cq_ext.php';
-  static const baseUrl_read_cq_int = 'http://10.17.20.45/webapi/api/questionario/read_cq_int.php';
+  static const baseUrl_read_lista = 'http://10.17.20.45/webapi/api/questionario/read_lista.php';
+  static const baseUrl_read_lista_cq_int = 'http://10.17.20.45/webapi/api/questionario/read_lista_cq_int.php';
   static const baseUrl_saveReferencia = 'http://10.17.20.45/webapi/api/questionario/save_referencia.php';
 
   SpsHttpQuestionario();
@@ -34,7 +34,7 @@ class SpsHttpQuestionario {
 
     final Response response = await client
         .post(
-          origem_usuario == "EXTERNO" ? baseUrl_read_cq_ext : baseUrl_read_cq_int,
+          origem_usuario == "INTERNO" && doc_action == "PREENCHER_CQ" ? baseUrl_read_lista_cq_int : baseUrl_read_lista,
           headers: {'Content-type': 'application/json'},
           body: dadosQuestionarioJson,
         )
@@ -43,6 +43,8 @@ class SpsHttpQuestionario {
             seconds: 5,
           ),
         );
+
+    print ("Adriano=>"+dadosQuestionarioJson.toString());
 
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
     final List<Map<String, dynamic>> transactionJsonOcorrencias = [];

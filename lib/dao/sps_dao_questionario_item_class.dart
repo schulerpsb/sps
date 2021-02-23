@@ -9,11 +9,33 @@ class SpsDaoQuestionarioItem {
       'registro_colaborador TEXT, '
       'identificacao_utilizador TEXT, '
       'item_checklist INTEGER, '
+      'sessao_checklist TEXT, '
       'codigo_grupo TEXT, '
       'codigo_checklist TEXT, '
       'seq_pergunta INTEGER, '
       'descr_pergunta TEXT, '
+      'codigo_pergunta_dependente TEXT, '
+      'resposta_pergunta_dependente TEXT, '
+      'tipo_resposta TEXT, '
+      'comentario_resposta_nao TEXT, '
+      'descr_escala TEXT, '
+      'inicio_escala INTEGER, '
+      'fim_escala INTEGER, '
+      'intervalo_escala INTEGER, '
+      'comentario_escala INTEGER, '
+      'midia TEXT, '
+      'opcao_nao_se_aplica TEXT, '
+      'comentarios TEXT, '
+      'tipo_resposta_fixa TEXT, '
+      'tamanho_resposta_fixa INTEGER, '
+      'resp_simnao TEXT, '
+      'resp_texto TEXT, '
+      'resp_numero INTEGER, '
+      'resp_data TEXT, '
+      'resp_hora TEXT, '
+      'resp_escala INTEGER, '
       'resp_cq TEXT, '
+      'resp_nao_se_aplica TEXT, '
       'descr_comentarios TEXT, '
       'status_resposta TEXT, '
       'status_aprovacao TEXT, '
@@ -75,7 +97,7 @@ class SpsDaoQuestionarioItem {
 
   Future<int> update_comentarios(_hcodigoEmpresa, _hcodigoProgramacao, _hregistroColaborador, _hidentificacaoUtilizador, _hitemChecklist, _hdescrComentarios) async {
     final Database db = await getDatabase();
-    var _query = 'update checklist_item set descr_comentarios = "'+_hdescrComentarios.toString()+'", sincronizado = "N" where codigo_empresa = "'+_hcodigoEmpresa.toString()+'" and codigo_programacao = '+_hcodigoProgramacao.toString()+' and registro_colaborador = "'+_hregistroColaborador.toString() +'" and identificacao_utilizador = "'+_hidentificacaoUtilizador.toString()+'" and item_checklist = '+_hitemChecklist.toString();
+    var _query = 'update checklist_item set descr_comentarios = "'+_hdescrComentarios.toString()+'", sincronizado = "N" where codigo_empresa = "'+_hcodigoEmpresa.toString()+'" and codigo_programacao = '+_hcodigoProgramacao.toString()+'  and item_checklist = '+_hitemChecklist.toString();
     debugPrint("query => "+_query);
     db.rawUpdate(_query);
     debugPrint("Alterado comentários (checklist_item) => "+_hdescrComentarios.toString());

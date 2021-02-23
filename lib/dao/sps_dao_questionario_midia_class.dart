@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class SpsDaoQuestionarioCqMidia {
+class SpsDaoQuestionarioMidia {
   static final String tableSql = 'CREATE TABLE IF NOT EXISTS checklist_lista('
       'codigo_empresa TEXT, '
       'codigo_programacao INTEGER, '
@@ -29,7 +29,7 @@ class SpsDaoQuestionarioCqMidia {
     return openDatabase(
       path,
       onCreate: (db, version) {
-        db.execute(SpsDaoQuestionarioCqMidia.tableSql);
+        db.execute(SpsDaoQuestionarioMidia.tableSql);
         debugPrint('DB Criado com sucesso!');
       },
       version: 1,
@@ -39,7 +39,7 @@ class SpsDaoQuestionarioCqMidia {
 
   Future<int> create_table() async {
     final Database db = await getDatabase();
-    db.execute(SpsDaoQuestionarioCqMidia.tableSql);
+    db.execute(SpsDaoQuestionarioMidia.tableSql);
     debugPrint('Tabela (checklist_lista) criada com sucesso ou já existente!');
   }
 
@@ -60,7 +60,7 @@ class SpsDaoQuestionarioCqMidia {
     return db.rawDelete('delete from checklist_lista');
   }
 
-  Future<List<Map<String, dynamic>>> listarQuestionarioCqMidia() async {
+  Future<List<Map<String, dynamic>>> listarQuestionarioMidia() async {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result = await db.query('checklist_lista');
     return result;

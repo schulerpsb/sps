@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sps/models/sps_usuario_class.dart';
-import 'package:sps/screens/sps_questionario_ext_filtro_screen.dart';
-import 'package:sps/screens/sps_questionario_int_filtro_screen.dart';
+import 'package:sps/screens/sps_questionario_ch_filtro_screen.dart';
+import 'package:sps/screens/sps_questionario_cq_ext_filtro_screen.dart';
+import 'package:sps/screens/sps_questionario_cq_int_filtro_screen.dart';
 import 'sps_cotacao_screen.dart';
 import 'sps_feedback_screen.dart';
 
@@ -28,26 +29,26 @@ class sps_menu_screen extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 80, left: 27, right: 20, bottom: 20),
+                      top: 40, left: 27, right: 20, bottom: 5),
                   child: RaisedButton.icon(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => _origemUsuario == "EXTERNO"
-                                ? sps_questionario_ext_filtro_screen()
-                                : sps_questionario_int_filtro_screen()),
+                                ? sps_questionario_cq_ext_filtro_screen()
+                                : sps_questionario_cq_int_filtro_screen()),
                       );
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    icon: Icon(Icons.receipt, color: Colors.white, size: 25.0),
+                    icon: Icon(Icons.check_circle, color: Colors.white, size: 25.0),
                     label: Text(
-                      'SISTEMA CHECKLIST (FOLLOW UP)           ',
+                      'FOLLOW-UP                                                         ',
                       style: TextStyle(color: Colors.white, fontSize: 12.0),
                       textAlign: TextAlign.center,
                     ),
-                    padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
+                    padding: EdgeInsets.fromLTRB(5, 20, 5, 20),
                     textColor: Colors.white,
                     splashColor: Colors.white,
                     color: Color(0xFF004077),
@@ -55,7 +56,69 @@ class sps_menu_screen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 20, left: 27, right: 20, bottom: 20),
+                      top: 10, left: 27, right: 20, bottom: 5),
+                  child: RaisedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => sps_questionario_ch_filtro_screen()),
+                      );
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    icon:
+                        Icon(Icons.fact_check_outlined, color: Colors.white, size: 25.0),
+                    label: Text(
+                      'CHECKLIST                                                         ',
+                      style: TextStyle(color: Colors.white, fontSize: 12.0),
+                      textAlign: TextAlign.center,
+                    ),
+                    padding: EdgeInsets.fromLTRB(5, 20, 5, 20),
+                    textColor: Colors.white,
+                    splashColor: Colors.white,
+                    color: Color(0xFF004077),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 10, left: 27, right: 20, bottom: 5),
+                  child: RaisedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => sps_cotacao_screen()),
+                      );
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    icon: Icon(Icons.network_check,
+                        color: Colors.white, size: 25.0),
+                    label: Text(
+                      'PESQUISA                                                           ',
+                      style: TextStyle(color: Colors.white, fontSize: 12.0),
+                      textAlign: TextAlign.center,
+                    ),
+                    padding: EdgeInsets.fromLTRB(5, 20, 5, 20),
+                    textColor: Colors.white,
+                    splashColor: Colors.white,
+                    color: Color(0xFF004077),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 5, left: 27, right: 20, bottom: 20),
                   child: RaisedButton.icon(
                     onPressed: () {
                       Navigator.push(
@@ -67,7 +130,7 @@ class sps_menu_screen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0))),
                     icon:
-                        Icon(Icons.equalizer, color: Colors.white, size: 25.0),
+                    Icon(Icons.equalizer, color: Colors.white, size: 25.0),
                     label: Text(
                       'GESTÃO DE FORNECEDORES (FEEDBACK)',
                       style: TextStyle(color: Colors.white, fontSize: 12.0),
@@ -81,7 +144,7 @@ class sps_menu_screen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 20, left: 27, right: 20, bottom: 20),
+                      top: 5, left: 27, right: 20, bottom: 20),
                   child: RaisedButton.icon(
                     onPressed: () {
                       Navigator.push(
@@ -110,7 +173,7 @@ class sps_menu_screen extends StatelessWidget {
           ),
         ),
         Container(
-          height: 100,
+          height: 30,
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
@@ -124,11 +187,11 @@ class sps_menu_screen extends StatelessWidget {
           ), // Your footer widget
         ),
         Container(
-          height: 50,
+          height: 20,
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-              'Version 1.0.0\n',
+              'Version 1.0.1 (19/02/2021)\n',
               style: TextStyle(
                 color: Color(0xFF004077),
                 fontSize: 12.0,
