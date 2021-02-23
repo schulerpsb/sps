@@ -5,17 +5,81 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sps/models/sps_imageGrid.dart';
-import 'package:sps/models/sps_criarThumbs.dart';
+import 'package:sps/models/sps_midia_utils.dart';
 import 'package:sps/models/sps_login.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:sps/models/sps_questionario_midia.dart';
+import 'package:flutter/painting.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 class sps_questionario_midia_screen extends StatefulWidget {
+  final String _codigo_empresa;
+  final int _codigo_programacao;
+  final int _item_checklist;
+  String _descr_comentarios;
+  final String _registro_colaborador;
+  final String _identificacao_utilizador;
+  final String _codigo_grupo;
+  final int _codigo_checklist;
+  final String _descr_programacao;
+  final String _codigo_pedido;
+  final int _item_pedido;
+  final String _codigo_material;
+  final String _referencia_parceiro;
+  final String _codigo_projeto;
+  final String _sincronizado;
+  final String _status_aprovacao;
+  final String _origemUsuario;
+  final String _filtro;
+  final String _filtroReferenciaProjeto;
+
+  sps_questionario_midia_screen(
+      this._codigo_empresa,
+      this._codigo_programacao,
+      this._item_checklist,
+      this._descr_comentarios,
+      this._registro_colaborador,
+      this._identificacao_utilizador,
+      this._codigo_grupo,
+      this._codigo_checklist,
+      this._descr_programacao,
+      this._codigo_pedido,
+      this._item_pedido,
+      this._codigo_material,
+      this._referencia_parceiro,
+      this._codigo_projeto,
+      this._sincronizado,
+      this._status_aprovacao,
+      this._origemUsuario,
+      this._filtro,
+      this._filtroReferenciaProjeto);
+
   @override
   _sps_questionario_midia_screen createState() =>
-      _sps_questionario_midia_screen();
+      _sps_questionario_midia_screen(
+          this._codigo_empresa,
+          this._codigo_programacao,
+          this._item_checklist,
+          this._descr_comentarios,
+          this._registro_colaborador,
+          this._identificacao_utilizador,
+          this._codigo_grupo,
+          this._codigo_checklist,
+          this._descr_programacao,
+          this._codigo_pedido,
+          this._item_pedido,
+          this._codigo_material,
+          this._referencia_parceiro,
+          this._codigo_projeto,
+          this._sincronizado,
+          this._status_aprovacao,
+          this._origemUsuario,
+          this._filtro,
+          this._filtroReferenciaProjeto);
 }
 
 //Declaração da classe _sps_questionario_midia_screen
@@ -23,8 +87,33 @@ class _sps_questionario_midia_screen
     extends State<sps_questionario_midia_screen>
     with TickerProviderStateMixin {
   //Declaração de variáveis da classe _sps_questionario_midia_screen
-  final SpsQuestionarioMidia spsquestionariomidia =
+  final SpsQuestionarioMidia spsquestionariocqmidia =
       SpsQuestionarioMidia();
+
+  _sps_questionario_midia_screen(
+      _codigo_empresa,
+      _codigo_programacao,
+      _item_checklist,
+      _descr_comentarios,
+      _registro_colaborador,
+      _identificacao_utilizador,
+      _codigo_grupo,
+      _codigo_checklist,
+      _descr_programacao,
+      _codigo_pedido,
+      _item_pedido,
+      _codigo_material,
+      _referencia_parceiro,
+      _codigo_projeto,
+      _sincronizado,
+      _status_aprovacao,
+      _origemUsuario,
+      _filtro,
+      _filtroReferenciaProjeto);
+
+  // manage state of modal progress HUD widget
+  bool _isLoading = false;
+
   PickedFile _imageFile;
   dynamic _pickImageError;
   bool isVideo = false;
@@ -56,13 +145,53 @@ class _sps_questionario_midia_screen
       await _controller.setVolume(0.0);
     }
     if (isVideo) {
-      final PickedFile file = await _picker.getVideo(
-          source: source, maxDuration: const Duration(seconds: 10));
-      spsCriarThumbs.toUserFolder();
-      //await _playVideo(file);
-      //Comando para atualizar a tela da galeria
-      setState(() {
+      _picker
+          .getVideo(source: source, maxDuration: const Duration(seconds: 60))
+          .then((final PickedFile file) async {
+        DateTime now = DateTime.now();
+        DateTime _currentTime = new DateTime(
+            now.year, now.month, now.day, now.hour, now.minute, now.second);
+        //Arquivo de video capturado
+        //Montagem do arquivo de dados para processamento do arquivo.
+        Map<String, dynamic> _dadosArquivo = new Map<String, dynamic>();
+        _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
+        _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
+        _dadosArquivo['item_checklist'] = this.widget._item_checklist;
+        _dadosArquivo['arquivo'] = file.path.toString();
+        if (usuarioAtual.tipo == "INTERNO") {
+          _dadosArquivo['registro_colaborador'] = usuarioAtual.senha_usuario;
+          _dadosArquivo['identificacao_utilizador'] = '';
+        } else {
+          _dadosArquivo['registro_colaborador'] = '';
+          _dadosArquivo['identificacao_utilizador'] =
+              usuarioAtual.codigo_usuario;
+        }
+        _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
+        _dadosArquivo['dthratualizacao'] = _currentTime.toString();
+        _dadosArquivo['dthranexo'] = _currentTime.toString();
 
+        //Processamento do arquivo capturado - Renomear - mover.
+        final String arquivoMovido =
+            await spsMidiaUtils.processarArquivoCapturado(
+                tipo: ".mp4", dadosArquivo: _dadosArquivo);
+
+        _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
+        _dadosArquivo['item_anexo'] =
+            (_dadosArquivo['nome_arquivo'].split('_')[3]).split('.').first;
+
+        List _listaArquivos = new List();
+        _listaArquivos.add(arquivoMovido);
+        //Processamento do arquivo capturado - Gerar thumbnail.
+        await spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos);
+        SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao =
+            SpsDaoQuestionarioMidia();
+        //Gravação do registro na tabela de anexos do SQLITE
+        final int registroGravado =
+            await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(
+                dadosArquivo: _dadosArquivo);
+        setState(() {
+          _isLoading = false;
+        });
       });
     } else {
       final pickedFile = await _picker.getImage(
@@ -71,9 +200,52 @@ class _sps_questionario_midia_screen
         maxHeight: null,
         imageQuality: null,
       );
-      //Comando para atualizar a tela da galeria
       setState(() {
-        //_imageFile = pickedFile;
+        _isLoading = true;
+      });
+      spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
+      File arquivoNormalizado =
+          await objspsMidiaUtils.normalizarArquivo(pickedFile.path.toString());
+
+      DateTime now = DateTime.now();
+      DateTime _currentTime = new DateTime(
+          now.year, now.month, now.day, now.hour, now.minute, now.second);
+      //Arquivo de imagem capturado
+      //Montagem do arquivo de dados para processamento do arquivo.
+      Map<String, dynamic> _dadosArquivo = new Map<String, dynamic>();
+      _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
+      _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
+      _dadosArquivo['item_checklist'] = this.widget._item_checklist;
+      _dadosArquivo['arquivo'] = arquivoNormalizado.path.toString();
+      if (usuarioAtual.tipo == "INTERNO") {
+        _dadosArquivo['registro_colaborador'] = usuarioAtual.senha_usuario;
+        _dadosArquivo['identificacao_utilizador'] = '';
+      } else {
+        _dadosArquivo['registro_colaborador'] = '';
+        _dadosArquivo['identificacao_utilizador'] = usuarioAtual.codigo_usuario;
+      }
+      _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
+      _dadosArquivo['dthratualizacao'] = _currentTime.toString();
+      _dadosArquivo['dthranexo'] = _currentTime.toString();
+
+      //Processamento do arquivo capturado - Renomear - mover.
+      final String arquivoMovido = await spsMidiaUtils
+          .processarArquivoCapturado(tipo: ".jpg", dadosArquivo: _dadosArquivo);
+
+      _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
+      _dadosArquivo['item_anexo'] =
+          (_dadosArquivo['nome_arquivo'].split('_')[3]).split('.').first;
+
+      List _listaArquivos = new List();
+      _listaArquivos.add(arquivoMovido);
+
+      //Gravação do registro na tabela de anexos do SQLITE
+      SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+      final int registroGravado = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+
+
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -215,11 +387,16 @@ class _sps_questionario_midia_screen
   //Widget Build da classe  _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
-    new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
+    //limpar cache de imagem
+    imageCache.clear();
+    new Directory(
+            '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs')
+        .create();
     return DefaultTabController(
         length: 3,
         child: new Scaffold(
-          backgroundColor: Color(0xFFe9eef7), // Cinza Azulado
+          backgroundColor: Color(0xFFe9eef7),
+          // Cinza Azulado
           appBar: AppBar(
             backgroundColor: Color(0xFF004077),
             title: Text(
@@ -243,33 +420,62 @@ class _sps_questionario_midia_screen
             ]),
           ),
           endDrawer: sps_drawer(spslogin: spslogin),
-          body: TabBarView(controller: controller, children: [
+          body: LoadingOverlay(
+            child:           TabBarView(controller: controller, children: [
 //             any widget can work very well here <3
-            //Container com a galeria de imagens
-            new Container(
-              child: Center(
-                child: ImageGrid(directory: _photoDir, extensao: ".jpg",tipo: "image"),
-              ),
-            ),
-            //Container com a galeria de vídeos
-            new Container(
-              child: Center(
-                child: ImageGrid(directory: _videoDir, extensao: ".jpg",tipo: "video"),
-              ),
-            ),
-            new Container(
-              color: Color(0xFFe9eef7),
-              child: Center(
-                child: Text(
-                  'Nenhum áudio disponível.',
-                  style: TextStyle(color: Colors.black),
+              //Container com a galeria de imagens
+              new Container(
+                child: Center(
+                  child: ImageGrid(
+                      funCallback: () {
+                        setState(() {
+                          //limpar cache de imagem
+                          imageCache.clear();
+                        });
+                      },
+                      directory: _photoDir,
+                      extensao: ".jpg",
+                      tipo: "image",
+                      codigo_empresa: this.widget._codigo_empresa,
+                      codigo_programacao: this.widget._codigo_programacao,
+                      item_checklist: this.widget._item_checklist),
                 ),
               ),
-            ),
-            new Container(
-
-            ),
-          ]),
+              //Container com a galeria de vídeos
+              new Container(
+                child: Center(
+                  child: ImageGrid(
+                      funCallback: () {
+                        setState(() {
+                          //limpar cache de imagem
+                          imageCache.clear();
+                        });
+                      },
+                      directory: _videoDir,
+                      extensao: ".jpg",
+                      tipo: "video",
+                      codigo_empresa: this.widget._codigo_empresa,
+                      codigo_programacao: this.widget._codigo_programacao,
+                      item_checklist: this.widget._item_checklist),
+                ),
+              ),
+              new Container(
+                color: Color(0xFFe9eef7),
+                child: Center(
+                  child: Text(
+                    'Nenhum áudio disponível.',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              new Container(),
+            ]),
+            isLoading: _isLoading,
+            // demo of some additional parameters
+            opacity: 0.5,
+            progressIndicator: CircularProgressIndicator(),
+            color: Colors.white,
+          ),
           floatingActionButton: _bottomButtons(controller.index),
         ));
   }
