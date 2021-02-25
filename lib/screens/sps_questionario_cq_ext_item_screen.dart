@@ -430,6 +430,11 @@ class _sps_questionario_cq_ext_item_screen
                                                     this.widget._origemUsuario,
                                                     this.widget._filtro,
                                                     this.widget._filtroReferenciaProjeto,
+                                                    funCallback: () {
+                                                        print('voltei');
+                                                        setState(() {
+                                                        });
+                                                    },
                                                   )),
                                         );
                                       },

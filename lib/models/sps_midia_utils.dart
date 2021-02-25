@@ -6,6 +6,7 @@ import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:thumbnails/thumbnails.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
+import 'package:intl/intl.dart';
 
 class spsMidiaUtils {
 
@@ -41,25 +42,9 @@ class spsMidiaUtils {
   static Future<String> processarArquivoCapturado({String tipo = "", Map<String,dynamic> dadosArquivo = null}) async {
     File sourceFile = new File(dadosArquivo['arquivo']);
     String _extensaoArquivo = sourceFile.path.split('.').last;
-    final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
-    List<Map<String, dynamic>> arquivosArmazenados = await objQuestionarioCqMidiaDao.listarQuestionarioMidia(codigo_empresa: dadosArquivo['codigo_empresa'], codigo_programacao: dadosArquivo['codigo_programacao'], item_checklist:dadosArquivo['item_checklist']);
-
-    int _proximoRegistro;
-    //Verificar se existe conexão
-    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-    final bool result = await ObjVerificarConexao.verificar_conexao();
-    if (result == true) {
-
-    }else{
-
-    }
-    if(arquivosArmazenados.length < 1){
-      _proximoRegistro = 1;
-    }else{
-      _proximoRegistro = arquivosArmazenados[0]['item_anexo'] + 1;
-    }
-
-    String _nomeArquivo = dadosArquivo['codigo_empresa']+'_'+dadosArquivo['codigo_programacao'].toString()+'_'+dadosArquivo['item_checklist'].toString()+'_'+_proximoRegistro.toString()+'.'+_extensaoArquivo.toString();
+    DateFormat dateFormat = DateFormat("yyyyMMdd_HHmmss");
+    DateTime now = DateTime.now();
+    String _nomeArquivo = dateFormat.format(now)+'.'+_extensaoArquivo.toString();
     String newPath = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/'+_nomeArquivo.toString();
     final util  = new spsMidiaUtils();
     File arquivoRenomeado = await util.moveFile(sourceFile, newPath);

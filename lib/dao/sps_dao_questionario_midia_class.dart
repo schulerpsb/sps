@@ -44,16 +44,16 @@ class SpsDaoQuestionarioMidia {
     var wregistros = dadosQuestionario.length;
     var windex = 0;
     while (windex < wregistros) {
-      db.insert('checklist_lista', dadosQuestionario[windex]);
-      debugPrint("Gravando checklist_lista => " + dadosQuestionario[windex].toString());
+      db.insert('sps_checklist_tb_resp_anexo', dadosQuestionario[windex]);
+      debugPrint("Gravando anexos Lista => " + dadosQuestionario[windex].toString());
       windex = windex + 1;
     }
-    return null;
+    return 1;
   }
 
   Future<int> emptyTable() async {
     final Database db = await getDatabase();
-    return db.rawDelete('delete from checklist_lista');
+    return db.rawDelete('delete from sps_checklist_tb_resp_anexo');
   }
 
   Future<List<Map<String, dynamic>>> listarQuestionarioMidia({String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0}) async {
@@ -66,7 +66,12 @@ class SpsDaoQuestionarioMidia {
 
   Future<int> InserirQuestionarioMidia({Map<String, dynamic> dadosArquivo}) async {
     final Database db = await getDatabase();
-    var _queryinsert = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES ("+dadosArquivo['codigo_empresa']+", '"+dadosArquivo['codigo_programacao'].toString()+"', '"+dadosArquivo['registro_colaborador'].toString()+"' , '"+dadosArquivo['identificacao_utilizador'].toString()+"', "+dadosArquivo['item_checklist'].toString()+", "+dadosArquivo['item_anexo'].toString()+", '"+dadosArquivo['nome_arquivo'].toString()+"' , '', '"+dadosArquivo['usuresponsavel'].toString()+"', '"+dadosArquivo['dthratualizacao'].toString()+"', '"+dadosArquivo['dthranexo'].toString()+"', '"+dadosArquivo['sincronizado'].toString()+"')";
+    String _queryinsert;
+    if(dadosArquivo['item_anexo'] != null){
+      _queryinsert = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES ("+dadosArquivo['codigo_empresa']+", '"+dadosArquivo['codigo_programacao'].toString()+"', '"+dadosArquivo['registro_colaborador'].toString()+"' , '"+dadosArquivo['identificacao_utilizador'].toString()+"', "+dadosArquivo['item_checklist'].toString()+", case when (SELECT item_anexo FROM sps_checklist_tb_resp_anexo where codigo_empresa = "+dadosArquivo['codigo_empresa']+" and codigo_programacao = '"+dadosArquivo['codigo_programacao'].toString()+"' and item_checklist = "+dadosArquivo['item_checklist'].toString()+" and item_anexo = "+dadosArquivo['item_anexo'].toString()+") is not null then (SELECT max(item_anexo) + 1 FROM sps_checklist_tb_resp_anexo where codigo_empresa = "+dadosArquivo['codigo_empresa']+" and codigo_programacao = '"+dadosArquivo['codigo_programacao'].toString()+"' and item_checklist = "+dadosArquivo['item_checklist'].toString()+") else "+dadosArquivo['item_anexo'].toString()+" end, '"+dadosArquivo['nome_arquivo'].toString()+"' , '', '"+dadosArquivo['usuresponsavel'].toString()+"', '"+dadosArquivo['dthratualizacao'].toString()+"', '"+dadosArquivo['dthranexo'].toString()+"', case when (SELECT item_anexo FROM sps_checklist_tb_resp_anexo where codigo_empresa = "+dadosArquivo['codigo_empresa']+" and codigo_programacao = '"+dadosArquivo['codigo_programacao'].toString()+"' and item_checklist = "+dadosArquivo['item_checklist'].toString()+" and item_anexo = "+dadosArquivo['item_anexo'].toString()+") is not null then 'N' else '"+dadosArquivo['sincronizado'].toString()+"' end)";
+    }else{
+      _queryinsert = "INSERT INTO sps_checklist_tb_resp_anexo (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, item_checklist, item_anexo, nome_arquivo, titulo_arquivo, usuresponsavel, dthratualizacao, dthranexo,sincronizado) VALUES ("+dadosArquivo['codigo_empresa']+", '"+dadosArquivo['codigo_programacao'].toString()+"', '"+dadosArquivo['registro_colaborador'].toString()+"' , '"+dadosArquivo['identificacao_utilizador'].toString()+"', "+dadosArquivo['item_checklist'].toString()+", case when (SELECT max(item_anexo) + 1 FROM sps_checklist_tb_resp_anexo where codigo_empresa = "+dadosArquivo['codigo_empresa']+" and codigo_programacao = '"+dadosArquivo['codigo_programacao'].toString()+"' and item_checklist = "+dadosArquivo['item_checklist'].toString()+") is null then 1 else (SELECT max(item_anexo) + 1 FROM sps_checklist_tb_resp_anexo where codigo_empresa = "+dadosArquivo['codigo_empresa']+" and codigo_programacao = '"+dadosArquivo['codigo_programacao'].toString()+"' and item_checklist = "+dadosArquivo['item_checklist'].toString()+") end , '"+dadosArquivo['nome_arquivo'].toString()+"' , '', '"+dadosArquivo['usuresponsavel'].toString()+"', '"+dadosArquivo['dthratualizacao'].toString()+"', '"+dadosArquivo['dthranexo'].toString()+"', '"+dadosArquivo['sincronizado'].toString()+"')";
+    }
     debugPrint("query inserir registro=> "+_queryinsert);
     final int result = await db.rawInsert(_queryinsert);
     return result;
@@ -89,6 +94,19 @@ class SpsDaoQuestionarioMidia {
     final int result = await db.rawUpdate(_query);
     return result;
 
+  }
+
+  Future<List<Map<String, dynamic>>> select_sincronizacao(
+      _hcodigoEmpresa, _hcodigoProgramacao) async {
+    final Database db = await getDatabase();
+    var _query = 'SELECT * FROM sps_checklist_tb_resp_anexo where codigo_empresa = "' +
+        _hcodigoEmpresa +
+        '" and codigo_programacao = ' +
+        _hcodigoProgramacao.toString() +
+        ' and (sincronizado = "N" OR sincronizado = "D")';
+    debugPrint("query => " + _query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    return result;
   }
 
 }
