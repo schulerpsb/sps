@@ -76,13 +76,14 @@ class SpsDaoQuestionarioItem {
       if (dadosQuestionarioItem[windex]['fim_escala'].toString() == "") {
         dadosQuestionarioItem[windex]['fim_escala'] = 0;
       }
-      if (dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() ==  "") {
+      if (dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() ==
+          "") {
         dadosQuestionarioItem[windex]['tamanho_resposta_fixa'] = 0;
       }
-      if (dadosQuestionarioItem[windex]['resp_numero'].toString() ==  "") {
+      if (dadosQuestionarioItem[windex]['resp_numero'].toString() == "") {
         dadosQuestionarioItem[windex]['resp_numero'] = 0;
       }
-      if (dadosQuestionarioItem[windex]['resp_escala'].toString() ==  "") {
+      if (dadosQuestionarioItem[windex]['resp_escala'].toString() == "") {
         dadosQuestionarioItem[windex]['resp_escala'] = 0;
       }
       var _query = 'insert into checklist_item values ("' +
@@ -207,15 +208,12 @@ class SpsDaoQuestionarioItem {
       _hidentificacaoUtilizador,
       _hitemChecklist,
       _hrespTexto,
-      _hstatusResposta,
       _hsincronizado) async {
     final Database db = await getDatabase();
     var _query = 'update checklist_item set resp_texto = "' +
         _hrespTexto +
         '", sincronizado = "' +
-        _hrespTexto +
-        '", status_resposta = "' +
-        _hstatusResposta +
+        _hsincronizado +
         '" where codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
@@ -227,6 +225,34 @@ class SpsDaoQuestionarioItem {
         '" and item_checklist = ' +
         _hitemChecklist.toString();
     debugPrint("query => " + _query);
+    db.rawUpdate(_query);
+    debugPrint("SQLITE - Alterado resposta (checklist_item)");
+    return 1;
+  }
+
+  Future<int> update_status_resposta(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao,
+      _hregistroColaborador,
+      _hidentificacaoUtilizador,
+      _hitemChecklist,
+      _hstatusResposta,
+      _hsincronizado) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_item set status_resposta = "' +
+        _hstatusResposta +
+        '", sincronizado = "' +
+        _hsincronizado +
+        '" where codigo_empresa = "' +
+        _hcodigoEmpresa +
+        '" and codigo_programacao = ' +
+        _hcodigoProgramacao.toString() +
+        ' and registro_colaborador = "' +
+        _hregistroColaborador +
+        '" and identificacao_utilizador = "' +
+        _hidentificacaoUtilizador +
+        '" and item_checklist = ' +
+        _hitemChecklist.toString();
     db.rawUpdate(_query);
     debugPrint("SQLITE - Alterado resposta (checklist_item)");
     return 1;
@@ -286,6 +312,30 @@ class SpsDaoQuestionarioItem {
     return result;
   }
 
+  Future<List<Map<String, dynamic>>> select_chave_primaria(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao,
+      _hregistroColaborador,
+      _hidentificacaoUtilizador,
+      _hitemChecklist) async {
+    final Database db = await getDatabase();
+    var _query =
+        'SELECT *, (select count(*) from sps_checklist_tb_resp_anexo b where b.codigo_empresa = a.codigo_empresa and b.codigo_programacao = a.codigo_programacao and b.registro_colaborador = a.registro_colaborador and b.identificacao_utilizador = a.identificacao_utilizador and b.item_checklist = a.item_checklist) as qtde_anexos FROM checklist_item a where codigo_empresa = "' +
+            _hcodigoEmpresa +
+            '" and a.codigo_programacao = ' +
+            _hcodigoProgramacao.toString() +
+            ' and a.registro_colaborador = "' +
+            _hregistroColaborador.toString() +
+            '" and a.identificacao_utilizador = "' +
+            _hidentificacaoUtilizador.toString() +
+            '" and a.item_checklist = ' +
+            _hitemChecklist.toString();
+    print("query adriano=> " + _query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    print("adriano =>"+result.toString());
+    return result;
+  }
+
   Future<int> emptyTable(_hcodigoEmpresa, _hcodigoProgramacao) async {
     final Database db = await getDatabase();
     var _query = 'delete from checklist_item where codigo_empresa = "' +
@@ -304,9 +354,15 @@ class SpsDaoQuestionarioItem {
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString();
     if (_hacao.toString() == "PROXIMO") {
-      _query = _query + ' and sessao_checklist > "' + _hsessaoChecklist.toString() + '" order by sessao_checklist, seq_pergunta';
+      _query = _query +
+          ' and sessao_checklist > "' +
+          _hsessaoChecklist.toString() +
+          '" order by sessao_checklist, seq_pergunta';
     } else {
-      _query = _query + ' and sessao_checklist < "' + _hsessaoChecklist.toString() + '" order by sessao_checklist desc, seq_pergunta';
+      _query = _query +
+          ' and sessao_checklist < "' +
+          _hsessaoChecklist.toString() +
+          '" order by sessao_checklist desc, seq_pergunta';
     }
     debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);

@@ -5,6 +5,7 @@ import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
+import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_item_screen.dart';
@@ -193,6 +194,8 @@ class _sps_questionario_comentarios_screen
                         onPressed: () => _gravar_comentario(
                             this.widget._codigo_empresa,
                             this.widget._codigo_programacao,
+                            this.widget._registro_colaborador,
+                            this.widget._identificacao_utilizador,
                             this.widget._item_checklist,
                             _novoComentario.text),
                         child: const Icon(Icons.add),
@@ -208,7 +211,12 @@ class _sps_questionario_comentarios_screen
     );
   }
 
-  _gravar_comentario(_wcodigoEmpresa, _wcodigoProgramacao, _witemChecklist,
+  _gravar_comentario(
+      _wcodigoEmpresa,
+      _wcodigoProgramacao,
+      _wregistroColaborador,
+      _widentificacaoUtilizador,
+      _witemChecklist,
       _wdescrComentarios) async {
     var _wsincronizado = "";
 
@@ -223,8 +231,8 @@ class _sps_questionario_comentarios_screen
           null,
           _wcodigoEmpresa,
           _wcodigoProgramacao.toString(),
-          null,
-          null,
+          _wregistroColaborador,
+          _widentificacaoUtilizador,
           _witemChecklist.toString(),
           _wdescrComentarios,
           usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
@@ -247,14 +255,23 @@ class _sps_questionario_comentarios_screen
     final int resultupdate = await objQuestionarioDaoItem.update_comentarios(
         _wcodigoEmpresa,
         _wcodigoProgramacao,
-        null,
-        null,
+        _wregistroColaborador,
+        _widentificacaoUtilizador,
         _witemChecklist,
         _wdescrComentarios);
     this.widget._descr_comentarios = _wdescrComentarios;
-    //setState(() {});
+
+    //Atualizar status da resposta
+    spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
+    await spsQuestionarioUtils.atualizar_status_resposta(
+        wcodigoEmpresa: _wcodigoEmpresa,
+        wcodigoProgramacao: _wcodigoProgramacao,
+        wregistroColaborador: _wregistroColaborador,
+        widentificacaoUtilizador: _widentificacaoUtilizador,
+        witemChecklist: _witemChecklist);
 
     //Retornar para tela de itens do questionário
+    Navigator.pop;
     Navigator.push(
       context,
       MaterialPageRoute(

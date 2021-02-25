@@ -14,6 +14,7 @@ import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_ch.dart';
+import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_comentarios_screen.dart';
@@ -411,24 +412,6 @@ class _sps_questionario_ch_item_screen
       _windex) async {
     var _wsincronizado = "";
 
-    //Analisar status da resposta
-    String _wstatusResposta;
-    if (_wrespTexto == "") {
-      _wstatusResposta = "PENDENTE";
-    } else {
-      _wstatusResposta = "PREENCHIDA";
-      if (_wcomentarios == "OBRIGATORIO") {
-        if (_wdescr_comentarios == "") {
-          _wstatusResposta = "PENDENTE";
-        }
-      }
-      /*if (snapshot.data[index]["midia"] == "OBRIGATORIO") {
-            if (snapshot.data[index]["qtde_midia"] == 0) {
-              _statusResposta = "PENDENTE";
-            }
-          }*/
-    }
-
     //Verificar se existe conexão
     final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
     final bool result = await ObjVerificarConexao.verificar_conexao();
@@ -443,7 +426,6 @@ class _sps_questionario_ch_item_screen
           _widentificacaoUtilizador,
           _witemChecklist,
           _wrespTexto,
-          _wstatusResposta,
           usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
               ? usuarioAtual.registro_usuario
               : usuarioAtual.codigo_usuario);
@@ -468,8 +450,15 @@ class _sps_questionario_ch_item_screen
         _widentificacaoUtilizador,
         _witemChecklist,
         _wrespTexto,
-        _wstatusResposta,
         _wsincronizado);
+
+    //Atualizar status da resposta
+    await spsQuestionarioUtils.atualizar_status_resposta(
+        wcodigoEmpresa: _wcodigoEmpresa,
+        wcodigoProgramacao: int.parse(_wcodigoProgramacao),
+        wregistroColaborador: _wregistroColaborador,
+        widentificacaoUtilizador: _widentificacaoUtilizador,
+        witemChecklist: int.parse(_witemChecklist));
 
     //Recarregar tela
     Navigator.pop;
