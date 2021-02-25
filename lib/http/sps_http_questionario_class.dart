@@ -81,7 +81,7 @@ class SpsHttpQuestionario {
       'codigo_empresa': codigo_empresa,
       'codigo_programacao': codigo_programacao,
       'referencia_parceiro': referencia_parceiro,
-      'usuresponsavel': usuresponsavel, //substituir por variavel global do Fernando
+      'usuresponsavel': usuresponsavel,
     };
 
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);

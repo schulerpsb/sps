@@ -242,7 +242,7 @@ class _sps_questionario_cq_ext_filtro_screen
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
                                               hintText:
-                                                  'Informa a referência do parceiro'),
+                                                  'Informar a referência do parceiro'),
                                         ),
                                       ],
                                     ),

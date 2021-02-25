@@ -9,12 +9,14 @@ class SpsHttpQuestionarioItem {
   //static const baseUrl_saveOpcao = 'https://teklist.schuler.de/webapi/api/questionario/save_opcao.php';
   //static const baseUrl_saveComentarios = 'http://teklist.schuler.de/webapi/api/questionario/save_comentarios.php';
   //static const baseUrl_saveAprovacao = 'http://teklist.schuler.de/webapi/api/questionario/save_aprovacao.php';
+  //static const baseUrl_saveResposta = 'http://teklist.schuler.de/webapi/api/questionario/save_resposta.php';
 
   //Servidor DEV
   static const baseUrl_read = 'http://10.17.20.45/webapi/api/questionario/read_item.php';
   static const baseUrl_saveOpcao = 'http://10.17.20.45/webapi/api/questionario/save_opcao.php';
   static const baseUrl_saveComentarios = 'http://10.17.20.45/webapi/api/questionario/save_comentarios.php';
   static const baseUrl_saveAprovacao = 'http://10.17.20.45/webapi/api/questionario/save_aprovacao.php';
+  static const baseUrl_saveResposta = 'http://10.17.20.45/webapi/api/questionario/save_resposta.php';
 
   SpsHttpQuestionarioItem();
 
@@ -87,6 +89,7 @@ class SpsHttpQuestionarioItem {
         'descr_comentarios': element['descr_comentarios'],
         'status_resposta': element['status_resposta'],
         'status_aprovacao': element['status_aprovacao'],
+        'sugestao_resposta': element['sugestao_resposta'],
       };
       transactionJsonItemOcorrencias.add(transactionJsonMap);
     }
@@ -124,7 +127,7 @@ class SpsHttpQuestionarioItem {
     return true;
   }
 
-  Future QuestionarioSave(String codigo_empresa, String codigo_programacao, String registro_colaborador, String identificacao_utilizador, String item_checklist, String resp_cq, String usuresponsavel) async {
+  Future QuestionarioSaveRespCQ(String codigo_empresa, String codigo_programacao, String registro_colaborador, String identificacao_utilizador, String item_checklist, String resp_cq, String usuresponsavel) async {
     final Map<String, dynamic> fieldQuestionario = {
       'codigo_empresa': codigo_empresa,
       'codigo_programacao': codigo_programacao,
@@ -143,6 +146,38 @@ class SpsHttpQuestionarioItem {
     final Response response = await client
         .post(
       baseUrl_saveOpcao,
+      headers: {'Content-type': 'application/json'},
+      body: dadosQuestionarioJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+
+    return true;
+  }
+
+  Future QuestionarioSaveResposta(String codigo_empresa, String codigo_programacao, String registro_colaborador, String identificacao_utilizador, String item_checklist, String resp_texto, String status_resposta, String usuresponsavel) async {
+    final Map<String, dynamic> fieldQuestionario = {
+      'codigo_empresa': codigo_empresa,
+      'codigo_programacao': codigo_programacao,
+      'registro_colaborador': registro_colaborador,
+      'identificacao_utilizador': identificacao_utilizador,
+      'item_checklist': item_checklist,
+      'resp_texto': resp_texto,
+      'status_resposta': status_resposta,
+      'usuresponsavel': usuresponsavel,
+    };
+    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      baseUrl_saveResposta,
       headers: {'Content-type': 'application/json'},
       body: dadosQuestionarioJson,
     )
@@ -196,9 +231,6 @@ class SpsHttpQuestionarioItem {
       'usuresponsavel': usuresponsavel,
     };
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
-
-    print ("Origem:"+origem_usuario);
-    print ("Save comentario:"+dadosQuestionarioJson.toString());
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),

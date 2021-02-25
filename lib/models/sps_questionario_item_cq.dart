@@ -58,7 +58,7 @@ class SpsQuestionarioItem {
             result[windex]["identificacao_utilizador"],
             result[windex]["item_checklist"].toString(),
             result[windex]["resp_cq"],
-            usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
+            usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
         if (retorno1.toString() == true) {
           debugPrint("registro sincronizado: " + result[windex].toString());
         } else {
@@ -76,7 +76,7 @@ class SpsQuestionarioItem {
                 result[windex]["identificacao_utilizador"],
                 result[windex]["item_checklist"].toString(),
                 result[windex]["descr_comentarios"],
-                usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
+                usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
         if (retorno2.toString() == true) {
           debugPrint("registro sincronizado: " + result[windex].toString());
         } else {
