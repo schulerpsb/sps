@@ -10,7 +10,7 @@ import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
-import 'package:sps/screens/sps_questionario_comentarios_screen.dart';
+import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
 import 'package:badges/badges.dart';
@@ -461,6 +461,7 @@ class _sps_questionario_cq_int_item_screen
                                               snapshot.data[index]
                                                   ["status_aprovacao"],
                                               this.widget._origemUsuario,
+                                              "CONTROLE DE QUALIDADE",
                                               this.widget._filtro,
                                               this
                                                   .widget
@@ -517,31 +518,13 @@ class _sps_questionario_cq_int_item_screen
           _wcodigoProgramacao,
           _witemChecklist,
           _wstatusAprovacao,
-          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
+          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
       if (retorno == true) {
         _wsincronizado = "";
-        debugPrint("registro gravado PostgreSQL: " +
-            _wcodigoEmpresa +
-            "/" +
-            _wcodigoProgramacao.toString() +
-            "/" +
-            _witemChecklist.toString() +
-            "/" +
-            _wstatusAprovacao +
-            "/" +
-            _wregistroAprovador);
+        debugPrint("registro gravado PostgreSQL");
       } else {
         _wsincronizado = "N";
-        debugPrint("ERRO => registro gravado PostgreSQL: " +
-            _wcodigoEmpresa +
-            "/" +
-            _wcodigoProgramacao.toString() +
-            "/" +
-            _witemChecklist.toString() +
-            "/" +
-            _wstatusAprovacao +
-            "/" +
-            _wregistroAprovador);
+        debugPrint("ERRO => registro não gravado PostgreSQL");
       }
     } else {
       _wsincronizado = "N";

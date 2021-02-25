@@ -100,7 +100,7 @@ class SpsDaoQuestionario {
       db.rawInsert(_query);
       windex = windex + 1;
     }
-    return null;
+    return 1;
   }
 
   Future<int> update_referencia(_hcodigoEmpresa, _hcodigoProgramacao,
@@ -117,7 +117,7 @@ class SpsDaoQuestionario {
     debugPrint("query => " + _query);
     db.rawUpdate(_query);
     debugPrint("Alterado referencia (checklist_lista) => " + _hreferencia);
-    return null;
+    return 1;
   }
 
   Future<List<Map<String, dynamic>>> select_sincronizacao() async {

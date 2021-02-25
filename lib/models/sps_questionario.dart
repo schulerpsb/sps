@@ -85,7 +85,7 @@ class SpsQuestionario {
             result[windex]["codigo_empresa"],
             result[windex]["codigo_programacao"],
             result[windex]["referencia_parceiro"],
-            usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario); //substituir por variavel global do Fernando
+            usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
         if (retorno.toString() == true) {
           debugPrint("registro sincronizado: " + result[windex].toString());
         } else {

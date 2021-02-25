@@ -40,6 +40,7 @@ class SpsDaoQuestionarioItem {
       'descr_comentarios TEXT, '
       'status_resposta TEXT, '
       'status_aprovacao TEXT, '
+      'sugestao_resposta TEXT, '
       'sincronizado TEXT, '
       'PRIMARY KEY (codigo_empresa, codigo_programacao, '
       '             registro_colaborador, identificacao_utilizador, item_checklist))';
@@ -70,6 +71,22 @@ class SpsDaoQuestionarioItem {
     var wregistros = dadosQuestionarioItem.length;
     var windex = 0;
     while (windex < wregistros) {
+      if (dadosQuestionarioItem[windex]['inicio_escala'].toString() == "") {
+        dadosQuestionarioItem[windex]['inicio_escala'] = 0;
+      }
+      if (dadosQuestionarioItem[windex]['fim_escala'].toString() == "") {
+        dadosQuestionarioItem[windex]['fim_escala'] = 0;
+      }
+      if (dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() ==
+          "") {
+        dadosQuestionarioItem[windex]['tamanho_resposta_fixa'] = 0;
+      }
+      if (dadosQuestionarioItem[windex]['resp_numero'].toString() == "") {
+        dadosQuestionarioItem[windex]['resp_numero'] = 0;
+      }
+      if (dadosQuestionarioItem[windex]['resp_escala'].toString() == "") {
+        dadosQuestionarioItem[windex]['resp_escala'] = 0;
+      }
       var _query = 'insert into checklist_item values ("' +
           dadosQuestionarioItem[windex]['codigo_empresa'] +
           '",' +
@@ -103,9 +120,9 @@ class SpsDaoQuestionarioItem {
           '","' +
           dadosQuestionarioItem[windex]['descr_escala'].toString() +
           '",' +
-          dadosQuestionarioItem[windex]['inicio_escala'].replaceAll('', '0') +
+          dadosQuestionarioItem[windex]['inicio_escala'].toString() +
           ',' +
-          dadosQuestionarioItem[windex]['fim_escala'].replaceAll('', '0') +
+          dadosQuestionarioItem[windex]['fim_escala'].toString() +
           ',' +
           dadosQuestionarioItem[windex]['intervalo_escala']
               .replaceAll('', '0') +
@@ -121,20 +138,19 @@ class SpsDaoQuestionarioItem {
           '","' +
           dadosQuestionarioItem[windex]['tipo_resposta_fixa'].toString() +
           '",' +
-          dadosQuestionarioItem[windex]['tamanho_resposta_fixa']
-              .replaceAll('', '0') +
+          dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() +
           ',"' +
           dadosQuestionarioItem[windex]['resp_simnao'].toString() +
           '","' +
           dadosQuestionarioItem[windex]['resp_texto'].toString() +
           '",' +
-          dadosQuestionarioItem[windex]['resp_numero'].replaceAll('', '0') +
+          dadosQuestionarioItem[windex]['resp_numero'].toString() +
           ',"' +
           dadosQuestionarioItem[windex]['resp_data'].toString() +
           '","' +
           dadosQuestionarioItem[windex]['resp_hora'].toString() +
           '",' +
-          dadosQuestionarioItem[windex]['resp_escala'].replaceAll('', '0') +
+          dadosQuestionarioItem[windex]['resp_escala'].toString() +
           ',"' +
           dadosQuestionarioItem[windex]['resp_cq'].toString() +
           '","' +
@@ -146,6 +162,8 @@ class SpsDaoQuestionarioItem {
           '","' +
           dadosQuestionarioItem[windex]['status_aprovacao'].toString() +
           '","' +
+          dadosQuestionarioItem[windex]['sugestao_resposta'].toString() +
+          '","' +
           dadosQuestionarioItem[windex]['sincronizado'].toString() +
           '")';
       //String _new_query = _query.replaceAll(',,',',0,');
@@ -153,7 +171,7 @@ class SpsDaoQuestionarioItem {
       db.rawInsert(_query);
       windex = windex + 1;
     }
-    return null;
+    return 1;
   }
 
   Future<int> update_opcao(
@@ -181,8 +199,65 @@ class SpsDaoQuestionarioItem {
         _hitemChecklist.toString();
     debugPrint("query => " + _query);
     db.rawUpdate(_query);
-    debugPrint("Alterado referencia (checklist_item) => " + _hrespCq);
-    return null;
+    debugPrint("SQLITE - Alterado referencia (checklist_item)");
+    return 1;
+  }
+
+  Future<int> update_resposta(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao,
+      _hregistroColaborador,
+      _hidentificacaoUtilizador,
+      _hitemChecklist,
+      _hrespTexto,
+      _hsincronizado) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_item set resp_texto = "' +
+        _hrespTexto +
+        '", sincronizado = "' +
+        _hsincronizado +
+        '" where codigo_empresa = "' +
+        _hcodigoEmpresa +
+        '" and codigo_programacao = ' +
+        _hcodigoProgramacao.toString() +
+        ' and registro_colaborador = "' +
+        _hregistroColaborador +
+        '" and identificacao_utilizador = "' +
+        _hidentificacaoUtilizador +
+        '" and item_checklist = ' +
+        _hitemChecklist.toString();
+    debugPrint("query => " + _query);
+    db.rawUpdate(_query);
+    debugPrint("SQLITE - Alterado resposta (checklist_item)");
+    return 1;
+  }
+
+  Future<int> update_status_resposta(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao,
+      _hregistroColaborador,
+      _hidentificacaoUtilizador,
+      _hitemChecklist,
+      _hstatusResposta,
+      _hsincronizado) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_item set status_resposta = "' +
+        _hstatusResposta +
+        '", sincronizado = "' +
+        _hsincronizado +
+        '" where codigo_empresa = "' +
+        _hcodigoEmpresa +
+        '" and codigo_programacao = ' +
+        _hcodigoProgramacao.toString() +
+        ' and registro_colaborador = "' +
+        _hregistroColaborador +
+        '" and identificacao_utilizador = "' +
+        _hidentificacaoUtilizador +
+        '" and item_checklist = ' +
+        _hitemChecklist.toString();
+    db.rawUpdate(_query);
+    debugPrint("SQLITE - Alterado resposta (checklist_item)");
+    return 1;
   }
 
   Future<int> update_aprovacao(_hcodigoEmpresa, _hcodigoProgramacao,
@@ -200,8 +275,8 @@ class SpsDaoQuestionarioItem {
         _hitemChecklist.toString();
     debugPrint("query => " + _query);
     db.rawUpdate(_query);
-    debugPrint("Alterado referencia (checklist_item) => " + _hstatusAprovacao);
-    return null;
+    debugPrint("SQLITE - Alterado aprovação (checklist_item)");
+    return 1;
   }
 
   Future<int> update_comentarios(
@@ -222,9 +297,8 @@ class SpsDaoQuestionarioItem {
         _hitemChecklist.toString();
     debugPrint("query => " + _query);
     db.rawUpdate(_query);
-    debugPrint("Alterado comentários (checklist_item) => " +
-        _hdescrComentarios.toString());
-    return null;
+    debugPrint("SQLITE - Alterado comentario (checklist_item)");
+    return 1;
   }
 
   Future<List<Map<String, dynamic>>> select_sincronizacao(
@@ -237,6 +311,30 @@ class SpsDaoQuestionarioItem {
         ' and sincronizado = "N"';
     debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> select_chave_primaria(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao,
+      _hregistroColaborador,
+      _hidentificacaoUtilizador,
+      _hitemChecklist) async {
+    final Database db = await getDatabase();
+    var _query =
+        'SELECT *, (select count(*) from sps_checklist_tb_resp_anexo b where b.codigo_empresa = a.codigo_empresa and b.codigo_programacao = a.codigo_programacao and b.registro_colaborador = a.registro_colaborador and b.identificacao_utilizador = a.identificacao_utilizador and b.item_checklist = a.item_checklist) as qtde_anexos FROM checklist_item a where codigo_empresa = "' +
+            _hcodigoEmpresa +
+            '" and a.codigo_programacao = ' +
+            _hcodigoProgramacao.toString() +
+            ' and a.registro_colaborador = "' +
+            _hregistroColaborador.toString() +
+            '" and a.identificacao_utilizador = "' +
+            _hidentificacaoUtilizador.toString() +
+            '" and a.item_checklist = ' +
+            _hitemChecklist.toString();
+    print("query adriano=> " + _query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    print("adriano =>"+result.toString());
     return result;
   }
 
@@ -261,8 +359,16 @@ class SpsDaoQuestionarioItem {
         '" and item.codigo_programacao = ' +
         _hcodigoProgramacao.toString();
     if (_hacao.toString() == "PROXIMO") {
+      _query = _query +
+          ' and sessao_checklist > "' +
+          _hsessaoChecklist.toString() +
+          '" order by sessao_checklist, seq_pergunta';
       _query = _query + ' and item.sessao_checklist > "' + _hsessaoChecklist.toString() + '" order by item.sessao_checklist, item.seq_pergunta';
     } else {
+      _query = _query +
+          ' and sessao_checklist < "' +
+          _hsessaoChecklist.toString() +
+          '" order by sessao_checklist desc, seq_pergunta';
       _query = _query + ' and item.sessao_checklist < "' + _hsessaoChecklist.toString() + '" order by item.sessao_checklist desc, item.seq_pergunta';
     }
     debugPrint("query => " + _query);
