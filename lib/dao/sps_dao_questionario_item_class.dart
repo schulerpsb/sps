@@ -360,16 +360,14 @@ class SpsDaoQuestionarioItem {
         _hcodigoProgramacao.toString();
     if (_hacao.toString() == "PROXIMO") {
       _query = _query +
-          ' and sessao_checklist > "' +
+          ' and item.sessao_checklist > "' +
           _hsessaoChecklist.toString() +
-          '" order by sessao_checklist, seq_pergunta';
-      _query = _query + ' and item.sessao_checklist > "' + _hsessaoChecklist.toString() + '" order by item.sessao_checklist, item.seq_pergunta';
+          '" order by item.sessao_checklist, item.seq_pergunta';
     } else {
       _query = _query +
-          ' and sessao_checklist < "' +
+          ' and item.sessao_checklist < "' +
           _hsessaoChecklist.toString() +
-          '" order by sessao_checklist desc, seq_pergunta';
-      _query = _query + ' and item.sessao_checklist < "' + _hsessaoChecklist.toString() + '" order by item.sessao_checklist desc, item.seq_pergunta';
+          '" order by item.sessao_checklist desc, item.seq_pergunta';
     }
     debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
