@@ -214,11 +214,11 @@ class _sps_questionario_midia_screen
         }
         //Atualizar Status das respostas
         spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
-        final statusrespostas =  objspsQuestionarioUtils.atualizar_status_resposta(
+        final statusrespostas =  await objspsQuestionarioUtils.atualizar_status_resposta(
             _dadosArquivo['codigo_empresa'],
             _dadosArquivo['codigo_programacao'],
-            _dadosArquivo['codigo_programacao'],
-            _dadosArquivo['item_checklist'],
+            _dadosArquivo['registro_colaborador'],
+            _dadosArquivo['identificacao_utilizador'],
             _dadosArquivo['item_checklist']
         );
         setState(() {
@@ -288,11 +288,11 @@ class _sps_questionario_midia_screen
       }
       //Atualizar Status das respostas
       spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
-      final statusrespostas =  objspsQuestionarioUtils.atualizar_status_resposta(
+      final statusrespostas =  await objspsQuestionarioUtils.atualizar_status_resposta(
           _dadosArquivo['codigo_empresa'],
           _dadosArquivo['codigo_programacao'],
-          _dadosArquivo['codigo_programacao'],
-          _dadosArquivo['item_checklist'],
+          _dadosArquivo['registro_colaborador'],
+          _dadosArquivo['identificacao_utilizador'],
           _dadosArquivo['item_checklist']
       );
       setState(() {
