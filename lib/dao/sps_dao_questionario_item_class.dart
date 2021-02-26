@@ -354,7 +354,7 @@ class SpsDaoQuestionarioItem {
     final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
     await objQuestionarioCqMidiaDao.create_table();
     print ("Adriano =>" + _hacao.toString() + "/" + _hsessaoChecklist.toString());
-    var _query = 'SELECT *, (select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (substr(nome_arquivo,-3,3) = "jpg" or substr(nome_arquivo,-3,3) = "mp4") and (sincronizado is null or sincronizado <> "D")) as anexos FROM checklist_item item where item.codigo_empresa = "' +
+    var _query = 'SELECT *, (select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos FROM checklist_item item where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and item.codigo_programacao = ' +
         _hcodigoProgramacao.toString();
