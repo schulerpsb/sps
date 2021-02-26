@@ -21,6 +21,7 @@ import 'package:sps/screens/sps_questionario_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_lista_screen.dart';
+import 'package:badges/badges.dart';
 
 class sps_questionario_ch_item_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -487,8 +488,19 @@ class _sps_questionario_ch_item_screen
     if (snapshot.data[index]["midia"] == "SIM" ||
         snapshot.data[index]["midia"] == "OBRIGATORIO") {
       return IconButton(
-        icon: Icon(Icons.collections, size: 30),
-        color: Colors.black,
+        icon: Badge(
+          badgeContent: Text(snapshot.data[index]["anexos"].toString(), style: TextStyle(color: Colors.white, fontSize: 8)),
+          showBadge: snapshot.data[index]
+          ["anexos"] > 0
+              ? true
+              : false,
+          badgeColor: Color(0xFF004077),
+          child: Icon(Icons.collections, size: 30),
+        ),
+        color: snapshot.data[index]
+        ["anexos"] > 0
+            ? Colors.blue
+            : Colors.black,
         onPressed: () {
           Navigator.push(
             context,
@@ -512,7 +524,29 @@ class _sps_questionario_ch_item_screen
                     snapshot.data[index]["status_aprovacao"],
                     null,
                     this.widget._filtro,
-                    this.widget._filtroDescrProgramacao)),
+                    this.widget._filtroDescrProgramacao,
+                    funCallback: () {
+                      //Recarregar tela
+                      Navigator.pop;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => sps_questionario_ch_item_screen(
+                              this.widget._codigo_empresa,
+                              this.widget._codigo_programacao,
+                              this.widget._registro_colaborador,
+                              this.widget._identificacao_utilizador,
+                              this.widget._codigo_grupo,
+                              this.widget._codigo_checklist,
+                              this.widget._descr_programacao,
+                              this.widget._sincronizado,
+                              this.widget._status_aprovacao,
+                              this.widget._filtro,
+                              this.widget._filtroDescrProgramacao),
+                        ),
+                      );
+                    },
+                )),
           );
         },
       );

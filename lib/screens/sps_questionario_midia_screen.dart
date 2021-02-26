@@ -462,8 +462,8 @@ class _sps_questionario_midia_screen
                   return IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      widget.funCallback();
                       Navigator.pop(context);
+                      widget.funCallback();
                     },
                   );
                 },
