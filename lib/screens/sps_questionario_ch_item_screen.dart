@@ -352,7 +352,7 @@ class _sps_questionario_ch_item_screen
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
     //Tratar resposta fixa
     if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA FIXA") {
-      //Tratar resposta fixa (texto)
+      //Tratar resposta fixa (TEXTO)
       if (snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO") {
         TextEditingController _respTexto = TextEditingController();
         _respTexto.text = snapshot.data[index]["resp_texto"];
@@ -363,7 +363,7 @@ class _sps_questionario_ch_item_screen
         if (_linhas < 1) {
           _linhas = 1;
         }
-        //Construir campo
+        //Construir campo texto
         return TextField(
           controller: _respTexto,
           maxLines: _linhas,
