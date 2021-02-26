@@ -391,7 +391,10 @@ class _sps_questionario_cq_int_item_screen
                                         badgeColor: Color(0xFF004077),
                                         child: Icon(Icons.collections, size: 30),
                                       ),
-                                      color: Colors.black,
+                                      color: snapshot.data[index]
+                                      ["anexos"] > 0
+                                          ? Colors.blue
+                                          : Colors.black,
                                       onPressed: () {
                                         Navigator.push(
                                           context,
@@ -422,6 +425,11 @@ class _sps_questionario_cq_int_item_screen
                                                     this.widget._origemUsuario,
                                                     this.widget._filtro,
                                                     this.widget._filtroReferenciaProjeto,
+                                                    funCallback: () {
+                                                      print('voltei');
+                                                      setState(() {
+                                                      });
+                                                    },
                                                   )),
                                         );
                                       },

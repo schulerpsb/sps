@@ -263,12 +263,12 @@ class _sps_questionario_comentarios_screen
 
     //Atualizar status da resposta
     spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
-    await spsQuestionarioUtils.atualizar_status_resposta(
-        wcodigoEmpresa: _wcodigoEmpresa,
-        wcodigoProgramacao: _wcodigoProgramacao,
-        wregistroColaborador: _wregistroColaborador,
-        widentificacaoUtilizador: _widentificacaoUtilizador,
-        witemChecklist: _witemChecklist);
+    await objspsQuestionarioUtils.atualizar_status_resposta(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao,
+        _wregistroColaborador,
+        _widentificacaoUtilizador,
+        _witemChecklist);
 
     //Retornar para tela de itens do questionário
     Navigator.pop;

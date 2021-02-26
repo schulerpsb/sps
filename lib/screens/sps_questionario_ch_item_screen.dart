@@ -453,12 +453,13 @@ class _sps_questionario_ch_item_screen
         _wsincronizado);
 
     //Atualizar status da resposta
-    await spsQuestionarioUtils.atualizar_status_resposta(
-        wcodigoEmpresa: _wcodigoEmpresa,
-        wcodigoProgramacao: int.parse(_wcodigoProgramacao),
-        wregistroColaborador: _wregistroColaborador,
-        widentificacaoUtilizador: _widentificacaoUtilizador,
-        witemChecklist: int.parse(_witemChecklist));
+    spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
+    await objspsQuestionarioUtils.atualizar_status_resposta(
+        _wcodigoEmpresa,
+        int.parse(_wcodigoProgramacao),
+        _wregistroColaborador,
+        _widentificacaoUtilizador,
+        int.parse(_witemChecklist));
 
     //Recarregar tela
     Navigator.pop;

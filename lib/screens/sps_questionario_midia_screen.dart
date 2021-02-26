@@ -11,6 +11,7 @@ import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_imageGrid.dart';
 import 'package:sps/models/sps_midia_utils.dart';
 import 'package:sps/models/sps_login.dart';
+import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:video_player/video_player.dart';
@@ -196,7 +197,6 @@ class _sps_questionario_midia_screen
         final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
         final bool result = await ObjVerificarConexao.verificar_conexao();
         if (result == true) {
-
           //Gravação do registro na tabela de anexos Online
           SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = new SpsHttpQuestionarioMidia();
           _dadosArquivo['item_anexo'] = await objSpsHttpQuestionarioMidia.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
@@ -205,12 +205,22 @@ class _sps_questionario_midia_screen
           SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
           //Gravação do registro na tabela de anexos do SQLITE
           final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+
         }else{
           _dadosArquivo['sincronizado'] = 'N';
           SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
           //Gravação do registro na tabela de anexos do SQLITE
           final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
         }
+        //Atualizar Status das respostas
+        spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
+        final statusrespostas =  objspsQuestionarioUtils.atualizar_status_resposta(
+            _dadosArquivo['codigo_empresa'],
+            _dadosArquivo['codigo_programacao'],
+            _dadosArquivo['codigo_programacao'],
+            _dadosArquivo['item_checklist'],
+            _dadosArquivo['item_checklist']
+        );
         setState(() {
           _isLoading = false;
         });
@@ -276,6 +286,15 @@ class _sps_questionario_midia_screen
         final int arquivoGravadoSQLite = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
         //print('gravei anexo offline');
       }
+      //Atualizar Status das respostas
+      spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
+      final statusrespostas =  objspsQuestionarioUtils.atualizar_status_resposta(
+          _dadosArquivo['codigo_empresa'],
+          _dadosArquivo['codigo_programacao'],
+          _dadosArquivo['codigo_programacao'],
+          _dadosArquivo['item_checklist'],
+          _dadosArquivo['item_checklist']
+      );
       setState(() {
         _isLoading = false;
       });

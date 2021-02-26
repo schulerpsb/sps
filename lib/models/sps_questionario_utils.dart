@@ -17,12 +17,12 @@ class spsQuestionarioUtils {
     throw UnimplementedError();
   }
 
-  static Future<String> atualizar_status_resposta(
-      {String wcodigoEmpresa,
+  Future<String> atualizar_status_resposta(
+      String wcodigoEmpresa,
       int wcodigoProgramacao,
       String wregistroColaborador,
       String widentificacaoUtilizador,
-      int witemChecklist}) async {
+      int witemChecklist) async {
     debugPrint("Atualizar status resposta");
 
     var _wsincronizado = "";
