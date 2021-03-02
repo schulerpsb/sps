@@ -344,31 +344,31 @@ class _sps_questionario_cq_comentarios_screen
     var _wsincronizado = "";
 
     //Verificar se existe conexão
-    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-    final bool result = await ObjVerificarConexao.verificar_conexao();
-    if (result == true) {
-      //Gravar PostgreSQL (API REST)
-      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-          SpsHttpQuestionarioItem();
-      final retorno = await objQuestionarioItemHttp.QuestionarioSaveComentario(
-          _worigemUsuario,
-          _wcodigoEmpresa,
-          _wcodigoProgramacao.toString(),
-          null,
-          null,
-          _witemChecklist.toString(),
-          _wdescrComentarios,
-          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
-      if (retorno == true) {
-        _wsincronizado = "";
-        debugPrint("registro gravado PostgreSQL");
-      } else {
-        _wsincronizado = "N";
-        debugPrint("ERRO => registro não gravado PostgreSQL");
-      }
-    } else {
+//    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+//    final bool result = await ObjVerificarConexao.verificar_conexao();
+//    if (result == true) {
+//      //Gravar PostgreSQL (API REST)
+//      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
+//          SpsHttpQuestionarioItem();
+//      final retorno = await objQuestionarioItemHttp.QuestionarioSaveComentario(
+//          _worigemUsuario,
+//          _wcodigoEmpresa,
+//          _wcodigoProgramacao.toString(),
+//          null,
+//          null,
+//          _witemChecklist.toString(),
+//          _wdescrComentarios,
+//          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
+//      if (retorno == true) {
+//        _wsincronizado = "";
+//        debugPrint("registro gravado PostgreSQL");
+//      } else {
+//        _wsincronizado = "N";
+//        debugPrint("ERRO => registro não gravado PostgreSQL");
+//      }
+//    } else {
       _wsincronizado = "N";
-    }
+//    }
 
     //Gravar SQlite
     final SpsDaoQuestionarioItem objQuestionarioDaoItem =

@@ -39,51 +39,52 @@ class SpsQuestionarioItem {
     final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
     final bool result = await ObjVerificarConexao.verificar_conexao();
     if (result == true) {
-      //debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
-      //Ler dados não sincronizados do SQlite
-      final List<Map<String, dynamic>> result = await objQuestionarioItemDao
-          .select_sincronizacao(h_codigo_empresa, h_codigo_programacao);
-      var _wregistros = result.length;
-      //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +_wregistros.toString() +")");
-      var windex = 0;
-      while (windex < _wregistros) {
-        var _wsincronizado = "";
-        //Atualizar registro no PostgreSQL (via API REST) campo RESP_CQ
-        final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-            SpsHttpQuestionarioItem();
-        final retorno1 = await objQuestionarioItemHttp.QuestionarioSaveOpcao(
-            result[windex]["codigo_empresa"],
-            result[windex]["codigo_programacao"].toString(),
-            result[windex]["registro_colaborador"],
-            result[windex]["identificacao_utilizador"],
-            result[windex]["item_checklist"].toString(),
-            result[windex]["resp_cq"],
-            usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
-        if (retorno1.toString() == true) {
-          //debugPrint("registro sincronizado: " + result[windex].toString());
-        } else {
-          //debugPrint("ERRO => registro sincronizado: " + result[windex].toString());
-        }
 
-        //Atualizar registro no PostgreSQL (via API REST) campo DESCR_COMENTARIOS
-        final retorno2 =
-            await objQuestionarioItemHttp.QuestionarioSaveComentario(
-                h_origem_usuario,
-                result[windex]["codigo_empresa"],
-                result[windex]["codigo_programacao"].toString(),
-                result[windex]["registro_colaborador"],
-                result[windex]["identificacao_utilizador"],
-                result[windex]["item_checklist"].toString(),
-                result[windex]["descr_comentarios"],
-                usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
-        if (retorno2.toString() == true) {
-          //debugPrint("registro sincronizado: " + result[windex].toString());
-        } else {
-          //debugPrint("ERRO => registro sincronizado: " + result[windex].toString());
-        }
-
-        windex = windex + 1;
-      }
+//      //debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
+//      //Ler dados não sincronizados do SQlite
+//      final List<Map<String, dynamic>> result = await objQuestionarioItemDao
+//          .select_sincronizacao(h_codigo_empresa, h_codigo_programacao);
+//      var _wregistros = result.length;
+//      //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +_wregistros.toString() +")");
+//      var windex = 0;
+//      while (windex < _wregistros) {
+//        var _wsincronizado = "";
+//        //Atualizar registro no PostgreSQL (via API REST) campo RESP_CQ
+//        final SpsHttpQuestionarioItem objQuestionarioItemHttp =
+//            SpsHttpQuestionarioItem();
+//        final retorno1 = await objQuestionarioItemHttp.QuestionarioSaveOpcao(
+//            result[windex]["codigo_empresa"],
+//            result[windex]["codigo_programacao"].toString(),
+//            result[windex]["registro_colaborador"],
+//            result[windex]["identificacao_utilizador"],
+//            result[windex]["item_checklist"].toString(),
+//            result[windex]["resp_cq"],
+//            usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
+//        if (retorno1.toString() == true) {
+//          //debugPrint("registro sincronizado: " + result[windex].toString());
+//        } else {
+//          //debugPrint("ERRO => registro sincronizado: " + result[windex].toString());
+//        }
+//
+//        //Atualizar registro no PostgreSQL (via API REST) campo DESCR_COMENTARIOS
+//        final retorno2 =
+//            await objQuestionarioItemHttp.QuestionarioSaveComentario(
+//                h_origem_usuario,
+//                result[windex]["codigo_empresa"],
+//                result[windex]["codigo_programacao"].toString(),
+//                result[windex]["registro_colaborador"],
+//                result[windex]["identificacao_utilizador"],
+//                result[windex]["item_checklist"].toString(),
+//                result[windex]["descr_comentarios"],
+//                usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
+//        if (retorno2.toString() == true) {
+//          //debugPrint("registro sincronizado: " + result[windex].toString());
+//        } else {
+//          //debugPrint("ERRO => registro sincronizado: " + result[windex].toString());
+//        }
+//
+//        windex = windex + 1;
+//      }
 
       //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
      // debugPrint("Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");

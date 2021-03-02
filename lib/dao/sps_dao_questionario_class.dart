@@ -130,7 +130,7 @@ class SpsDaoQuestionario {
 
   Future<int> emptyTable() async {
     final Database db = await getDatabase();
-    return db.rawDelete('delete from checklist_lista');
+    return db.rawDelete('delete from checklist_lista where sincronizado is null');
   }
 
   Future<List<Map<String, dynamic>>> listarQuestionarioGeral(
@@ -167,4 +167,19 @@ class SpsDaoQuestionario {
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
+
+  Future<int> updateQuestionarioSincronizacao(
+      _codigoEmpresa,
+      _codigoProgramacao
+) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_item set sincronizado = "''" where codigo_empresa = "' +
+        _codigoEmpresa +
+        '" and codigo_programacao = ' +
+        _codigoProgramacao.toString();
+    print(_query.toString());
+    db.rawUpdate(_query);
+    return 1;
+  }
+
 }

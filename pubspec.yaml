@@ -49,6 +49,10 @@ dependencies:
   cupertino_icons: ^1.0.0
 
 dev_dependencies:
+  #flutter_startup: ^0.0.2
+  flutter_isolate: ^1.0.0+15
+  flutter_local_notifications: ^1.4.4+2
+  cron: ^0.2.4
   video_player: ^1.0.0
   flutter_test:
     sdk: flutter
