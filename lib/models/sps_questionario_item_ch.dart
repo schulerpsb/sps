@@ -122,7 +122,7 @@ class SpsQuestionarioItem_ch {
           "=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
       //Ler dados não sincronizados do SQlite
       final List<Map<String, dynamic>> resultMidia = await objSpsDaoQuestionarioMidia
-          .select_sincronizacao(h_codigo_empresa, h_codigo_programacao);
+          .select_sincronizacao();
       var _wregistrosMidia = resultMidia.length;
       debugPrint(
           "Ler dados não sincronizados do SQlite (quantidade de registro: " +

@@ -96,17 +96,37 @@ class SpsDaoQuestionarioMidia {
 
   }
 
-  Future<List<Map<String, dynamic>>> select_sincronizacao(
-      _hcodigoEmpresa, _hcodigoProgramacao) async {
+  Future<List<Map<String, dynamic>>> select_sincronizacao() async {
     final Database db = await getDatabase();
-    var _query = 'SELECT * FROM sps_checklist_tb_resp_anexo where codigo_empresa = "' +
-        _hcodigoEmpresa +
-        '" and codigo_programacao = ' +
-        _hcodigoProgramacao.toString() +
-        ' and (sincronizado = "N" OR sincronizado = "D")';
+    var _query = 'SELECT * FROM sps_checklist_tb_resp_anexo where sincronizado = "N" OR sincronizado = "D"';
     debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
+  }
+
+  Future<int> updateQuestionarioMidiaSincronizacao(
+      _codigoEmpresa,
+      _codigoProgramacao,
+      _registroColaborador,
+      _identificacaoUtilizador,
+      _itemChecklist,
+      _itemAnexo) async {
+    final Database db = await getDatabase();
+    var _query = 'update sps_checklist_tb_resp_anexo set sincronizado = "''" where codigo_empresa = "' +
+        _codigoEmpresa +
+        '" and codigo_programacao = ' +
+        _codigoProgramacao.toString() +
+        ' and registro_colaborador = "' +
+        _registroColaborador +
+        '" and identificacao_utilizador = "' +
+        _identificacaoUtilizador +
+        '" and item_checklist = ' +
+        _itemChecklist.toString() +
+        '" and item_anexo = ' +
+        _itemChecklist.toString();
+    print(_query.toString());
+    db.rawUpdate(_query);
+    return 1;
   }
 
 }

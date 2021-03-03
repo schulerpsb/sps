@@ -173,7 +173,7 @@ class SpsDaoQuestionario {
       _codigoProgramacao
 ) async {
     final Database db = await getDatabase();
-    var _query = 'update checklist_item set sincronizado = "''" where codigo_empresa = "' +
+    var _query = 'update checklist_lista set sincronizado = "''" where codigo_empresa = "' +
         _codigoEmpresa +
         '" and codigo_programacao = ' +
         _codigoProgramacao.toString();

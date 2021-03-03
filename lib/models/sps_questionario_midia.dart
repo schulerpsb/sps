@@ -78,7 +78,7 @@ class SpsQuestionarioMidia {
       'identificacao_utilizador': identificacao_utilizador,
     };
 
-    final List<Map<String, dynamic>> arquivosServidor = await objSpsDaoQuestionarioMidia.select_sincronizacao(codigo_empresa, codigo_programacao);
+    final List<Map<String, dynamic>> arquivosServidor = await objSpsDaoQuestionarioMidia.select_sincronizacao();
     final int criarTabelaLocal = await objSpsDaoQuestionarioMidia.create_table();
 
 //    final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia.emptyTable();

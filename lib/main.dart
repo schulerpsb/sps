@@ -30,7 +30,7 @@ void isolateSincronizacao(String arg) async  {
       print('Sincronizando Dados em background - Primeira execução');
 
       print('Sincronizando Dados de questionários - Primeira execução');
-      statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
+      statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionariosLocalToServer();
 
     }
   }else{
@@ -55,7 +55,7 @@ void isolateSincronizacao(String arg) async  {
         if(statusSincronizarQuestionarios == true){
           print('Sincronizando Dados de questionários - Recorrente');
           statusSincronizarQuestionarios = false;
-          statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
+          statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionariosLocalToServer();
         }
 
       }

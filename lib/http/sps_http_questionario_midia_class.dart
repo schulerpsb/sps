@@ -155,7 +155,7 @@ class SpsHttpQuestionarioMidia {
     }
   }
 
-  Future<int> atualizarQuestionarioMidia({Map<String, dynamic> dadosArquivo}) async {
+  Future<String> atualizarQuestionarioMidia({Map<String, dynamic> dadosArquivo}) async {
     final Map<String, dynamic> keyMidia = {
       'codigo_empresa': dadosArquivo['codigo_empresa'],
       'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
@@ -190,11 +190,7 @@ class SpsHttpQuestionarioMidia {
     );
 
     final int transactionJson = jsonDecode(response.body);
-    if(transactionJson == 1){
-      return transactionJson;
-    }else{
-      return 0;
-    }
+    return transactionJson.toString();
   }
 
 
