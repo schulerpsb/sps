@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 
@@ -23,6 +24,11 @@ class Sps extends StatelessWidget {
         accentColor: Color(0xFF004077),
       ),
       //splash Screen
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('pt', 'BR')],
       home: MyHomePage(title: 'Schuler Production System'),
       //home: SpsLoginScreen(),
     );

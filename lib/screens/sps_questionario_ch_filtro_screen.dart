@@ -60,7 +60,7 @@ class _sps_questionario_ch_filtro_screen
         endDrawer: sps_drawer(spslogin: spslogin),
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: spsquestionario.listarQuestionario(
-              'INTERNO', 'CHECKLIST', 'CONTAR', null, null),
+              'INTERNO', 'CHECKLIST', 'CONTAR', null, null, _filtroDescrProgramacao),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {

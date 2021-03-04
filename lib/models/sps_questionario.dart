@@ -10,7 +10,7 @@ import 'package:sps/models/sps_usuario_class.dart';
 class SpsQuestionario {
   @override
   Future<List<Map<String, dynamic>>> listarQuestionario(
-      _origemUsuario, _tipoChecklist, _parametro, _filtro, _filtroReferenciaProjeto) async {
+      _origemUsuario, _tipoChecklist, _parametro, _filtro, _filtroReferenciaProjeto, _filtroDescrProgramacao) async {
 
     //Tipos de usuário: "INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS
 
@@ -132,7 +132,7 @@ class SpsQuestionario {
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> DadosSessao =
           await objQuestionarioDao.listarQuestionarioGeral(
-              _filtro, _filtroReferenciaProjeto, _origemUsuario);
+              _filtro, _filtroReferenciaProjeto, _filtroDescrProgramacao, _origemUsuario);
       return DadosSessao;
     }
   }

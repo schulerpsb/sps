@@ -37,6 +37,11 @@ dependencies:
   thumbnails: ^1.0.1
   auto_orientation: ^1.0.6
   chewie: ^0.12.0
+  flutter_localizations:
+    sdk: flutter
+  datetime_picker_formfield: ^1.0.0
+  mask_text_input_formatter: ^1.2.1
+  flutter_masked_text: ^0.7.0
 
   # Dependências para o DB
   sqflite:
@@ -84,6 +89,8 @@ flutter:
     - images/logo_schuler.gif
     - images/logo_sps.png
     - images/desenvolvimento.png
+    - images/negativo.png
+    - images/positivo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

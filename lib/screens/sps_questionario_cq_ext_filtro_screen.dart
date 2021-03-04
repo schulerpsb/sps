@@ -61,7 +61,7 @@ class _sps_questionario_cq_ext_filtro_screen
 
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: spsquestionario.listarQuestionario(
-              'EXTERNO', 'CONTROLE DE QUALIDADE', 'CONTAR', null, null),
+              'EXTERNO', 'CONTROLE DE QUALIDADE', 'CONTAR', null, null, null),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {

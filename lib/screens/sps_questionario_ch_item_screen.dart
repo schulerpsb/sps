@@ -1,15 +1,10 @@
-import 'dart:ffi';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
-import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
-import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
@@ -18,10 +13,11 @@ import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_comentarios_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_lista_screen.dart';
 import 'package:badges/badges.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
 
 class sps_questionario_ch_item_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -78,7 +74,6 @@ class _sps_questionario_ch_item_screen
       SpsQuestionarioItem_ch();
 
   final SpsLogin spslogin = SpsLogin();
-  GlobalKey<ScaffoldState> _key = GlobalKey();
 
   _sps_questionario_ch_item_screen(
       _codigo_empresa,
@@ -134,6 +129,8 @@ class _sps_questionario_ch_item_screen
           future: spsQuestionarioItem_ch.listarQuestionarioItem_ch(
               this.widget._codigo_empresa,
               this.widget._codigo_programacao,
+              this.widget._registro_colaborador,
+              this.widget._identificacao_utilizador,
               this.widget._codigo_grupo,
               this.widget._codigo_checklist,
               this.widget._acao,
@@ -207,11 +204,20 @@ class _sps_questionario_ch_item_screen
                                     color: Colors.black26,
                                     child: IconButton(
                                       icon: Icon(Icons.arrow_back, size: 20),
-                                      color: Colors.indigo,
+                                      color: snapshot.data[0]
+                                                  ["sessao_anterior"] !=
+                                              0
+                                          ? Colors.indigo
+                                          : Colors.black12,
                                       onPressed: () {
-                                        setState(() {
-                                          this.widget._acao = "ANTERIOR";
-                                        });
+                                        snapshot.data[0]["sessao_anterior"] != 0
+                                            ? setState(
+                                                () {
+                                                  this.widget._acao =
+                                                      "ANTERIOR";
+                                                },
+                                              )
+                                            : null;
                                       },
                                     ),
                                   ),
@@ -251,11 +257,20 @@ class _sps_questionario_ch_item_screen
                                     color: Colors.black26,
                                     child: IconButton(
                                       icon: Icon(Icons.arrow_forward, size: 20),
-                                      color: Colors.indigo,
+                                      color: snapshot.data[0]
+                                                  ["sessao_posterior"] !=
+                                              0
+                                          ? Colors.indigo
+                                          : Colors.black12,
                                       onPressed: () {
-                                        setState(() {
-                                          this.widget._acao = "PROXIMO";
-                                        });
+                                        snapshot.data[0]["sessao_posterior"] !=
+                                                0
+                                            ? setState(
+                                                () {
+                                                  this.widget._acao = "PROXIMO";
+                                                },
+                                              )
+                                            : null;
                                       },
                                     ),
                                   ),
@@ -344,7 +359,7 @@ class _sps_questionario_ch_item_screen
           '${snapshot.data[index]["seq_pergunta"]}' +
               " - " +
               '${snapshot.data[index]["descr_pergunta"]}',
-          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
     );
   }
 
@@ -352,53 +367,510 @@ class _sps_questionario_ch_item_screen
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
     //Tratar resposta fixa
     if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA FIXA") {
-      //Tratar resposta fixa (TEXTO)
-      if (snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO") {
+      //Tratar resposta fixa (TEXTO/NUMERO/DATA/HORA)
+      if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO" ||
+          snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO" ||
+          snapshot.data[index]["tipo_resposta_fixa"].toString() == "DATA" ||
+          snapshot.data[index]["tipo_resposta_fixa"].toString() == "HORA") {
         TextEditingController _respTexto = TextEditingController();
-        _respTexto.text = snapshot.data[index]["resp_texto"];
-
+        TextEditingController _respNumero = TextEditingController();
+        TextEditingController _respData = TextEditingController();
+        TextEditingController _respHora = TextEditingController();
+        if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO") {
+          _respTexto.text = snapshot.data[index]["resp_texto"];
+        }
+        if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO") {
+          _respNumero.text = snapshot.data[index]["resp_numero"]
+              .toString()
+              .replaceAll("null", "");
+        }
+        if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "DATA") {
+          _respData.text = snapshot.data[index]["resp_data"];
+        }
+        if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "HORA") {
+          _respHora.text = snapshot.data[index]["resp_hora"];
+        }
         //Ajustar tamanho do campo
         int _linhas;
-        _linhas = (snapshot.data[index]["tamanho_resposta_fixa"] / 30).toInt();
-        if (_linhas < 1) {
-          _linhas = 1;
+        if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO" ||
+            snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO") {
+          _linhas =
+              (snapshot.data[index]["tamanho_resposta_fixa"] / 30).toInt();
+          if (_linhas < 1) {
+            _linhas = 1;
+          }
         }
-        //Construir campo texto
-        return TextField(
-          controller: _respTexto,
-          maxLines: _linhas,
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(
-                snapshot.data[index]["tamanho_resposta_fixa"]),
-          ],
-          textInputAction: TextInputAction.go,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: new OutlineInputBorder(
-                borderSide: new BorderSide(color: Colors.teal)),
-            contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            hintText: snapshot.data[index]["sugestao_resposta"],
-            suffixIcon: IconButton(
-              onPressed: () => {
-                _gravar_resposta(
-                    snapshot.data[index]["codigo_empresa"],
-                    snapshot.data[index]["codigo_programacao"].toString(),
-                    snapshot.data[index]["registro_colaborador"],
-                    snapshot.data[index]["identificacao_utilizador"],
-                    snapshot.data[index]["item_checklist"].toString(),
-                    _respTexto.text,
-                    snapshot.data[index]["comentarios"],
-                    snapshot.data[index]["descr_comentarios"],
-                    index),
-              },
-              icon: Icon(Icons.save),
+        //Construir campo texto/numero
+        if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO" ||
+            snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO") {
+          return TextField(
+            controller: snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO"
+                ? _respTexto
+                : _respNumero,
+            maxLines: _linhas,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(
+                  snapshot.data[index]["tamanho_resposta_fixa"]),
+            ],
+            textInputAction: TextInputAction.go,
+            keyboardType: snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO"
+                ? TextInputType.text
+                : TextInputType.number,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: new OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.teal)),
+              contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              hintText: snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO"
+                  ? snapshot.data[index]["sugestao_resposta"]
+                  : "",
+              suffixIcon: IconButton(
+                onPressed: () => {
+                  _gravar_resposta(
+                      snapshot.data[index]["codigo_empresa"],
+                      snapshot.data[index]["codigo_programacao"].toString(),
+                      snapshot.data[index]["registro_colaborador"],
+                      snapshot.data[index]["identificacao_utilizador"],
+                      snapshot.data[index]["item_checklist"].toString(),
+                      _respTexto.text,
+                      _respNumero.text,
+                      _respData.text,
+                      _respHora.text,
+                      snapshot.data[index]["resp_simnao"],
+                      snapshot.data[index]["resp_escala"],
+                      snapshot.data[index]["comentarios"],
+                      snapshot.data[index]["descr_comentarios"],
+                      index),
+                },
+                icon: Icon(Icons.save),
+              ),
             ),
-          ),
+          );
+        } else {
+          //Construir campo data
+          if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "DATA") {
+            return Column(
+              children: <Widget>[
+                DateTimeField(
+                  controller: TextEditingController(
+                      text: snapshot.data[index]["resp_data"].toString()),
+                  format: DateFormat("dd/MM/yyyy"),
+                  onShowPicker: (context, currentValue) async {
+                    final date = await showDatePicker(
+                      context: context,
+                      locale: Locale("pt"),
+                      firstDate: DateTime(1900),
+                      initialDate: currentValue ??
+                              snapshot.data[index]["resp_data"].toString() != ""
+                          ? DateTime(
+                              int.parse(snapshot.data[index]["resp_data"]
+                                  .toString()
+                                  .substring(0, 4)),
+                              int.parse(snapshot.data[index]["resp_data"]
+                                  .toString()
+                                  .substring(5, 7)),
+                              int.parse(snapshot.data[index]["resp_data"]
+                                  .toString()
+                                  .substring(8, 10)))
+                          : DateTime.now(),
+                      lastDate: DateTime(2100),
+                      cancelText: "",
+                      builder: (BuildContext context, Widget child) {
+                        return MediaQuery(
+                          data: MediaQuery.of(context)
+                              .copyWith(alwaysUse24HourFormat: true),
+                          child: child,
+                        );
+                      },
+                    );
+                    return date;
+                  },
+                  onChanged: (dt) {
+                    try {
+                      _gravar_resposta(
+                          snapshot.data[index]["codigo_empresa"],
+                          snapshot.data[index]["codigo_programacao"].toString(),
+                          snapshot.data[index]["registro_colaborador"],
+                          snapshot.data[index]["identificacao_utilizador"],
+                          snapshot.data[index]["item_checklist"].toString(),
+                          _respTexto.text,
+                          _respNumero.text,
+                          dt.toString().substring(0, 10),
+                          _respHora.text,
+                          snapshot.data[index]["resp_simnao"],
+                          snapshot.data[index]["resp_escala"],
+                          snapshot.data[index]["comentarios"],
+                          snapshot.data[index]["descr_comentarios"],
+                          index);
+                    } catch (e) {
+                      _gravar_resposta(
+                          snapshot.data[index]["codigo_empresa"],
+                          snapshot.data[index]["codigo_programacao"].toString(),
+                          snapshot.data[index]["registro_colaborador"],
+                          snapshot.data[index]["identificacao_utilizador"],
+                          snapshot.data[index]["item_checklist"].toString(),
+                          _respTexto.text,
+                          _respNumero.text,
+                          "",
+                          _respHora.text,
+                          snapshot.data[index]["resp_simnao"],
+                          snapshot.data[index]["resp_escala"],
+                          snapshot.data[index]["comentarios"],
+                          snapshot.data[index]["descr_comentarios"],
+                          index);
+                    }
+                  },
+                ),
+              ],
+            );
+          } else {
+            //Construir campo hora
+            if (snapshot.data[index]["tipo_resposta_fixa"].toString() ==
+                "HORA") {
+              final format = DateFormat("HH:mm");
+              return Column(
+                children: <Widget>[
+                  DateTimeField(
+                    controller: TextEditingController(
+                        text: snapshot.data[index]["resp_hora"] != ""
+                            ? snapshot.data[index]["resp_hora"].substring(0, 5)
+                            : ""),
+                    format: format,
+                    onShowPicker: (context, currentValue) async {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(
+                            currentValue ?? DateTime.now()),
+                        builder: (BuildContext context, Widget child) {
+                          return MediaQuery(
+                            data: MediaQuery.of(context)
+                                .copyWith(alwaysUse24HourFormat: true),
+                            child: child,
+                          );
+                        },
+                      );
+                      return DateTimeField.convert(time);
+                    },
+                    onChanged: (hr) {
+                      try {
+                        if (hr.toString().substring(11, 19) != "00:00:00") {
+                          _gravar_resposta(
+                              snapshot.data[index]["codigo_empresa"],
+                              snapshot.data[index]["codigo_programacao"]
+                                  .toString(),
+                              snapshot.data[index]["registro_colaborador"],
+                              snapshot.data[index]["identificacao_utilizador"],
+                              snapshot.data[index]["item_checklist"].toString(),
+                              _respTexto.text,
+                              _respNumero.text,
+                              _respData.text,
+                              hr.toString().substring(11, 19),
+                              snapshot.data[index]["resp_simnao"],
+                              snapshot.data[index]["resp_escala"],
+                              snapshot.data[index]["comentarios"],
+                              snapshot.data[index]["descr_comentarios"],
+                              index);
+                        }
+                      } catch (e) {
+                        _gravar_resposta(
+                            snapshot.data[index]["codigo_empresa"],
+                            snapshot.data[index]["codigo_programacao"]
+                                .toString(),
+                            snapshot.data[index]["registro_colaborador"],
+                            snapshot.data[index]["identificacao_utilizador"],
+                            snapshot.data[index]["item_checklist"].toString(),
+                            _respTexto.text,
+                            _respNumero.text,
+                            _respData.text,
+                            "",
+                            snapshot.data[index]["resp_simnao"],
+                            snapshot.data[index]["resp_escala"],
+                            snapshot.data[index]["comentarios"],
+                            snapshot.data[index]["descr_comentarios"],
+                            index);
+                      }
+                    },
+                  ),
+                ],
+              );
+            } else {
+              return TextField();
+            }
+          }
+        }
+      } else {
+        return TextField();
+      }
+    } else {
+      //Tratar resposta sim/não
+      if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA SIM/NÃO") {
+        return Column(
+          children: <Widget>[
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Text("     "),
+                    Container(
+                      child: CustomRadioWidget(
+                        height: 20,
+                        value: "SIM",
+                        groupValue: snapshot.data[index]["resp_simnao"],
+                        onChanged: (value) => _gravar_resposta(
+                            snapshot.data[index]["codigo_empresa"],
+                            snapshot.data[index]["codigo_programacao"]
+                                .toString(),
+                            snapshot.data[index]["registro_colaborador"],
+                            snapshot.data[index]["identificacao_utilizador"],
+                            snapshot.data[index]["item_checklist"].toString(),
+                            snapshot.data[index]["resp_texto"],
+                            snapshot.data[index]["resp_numero"],
+                            snapshot.data[index]["resp_data"],
+                            snapshot.data[index]["resp_hora"],
+                            "SIM",
+                            snapshot.data[index]["resp_escala"],
+                            snapshot.data[index]["comentarios"],
+                            snapshot.data[index]["descr_comentarios"],
+                            index),
+                      ),
+                    ),
+                    //Icon(Icons.check_box,color: Colors.green, size: 40),
+                    Image.asset('images/positivo.png',
+                        fit: BoxFit.contain, height: 40),
+                    Text("          "),
+                    Container(
+                      child: CustomRadioWidget(
+                        height: 20,
+                        value: "NÃO",
+                        groupValue: snapshot.data[index]["resp_simnao"],
+                        onChanged: (value) => _gravar_resposta(
+                            snapshot.data[index]["codigo_empresa"],
+                            snapshot.data[index]["codigo_programacao"]
+                                .toString(),
+                            snapshot.data[index]["registro_colaborador"],
+                            snapshot.data[index]["identificacao_utilizador"],
+                            snapshot.data[index]["item_checklist"].toString(),
+                            snapshot.data[index]["resp_texto"],
+                            snapshot.data[index]["resp_numero"],
+                            snapshot.data[index]["resp_data"],
+                            snapshot.data[index]["resp_hora"],
+                            "NÃO",
+                            snapshot.data[index]["resp_escala"],
+                            snapshot.data[index]["comentarios"],
+                            snapshot.data[index]["descr_comentarios"],
+                            index),
+                      ),
+                    ),
+                    //Icon(Icons.check_box_outlined,color: Colors.red, size: 40),
+                    Image.asset('images/negativo.png',
+                        fit: BoxFit.contain, height: 40),
+                  ],
+                )
+              ],
+            ),
+          ],
         );
+      } else {
+        //Tratar resposta por escala (resposta livre)
+        if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA POR ESCALA" &&
+            int.parse(snapshot.data[index]["intervalo_escala"].toString(),
+                    onError: (e) => 0) ==
+                0) {
+          double _currentSliderValue;
+          if (snapshot.data[index]["resp_escala"] == null) {
+            _currentSliderValue = 0;
+          } else {
+            _currentSliderValue =
+                (snapshot.data[index]["resp_escala"] as num).toDouble();
+          }
+
+          return Column(
+            children: <Widget>[
+              Column(
+                children: [
+                  Text(
+                    snapshot.data[index]["descr_escala"],
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        child: Text(
+                            snapshot.data[index]["inicio_escala"].toString(),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                      ),
+                      Container(
+                        width: 350,
+                        child: Slider(
+                          value: _currentSliderValue,
+                          min: (snapshot.data[index]["inicio_escala"] as num)
+                              .toDouble(),
+                          max: (snapshot.data[index]["fim_escala"] as num)
+                              .toDouble(),
+                          label: _currentSliderValue.toString(),
+                          onChanged: (value) {
+                            //_currentSliderValue = value;
+                          },
+                          onChangeEnd: (value) {
+                            _currentSliderValue = value;
+                            _gravar_resposta(
+                                snapshot.data[index]["codigo_empresa"],
+                                snapshot.data[index]["codigo_programacao"]
+                                    .toString(),
+                                snapshot.data[index]["registro_colaborador"],
+                                snapshot.data[index]
+                                    ["identificacao_utilizador"],
+                                snapshot.data[index]["item_checklist"]
+                                    .toString(),
+                                snapshot.data[index]["resp_texto"],
+                                snapshot.data[index]["resp_numero"],
+                                snapshot.data[index]["resp_data"],
+                                snapshot.data[index]["resp_hora"],
+                                snapshot.data[index]["resp_simnao"],
+                                value.round().toString(),
+                                snapshot.data[index]["comentarios"],
+                                snapshot.data[index]["descr_comentarios"],
+                                index);
+                          },
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                            snapshot.data[index]["fim_escala"].toString(),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(_currentSliderValue.toString().replaceAll(".0", ""),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ],
+          );
+        } else {
+          //Tratar resposta por escala (com intervalo)
+          if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA POR ESCALA" &&
+              int.parse(snapshot.data[index]["intervalo_escala"].toString(),
+                      onError: (e) => 0) !=
+                  0) {
+            return Column(
+              children: <Widget>[
+                Column(
+                  children: [
+                    Text(
+                      snapshot.data[index]["descr_escala"],
+                    ),
+                  ],
+                ),
+                Column(children: escala_opcoes(snapshot, index)),
+              ],
+            );
+          } else {
+            return TextField();
+          }
+        }
       }
     }
+  }
+
+  List<Widget> escala_opcoes(
+      AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
+    List<Widget> _listaOpcoes = [];
+    //sentido - escala maior para menor
+    if (snapshot.data[index]["inicio_escala"] <
+        snapshot.data[index]["fim_escala"]) {
+      var _ocorrencia = snapshot.data[index]["inicio_escala"];
+      while (_ocorrencia <= snapshot.data[index]["fim_escala"]) {
+        _listaOpcoes.add(
+          Column(
+            children: [
+              Row(
+                children: [
+                  CustomRadioWidget(
+                    height: 20,
+                    value: _ocorrencia,
+                    groupValue: snapshot.data[index]["resp_escala"],
+                    onChanged: (value) => _gravar_resposta(
+                        snapshot.data[index]["codigo_empresa"],
+                        snapshot.data[index]["codigo_programacao"].toString(),
+                        snapshot.data[index]["registro_colaborador"],
+                        snapshot.data[index]["identificacao_utilizador"],
+                        snapshot.data[index]["item_checklist"].toString(),
+                        snapshot.data[index]["resp_texto"],
+                        snapshot.data[index]["resp_numero"],
+                        snapshot.data[index]["resp_data"],
+                        snapshot.data[index]["resp_hora"],
+                        snapshot.data[index]["resp_simnao"],
+                        value.toString(),
+                        snapshot.data[index]["comentarios"],
+                        snapshot.data[index]["descr_comentarios"],
+                        index),
+                  ),
+                  Text(_ocorrencia.toString(),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ],
+          ),
+        );
+        _ocorrencia = _ocorrencia + snapshot.data[index]["intervalo_escala"];
+      }
+    }
+    //sentido - escala menor para maior
+    if (snapshot.data[index]["inicio_escala"] >
+        snapshot.data[index]["fim_escala"]) {
+      var _ocorrencia = snapshot.data[index]["inicio_escala"];
+      while (_ocorrencia >= snapshot.data[index]["fim_escala"]) {
+        _listaOpcoes.add(
+          Column(
+            children: [
+              Row(
+                children: [
+                  CustomRadioWidget(
+                    height: 20,
+                    value: _ocorrencia,
+                    groupValue: snapshot.data[index]["resp_escala"],
+                    onChanged: (value) => _gravar_resposta(
+                        snapshot.data[index]["codigo_empresa"],
+                        snapshot.data[index]["codigo_programacao"].toString(),
+                        snapshot.data[index]["registro_colaborador"],
+                        snapshot.data[index]["identificacao_utilizador"],
+                        snapshot.data[index]["item_checklist"].toString(),
+                        snapshot.data[index]["resp_texto"],
+                        snapshot.data[index]["resp_numero"],
+                        snapshot.data[index]["resp_data"],
+                        snapshot.data[index]["resp_hora"],
+                        snapshot.data[index]["resp_simnao"],
+                        value.toString(),
+                        snapshot.data[index]["comentarios"],
+                        snapshot.data[index]["descr_comentarios"],
+                        index),
+                  ),
+                  Text(_ocorrencia.toString(),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ],
+          ),
+        );
+        _ocorrencia = _ocorrencia - snapshot.data[index]["intervalo_escala"];
+      }
+    }
+    return _listaOpcoes;
   }
 
   _gravar_resposta(
@@ -408,8 +880,13 @@ class _sps_questionario_ch_item_screen
       _widentificacaoUtilizador,
       _witemChecklist,
       _wrespTexto,
+      _wrespNumero,
+      _wrespData,
+      _wrespHora,
+      _wrespSimnao,
+      _wrespEscala,
       _wcomentarios,
-      _wdescr_comentarios,
+      _wdescrComentarios,
       _windex) async {
     var _wsincronizado = "";
 
@@ -427,6 +904,12 @@ class _sps_questionario_ch_item_screen
           _widentificacaoUtilizador,
           _witemChecklist,
           _wrespTexto,
+          _wrespNumero,
+          _wrespData.toString(),
+          _wrespHora,
+          _wrespSimnao,
+          _wrespEscala.toString(),
+          _wdescrComentarios,
           usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
               ? usuarioAtual.registro_usuario
               : usuarioAtual.codigo_usuario);
@@ -451,6 +934,11 @@ class _sps_questionario_ch_item_screen
         _widentificacaoUtilizador,
         _witemChecklist,
         _wrespTexto,
+        _wrespNumero,
+        _wrespData,
+        _wrespHora,
+        _wrespSimnao,
+        _wrespEscala,
         _wsincronizado);
 
     //Atualizar status da resposta
@@ -489,64 +977,60 @@ class _sps_questionario_ch_item_screen
         snapshot.data[index]["midia"] == "OBRIGATORIO") {
       return IconButton(
         icon: Badge(
-          badgeContent: Text(snapshot.data[index]["anexos"].toString(), style: TextStyle(color: Colors.white, fontSize: 8)),
-          showBadge: snapshot.data[index]
-          ["anexos"] > 0
-              ? true
-              : false,
+          badgeContent: Text(snapshot.data[index]["anexos"].toString(),
+              style: TextStyle(color: Colors.white, fontSize: 8)),
+          showBadge: snapshot.data[index]["anexos"] > 0 ? true : false,
           badgeColor: Color(0xFF004077),
           child: Icon(Icons.collections, size: 30),
         ),
-        color: snapshot.data[index]
-        ["anexos"] > 0
-            ? Colors.blue
-            : Colors.black,
+        color: snapshot.data[index]["anexos"] > 0 ? Colors.blue : Colors.black,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => sps_questionario_midia_screen(
-                    snapshot.data[index]["codigo_empresa"],
-                    snapshot.data[index]["codigo_programacao"],
-                    snapshot.data[index]["item_checklist"],
-                    snapshot.data[index]["descr_comentarios"],
-                    this.widget._registro_colaborador,
-                    this.widget._identificacao_utilizador,
-                    this.widget._codigo_grupo,
-                    this.widget._codigo_checklist,
-                    this.widget._descr_programacao,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    this.widget._sincronizado,
-                    snapshot.data[index]["status_aprovacao"],
-                    null,
-                    this.widget._filtro,
-                    this.widget._filtroDescrProgramacao,
-                    funCallback: () {
-                      //Recarregar tela
-                      Navigator.pop;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => sps_questionario_ch_item_screen(
-                              this.widget._codigo_empresa,
-                              this.widget._codigo_programacao,
-                              this.widget._registro_colaborador,
-                              this.widget._identificacao_utilizador,
-                              this.widget._codigo_grupo,
-                              this.widget._codigo_checklist,
-                              this.widget._descr_programacao,
-                              this.widget._sincronizado,
-                              this.widget._status_aprovacao,
-                              this.widget._filtro,
-                              this.widget._filtroDescrProgramacao),
-                        ),
-                      );
-                    },
-                )),
+                      snapshot.data[index]["codigo_empresa"],
+                      snapshot.data[index]["codigo_programacao"],
+                      snapshot.data[index]["item_checklist"],
+                      snapshot.data[index]["descr_comentarios"],
+                      this.widget._registro_colaborador,
+                      this.widget._identificacao_utilizador,
+                      this.widget._codigo_grupo,
+                      this.widget._codigo_checklist,
+                      this.widget._descr_programacao,
+                      null,
+                      null,
+                      null,
+                      null,
+                      null,
+                      this.widget._sincronizado,
+                      snapshot.data[index]["status_aprovacao"],
+                      null,
+                      this.widget._filtro,
+                      this.widget._filtroDescrProgramacao,
+                      funCallback: () {
+                        //Recarregar tela
+                        Navigator.pop;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                sps_questionario_ch_item_screen(
+                                    this.widget._codigo_empresa,
+                                    this.widget._codigo_programacao,
+                                    this.widget._registro_colaborador,
+                                    this.widget._identificacao_utilizador,
+                                    this.widget._codigo_grupo,
+                                    this.widget._codigo_checklist,
+                                    this.widget._descr_programacao,
+                                    this.widget._sincronizado,
+                                    this.widget._status_aprovacao,
+                                    this.widget._filtro,
+                                    this.widget._filtroDescrProgramacao),
+                          ),
+                        );
+                      },
+                    )),
           );
         },
       );
@@ -558,7 +1042,14 @@ class _sps_questionario_ch_item_screen
   tratar_comentarios(BuildContext context,
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
     if (snapshot.data[index]["comentarios"] == "SIM" ||
-        snapshot.data[index]["comentarios"] == "OBRIGATORIO") {
+        snapshot.data[index]["comentarios"] == "OBRIGATORIO" ||
+        ((snapshot.data[index]["comentario_resposta_nao"] == "SIM" ||
+                snapshot.data[index]["comentario_resposta_nao"] ==
+                    "OBRIGATORIO") &&
+            snapshot.data[index]["resp_simnao"] == "NÃO") ||
+        (snapshot.data[index]["comentario_escala"] != null &&
+            snapshot.data[index]["resp_escala"] <
+                snapshot.data[index]["comentario_escala"])) {
       return IconButton(
         icon: Icon(Icons.comment, size: 30),
         color: snapshot.data[index]["descr_comentarios"] == ""
@@ -591,65 +1082,5 @@ class _sps_questionario_ch_item_screen
     } else {
       return Text("");
     }
-  }
-}
-
-class CustomRadioWidget<T> extends StatelessWidget {
-  final T value;
-  final T groupValue;
-  final ValueChanged<T> onChanged;
-  final double width;
-  final double height;
-
-  CustomRadioWidget(
-      {this.value,
-      this.groupValue,
-      this.onChanged,
-      this.width = 28,
-      this.height = 28});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: GestureDetector(
-        onTap: () {
-          onChanged(this.value);
-        },
-        child: Container(
-          height: this.height,
-          width: this.width,
-          decoration: ShapeDecoration(
-            shape: CircleBorder(),
-            gradient: LinearGradient(
-              colors: [
-                Colors.black,
-                Colors.black,
-              ],
-            ),
-          ),
-          child: Center(
-            child: Container(
-              height: this.height - 5,
-              width: this.width - 5,
-              decoration: ShapeDecoration(
-                shape: CircleBorder(),
-                gradient: LinearGradient(
-                  colors: value == groupValue
-                      ? [
-                          Colors.black,
-                          Colors.blue,
-                        ]
-                      : [
-                          Theme.of(context).scaffoldBackgroundColor,
-                          Theme.of(context).scaffoldBackgroundColor,
-                        ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

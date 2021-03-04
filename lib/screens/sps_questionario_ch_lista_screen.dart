@@ -75,6 +75,7 @@ class _sps_questionario_ch_lista_screen
               'CHECKLIST',
               'LISTAR',
               this.widget._filtro,
+              null,
               this.widget._filtroDescrProgramacao),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());

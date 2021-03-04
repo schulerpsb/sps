@@ -93,7 +93,7 @@ class sps_menu_screen extends StatelessWidget {
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    icon: Icon(Icons.network_check,
+                    icon: Icon(Icons.web,
                         color: Colors.white, size: 25.0),
                     label: Text(
                       'PESQUISA                                                           ',

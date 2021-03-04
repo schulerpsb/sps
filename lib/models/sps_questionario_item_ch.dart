@@ -14,6 +14,8 @@ class SpsQuestionarioItem_ch {
   Future<List<Map<String, dynamic>>> listarQuestionarioItem_ch(
       h_codigo_empresa,
       h_codigo_programacao,
+      h_registro_colaborador,
+      h_identificacao_utilizador,
       h_codigo_grupo,
       h_codigo_checklist,
       h_acao,
@@ -44,7 +46,7 @@ class SpsQuestionarioItem_ch {
           "=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
       //Ler dados não sincronizados do SQlite
       final List<Map<String, dynamic>> result = await objQuestionarioItemDao
-          .select_sincronizacao(h_codigo_empresa, h_codigo_programacao);
+          .select_sincronizacao(h_codigo_empresa, h_codigo_programacao, h_registro_colaborador, h_identificacao_utilizador);
       var _wregistros = result.length;
       debugPrint(
           "Ler dados não sincronizados do SQlite (quantidade de registro: " +
@@ -56,13 +58,19 @@ class SpsQuestionarioItem_ch {
         //Atualizar registro no PostgreSQL (via API REST) resposta do questionario
         final SpsHttpQuestionarioItem objQuestionarioItemHttp =
             SpsHttpQuestionarioItem();
-        final retorno1 = await objQuestionarioItemHttp.QuestionarioSaveRespCQ(
+        final retorno1 = await objQuestionarioItemHttp.QuestionarioSaveResposta(
             result[windex]["codigo_empresa"],
             result[windex]["codigo_programacao"].toString(),
             result[windex]["registro_colaborador"],
             result[windex]["identificacao_utilizador"],
             result[windex]["item_checklist"].toString(),
-            result[windex]["resp_cq"],
+            result[windex]["resp_texto"].toString(),
+            result[windex]["resp_numero"].toString(),
+            result[windex]["resp_data"].toString(),
+            result[windex]["resp_hora"].toString(),
+            result[windex]["resp_simnao"].toString(),
+            result[windex]["resp_escala"].toString(),
+            result[windex]["descr_comentarios"],
             usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
         if (retorno1.toString() == true) {
           debugPrint("registro sincronizado: " + result[windex].toString());
@@ -71,15 +79,20 @@ class SpsQuestionarioItem_ch {
               "ERRO => registro sincronizado: " + result[windex].toString());
         }
 
-        //Atualizar registro no PostgreSQL (via API REST) campo DESCR_COMENTARIOS
+        //Atualizar registro no PostgreSQL (via API REST)
         final retorno2 =
-            await objQuestionarioItemHttp.QuestionarioSaveComentario(
-                null,
+            await objQuestionarioItemHttp.QuestionarioSaveResposta(
                 result[windex]["codigo_empresa"],
                 result[windex]["codigo_programacao"].toString(),
                 result[windex]["registro_colaborador"],
                 result[windex]["identificacao_utilizador"],
                 result[windex]["item_checklist"].toString(),
+                result[windex]["resp_texto"].toString(),
+                result[windex]["resp_numero"].toString(),
+                result[windex]["resp_data"].toString(),
+                result[windex]["resp_hora"].toString(),
+                result[windex]["resp_simnao"].toString(),
+                result[windex]["resp_escala"].toString(),
                 result[windex]["descr_comentarios"],
                 usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
         if (retorno2.toString() == true) {

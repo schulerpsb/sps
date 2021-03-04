@@ -72,20 +72,26 @@ class SpsDaoQuestionarioItem {
     var windex = 0;
     while (windex < wregistros) {
       if (dadosQuestionarioItem[windex]['inicio_escala'].toString() == "") {
-        dadosQuestionarioItem[windex]['inicio_escala'] = 0;
+        dadosQuestionarioItem[windex]['inicio_escala'] = null;
       }
       if (dadosQuestionarioItem[windex]['fim_escala'].toString() == "") {
-        dadosQuestionarioItem[windex]['fim_escala'] = 0;
+        dadosQuestionarioItem[windex]['fim_escala'] = null;
+      }
+      if (dadosQuestionarioItem[windex]['intervalo_escala'].toString() == "") {
+        dadosQuestionarioItem[windex]['intervalo_escala'] = null;
+      }
+      if (dadosQuestionarioItem[windex]['comentario_escala'].toString() == "") {
+        dadosQuestionarioItem[windex]['comentario_escala'] = null;
       }
       if (dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() ==
           "") {
-        dadosQuestionarioItem[windex]['tamanho_resposta_fixa'] = 0;
+        dadosQuestionarioItem[windex]['tamanho_resposta_fixa'] = null;
       }
       if (dadosQuestionarioItem[windex]['resp_numero'].toString() == "") {
-        dadosQuestionarioItem[windex]['resp_numero'] = 0;
+        dadosQuestionarioItem[windex]['resp_numero'] = null;
       }
       if (dadosQuestionarioItem[windex]['resp_escala'].toString() == "") {
-        dadosQuestionarioItem[windex]['resp_escala'] = 0;
+        dadosQuestionarioItem[windex]['resp_escala'] = null;
       }
       var _query = 'insert into checklist_item values ("' +
           dadosQuestionarioItem[windex]['codigo_empresa'] +
@@ -124,11 +130,9 @@ class SpsDaoQuestionarioItem {
           ',' +
           dadosQuestionarioItem[windex]['fim_escala'].toString() +
           ',' +
-          dadosQuestionarioItem[windex]['intervalo_escala']
-              .replaceAll('', '0') +
+          dadosQuestionarioItem[windex]['intervalo_escala'].toString() +
           ',' +
-          dadosQuestionarioItem[windex]['comentario_escala']
-              .replaceAll('', '0') +
+          dadosQuestionarioItem[windex]['comentario_escala'].toString() +
           ',"' +
           dadosQuestionarioItem[windex]['midia'].toString() +
           '","' +
@@ -210,11 +214,31 @@ class SpsDaoQuestionarioItem {
       _hidentificacaoUtilizador,
       _hitemChecklist,
       _hrespTexto,
+      _hrespNumero,
+      _hrespData,
+      _hrespHora,
+      _hrespSimnao,
+      _hrespEscala,
       _hsincronizado) async {
     final Database db = await getDatabase();
+
+    if (_hrespNumero.toString() == "") {
+      _hrespNumero = null;
+    }
+
     var _query = 'update checklist_item set resp_texto = "' +
         _hrespTexto +
-        '", sincronizado = "' +
+        '", resp_numero = ' +
+        int.parse(_hrespNumero.toString(), onError: (e) => null).toString() +
+        ', resp_data = "' +
+        _hrespData.toString() +
+        '", resp_hora = "' +
+        _hrespHora +
+        '", resp_simnao = "' +
+        _hrespSimnao +
+        '", resp_escala = ' +
+        int.parse(_hrespEscala.toString(), onError: (e) => null).toString() +
+        ', sincronizado = "' +
         _hsincronizado +
         '" where codigo_empresa = "' +
         _hcodigoEmpresa +
@@ -302,13 +326,17 @@ class SpsDaoQuestionarioItem {
   }
 
   Future<List<Map<String, dynamic>>> select_sincronizacao(
-      _hcodigoEmpresa, _hcodigoProgramacao) async {
+      _hcodigoEmpresa, _hcodigoProgramacao, _hregistroColaborador, _hidentificacaoUtilizador) async {
     final Database db = await getDatabase();
     var _query = 'SELECT * FROM checklist_item where codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString() +
-        ' and sincronizado = "N"';
+        ' and registro_colaborador = "' +
+        _hregistroColaborador.toString() +
+        '" and identificacao_utilizador = "' +
+        _hidentificacaoUtilizador.toString() +
+        '" and sincronizado = "N"';
     debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
@@ -332,9 +360,8 @@ class SpsDaoQuestionarioItem {
             _hidentificacaoUtilizador.toString() +
             '" and a.item_checklist = ' +
             _hitemChecklist.toString();
-    print("query adriano=> " + _query);
+    print("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
-    print("adriano =>"+result.toString());
     return result;
   }
 
@@ -353,8 +380,11 @@ class SpsDaoQuestionarioItem {
     final Database db = await getDatabase();
     final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
     await objQuestionarioCqMidiaDao.create_table();
-    print ("Adriano =>" + _hacao.toString() + "/" + _hsessaoChecklist.toString());
-    var _query = 'SELECT *, (select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos FROM checklist_item item where item.codigo_empresa = "' +
+    var _query = 'SELECT *, '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos, '
+        '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist > item.sessao_checklist) as sessao_posterior, '
+        '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist < item.sessao_checklist) as sessao_anterior '
+    'FROM checklist_item item where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and item.codigo_programacao = ' +
         _hcodigoProgramacao.toString();

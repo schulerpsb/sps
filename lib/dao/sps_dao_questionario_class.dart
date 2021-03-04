@@ -56,7 +56,8 @@ class SpsDaoQuestionario {
       if (dadosQuestionario[windex]['identificacao_utilizador'] == null) {
         dadosQuestionario[windex]['identificacao_utilizador'] = "";
       }
-      if (dadosQuestionario[windex]['item_pedido'] == null || dadosQuestionario[windex]['item_pedido'] == "") {
+      if (dadosQuestionario[windex]['item_pedido'] == null ||
+          dadosQuestionario[windex]['item_pedido'] == "") {
         dadosQuestionario[windex]['item_pedido'] = 0;
       }
       if (dadosQuestionario[windex]['descr_comentarios'] == null) {
@@ -133,8 +134,8 @@ class SpsDaoQuestionario {
     return db.rawDelete('delete from checklist_lista');
   }
 
-  Future<List<Map<String, dynamic>>> listarQuestionarioGeral(
-      _filtro, _filtroReferenciaProjeto, _origemUsuario) async {
+  Future<List<Map<String, dynamic>>> listarQuestionarioGeral(_filtro,
+      _filtroReferenciaProjeto, _filtroDescrProgramacao, _origemUsuario) async {
     final Database db = await getDatabase();
     var _query = 'SELECT * FROM checklist_lista ';
     if (_filtro.toString() != "" && _filtro.toString() != "null") {
@@ -154,6 +155,14 @@ class SpsDaoQuestionario {
             "%'";
       }
     }
+    if (_filtroDescrProgramacao.toString() != "" &&
+        _filtroDescrProgramacao.toString() != "null") {
+      _query = _query +
+          " where descr_programacao like '%" +
+          _filtroDescrProgramacao.toString() +
+          "%'";
+    }
+
     debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;

@@ -8,6 +8,7 @@ import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
+import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
@@ -438,7 +439,9 @@ class _sps_questionario_cq_int_item_screen
                                     //Tratar Comentários
                                     IconButton(
                                       icon: Icon(Icons.comment, size: 30),
-                                      color: Colors.black,
+                                      color: snapshot.data[index]["descr_comentarios"] == ""
+                                          ? Colors.black
+                                          : Colors.blue,
                                       onPressed: () {
                                         Navigator.push(
                                           context,
@@ -552,62 +555,4 @@ class _sps_questionario_cq_int_item_screen
   }
 }
 
-class CustomRadioWidget<T> extends StatelessWidget {
-  final T value;
-  final T groupValue;
-  final ValueChanged<T> onChanged;
-  final double width;
-  final double height;
 
-  CustomRadioWidget(
-      {this.value,
-      this.groupValue,
-      this.onChanged,
-      this.width = 28,
-      this.height = 28});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: GestureDetector(
-        onTap: () {
-          onChanged(this.value);
-        },
-        child: Container(
-          height: this.height,
-          width: this.width,
-          decoration: ShapeDecoration(
-            shape: CircleBorder(),
-            gradient: LinearGradient(
-              colors: [
-                Colors.black,
-                Colors.black,
-              ],
-            ),
-          ),
-          child: Center(
-            child: Container(
-              height: this.height - 5,
-              width: this.width - 5,
-              decoration: ShapeDecoration(
-                shape: CircleBorder(),
-                gradient: LinearGradient(
-                  colors: value == groupValue
-                      ? [
-                          Colors.black,
-                          Colors.blue,
-                        ]
-                      : [
-                          Theme.of(context).scaffoldBackgroundColor,
-                          Theme.of(context).scaffoldBackgroundColor,
-                        ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

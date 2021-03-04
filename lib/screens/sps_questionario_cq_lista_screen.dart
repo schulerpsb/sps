@@ -80,7 +80,8 @@ class _sps_questionario_cq_lista_screen
               'CONTROLE DE QUALIDADE',
               'LISTAR',
               this.widget._filtro,
-              this.widget._filtroReferenciaProjeto),
+              this.widget._filtroReferenciaProjeto,
+              null),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {

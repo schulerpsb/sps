@@ -195,6 +195,12 @@ class SpsHttpQuestionarioItem {
       String identificacao_utilizador,
       String item_checklist,
       String resp_texto,
+      String resp_numero,
+      String resp_data,
+      String resp_hora,
+      String resp_simnao,
+      String resp_escala,
+      String descr_comentarios,
       String usuresponsavel) async {
     final Map<String, dynamic> fieldQuestionario = {
       'codigo_empresa': codigo_empresa,
@@ -203,6 +209,12 @@ class SpsHttpQuestionarioItem {
       'identificacao_utilizador': identificacao_utilizador,
       'item_checklist': item_checklist,
       'resp_texto': resp_texto,
+      'resp_numero': resp_numero,
+      'resp_data': resp_data,
+      'resp_hora': resp_hora,
+      'resp_simnao': resp_simnao,
+      'resp_escala': resp_escala,
+      'descr_comentarios': descr_comentarios,
       'usuresponsavel': usuresponsavel,
     };
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
