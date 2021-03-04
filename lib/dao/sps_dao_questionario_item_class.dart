@@ -163,9 +163,7 @@ class SpsDaoQuestionarioItem {
           dadosQuestionarioItem[windex]['status_aprovacao'].toString() +
           '","' +
           dadosQuestionarioItem[windex]['sugestao_resposta'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['sincronizado'].toString() +
-          '")';
+          '","")';
       //String _new_query = _query.replaceAll(',,',',0,');
       debugPrint("query => " + _query);
       db.rawInsert(_query);
@@ -353,7 +351,7 @@ class SpsDaoQuestionarioItem {
     var _query = 'delete from checklist_item where codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
-        _hcodigoProgramacao.toString()+ ' and sincronizado is null';
+        _hcodigoProgramacao.toString()+ ' and (sincronizado is null or sincronizado = "")';
     debugPrint("query => " + _query);
     return db.rawDelete(_query);
   }
@@ -379,7 +377,7 @@ class SpsDaoQuestionarioItem {
           _hsessaoChecklist.toString() +
           '" order by item.sessao_checklist desc, item.seq_pergunta';
     }
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }

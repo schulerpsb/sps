@@ -7,6 +7,7 @@ import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/http/sps_http_questionario_midia_class.dart';
 import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_questionario_midia.dart';
+import 'package:sps/models/sps_updown.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/models/sps_notificacao.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -157,7 +158,7 @@ class spsSincronizacao {
 
       }
 
-      //debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
+      debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
       //Ler dados não sincronizados do SQlite
       final List<Map<String, dynamic>> resultMidia = await objSpsDaoQuestionarioMidia.select_sincronizacao();
       var _wregistrosMidia = resultMidia.length;
@@ -183,18 +184,25 @@ class spsSincronizacao {
           'dthranexo': resultMidia[windexMidia]['dthranexo'].toString(),
           'sincronizado': resultMidia[windexMidia]['sincronizado'].toString(),
         };
-        //print('arquvivoMidia==>'+dadosArquivo.toString());
+        print('arquvivoMidia==>'+dadosArquivo.toString());
 
         var retorno1Midia = await objSpsHttpQuestionarioMidia.atualizarQuestionarioMidia(dadosArquivo: dadosArquivo);
 
         if (retorno1Midia == "1") {
           debugPrint("registro deletado com sucesso no servidor: " + resultMidia[windexMidia].toString());
+          print('apagando o registro de atualização (D) do sqlite');
+          objSpsDaoQuestionarioMidia.deleteQuestionarioMidiaSincronizacao(
+              resultMidia[windexMidia]["codigo_empresa"],
+              resultMidia[windexMidia]["codigo_programacao"].toString(),
+              resultMidia[windexMidia]["registro_colaborador"],
+              resultMidia[windexMidia]["identificacao_utilizador"],
+              resultMidia[windexMidia]["item_checklist"].toString(),
+              resultMidia[windexMidia]["item_anexo"].toString());
         }
         if (retorno1Midia == "2") {
           debugPrint("registro de dados de anexo atualizado com sucesso no servidor: " + resultMidia[windexMidia].toString());
-
-          //upload do arquivo
-          try {
+          if(resultMidia[windexMidia]['sincronizado'].toString() == "T" || resultMidia[windexMidia]['sincronizado'].toString() == "M"){
+            //Prepara dados para upload do arquivo.
             FormData formData = FormData.fromMap({
               "files": [
                 await MultipartFile.fromFile("/storage/emulated/0/Android/data/com.example.sps/files/Pictures/"+resultMidia[windexMidia]['nome_arquivo'].toString(), filename: resultMidia[windexMidia]['nome_arquivo'].toString()),
@@ -204,32 +212,30 @@ class spsSincronizacao {
               "identificacao_utilizador": resultMidia[windexMidia]["identificacao_utilizador"].toString(),
               "item_checklist": resultMidia[windexMidia]["item_checklist"].toString(),
             });
-
-            Response response;
-            Dio dio = new Dio();
-            (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-                (HttpClient client) {
-              client.badCertificateCallback =
-                  (X509Certificate cert, String host, int port) => true;
-              return client;
-            };
-            response = await dio.post("http://10.17.20.45/webapi/api/midia/upload.php", data: formData);
-            print('Foi');
-            print(response);
-          } catch (e) {
-            print('Erro');
-            print(e);
+            spsUpDown objspsUpDown = spsUpDown();
+            bool statusUpload = await objspsUpDown.uploadQuestionarioMidia(formData);
+            if(statusUpload == true){
+              print('Limpando o registro de atualização (N) do sqlite');
+              objSpsDaoQuestionarioMidia.updateQuestionarioMidiaSincronizacao(
+                  resultMidia[windexMidia]["codigo_empresa"],
+                  resultMidia[windexMidia]["codigo_programacao"].toString(),
+                  resultMidia[windexMidia]["registro_colaborador"],
+                  resultMidia[windexMidia]["identificacao_utilizador"],
+                  resultMidia[windexMidia]["item_checklist"].toString(),
+                  resultMidia[windexMidia]["item_anexo"].toString());
+            }else{
+              debugPrint("ERRO ao processar upload do arquivo no servidor: " + resultMidia[windexMidia].toString());
+            }
+          }else{
+            print('Limpando o registro de atualização (D) do sqlite');
+            objSpsDaoQuestionarioMidia.updateQuestionarioMidiaSincronizacao(
+                resultMidia[windexMidia]["codigo_empresa"],
+                resultMidia[windexMidia]["codigo_programacao"].toString(),
+                resultMidia[windexMidia]["registro_colaborador"],
+                resultMidia[windexMidia]["identificacao_utilizador"],
+                resultMidia[windexMidia]["item_checklist"].toString(),
+                resultMidia[windexMidia]["item_anexo"].toString());
           }
-          //FIM - Upload arquivo
-
-//          print('Iniciando a anexo dos itens a serem sincronizados');
-//          objSpsDaoQuestionarioMidia.updateQuestionarioMidiaSincronizacao(
-//              result[windex]["codigo_empresa"],
-//              result[windex]["codigo_programacao"].toString(),
-//              result[windex]["registro_colaborador"],
-//              result[windex]["identificacao_utilizador"],
-//              result[windex]["item_checklist"].toString(),
-//              result[windex]["item_anexo"].toString());
         }
         if (retorno1Midia == "0") {
           debugPrint("ERRO ao processar arquivo no servidor: " + resultMidia[windexMidia].toString());
@@ -237,11 +243,10 @@ class spsSincronizacao {
 
         windexMidia = windexMidia + 1;
 
-        await spsNotificacao.notificarProgresso(2, _wregistrosMidia , windexMidia, 'SPS - Atualização', 'Upload de Dados de anexos', flip);
+        await spsNotificacao.notificarProgresso(2, _wregistrosMidia , windexMidia, 'SPS - Atualização', 'Upload de arquivos anexos', flip);
 
       }
-      //debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
-
+      debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
 
     }
 
@@ -303,9 +308,8 @@ class spsSincronizacao {
     final bool result = await ObjVerificarConexao.verificar_conexao();
     if (result == true) {
       //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
-      // debugPrint("Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
-      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-      SpsHttpQuestionarioItem();
+       debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
+      final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
       final List<Map<String, dynamic>> dadosQuestionarioItem =
       await objQuestionarioItemHttp.listarQuestionarioItem(
           acao,
@@ -317,12 +321,9 @@ class spsSincronizacao {
           codigo_grupo,
           codigo_checklist);
       if (dadosQuestionarioItem != null) {
-        final SpsDaoQuestionarioItem objQuestionarioItemDao =
-        SpsDaoQuestionarioItem();
-        final int resullimpar = await objQuestionarioItemDao.emptyTable(
-            h_codigo_empresa, h_codigo_programacao);
-        final int resultsave =
-        await objQuestionarioItemDao.save(dadosQuestionarioItem);
+        final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
+        final int resullimpar = await objQuestionarioItemDao.emptyTable(h_codigo_empresa, h_codigo_programacao);
+        final int resultsave = await objQuestionarioItemDao.save(dadosQuestionarioItem);
       }
       //debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) ============================================");
 
