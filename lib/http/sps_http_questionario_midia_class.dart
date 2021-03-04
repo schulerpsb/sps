@@ -44,17 +44,17 @@ class SpsHttpQuestionarioMidia {
     Map<String, dynamic> transactionJsonMap = null;
     for (Map<String, dynamic> element in transactionJsonList) {
       transactionJsonMap = {
-        'codigo_empresa': element['codigo_empresa'].trim(),
+        'codigo_empresa': element['codigo_empresa'],
         'codigo_programacao': element['codigo_programacao'],
-        'registro_colaborador': element['registro_colaborador'].trim(),
-        'identificacao_utilizador': element['identificacao_utilizador'].trim(),
+        'registro_colaborador': element['registro_colaborador'],
+        'identificacao_utilizador': element['identificacao_utilizador'],
         'item_checklist': element['item_checklist'],
         'item_anexo': element['item_anexo'],
-        'nome_arquivo': element['nome_arquivo'].trim(),
-        'titulo_arquivo': element['titulo_arquivo'].trim(),
-        'usuresponsavel': element['usuresponsavel'].trim(),
-        'dthratualizacao': element['dthratualizacao'].trim(),
-        'dthranexo': element['dthranexo'].trim(),
+        'nome_arquivo': element['nome_arquivo'],
+        'titulo_arquivo': element['titulo_arquivo'],
+        'usuresponsavel': element['usuresponsavel'],
+        'dthratualizacao': element['dthratualizacao'],
+        'dthranexo': element['dthranexo'],
       };
       transactionJsonOcorrencias.add(transactionJsonMap);
     }
@@ -94,17 +94,17 @@ class SpsHttpQuestionarioMidia {
     Map<String, dynamic> transactionJsonMap = null;
     for (Map<String, dynamic> element in transactionJsonList) {
       transactionJsonMap = {
-        'codigo_empresa': element['codigo_empresa'].trim(),
+        'codigo_empresa': element['codigo_empresa'],
         'codigo_programacao': element['codigo_programacao'],
-        'registro_colaborador': element['registro_colaborador'].trim(),
-        'identificacao_utilizador': element['identificacao_utilizador'].trim(),
+        'registro_colaborador': element['registro_colaborador'],
+        'identificacao_utilizador': element['identificacao_utilizador'],
         'item_checklist': element['item_checklist'],
         'item_anexo': element['item_anexo'],
-        'nome_arquivo': element['nome_arquivo'].trim(),
-        'titulo_arquivo': element['nome_arquivo'].trim(),
-        'usuresponsavel': element['usuresponsavel'].trim(),
-        'dthratualizacao': element['dthratualizacao'].trim(),
-        'dthranexo': element['dthranexo'].trim(),
+        'nome_arquivo': element['nome_arquivo'],
+        'titulo_arquivo': element['nome_arquivo'],
+        'usuresponsavel': element['usuresponsavel'],
+        'dthratualizacao': element['dthratualizacao'],
+        'dthranexo': element['dthranexo'],
       };
       transactionJsonOcorrencias.add(transactionJsonMap);
     }
@@ -155,7 +155,7 @@ class SpsHttpQuestionarioMidia {
     }
   }
 
-  Future<int> atualizarQuestionarioMidia({Map<String, dynamic> dadosArquivo}) async {
+  Future<String> atualizarQuestionarioMidia({Map<String, dynamic> dadosArquivo}) async {
     final Map<String, dynamic> keyMidia = {
       'codigo_empresa': dadosArquivo['codigo_empresa'],
       'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
@@ -190,11 +190,7 @@ class SpsHttpQuestionarioMidia {
     );
 
     final int transactionJson = jsonDecode(response.body);
-    if(transactionJson == 1){
-      return transactionJson;
-    }else{
-      return 0;
-    }
+    return transactionJson.toString();
   }
 
 

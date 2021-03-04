@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_questionario_ch_filtro_screen.dart';
@@ -18,7 +20,6 @@ class sps_menu_screen extends StatelessWidget {
     }else{
       _origemUsuario = "EXTERNO";
     }
-
     return Column(
       children: <Widget>[
         Expanded(

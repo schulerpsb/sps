@@ -167,9 +167,7 @@ class SpsDaoQuestionarioItem {
           dadosQuestionarioItem[windex]['status_aprovacao'].toString() +
           '","' +
           dadosQuestionarioItem[windex]['sugestao_resposta'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['sincronizado'].toString() +
-          '")';
+          '","")';
       //String _new_query = _query.replaceAll(',,',',0,');
       debugPrint("query => " + _query);
       db.rawInsert(_query);
@@ -325,6 +323,7 @@ class SpsDaoQuestionarioItem {
     return 1;
   }
 
+  //Usado somente na sincronização por demanda
   Future<List<Map<String, dynamic>>> select_sincronizacao(
       _hcodigoEmpresa, _hcodigoProgramacao, _hregistroColaborador, _hidentificacaoUtilizador) async {
     final Database db = await getDatabase();
@@ -337,6 +336,15 @@ class SpsDaoQuestionarioItem {
         '" and identificacao_utilizador = "' +
         _hidentificacaoUtilizador.toString() +
         '" and sincronizado = "N"';
+    debugPrint("query => " + _query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    return result;
+  }
+
+  //Usado na sincronizaçõa em background
+  Future<List<Map<String, dynamic>>> selectSincronizacaoItens() async {
+    final Database db = await getDatabase();
+    var _query = 'SELECT * FROM checklist_item where sincronizado = "N"';
     debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
@@ -370,7 +378,7 @@ class SpsDaoQuestionarioItem {
     var _query = 'delete from checklist_item where codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
-        _hcodigoProgramacao.toString();
+        _hcodigoProgramacao.toString()+ ' and (sincronizado is null or sincronizado = "")';
     debugPrint("query => " + _query);
     return db.rawDelete(_query);
   }
@@ -408,8 +416,32 @@ class SpsDaoQuestionarioItem {
         }
       }
     }
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
+
+  Future<int> updateQuestionarioItemSincronizacao(
+      _codigoEmpresa,
+      _codigoProgramacao,
+      _registroColaborador,
+      _identificacaoUtilizador,
+      _itemChecklist) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_item set sincronizado = "''" where codigo_empresa = "' +
+        _codigoEmpresa +
+        '" and codigo_programacao = ' +
+        _codigoProgramacao.toString() +
+        ' and registro_colaborador = "' +
+        _registroColaborador +
+        '" and identificacao_utilizador = "' +
+        _identificacaoUtilizador +
+        '" and item_checklist = ' +
+        _itemChecklist.toString();
+    print(_query.toString());
+    db.rawUpdate(_query);
+    return 1;
+  }
+
+
 }

@@ -1,9 +1,78 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:cron/cron.dart';
+
+import 'http/sps_http_verificar_conexao_class.dart';
+import 'models/sps_login.dart';
+import 'models/sps_sincronizacao.dart';
+
+void isolateSincronizacao(String arg) async  {
+  final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+  final SpsLogin spslogin = SpsLogin();
+  final cron = Cron();
+  DateTime now = new DateTime.now();
+  DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+  print('Verificando sincronização '+ dataHoraAtual.toString());
+  print(arg);
+  bool statusSincronizarQuestionarios = true;
+
+  //verificação para inicio da primeira execução
+  final bool conectadoInicial = await ObjVerificarConexao.verificar_conexao();
+  if (conectadoInicial == true) {
+    //Verifica se existe usuário logado
+    List<Map<String, dynamic>> dadosSessaoInicial = await spslogin.verificaUsuarioAutenticado();
+    if(dadosSessaoInicial != null){
+      //Inicio da sincronização Recorrente de 1 em 1 minuto
+      print('Sincronizando Dados em background - Primeira execução');
+
+      print('Sincronizando Dados de questionários - Primeira execução');
+      statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionariosLocalToServer();
+
+    }
+  }else{
+    print('Sincronização Primeira execução - Não executada - Dispositivo OFFLINE');
+  }
+
+  //Verificação recorrente - 1 em 1 minuto
+  //  bool statusSincronizandoArquivos = false;
+  cron.schedule(Schedule.parse('* * * * *'), () async {
+    DateTime now = new DateTime.now();
+    DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+    print('Verificando sincronização recorrente '+ dataHoraAtual.toString());
+
+    final bool conectadoRecorrente = await ObjVerificarConexao.verificar_conexao();
+    if (conectadoRecorrente == true) {
+      //Verifica se existe usuário logado
+      List<Map<String, dynamic>> dadosSessao = await spslogin.verificaUsuarioAutenticado();
+      if(dadosSessao != null){
+        //Inicio da sincronização Recorrente de 1 em 1 minuto
+        print('Sincronizando Dados em background - Recorrente');
+
+        if(statusSincronizarQuestionarios == true){
+          print('Sincronizando Dados de questionários - Recorrente');
+          statusSincronizarQuestionarios = false;
+          statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionariosLocalToServer();
+        }
+
+      }
+    }else{
+      DateTime now = new DateTime.now();
+      DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+      print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - Dispositivo OFFLINE');
+    }
+  });
+}
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Timer(Duration(seconds:5), (){
+    final isolate = FlutterIsolate.spawn(isolateSincronizacao, "Início da sincronização em background - ISOLATE");
+  });
   //runApp(Sps(),
   //runApp(MaterialApp(home: sps_menu_screen()),
   runApp(

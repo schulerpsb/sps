@@ -201,13 +201,13 @@ class _sps_questionario_midia_screen
           SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = new SpsHttpQuestionarioMidia();
           _dadosArquivo['item_anexo'] = await objSpsHttpQuestionarioMidia.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
 
-          _dadosArquivo['sincronizado'] = '';
+          _dadosArquivo['sincronizado'] = 'M';
           SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
           //Gravação do registro na tabela de anexos do SQLITE
           final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
 
         }else{
-          _dadosArquivo['sincronizado'] = 'N';
+          _dadosArquivo['sincronizado'] = 'T';
           SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
           //Gravação do registro na tabela de anexos do SQLITE
           final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
@@ -275,13 +275,13 @@ class _sps_questionario_midia_screen
           SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = new SpsHttpQuestionarioMidia();
           _dadosArquivo['item_anexo'] = await objSpsHttpQuestionarioMidia.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
 
-          _dadosArquivo['sincronizado'] = '';
+          _dadosArquivo['sincronizado'] = 'M';
           //Gravação do registro na tabela de anexos do SQLITE
           SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
           final int arquivoGravadoSQLite = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
           //print('gravei anexo Online');
         }else{
-          _dadosArquivo['sincronizado'] = 'N';
+          _dadosArquivo['sincronizado'] = 'T';
           //Gravação do registro na tabela de anexos do SQLITE
           SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
           final int arquivoGravadoSQLite = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);

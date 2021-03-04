@@ -68,4 +68,28 @@ class SpsQuestionarioMidia {
 //  return 1;
   }
 
+  Future<int> sincronizarArquivosQuestionarioMidia({String codigo_empresa = "", int codigo_programacao = 0,String registro_colaborador = "",String identificacao_utilizador = ""}) async {
+    final SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = SpsHttpQuestionarioMidia();
+    final SpsDaoQuestionarioMidia objSpsDaoQuestionarioMidia = SpsDaoQuestionarioMidia();
+    Map<String, dynamic> dadosArquivo = {
+      'codigo_empresa': codigo_empresa,
+      'codigo_programacao': codigo_programacao,
+      'registro_colaborador': registro_colaborador,
+      'identificacao_utilizador': identificacao_utilizador,
+    };
+
+    final List<Map<String, dynamic>> arquivosServidor = await objSpsDaoQuestionarioMidia.select_sincronizacao();
+    final int criarTabelaLocal = await objSpsDaoQuestionarioMidia.create_table();
+
+//    final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia.emptyTable();
+//    final int ResultadoSave = await objSpsDaoQuestionarioMidia.save(arquivosServidor);
+//    if (ResultadoSave == 1) {
+//      print('Arquivos de midia sincronizados com sucesso');
+//      return 1;
+//    } else {
+//      return 0;
+//    }
+//  return 1;
+  }
+
 }
