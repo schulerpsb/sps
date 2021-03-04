@@ -33,7 +33,7 @@ class SpsLogin {
       }
     }else{
       final List<Map<String, dynamic>> DadosSessao = [{'mensagem': dadosUsuario['mensagem'].trim()}];
-      debugPrint(DadosSessao.toString());
+      //debugPrint(DadosSessao.toString());
       return DadosSessao;
     };
 

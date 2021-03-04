@@ -29,6 +29,7 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
   final String _origemUsuario;
   final String _filtro;
   final String _filtroDescrProgramacao;
+  final String _sessao_checklist;
 
   sps_questionario_comentarios_screen(
       this._codigo_empresa,
@@ -44,7 +45,8 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
       this._status_aprovacao,
       this._origemUsuario,
       this._filtro,
-      this._filtroDescrProgramacao);
+      this._filtroDescrProgramacao,
+      this._sessao_checklist);
 
   @override
   _sps_questionario_comentarios_screen createState() =>
@@ -62,7 +64,8 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
           this._status_aprovacao,
           this._origemUsuario,
           this._filtro,
-          this._filtroDescrProgramacao);
+          this._filtroDescrProgramacao,
+          this._sessao_checklist);
 }
 
 class _sps_questionario_comentarios_screen
@@ -86,7 +89,8 @@ class _sps_questionario_comentarios_screen
       _status_aprovacao,
       _origemUsuario,
       _filtro,
-      _filtroDescrProgramacao);
+      _filtroDescrProgramacao,
+      _sessao_checklist);
 
   //Executar Scrolling automático
   ScrollController _controller;
@@ -147,7 +151,9 @@ class _sps_questionario_comentarios_screen
                             this.widget._sincronizado,
                             this.widget._status_aprovacao,
                             this.widget._filtro,
-                            this.widget._filtroDescrProgramacao)),
+                            this.widget._filtroDescrProgramacao,
+                            this.widget._sessao_checklist,
+                            "RECARREGAR")),
                   );
                 },
               );
@@ -286,7 +292,9 @@ class _sps_questionario_comentarios_screen
             this.widget._sincronizado,
             this.widget._status_aprovacao,
             this.widget._filtro,
-            this.widget._filtroDescrProgramacao),
+            this.widget._filtroDescrProgramacao,
+            this.widget._sessao_checklist,
+            "RECARREGAR"),
       ),
     );
   }

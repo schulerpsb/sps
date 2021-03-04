@@ -31,11 +31,13 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
   final String _status_aprovacao;
   final String _filtro;
   final String _filtroDescrProgramacao;
+  String _acao;
+  String _sessao_checklist;
 
   final sps_usuario usuarioAtual;
 
-  String _acao = "PROXIMO";
-  String _sessao_checklist = "";
+  //String _acao = "";
+  //String _sessao_checklist = "";
 
   sps_questionario_ch_item_screen(
       this._codigo_empresa,
@@ -49,6 +51,8 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
       this._status_aprovacao,
       this._filtro,
       this._filtroDescrProgramacao,
+      this._acao,
+      this._sessao_checklist,
       {this.usuarioAtual = null});
 
   @override
@@ -65,6 +69,8 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
         this._status_aprovacao,
         this._filtro,
         this._filtroDescrProgramacao,
+        this._acao,
+        this._sessao_checklist,
       );
 }
 
@@ -86,13 +92,27 @@ class _sps_questionario_ch_item_screen
       _sincronizado,
       _status_aprovacao,
       _filtro,
-      _filtroReferenciaProjeto);
+      _filtroReferenciaProjeto,
+      _acao,
+      _sessao_checklist);
 
   var _singleValue = List();
+  ScrollController _controller;
+
+  void initState() {
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
+    //super.initState();
+    //print("adriano =>1");
+    //WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
+    //print("adriano =>2");
+    //WidgetsBinding.instance.addObserver(this);
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
+
     return WillPopScope(
       onWillPop: () {
         return new Future(() => false);
@@ -137,7 +157,7 @@ class _sps_questionario_ch_item_screen
               this.widget._sessao_checklist),
           builder: (context, snapshot) {
             _singleValue.clear();
-            debugPrint(snapshot.data.toString());
+            //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 break;
@@ -286,6 +306,7 @@ class _sps_questionario_ch_item_screen
                                 top: 5, left: 0, right: 0, bottom: 0),
                             child: ListView.builder(
                               padding: EdgeInsets.only(top: 5),
+                              controller: _controller,
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
                                 if (index == 0) {
@@ -308,15 +329,17 @@ class _sps_questionario_ch_item_screen
                                           montar_questionario(
                                               context, snapshot, index),
 
-                                          Row(children: [
-                                            //Tratar mídias
-                                            tratar_midias(
-                                                context, snapshot, index),
+                                          Row(
+                                            children: [
+                                              //Tratar mídias
+                                              tratar_midias(
+                                                  context, snapshot, index),
 
-                                            //Tratar comentarios
-                                            tratar_comentarios(
-                                                context, snapshot, index),
-                                          ]),
+                                              //Tratar comentarios
+                                              tratar_comentarios(
+                                                  context, snapshot, index),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -347,6 +370,27 @@ class _sps_questionario_ch_item_screen
         ),
       ),
     );
+  }
+
+  _scrollToEnd() {
+     print("adriano =>aqui1 "+_controller.toString());
+    //_controller.animateTo(_controller.position.maxScrollExtent,
+    //    duration: const Duration(milliseconds: 350), curve: Curves.easeOut);
+    //Scrollable.ensureVisible(lastKey.currentContext);
+    print("adriano =>aqui2");
+  }
+
+  _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      print("reach the bottom");
+    }
+    if (_controller.offset <= _controller.position.minScrollExtent &&
+        !_controller.position.outOfRange) {
+      print("reach the top");
+      //_controller.animateTo(_controller.position.maxScrollExtent,
+      //    duration: const Duration(milliseconds: 350), curve: Curves.easeOut);
+    }
   }
 
   ListTile descricao_pergunta(
@@ -427,6 +471,7 @@ class _sps_questionario_ch_item_screen
                   : "",
               suffixIcon: IconButton(
                 onPressed: () => {
+                  this.widget._acao = "RECARREGAR",
                   _gravar_resposta(
                       snapshot.data[index]["codigo_empresa"],
                       snapshot.data[index]["codigo_programacao"].toString(),
@@ -488,6 +533,7 @@ class _sps_questionario_ch_item_screen
                   },
                   onChanged: (dt) {
                     try {
+                      this.widget._acao = "RECARREGAR";
                       _gravar_resposta(
                           snapshot.data[index]["codigo_empresa"],
                           snapshot.data[index]["codigo_programacao"].toString(),
@@ -504,6 +550,7 @@ class _sps_questionario_ch_item_screen
                           snapshot.data[index]["descr_comentarios"],
                           index);
                     } catch (e) {
+                      this.widget._acao = "RECARREGAR";
                       _gravar_resposta(
                           snapshot.data[index]["codigo_empresa"],
                           snapshot.data[index]["codigo_programacao"].toString(),
@@ -555,6 +602,7 @@ class _sps_questionario_ch_item_screen
                     onChanged: (hr) {
                       try {
                         if (hr.toString().substring(11, 19) != "00:00:00") {
+                          this.widget._acao = "RECARREGAR";
                           _gravar_resposta(
                               snapshot.data[index]["codigo_empresa"],
                               snapshot.data[index]["codigo_programacao"]
@@ -573,6 +621,7 @@ class _sps_questionario_ch_item_screen
                               index);
                         }
                       } catch (e) {
+                        this.widget._acao = "RECARREGAR";
                         _gravar_resposta(
                             snapshot.data[index]["codigo_empresa"],
                             snapshot.data[index]["codigo_programacao"]
@@ -617,22 +666,25 @@ class _sps_questionario_ch_item_screen
                         height: 20,
                         value: "SIM",
                         groupValue: snapshot.data[index]["resp_simnao"],
-                        onChanged: (value) => _gravar_resposta(
-                            snapshot.data[index]["codigo_empresa"],
-                            snapshot.data[index]["codigo_programacao"]
-                                .toString(),
-                            snapshot.data[index]["registro_colaborador"],
-                            snapshot.data[index]["identificacao_utilizador"],
-                            snapshot.data[index]["item_checklist"].toString(),
-                            snapshot.data[index]["resp_texto"],
-                            snapshot.data[index]["resp_numero"],
-                            snapshot.data[index]["resp_data"],
-                            snapshot.data[index]["resp_hora"],
-                            "SIM",
-                            snapshot.data[index]["resp_escala"],
-                            snapshot.data[index]["comentarios"],
-                            snapshot.data[index]["descr_comentarios"],
-                            index),
+                        onChanged: (value) => {
+                          this.widget._acao = "RECARREGAR",
+                          _gravar_resposta(
+                              snapshot.data[index]["codigo_empresa"],
+                              snapshot.data[index]["codigo_programacao"]
+                                  .toString(),
+                              snapshot.data[index]["registro_colaborador"],
+                              snapshot.data[index]["identificacao_utilizador"],
+                              snapshot.data[index]["item_checklist"].toString(),
+                              snapshot.data[index]["resp_texto"],
+                              snapshot.data[index]["resp_numero"],
+                              snapshot.data[index]["resp_data"],
+                              snapshot.data[index]["resp_hora"],
+                              "SIM",
+                              snapshot.data[index]["resp_escala"],
+                              snapshot.data[index]["comentarios"],
+                              snapshot.data[index]["descr_comentarios"],
+                              index)
+                        },
                       ),
                     ),
                     //Icon(Icons.check_box,color: Colors.green, size: 40),
@@ -644,22 +696,25 @@ class _sps_questionario_ch_item_screen
                         height: 20,
                         value: "NÃO",
                         groupValue: snapshot.data[index]["resp_simnao"],
-                        onChanged: (value) => _gravar_resposta(
-                            snapshot.data[index]["codigo_empresa"],
-                            snapshot.data[index]["codigo_programacao"]
-                                .toString(),
-                            snapshot.data[index]["registro_colaborador"],
-                            snapshot.data[index]["identificacao_utilizador"],
-                            snapshot.data[index]["item_checklist"].toString(),
-                            snapshot.data[index]["resp_texto"],
-                            snapshot.data[index]["resp_numero"],
-                            snapshot.data[index]["resp_data"],
-                            snapshot.data[index]["resp_hora"],
-                            "NÃO",
-                            snapshot.data[index]["resp_escala"],
-                            snapshot.data[index]["comentarios"],
-                            snapshot.data[index]["descr_comentarios"],
-                            index),
+                        onChanged: (value) => {
+                          this.widget._acao = "RECARREGAR",
+                          _gravar_resposta(
+                              snapshot.data[index]["codigo_empresa"],
+                              snapshot.data[index]["codigo_programacao"]
+                                  .toString(),
+                              snapshot.data[index]["registro_colaborador"],
+                              snapshot.data[index]["identificacao_utilizador"],
+                              snapshot.data[index]["item_checklist"].toString(),
+                              snapshot.data[index]["resp_texto"],
+                              snapshot.data[index]["resp_numero"],
+                              snapshot.data[index]["resp_data"],
+                              snapshot.data[index]["resp_hora"],
+                              "NÃO",
+                              snapshot.data[index]["resp_escala"],
+                              snapshot.data[index]["comentarios"],
+                              snapshot.data[index]["descr_comentarios"],
+                              index)
+                        },
                       ),
                     ),
                     //Icon(Icons.check_box_outlined,color: Colors.red, size: 40),
@@ -719,6 +774,7 @@ class _sps_questionario_ch_item_screen
                           },
                           onChangeEnd: (value) {
                             _currentSliderValue = value;
+                            this.widget._acao = "RECARREGAR";
                             _gravar_resposta(
                                 snapshot.data[index]["codigo_empresa"],
                                 snapshot.data[index]["codigo_programacao"]
@@ -802,21 +858,24 @@ class _sps_questionario_ch_item_screen
                     height: 20,
                     value: _ocorrencia,
                     groupValue: snapshot.data[index]["resp_escala"],
-                    onChanged: (value) => _gravar_resposta(
-                        snapshot.data[index]["codigo_empresa"],
-                        snapshot.data[index]["codigo_programacao"].toString(),
-                        snapshot.data[index]["registro_colaborador"],
-                        snapshot.data[index]["identificacao_utilizador"],
-                        snapshot.data[index]["item_checklist"].toString(),
-                        snapshot.data[index]["resp_texto"],
-                        snapshot.data[index]["resp_numero"],
-                        snapshot.data[index]["resp_data"],
-                        snapshot.data[index]["resp_hora"],
-                        snapshot.data[index]["resp_simnao"],
-                        value.toString(),
-                        snapshot.data[index]["comentarios"],
-                        snapshot.data[index]["descr_comentarios"],
-                        index),
+                    onChanged: (value) => {
+                      this.widget._acao = "RECARREGAR",
+                      _gravar_resposta(
+                          snapshot.data[index]["codigo_empresa"],
+                          snapshot.data[index]["codigo_programacao"].toString(),
+                          snapshot.data[index]["registro_colaborador"],
+                          snapshot.data[index]["identificacao_utilizador"],
+                          snapshot.data[index]["item_checklist"].toString(),
+                          snapshot.data[index]["resp_texto"],
+                          snapshot.data[index]["resp_numero"],
+                          snapshot.data[index]["resp_data"],
+                          snapshot.data[index]["resp_hora"],
+                          snapshot.data[index]["resp_simnao"],
+                          value.toString(),
+                          snapshot.data[index]["comentarios"],
+                          snapshot.data[index]["descr_comentarios"],
+                          index)
+                    },
                   ),
                   Text(_ocorrencia.toString(),
                       style:
@@ -843,21 +902,24 @@ class _sps_questionario_ch_item_screen
                     height: 20,
                     value: _ocorrencia,
                     groupValue: snapshot.data[index]["resp_escala"],
-                    onChanged: (value) => _gravar_resposta(
-                        snapshot.data[index]["codigo_empresa"],
-                        snapshot.data[index]["codigo_programacao"].toString(),
-                        snapshot.data[index]["registro_colaborador"],
-                        snapshot.data[index]["identificacao_utilizador"],
-                        snapshot.data[index]["item_checklist"].toString(),
-                        snapshot.data[index]["resp_texto"],
-                        snapshot.data[index]["resp_numero"],
-                        snapshot.data[index]["resp_data"],
-                        snapshot.data[index]["resp_hora"],
-                        snapshot.data[index]["resp_simnao"],
-                        value.toString(),
-                        snapshot.data[index]["comentarios"],
-                        snapshot.data[index]["descr_comentarios"],
-                        index),
+                    onChanged: (value) => {
+                      this.widget._acao = "RECARREGAR",
+                      _gravar_resposta(
+                          snapshot.data[index]["codigo_empresa"],
+                          snapshot.data[index]["codigo_programacao"].toString(),
+                          snapshot.data[index]["registro_colaborador"],
+                          snapshot.data[index]["identificacao_utilizador"],
+                          snapshot.data[index]["item_checklist"].toString(),
+                          snapshot.data[index]["resp_texto"],
+                          snapshot.data[index]["resp_numero"],
+                          snapshot.data[index]["resp_data"],
+                          snapshot.data[index]["resp_hora"],
+                          snapshot.data[index]["resp_simnao"],
+                          value.toString(),
+                          snapshot.data[index]["comentarios"],
+                          snapshot.data[index]["descr_comentarios"],
+                          index)
+                    },
                   ),
                   Text(_ocorrencia.toString(),
                       style:
@@ -966,7 +1028,9 @@ class _sps_questionario_ch_item_screen
             this.widget._sincronizado,
             this.widget._status_aprovacao,
             this.widget._filtro,
-            this.widget._filtroDescrProgramacao),
+            this.widget._filtroDescrProgramacao,
+            this.widget._acao,
+            this.widget._sessao_checklist),
       ),
     );
   }
@@ -1016,17 +1080,20 @@ class _sps_questionario_ch_item_screen
                           MaterialPageRoute(
                             builder: (context) =>
                                 sps_questionario_ch_item_screen(
-                                    this.widget._codigo_empresa,
-                                    this.widget._codigo_programacao,
-                                    this.widget._registro_colaborador,
-                                    this.widget._identificacao_utilizador,
-                                    this.widget._codigo_grupo,
-                                    this.widget._codigo_checklist,
-                                    this.widget._descr_programacao,
-                                    this.widget._sincronizado,
-                                    this.widget._status_aprovacao,
-                                    this.widget._filtro,
-                                    this.widget._filtroDescrProgramacao),
+                              this.widget._codigo_empresa,
+                              this.widget._codigo_programacao,
+                              this.widget._registro_colaborador,
+                              this.widget._identificacao_utilizador,
+                              this.widget._codigo_grupo,
+                              this.widget._codigo_checklist,
+                              this.widget._descr_programacao,
+                              this.widget._sincronizado,
+                              this.widget._status_aprovacao,
+                              this.widget._filtro,
+                              this.widget._filtroDescrProgramacao,
+                              this.widget._acao,
+                              this.widget._sessao_checklist,
+                            ),
                           ),
                         );
                       },
@@ -1074,6 +1141,7 @@ class _sps_questionario_ch_item_screen
                 null,
                 this.widget._filtro,
                 this.widget._filtroDescrProgramacao,
+                this.widget._sessao_checklist,
               ),
             ),
           );

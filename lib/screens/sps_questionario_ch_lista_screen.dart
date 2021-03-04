@@ -179,6 +179,8 @@ class _sps_questionario_ch_lista_screen
                                                 this
                                                     .widget
                                                     ._filtroDescrProgramacao,
+                                                "PROXIMO",
+                                                "",
                                               )),
                                     )
                                   : _popup_vencido(context);

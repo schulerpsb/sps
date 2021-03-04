@@ -394,10 +394,19 @@ class SpsDaoQuestionarioItem {
           _hsessaoChecklist.toString() +
           '" order by item.sessao_checklist, item.seq_pergunta';
     } else {
+      if (_hacao.toString() == "ANTERIOR") {
       _query = _query +
           ' and item.sessao_checklist < "' +
           _hsessaoChecklist.toString() +
           '" order by item.sessao_checklist desc, item.seq_pergunta';
+      } else {
+        if (_hacao.toString() == "RECARREGAR") {
+          _query = _query +
+              ' and item.sessao_checklist = "' +
+              _hsessaoChecklist.toString() +
+              '" order by item.seq_pergunta';
+        }
+      }
     }
     debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);

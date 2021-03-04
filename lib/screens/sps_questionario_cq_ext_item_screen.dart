@@ -159,7 +159,7 @@ class _sps_questionario_cq_ext_item_screen
               ''),
           builder: (context, snapshot) {
             _singleValue.clear();
-            debugPrint(snapshot.data.toString());
+            //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 break;
@@ -528,7 +528,6 @@ class _sps_questionario_cq_ext_item_screen
 
   _gravar_opcao(_wcodigoEmpresa, _wcodigoProgramacao, _wregistroColaborador,
       _widentificacaoUtilizador, _witemChecklist, _wrespCq, _windex) async {
-    debugPrint('opcao => ' + _wrespCq);
 
     var _wsincronizado = "";
 
@@ -661,7 +660,6 @@ class _sps_questionario_cq_ext_item_screen
 
   _gravar_referencia(
       _wcodigoEmpresa, _wcodigoProgramacao, _wnovaReferencia) async {
-    debugPrint('referencia => ' + _wnovaReferencia);
 
     var _wsincronizado = "";
 

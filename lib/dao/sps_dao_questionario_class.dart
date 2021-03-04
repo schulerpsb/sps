@@ -115,7 +115,7 @@ class SpsDaoQuestionario {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString();
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     db.rawUpdate(_query);
     debugPrint("Alterado referencia (checklist_lista) => " + _hreferencia);
     return 1;
@@ -124,7 +124,7 @@ class SpsDaoQuestionario {
   Future<List<Map<String, dynamic>>> select_sincronizacao() async {
     final Database db = await getDatabase();
     var _query = 'SELECT * FROM checklist_lista where sincronizado = "N"';
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
@@ -163,7 +163,7 @@ class SpsDaoQuestionario {
           "%'";
     }
 
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
@@ -172,7 +172,7 @@ class SpsDaoQuestionario {
     final Database db = await getDatabase();
     var _query =
         'SELECT status, count(*) as contador FROM checklist_lista group by status';
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }

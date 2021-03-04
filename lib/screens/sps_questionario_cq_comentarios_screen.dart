@@ -339,7 +339,6 @@ class _sps_questionario_cq_comentarios_screen
       _wcodigoProgramacao,
       _witemChecklist,
       _wdescrComentarios) async {
-    debugPrint('comentário => ' + _wdescrComentarios);
 
     var _wsincronizado = "";
 
@@ -385,7 +384,6 @@ class _sps_questionario_cq_comentarios_screen
   }
 
   String ajustar_comentarios(wcomentarios) {
-    debugPrint(wcomentarios);
     return wcomentarios
         .replaceAll("</font></b>||", "\n")
         .replaceAll("<br>||", "\n\n")

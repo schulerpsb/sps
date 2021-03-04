@@ -153,7 +153,7 @@ class _sps_questionario_cq_int_item_screen
               ''),
           builder: (context, snapshot) {
             _singleValue.clear();
-            debugPrint(snapshot.data.toString());
+            //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 break;
@@ -513,7 +513,6 @@ class _sps_questionario_cq_int_item_screen
 
   _gravar_aprovacao(_wcodigoEmpresa, _wcodigoProgramacao, _witemChecklist,
       _wregistroAprovador, _wstatusAprovacao, _windex) async {
-    debugPrint('opcao => ' + _wstatusAprovacao);
 
     var _wsincronizado = "";
 
