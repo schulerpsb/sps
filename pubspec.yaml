@@ -71,6 +71,7 @@ dev_dependencies:
   image: any
   loading_overlay: ^0.2.1
   badges: ^1.1.6
+  scroll_to_index: ^1.0.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -97,17 +97,8 @@ class _sps_questionario_ch_item_screen
       _sessao_checklist);
 
   var _singleValue = List();
-  ScrollController _controller;
 
-  void initState() {
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
-    //super.initState();
-    //print("adriano =>1");
-    //WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
-    //print("adriano =>2");
-    //WidgetsBinding.instance.addObserver(this);
-  }
+  //AutoScrollController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +297,6 @@ class _sps_questionario_ch_item_screen
                                 top: 5, left: 0, right: 0, bottom: 0),
                             child: ListView.builder(
                               padding: EdgeInsets.only(top: 5),
-                              controller: _controller,
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
                                 if (index == 0) {
@@ -370,27 +360,6 @@ class _sps_questionario_ch_item_screen
         ),
       ),
     );
-  }
-
-  _scrollToEnd() {
-     print("adriano =>aqui1 "+_controller.toString());
-    //_controller.animateTo(_controller.position.maxScrollExtent,
-    //    duration: const Duration(milliseconds: 350), curve: Curves.easeOut);
-    //Scrollable.ensureVisible(lastKey.currentContext);
-    print("adriano =>aqui2");
-  }
-
-  _scrollListener() {
-    if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange) {
-      print("reach the bottom");
-    }
-    if (_controller.offset <= _controller.position.minScrollExtent &&
-        !_controller.position.outOfRange) {
-      print("reach the top");
-      //_controller.animateTo(_controller.position.maxScrollExtent,
-      //    duration: const Duration(milliseconds: 350), curve: Curves.easeOut);
-    }
   }
 
   ListTile descricao_pergunta(
