@@ -51,9 +51,9 @@ class SpsDaoQuestionarioMidia {
     return 1;
   }
 
-  Future<int> emptyTable() async {
+  Future<int> emptyTable(String codigo_programacao) async {
     final Database db = await getDatabase();
-    return db.rawDelete('delete from sps_checklist_tb_resp_anexo where (sincronizado is null or sincronizado == "")');
+    return db.rawDelete('delete from sps_checklist_tb_resp_anexo where (sincronizado is null or sincronizado == "") and codigo_programacao = '+codigo_programacao.toString());
   }
 
   Future<List<Map<String, dynamic>>> listarQuestionarioMidia({String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0}) async {
@@ -99,7 +99,7 @@ class SpsDaoQuestionarioMidia {
   Future<List<Map<String, dynamic>>> select_sincronizacao() async {
     final Database db = await getDatabase();
     var _query = 'SELECT * FROM sps_checklist_tb_resp_anexo where sincronizado = "N" OR sincronizado = "D" OR sincronizado = "M" OR sincronizado = "T"';
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
@@ -124,7 +124,7 @@ class SpsDaoQuestionarioMidia {
         _itemChecklist.toString() +
         ' and item_anexo = ' +
         _itemAnexo;
-    print(_query.toString());
+    //print(_query.toString());
     db.rawUpdate(_query);
     return 1;
   }
@@ -149,7 +149,7 @@ class SpsDaoQuestionarioMidia {
         _itemChecklist.toString() +
         ' and item_anexo = ' +
         _itemAnexo;
-    print(_query.toString());
+    //print(_query.toString());
     db.rawUpdate(_query);
     return 1;
   }

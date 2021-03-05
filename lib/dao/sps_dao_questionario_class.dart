@@ -42,7 +42,7 @@ class SpsDaoQuestionario {
   Future<int> create_table() async {
     final Database db = await getDatabase();
     db.execute(SpsDaoQuestionario.tableSql);
-    debugPrint('Tabela (checklist_lista) criada com sucesso ou já existente!');
+    //debugPrint('Tabela (checklist_lista) criada com sucesso ou já existente!');
   }
 
   Future<int> save(List<Map<String, dynamic>> dadosQuestionario) async {
@@ -117,7 +117,7 @@ class SpsDaoQuestionario {
         _hcodigoProgramacao.toString();
     //debugPrint("query => " + _query);
     db.rawUpdate(_query);
-    debugPrint("Alterado referencia (checklist_lista) => " + _hreferencia);
+    //debugPrint("Alterado referencia (checklist_lista) => " + _hreferencia);
     return 1;
   }
 
@@ -186,7 +186,7 @@ class SpsDaoQuestionario {
         _codigoEmpresa +
         '" and codigo_programacao = ' +
         _codigoProgramacao.toString();
-    print(_query.toString());
+    //print(_query.toString());
     db.rawUpdate(_query);
     return 1;
   }

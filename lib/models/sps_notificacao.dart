@@ -41,5 +41,24 @@ class spsNotificacao {
     return 1;
   }
 
+  static Future<int> notificarErro(int id, String title1, String title2, FlutterLocalNotificationsPlugin flip) async {
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails('progress channel', 'progress channel',
+        'progress channel description',
+        channelShowBadge: false,
+        importance: Importance.Max,
+        priority: Priority.High,
+        onlyAlertOnce: true,
+        playSound: false,
+        groupKey: 'com.android.example.sps');
+
+    //Detalhes de especificções para IOS
+    const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    final NotificationDetails platformChannelSpecifics =
+    NotificationDetails(androidPlatformChannelSpecifics,iOSPlatformChannelSpecifics);
+    await flip.show(id, title1, title2, platformChannelSpecifics, payload: 'item x');
+    return 1;
+  }
+
 
 }

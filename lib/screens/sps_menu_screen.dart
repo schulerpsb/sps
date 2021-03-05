@@ -17,9 +17,6 @@ class sps_menu_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    spsSincronizacao objspsSincronizacao = spsSincronizacao();
-    objspsSincronizacao.sincronizarAnexosServerToLocal('EXTERNO', 'CONTROLE DE QUALIDADE');
-
     if (usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA") { //"INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS ")
       _origemUsuario = "INTERNO";
     }else{

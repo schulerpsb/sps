@@ -54,7 +54,7 @@ class SpsDaoQuestionarioItem {
       path,
       onCreate: (db, version) {
         db.execute(SpsDaoQuestionarioItem.tableSql);
-        debugPrint('DB Criado com sucesso!');
+        //debugPrint('DB Criado com sucesso!');
       },
       version: 1,
       onDowngrade: onDatabaseDowngradeDelete,
@@ -64,7 +64,7 @@ class SpsDaoQuestionarioItem {
   Future<int> create_table() async {
     final Database db = await getDatabase();
     db.execute(SpsDaoQuestionarioItem.tableSql);
-    debugPrint('Tabela (checklist_item) criada com sucesso ou já existente!');
+    //debugPrint('Tabela (checklist_item) criada com sucesso ou já existente!');
   }
 
   Future<int> save(List<Map<String, dynamic>> dadosQuestionarioItem) async {
@@ -170,7 +170,7 @@ class SpsDaoQuestionarioItem {
           dadosQuestionarioItem[windex]['sugestao_resposta'].toString() +
           '","")';
       //String _new_query = _query.replaceAll(',,',',0,');
-      debugPrint("query => " + _query);
+      //debugPrint("query => " + _query);
       db.rawInsert(_query);
       windex = windex + 1;
     }
@@ -200,9 +200,9 @@ class SpsDaoQuestionarioItem {
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
         _hitemChecklist.toString();
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     db.rawUpdate(_query);
-    debugPrint("SQLITE - Alterado referencia (checklist_item)");
+    //debugPrint("SQLITE - Alterado referencia (checklist_item)");
     return 1;
   }
 
@@ -249,9 +249,9 @@ class SpsDaoQuestionarioItem {
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
         _hitemChecklist.toString();
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     db.rawUpdate(_query);
-    debugPrint("SQLITE - Alterado resposta (checklist_item)");
+    //debugPrint("SQLITE - Alterado resposta (checklist_item)");
     return 1;
   }
 
@@ -279,7 +279,7 @@ class SpsDaoQuestionarioItem {
         '" and item_checklist = ' +
         _hitemChecklist.toString();
     db.rawUpdate(_query);
-    debugPrint("SQLITE - Alterado resposta (checklist_item)");
+    //debugPrint("SQLITE - Alterado resposta (checklist_item)");
     return 1;
   }
 
@@ -296,9 +296,9 @@ class SpsDaoQuestionarioItem {
         _hcodigoProgramacao.toString() +
         ' and item_checklist = ' +
         _hitemChecklist.toString();
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     db.rawUpdate(_query);
-    debugPrint("SQLITE - Alterado aprovação (checklist_item)");
+    //debugPrint("SQLITE - Alterado aprovação (checklist_item)");
     return 1;
   }
 
@@ -318,9 +318,9 @@ class SpsDaoQuestionarioItem {
         _hcodigoProgramacao.toString() +
         '  and item_checklist = ' +
         _hitemChecklist.toString();
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     db.rawUpdate(_query);
-    debugPrint("SQLITE - Alterado comentario (checklist_item)");
+    //debugPrint("SQLITE - Alterado comentario (checklist_item)");
     return 1;
   }
 
@@ -337,7 +337,7 @@ class SpsDaoQuestionarioItem {
         '" and identificacao_utilizador = "' +
         _hidentificacaoUtilizador.toString() +
         '" and sincronizado = "N"';
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
@@ -346,7 +346,7 @@ class SpsDaoQuestionarioItem {
   Future<List<Map<String, dynamic>>> selectSincronizacaoItens() async {
     final Database db = await getDatabase();
     var _query = 'SELECT * FROM checklist_item where sincronizado = "N"';
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
@@ -369,7 +369,7 @@ class SpsDaoQuestionarioItem {
             _hidentificacaoUtilizador.toString() +
             '" and a.item_checklist = ' +
             _hitemChecklist.toString();
-    print("query => " + _query);
+    //print("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
@@ -380,7 +380,7 @@ class SpsDaoQuestionarioItem {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString()+ ' and (sincronizado is null or sincronizado = "")';
-    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     return db.rawDelete(_query);
   }
 
@@ -439,7 +439,7 @@ class SpsDaoQuestionarioItem {
         _identificacaoUtilizador +
         '" and item_checklist = ' +
         _itemChecklist.toString();
-    print(_query.toString());
+    //print(_query.toString());
     db.rawUpdate(_query);
     return 1;
   }
