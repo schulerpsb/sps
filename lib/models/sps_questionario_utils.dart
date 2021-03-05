@@ -116,6 +116,11 @@ class spsQuestionarioUtils {
       }
     }
 
+    //Não se aplica
+    if (result[0]["resp_nao_se_aplica"] == "SIM") {
+      _wstatusResposta = "PREENCHIDA";
+    }
+
     if (_wstatusResposta != result[0]["status_resposta"]) {
       //Verificar se existe conexão
       final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();

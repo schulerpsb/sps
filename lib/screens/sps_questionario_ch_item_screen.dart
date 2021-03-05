@@ -924,7 +924,9 @@ class _sps_questionario_ch_item_screen
     if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA FIXA") {
       //Tratar resposta fixa (TEXTO/NUMERO/DATA/HORA)
       if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO" ||
-          snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO") {
+          snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO" ||
+          snapshot.data[index]["tipo_resposta_fixa"].toString() == "DATA" ||
+          snapshot.data[index]["tipo_resposta_fixa"].toString() == "HORA") {
         return Align(
           alignment: Alignment.centerLeft,
           child: Padding(
