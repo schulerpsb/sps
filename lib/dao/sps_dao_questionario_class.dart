@@ -131,7 +131,7 @@ class SpsDaoQuestionario {
 
   Future<int> emptyTable() async {
     final Database db = await getDatabase();
-    return db.rawDelete('delete from checklist_lista where sincronizado is null');
+    return db.rawDelete('delete from checklist_lista where sincronizado is null or sincronizado = "null" or sincronizado = ""');
   }
 
   Future<List<Map<String, dynamic>>> listarQuestionarioGeral(_filtro,

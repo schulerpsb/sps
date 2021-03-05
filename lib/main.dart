@@ -48,6 +48,7 @@ void isolateSincronizacao(String arg) async  {
 
   //Verificação recorrente - 1 em 1 minuto
   //  bool statusSincronizandoArquivos = false;
+  int numsinc;
   cron.schedule(Schedule.parse('* * * * *'), () async {
     DateTime now = new DateTime.now();
     DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
@@ -68,10 +69,17 @@ void isolateSincronizacao(String arg) async  {
         //Inicio da sincronização Recorrente de 1 em 1 minuto
         print('Verificando a possibilidade de rodar a sincronização Dados em background - Recorrente');
         if(statusSincronizarQuestionarios == true){
+          numsinc = 0;
           print('Sincronizando Dados de questionários - Recorrente');
           statusSincronizarQuestionarios = false;
           statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
         }else{
+          if(numsinc == 3){
+            statusSincronizarQuestionarios = true;
+            numsinc = 0;
+          }else{
+            numsinc++;
+          }
           print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - JA EXISTE UMA SINCRONIZAÇÃO EM ANDAMENTO');
         }
 
