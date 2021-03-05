@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 
 class SpsDaoQuestionarioItem {
   static final String tableSql = 'CREATE TABLE IF NOT EXISTS checklist_item('
@@ -264,7 +265,7 @@ class SpsDaoQuestionarioItem {
       _hsincronizado) async {
     final Database db = await getDatabase();
     var _query = 'update checklist_item set status_resposta = "' +
-        _hstatusResposta +
+        _hstatusResposta.toString() +
         '", sincronizado = "' +
         _hsincronizado +
         '" where codigo_empresa = "' +

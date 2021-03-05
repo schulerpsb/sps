@@ -1,13 +1,10 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_usuario_class.dart';
-import 'package:thumbnails/thumbnails.dart';
-import 'package:exif/exif.dart';
-import 'package:image/image.dart' as img;
-import 'package:intl/intl.dart';
+import 'package:sps/models/sps_usuario_class.dart';
+
 
 class spsQuestionarioUtils {
   @override
@@ -26,12 +23,10 @@ class spsQuestionarioUtils {
 
     var _wsincronizado = "";
 
-    final SpsDaoQuestionarioItem objQuestionarioItemDao =
-        SpsDaoQuestionarioItem();
+    final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
 
     //Ler dados do SQlite (Checklis Item - chave primaria)
-    final List<Map<String, dynamic>> result =
-        await objQuestionarioItemDao.select_chave_primaria(
+    final List<Map<String, dynamic>> result = await objQuestionarioItemDao.select_chave_primaria(
             wcodigoEmpresa,
             wcodigoProgramacao,
             wregistroColaborador,
@@ -153,8 +148,7 @@ class spsQuestionarioUtils {
       }
 
       //Gravar SQlite
-      final SpsDaoQuestionarioItem objQuestionarioItemDao =
-          SpsDaoQuestionarioItem();
+      final SpsDaoQuestionarioItem objQuestionarioItemDao =  SpsDaoQuestionarioItem();
       final int resultupdate =
           await objQuestionarioItemDao.update_status_resposta(
               wcodigoEmpresa,

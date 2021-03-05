@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
-import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
-import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/models/sps_sincronizacao.dart';
 
