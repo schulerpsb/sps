@@ -254,7 +254,12 @@ class spsSincronizacao {
 
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
       debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
-      bool StatuExterno = await sincronizarAnexosServerToLocal('EXTERNO', 'CONTROLE DE QUALIDADE',flip);
+      bool StatuExternoCq = await sincronizarAnexosServerToLocal('EXTERNO', 'CONTROLE DE QUALIDADE',flip);
+      bool StatuInternoCq = await sincronizarAnexosServerToLocal('INTERNO', 'CONTROLE DE QUALIDADE',flip);
+//      bool StatuExternoCheck = await sincronizarAnexosServerToLocal('EXTERNO', 'CHECKLIST',flip);
+//      bool StatuInternoCheck = await sincronizarAnexosServerToLocal('INTERNO', 'CHECKLIST',flip);
+//      bool StatuExternoPesq = await sincronizarAnexosServerToLocal('EXTERNO', 'PESQUISA',flip);
+//      bool StatuInternoPesq = await sincronizarAnexosServerToLocal('INTERNO', 'PESQUISA',flip);
       debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
     }
@@ -344,54 +349,44 @@ class spsSincronizacao {
             dynamic>> dadosDeAnexosServidor = await objSpsHttpQuestionarioMidia
             .listarMidiaAll(dadosArquivo: dadosArquivo);
         //print('Sincronizar o arquivo do servidor====>' +dadosDeAnexosServidor.toString());
-        final int criarTabelaLocal = await objSpsDaoQuestionarioMidia
-            .create_table();
-        final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia
-            .emptyTable(dadosQuestionario[indexQuestionario]["codigo_programacao"].toString());
+        final int criarTabelaLocal = await objSpsDaoQuestionarioMidia.create_table();
+        final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia.emptyTable(dadosQuestionario[indexQuestionario]["codigo_programacao"].toString());
         final int ResultadoSave = await objSpsDaoQuestionarioMidia.save(dadosDeAnexosServidor);
         if (ResultadoSave == 1) {
           //print('Dados de Anexos de midia sincronizados com sucesso - Server to Local!');
           var indexMidia = 0;
           var registrosMidia = dadosDeAnexosServidor.length;
           while (indexMidia < registrosMidia) {
-            String path = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' +
-                dadosDeAnexosServidor[indexMidia]["nome_arquivo"];
+            String path = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' +dadosDeAnexosServidor[indexMidia]["nome_arquivo"].toString();
             //print('Verificar==> ' +dadosDeAnexosServidor[indexMidia]["nome_arquivo"].toString());
             bool status = await File(path).exists();
             if (status == false) {
-              String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' +
-                  dadosDeAnexosServidor[indexMidia]["codigo_programacao"] +
-                  '_' +
-                  dadosDeAnexosServidor[indexMidia]["registro_colaborador"] +
-                  '_' +
-                  dadosDeAnexosServidor[indexMidia]["identificacao_utilizador"] +
-                  '_' + dadosDeAnexosServidor[indexMidia]["item_checklist"] +
-                  '/' + dadosDeAnexosServidor[indexMidia]["nome_arquivo"];
-              String destinoLocal = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' +
-                  dadosDeAnexosServidor[indexMidia]["nome_arquivo"];
-              //print('baixar ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
-              await spsNotificacao.notificarProgresso(
-                  indexQuestionario, registrosMidia, indexMidia,
-                  'SPS - Atualização', 'Download de arquivos anexos', flip);
-              bool statusDownload = await objspsUpDown
-                  .downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal);
-              if (statusDownload == true) {
-                //print('Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
-                File arquivoLocal = new File(destinoLocal);
-                String tipoArquivo = arquivoLocal.path
-                    .split('.')
-                    .last;
-                if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4') {
-                  //Processamento do arquivo capturado - Gerar thumbnail.
-                  List _listaArquivos = new List();
-                  _listaArquivos.add(destinoLocal);
-                  await spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos);
-                  //print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+              if(dadosDeAnexosServidor[indexMidia]["nome_arquivo"].toString() != null && dadosDeAnexosServidor[indexMidia]["nome_arquivo"].toString() != "null"){
+                String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + dadosDeAnexosServidor[indexMidia]["codigo_programacao"].toString() + '_' + '_' + dadosDeAnexosServidor[indexMidia]["identificacao_utilizador"].toString() + '_' + dadosDeAnexosServidor[indexMidia]["item_checklist"].toString() +'/' + dadosDeAnexosServidor[indexMidia]["nome_arquivo"].toString();
+                String destinoLocal = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' + dadosDeAnexosServidor[indexMidia]["nome_arquivo"].toString();
+                //print('baixar ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
+                await spsNotificacao.notificarProgresso(indexQuestionario, registrosMidia, indexMidia, 'SPS - Atualização', 'Download de arquivos anexos', flip);
+                bool statusDownload = await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal);
+                if (statusDownload == true) {
+                  //print('Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+                  File arquivoLocal = new File(destinoLocal);
+                  String tipoArquivo = arquivoLocal.path
+                      .split('.')
+                      .last;
+                  if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4') {
+                    //Processamento do arquivo capturado - Gerar thumbnail.
+                    List _listaArquivos = new List();
+                    _listaArquivos.add(destinoLocal);
+                    await spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos);
+                    //print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+                  }
+                  await spsNotificacao.notificarProgresso(indexQuestionario, registrosMidia, indexMidia,'SPS - Atualização', 'Download de arquivos anexos', flip);
+                } else {
+                  await spsNotificacao.notificarErro(900 + indexQuestionario + indexMidia, 'SPS - Falha no download', 'Verifique arquivo na WEB - Cod-Prog:'+dadosDeAnexosServidor[indexMidia]["codigo_programacao"].toString()+' item: '+dadosDeAnexosServidor[indexMidia]["item_checklist"].toString(), flip);
+                  print('ERRO ao processar download de Anexos de midia - Server to Local! ' +ArquivoParaDownload.toString());
                 }
-                await spsNotificacao.notificarProgresso(indexQuestionario, registrosMidia, indexMidia,'SPS - Atualização', 'Download de arquivos anexos', flip);
-              } else {
-                await spsNotificacao.notificarErro(999, 'SPS - Falha no download', 'Verifique arquivo na WEB - Cod-Prog:'+dadosDeAnexosServidor[indexMidia]["codigo_programacao"].toString()+' item: '+dadosDeAnexosServidor[indexMidia]["item_checklist"].toString(), flip);
-                print('ERRO ao processar download de Anexos de midia - Server to Local! ' +ArquivoParaDownload.toString());
+              }else{
+                print('ERRO ao processar download de Anexos de midia - Server to Local! ARQUVIVO CORROMPIDO NA WEB');
               }
             };
             indexMidia = indexMidia + 1;
@@ -440,8 +435,7 @@ class spsSincronizacao {
         if (dadosQuestionario != null) {
           final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
           final int resullimpar = await objQuestionarioDao.emptyTable();
-          final int resultsave = await objQuestionarioDao.save(
-              dadosQuestionario);
+          final int resultsave = await objQuestionarioDao.save(dadosQuestionario);
         }
         debugPrint(
             "=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
@@ -460,8 +454,7 @@ class spsSincronizacao {
 
       //Criar tabela "sps_checklist_tb_resp_anexo" caso não exista
       final SpsDaoQuestionarioMidia objSpsDaoQuestionarioMidia = SpsDaoQuestionarioMidia();
-      final int resulcreateMidia = await objSpsDaoQuestionarioMidia
-          .create_table();
+      final int resulcreateMidia = await objSpsDaoQuestionarioMidia.create_table();
 
       //Verificar se existe conexão
       final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
