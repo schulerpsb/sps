@@ -71,6 +71,7 @@ class SpsQuestionarioItem_ch {
             result[windex]["resp_simnao"].toString(),
             result[windex]["resp_escala"].toString(),
             result[windex]["descr_comentarios"],
+            result[windex]["resp_nao_se_aplica"],
             usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
         if (retorno1.toString() == true) {
           debugPrint("registro sincronizado: " + result[windex].toString());
@@ -94,6 +95,7 @@ class SpsQuestionarioItem_ch {
                 result[windex]["resp_simnao"].toString(),
                 result[windex]["resp_escala"].toString(),
                 result[windex]["descr_comentarios"],
+                result[windex]["resp_nao_se_aplica"],
                 usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
         if (retorno2.toString() == true) {
           debugPrint("registro sincronizado: " + result[windex].toString());

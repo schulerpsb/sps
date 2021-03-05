@@ -319,6 +319,10 @@ class _sps_questionario_ch_item_screen
                                           montar_questionario(
                                               context, snapshot, index),
 
+                                          //Tratar não se aplica
+                                          tratar_nao_se_aplica(
+                                              context, snapshot, index),
+
                                           Row(
                                             children: [
                                               //Tratar mídias
@@ -455,6 +459,7 @@ class _sps_questionario_ch_item_screen
                       snapshot.data[index]["resp_escala"],
                       snapshot.data[index]["comentarios"],
                       snapshot.data[index]["descr_comentarios"],
+                      "",
                       index),
                 },
                 icon: Icon(Icons.save),
@@ -517,6 +522,7 @@ class _sps_questionario_ch_item_screen
                           snapshot.data[index]["resp_escala"],
                           snapshot.data[index]["comentarios"],
                           snapshot.data[index]["descr_comentarios"],
+                          "",
                           index);
                     } catch (e) {
                       this.widget._acao = "RECARREGAR";
@@ -534,6 +540,7 @@ class _sps_questionario_ch_item_screen
                           snapshot.data[index]["resp_escala"],
                           snapshot.data[index]["comentarios"],
                           snapshot.data[index]["descr_comentarios"],
+                          "",
                           index);
                     }
                   },
@@ -587,6 +594,7 @@ class _sps_questionario_ch_item_screen
                               snapshot.data[index]["resp_escala"],
                               snapshot.data[index]["comentarios"],
                               snapshot.data[index]["descr_comentarios"],
+                              "",
                               index);
                         }
                       } catch (e) {
@@ -606,6 +614,7 @@ class _sps_questionario_ch_item_screen
                             snapshot.data[index]["resp_escala"],
                             snapshot.data[index]["comentarios"],
                             snapshot.data[index]["descr_comentarios"],
+                            "",
                             index);
                       }
                     },
@@ -652,6 +661,7 @@ class _sps_questionario_ch_item_screen
                               snapshot.data[index]["resp_escala"],
                               snapshot.data[index]["comentarios"],
                               snapshot.data[index]["descr_comentarios"],
+                              "",
                               index)
                         },
                       ),
@@ -682,6 +692,7 @@ class _sps_questionario_ch_item_screen
                               snapshot.data[index]["resp_escala"],
                               snapshot.data[index]["comentarios"],
                               snapshot.data[index]["descr_comentarios"],
+                              "",
                               index)
                         },
                       ),
@@ -761,6 +772,7 @@ class _sps_questionario_ch_item_screen
                                 value.round().toString(),
                                 snapshot.data[index]["comentarios"],
                                 snapshot.data[index]["descr_comentarios"],
+                                "",
                                 index);
                           },
                         ),
@@ -843,6 +855,7 @@ class _sps_questionario_ch_item_screen
                           value.toString(),
                           snapshot.data[index]["comentarios"],
                           snapshot.data[index]["descr_comentarios"],
+                          "",
                           index)
                     },
                   ),
@@ -887,6 +900,7 @@ class _sps_questionario_ch_item_screen
                           value.toString(),
                           snapshot.data[index]["comentarios"],
                           snapshot.data[index]["descr_comentarios"],
+                          "",
                           index)
                     },
                   ),
@@ -904,6 +918,58 @@ class _sps_questionario_ch_item_screen
     return _listaOpcoes;
   }
 
+  tratar_nao_se_aplica(BuildContext context,
+      AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
+    //Tratar resposta fixa
+    if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA FIXA") {
+      //Tratar resposta fixa (TEXTO/NUMERO/DATA/HORA)
+      if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO" ||
+          snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO") {
+        return Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
+            child: CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
+              title: Text("Não se aplica",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold)),
+              value: snapshot.data[index]["resp_nao_se_aplica"].toString() == ""
+                  ? false
+                  : true,
+              onChanged: (value) {
+                this.widget._acao = "RECARREGAR";
+                _gravar_resposta(
+                    snapshot.data[index]["codigo_empresa"],
+                    snapshot.data[index]["codigo_programacao"].toString(),
+                    snapshot.data[index]["registro_colaborador"],
+                    snapshot.data[index]["identificacao_utilizador"],
+                    snapshot.data[index]["item_checklist"].toString(),
+                    snapshot.data[index]["resp_texto"],
+                    snapshot.data[index]["resp_numero"],
+                    snapshot.data[index]["resp_data"],
+                    snapshot.data[index]["resp_hora"],
+                    snapshot.data[index]["resp_simnao"],
+                    snapshot.data[index]["resp_escala"],
+                    snapshot.data[index]["comentarios"],
+                    snapshot.data[index]["descr_comentarios"],
+                    value == true ? "SIM" : "",
+                    index);
+              },
+            ),
+          ),
+        );
+      } else {
+        return Container();
+      }
+    } else {
+      return Container();
+    }
+  }
+
   _gravar_resposta(
       _wcodigoEmpresa,
       _wcodigoProgramacao,
@@ -918,8 +984,21 @@ class _sps_questionario_ch_item_screen
       _wrespEscala,
       _wcomentarios,
       _wdescrComentarios,
+      _wnaoSeAplica,
       _windex) async {
     var _wsincronizado = "";
+
+    //Tratar "não se aplica"
+    print ("adriano =>"+_wnaoSeAplica);
+    if (_wnaoSeAplica == "SIM") {
+      _wrespTexto = "";
+      _wrespNumero = null;
+      _wrespData = "";
+      _wrespHora = "";
+      _wrespSimnao = "";
+      _wrespEscala = "";
+      _wdescrComentarios = "";
+    }
 
     //Verificar se existe conexão
     final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
@@ -941,6 +1020,7 @@ class _sps_questionario_ch_item_screen
           _wrespSimnao,
           _wrespEscala.toString(),
           _wdescrComentarios,
+          _wnaoSeAplica,
           usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
               ? usuarioAtual.registro_usuario
               : usuarioAtual.codigo_usuario);
@@ -970,6 +1050,8 @@ class _sps_questionario_ch_item_screen
         _wrespHora,
         _wrespSimnao,
         _wrespEscala,
+        _wnaoSeAplica,
+        _wdescrComentarios,
         _wsincronizado);
 
     //Atualizar status da resposta

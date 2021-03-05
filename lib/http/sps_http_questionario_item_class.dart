@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
 import 'Json_interceptor.dart';
@@ -201,6 +202,7 @@ class SpsHttpQuestionarioItem {
       String resp_simnao,
       String resp_escala,
       String descr_comentarios,
+      String resp_nao_se_aplica,
       String usuresponsavel) async {
     final Map<String, dynamic> fieldQuestionario = {
       'codigo_empresa': codigo_empresa,
@@ -215,6 +217,7 @@ class SpsHttpQuestionarioItem {
       'resp_simnao': resp_simnao,
       'resp_escala': resp_escala,
       'descr_comentarios': descr_comentarios,
+      'resp_nao_se_aplica': resp_nao_se_aplica,
       'usuresponsavel': usuresponsavel,
     };
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
