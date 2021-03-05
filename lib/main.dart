@@ -6,7 +6,7 @@ import 'package:splashscreen/splashscreen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:cron/cron.dart';
-
+import 'package:sps/models/sps_usuario_class.dart';
 import 'http/sps_http_verificar_conexao_class.dart';
 import 'models/sps_login.dart';
 import 'models/sps_sincronizacao.dart';
@@ -26,13 +26,21 @@ void isolateSincronizacao(String arg) async  {
   if (conectadoInicial == true) {
     //Verifica se existe usuário logado
     List<Map<String, dynamic>> dadosSessaoInicial = await spslogin.verificaUsuarioAutenticado();
-    if(dadosSessaoInicial != null){
+    print(dadosSessaoInicial.toString());
+    if(dadosSessaoInicial.length >= 1){
+      usuarioAtual.codigo_usuario = dadosSessaoInicial[0]['codigo_usuario'];
+      usuarioAtual.nome_usuario = dadosSessaoInicial[0]['nome_usuario'];
+      usuarioAtual.email_usuario = dadosSessaoInicial[0]['email_usuario'];
+      usuarioAtual.lingua_usuario = dadosSessaoInicial[0]['lingua_usuario'];
+      usuarioAtual.status_usuario = dadosSessaoInicial[0]['status_usuario'];
+      usuarioAtual.tipo = dadosSessaoInicial[0]['tipo'];
+      usuarioAtual.registro_usuario = dadosSessaoInicial[0]['registro_usuario'];
       //Inicio da sincronização Recorrente de 1 em 1 minuto
       print('Sincronizando Dados em background - Primeira execução');
-
       print('Sincronizando Dados de questionários - Primeira execução');
-      statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionariosLocalToServer();
-
+      statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
+    }else{
+      print('Sincronização Primeira execução - Não executada - SEM DADOS DE LOGON LOCAL');
     }
   }else{
     print('Sincronização Primeira execução - Não executada - Dispositivo OFFLINE');
@@ -49,16 +57,26 @@ void isolateSincronizacao(String arg) async  {
     if (conectadoRecorrente == true) {
       //Verifica se existe usuário logado
       List<Map<String, dynamic>> dadosSessao = await spslogin.verificaUsuarioAutenticado();
-      if(dadosSessao != null){
+      if(dadosSessao.length >= 1){
+        usuarioAtual.codigo_usuario = dadosSessao[0]['codigo_usuario'];
+        usuarioAtual.nome_usuario = dadosSessao[0]['nome_usuario'];
+        usuarioAtual.email_usuario = dadosSessao[0]['email_usuario'];
+        usuarioAtual.lingua_usuario = dadosSessao[0]['lingua_usuario'];
+        usuarioAtual.status_usuario = dadosSessao[0]['status_usuario'];
+        usuarioAtual.tipo = dadosSessao[0]['tipo'];
+        usuarioAtual.registro_usuario = dadosSessao[0]['registro_usuario'];
         //Inicio da sincronização Recorrente de 1 em 1 minuto
-        print('Sincronizando Dados em background - Recorrente');
-
+        print('Verificando a possibilidade de rodar a sincronização Dados em background - Recorrente');
         if(statusSincronizarQuestionarios == true){
           print('Sincronizando Dados de questionários - Recorrente');
           statusSincronizarQuestionarios = false;
-          statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionariosLocalToServer();
+          statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
+        }else{
+          print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - JA EXISTE UMA SINCRONIZAÇÃO EM ANDAMENTO');
         }
 
+      }else{
+        print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - SEM DADOS DE LOGON LOCAL');
       }
     }else{
       DateTime now = new DateTime.now();

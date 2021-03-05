@@ -57,7 +57,7 @@ class SpsQuestionarioMidia {
     };
     final List<Map<String, dynamic>> arquivosServidor = await objSpsHttpQuestionarioMidia.listarMidiaAll(dadosArquivo: dadosArquivo);
     final int criarTabelaLocal = await objSpsDaoQuestionarioMidia.create_table();
-    final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia.emptyTable();
+    final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia.emptyTable(codigo_programacao.toString());
     final int ResultadoSave = await objSpsDaoQuestionarioMidia.save(arquivosServidor);
     if (ResultadoSave == 1) {
       print('Arquivos de midia sincronizados com sucesso');

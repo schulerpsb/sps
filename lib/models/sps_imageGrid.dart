@@ -104,7 +104,7 @@ class ImageGrid extends StatelessWidget {
                       .substring(
                           snapshot.data[i]['nome_arquivo'].toString().length -
                               4);
-                  if (_extensao == '.mp4' && tipo == 'video') {
+                  if ((_extensao == '.mp4' || _extensao == '.MP4') && tipo == 'video') {
                     String _nomeArquivoSemExtensao =
                         snapshot.data[i]['nome_arquivo'].toString().substring(
                             0,
@@ -154,7 +154,7 @@ class ImageGrid extends StatelessWidget {
                           .then((value) => print('Registro apagado'));
                     }
                   }
-                  if (_extensao == '.jpg' && tipo == 'image') {
+                  if ((_extensao == '.jpg' || _extensao == '.JPG' || _extensao == '.png' || _extensao == '.PNG') && tipo == 'image') {
                     String _nomeArquivoSemExtensao =
                         snapshot.data[i]['nome_arquivo'].toString();
                     if (File('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' +
