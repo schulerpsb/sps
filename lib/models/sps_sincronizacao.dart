@@ -158,7 +158,7 @@ class spsSincronizacao {
 
       }
 
-      debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
+      debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo - UPLOAD) =============================================");
       //Ler dados não sincronizados do SQlite
       final List<Map<String, dynamic>> resultMidia = await objSpsDaoQuestionarioMidia.select_sincronizacao();
       var _wregistrosMidia = resultMidia.length;
@@ -246,12 +246,95 @@ class spsSincronizacao {
         await spsNotificacao.notificarProgresso(2, _wregistrosMidia , windexMidia, 'SPS - Atualização', 'Upload de arquivos anexos', flip);
 
       }
-      debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
+      debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo - UPLOAD) =============================================");
 
     }
 
     return true;
   }
+
+  Future sincronizarAnexosServerToLocal(_origemUsuario, _tipoChecklist) async {
+    //Tipos de usuário: "INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS
+
+    debugPrint(
+        "=== SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo - DOWNLOAD) =============================================");
+
+    String registro_colaborador;
+    String identificacao_utilizador;
+    String tipo_checklist;
+    String tipo_frequencia;
+    String registro_aprovador;
+
+    final origem_usuario = _origemUsuario;
+
+    String doc_action;
+    if (_tipoChecklist == "CONTROLE DE QUALIDADE") {
+      doc_action = 'PREENCHER_CQ';
+      tipo_checklist = 'CHECKLIST';
+      tipo_frequencia = 'CONTROLE DE QUALIDADE';
+      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+        registro_colaborador = sps_usuario().registro_usuario;
+        identificacao_utilizador = 'SCHULER';
+      } else {
+        registro_colaborador = '';
+        identificacao_utilizador = sps_usuario().codigo_usuario;
+      }
+      registro_aprovador = sps_usuario().registro_usuario;
+    }
+    if (_tipoChecklist == "CHECKLIST") {
+      doc_action = 'PREENCHER_CHECKLIST';
+      tipo_checklist = 'CHECKLIST';
+      tipo_frequencia = 'ESPORADICA';
+      registro_colaborador = sps_usuario().registro_usuario;
+      identificacao_utilizador = '';
+      registro_aprovador = '';
+    }
+    if (_tipoChecklist == "PESQUISA") {
+      doc_action = 'PREENCHER_PESQUISA';
+      tipo_checklist = 'PESQUISA';
+      tipo_frequencia = 'ESPORADICA';
+      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+        registro_colaborador = sps_usuario().registro_usuario;
+        identificacao_utilizador = '';
+      } else {
+        registro_colaborador = '';
+        identificacao_utilizador = sps_usuario().codigo_usuario;
+      }
+      registro_aprovador = '';
+    }
+
+    final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
+    final List<
+        Map<String, dynamic>> dadosQuestionario = await objQuestionarioHttp
+        .httplistarQuestionario(
+        origem_usuario,
+        doc_action,
+        registro_colaborador,
+        identificacao_utilizador,
+        tipo_frequencia,
+        tipo_checklist,
+        registro_aprovador);
+    if (dadosQuestionario != null) {
+      print('DADOS DE FORMULARIOS PARA DOWNLOAD===>' +
+          dadosQuestionario.toString());
+      var indexQuestionario = 0;
+      var registrosQuationario = dadosQuestionario.length;
+      Map<String, dynamic> dadosArquivo;
+      while (indexQuestionario < registrosQuationario) {
+        dadosArquivo = {
+          'codigo_empresa': dadosQuestionario[indexQuestionario]["codigo_empresa"],
+          'codigo_programacao': dadosQuestionario[indexQuestionario]["codigo_programacao"]
+              .toString(),
+          'registro_colaborador': dadosQuestionario[indexQuestionario]["registro_colaborador"],
+          'identificacao_utilizador': dadosQuestionario[indexQuestionario]['identificacao_utilizador']
+              .toString(),
+        };
+      }
+      debugPrint(
+          "=== FIM - SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo - DOWNLOAD) =============================================");
+    }
+  }
+
 
   //Função que atualiza os dados de questionários(cabeçalho) do Server(Rest API) para o Local(Sqlite)
   Future sincronizarQuestionariosServerToLocal(
@@ -274,8 +357,7 @@ class spsSincronizacao {
       debugPrint(
           "Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
       final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
-      final List<Map<String, dynamic>> dadosQuestionario =
-          await objQuestionarioHttp.httplistarQuestionario(
+      final List<Map<String, dynamic>> dadosQuestionario = await objQuestionarioHttp.httplistarQuestionario(
               origem_usuario,
               doc_action,
               registro_colaborador,

@@ -89,7 +89,7 @@ class SpsDaoQuestionarioMidia {
 
   Future<int> updateTituloQuestionarioMidia({String titulo_arquivo = "", String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0, int item_anexo = 0}) async {
     final Database db = await getDatabase();
-    var _query = 'update sps_checklist_tb_resp_anexo set titulo_arquivo = "'+titulo_arquivo+'", sincronizado = "N" where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' and item_anexo = '+item_anexo.toString();
+    var _query = 'update sps_checklist_tb_resp_anexo set titulo_arquivo = "'+titulo_arquivo+'", sincronizado = "M" where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' and item_anexo = '+item_anexo.toString();
     //debugPrint("query atualizar titulo do arquivo=> "+_query);
     final int result = await db.rawUpdate(_query);
     return result;
