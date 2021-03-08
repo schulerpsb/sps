@@ -382,7 +382,7 @@ class spsSincronizacao {
                   }
                   await spsNotificacao.notificarProgresso(indexQuestionario, registrosMidia, indexMidia,'SPS - Atualização', 'Download de arquivos anexos', flip);
                 } else {
-                  await spsNotificacao.notificarErro(900 + indexQuestionario + indexMidia, 'SPS - Falha no download', 'Verifique arquivo na WEB - Cod-Prog:'+dadosDeAnexosServidor[indexMidia]["codigo_programacao"].toString()+' item: '+dadosDeAnexosServidor[indexMidia]["item_checklist"].toString(), flip);
+                  //await spsNotificacao.notificarErro(900 + indexQuestionario + indexMidia, 'SPS - Falha no download', 'Verifique arquivo na WEB - Cod-Prog:'+dadosDeAnexosServidor[indexMidia]["codigo_programacao"].toString()+' item: '+dadosDeAnexosServidor[indexMidia]["item_checklist"].toString(), flip);
                   print('ERRO ao processar download de Anexos de midia - Server to Local! ' +ArquivoParaDownload.toString());
                 }
               }else{

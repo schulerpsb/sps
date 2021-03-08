@@ -17,8 +17,6 @@ class sps_menu_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    spsSincronizacao.sincronizarQuestionarios();
-
     if (usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA") { //"INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS ")
       _origemUsuario = "INTERNO";
     }else{
