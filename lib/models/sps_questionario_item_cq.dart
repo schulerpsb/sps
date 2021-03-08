@@ -24,14 +24,25 @@ class SpsQuestionarioItem {
 
     //Sincronização de itens  de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();
-    await objspsSincronizacao.sincronizarQuestionariosItensServerToLocal(acao, sessao_checklist, codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, codigo_grupo, codigo_checklist, h_codigo_empresa, h_codigo_programacao);
+    await objspsSincronizacao.sincronizarQuestionariosItensServerToLocal(
+        acao,
+        sessao_checklist,
+        codigo_empresa,
+        codigo_programacao,
+        registro_colaborador,
+        identificacao_utilizador,
+        codigo_grupo,
+        codigo_checklist,
+        h_codigo_empresa,
+        h_codigo_programacao);
 
     //Ler dados do SQlite
     debugPrint("Ler dados do SQlite (Tabela: checklist_item)");
-    final SpsDaoQuestionarioItem objQuestionarioItemDao =  SpsDaoQuestionarioItem();
-    final List<Map<String, dynamic>> DadosSessao = await objQuestionarioItemDao
-        .listarQuestionarioItemLocal(h_codigo_empresa, h_codigo_programacao, h_acao, h_sessao_checklist);
+    final SpsDaoQuestionarioItem objQuestionarioItemDao =
+        SpsDaoQuestionarioItem();
+    final List<Map<String, dynamic>> DadosSessao =
+        await objQuestionarioItemDao.listarQuestionarioItemLocal(
+            h_codigo_empresa, h_codigo_programacao, h_acao, h_sessao_checklist);
     return DadosSessao;
   }
-
 }

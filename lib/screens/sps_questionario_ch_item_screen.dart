@@ -119,6 +119,8 @@ class _sps_questionario_ch_item_screen
   Widget build(BuildContext context) {
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
 
+    print ("adriano =>1 -> "+this.widget._acao);
+
     return WillPopScope(
       onWillPop: () {
         return new Future(() => false);

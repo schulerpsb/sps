@@ -137,8 +137,8 @@ class _sps_questionario_comentarios_screen
                             this.widget._status_aprovacao,
                             this.widget._filtro,
                             this.widget._filtroDescrProgramacao,
-                            this.widget._sessao_checklist,
                             "RECARREGAR",
+                            this.widget._sessao_checklist,
                             this.widget._indexCard)),
                   );
                 },
@@ -279,8 +279,8 @@ class _sps_questionario_comentarios_screen
             this.widget._status_aprovacao,
             this.widget._filtro,
             this.widget._filtroDescrProgramacao,
-            this.widget._sessao_checklist,
             "RECARREGAR",
+            this.widget._sessao_checklist,
             this.widget._indexCard),
       ),
     );
