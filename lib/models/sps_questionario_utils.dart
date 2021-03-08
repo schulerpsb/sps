@@ -101,7 +101,7 @@ class spsQuestionarioUtils {
         }
       }
     }
-    if (result[0]["comentario_escala"] != null) {
+    if (result[0]["comentario_escala"] != null && result[0]["resp_escala"] != null) {
       if (result[0]["resp_escala"] < result[0]["comentario_escala"]) {
         if (result[0]["descr_comentarios"].toString() == "") {
           _wstatusResposta = "PENDENTE";
