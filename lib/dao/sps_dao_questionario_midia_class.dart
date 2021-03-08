@@ -155,23 +155,13 @@ class SpsDaoQuestionarioMidia {
   }
 
 
-  Future<String> contarMidias(codigo_empresa, codigo_programacao, item_checklist) async {
+  Future<List<Map<String, dynamic>>> listarArquivosOutros(codigo_empresa, codigo_programacao, item_checklist) async {
     final Database db = await getDatabase();
-    final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
     var _query;
-    _query = 'select count(codigo_empresa) as qt from sps_checklist_tb_resp_anexo where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")';
-    final List<Map<String, dynamic>> resultImagens = await db.rawQuery(_query);
-    _query = 'select count(codigo_empresa) as qt from sps_checklist_tb_resp_anexo where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4")';
-    final List<Map<String, dynamic>> resultVideos = await db.rawQuery(_query);
-    _query = 'select count(codigo_empresa) as qt from sps_checklist_tb_resp_anexo where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF")';
+    final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+    _query = 'select * from sps_checklist_tb_resp_anexo where codigo_empresa = "'+codigo_empresa+'" and codigo_programacao = '+codigo_programacao.toString()+' and item_checklist = '+item_checklist.toString()+' and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF")';
     final List<Map<String, dynamic>> resultAnexos = await db.rawQuery(_query);
-    Map<String, dynamic> dadosMidias;
-      dadosMidias = {
-        'imagens': resultImagens[0]['qt'],
-        'videos': resultVideos[0]['qt'],
-        'anexos': resultAnexos[0]['qt'],
-      };
-    return resultImagens[0]['qt'].toString();
+    return resultAnexos;
   }
 
 }

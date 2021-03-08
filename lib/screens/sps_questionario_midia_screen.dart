@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sps/components/centered_message.dart';
+import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
@@ -42,6 +44,9 @@ class sps_questionario_midia_screen extends StatefulWidget {
   final String _origemUsuario;
   final String _filtro;
   final String _filtroReferenciaProjeto;
+  final String _qtImagens;
+  final String _qtVideos;
+  final String _qtOutros;
 
   sps_questionario_midia_screen(
       this._codigo_empresa,
@@ -63,6 +68,9 @@ class sps_questionario_midia_screen extends StatefulWidget {
       this._origemUsuario,
       this._filtro,
       this._filtroReferenciaProjeto,
+      this._qtImagens,
+      this._qtVideos,
+      this._qtOutros,
       {this.funCallback});
 
   @override
@@ -87,6 +95,9 @@ class sps_questionario_midia_screen extends StatefulWidget {
           this._origemUsuario,
           this._filtro,
           this._filtroReferenciaProjeto,
+          this._qtImagens,
+          this._qtVideos,
+          this._qtOutros,
           {this.funCallback}
       );
 }
@@ -119,6 +130,9 @@ class _sps_questionario_midia_screen
       _origemUsuario,
       _filtro,
       _filtroReferenciaProjeto,
+      _qtImagens,
+      _qtVideos,
+      _qtOutros,
       funCallback,
       );
 
@@ -307,7 +321,7 @@ class _sps_questionario_midia_screen
   @override
   void initState() {
     super.initState();
-    controller = new TabController(vsync: this, length: 4);
+    controller = new TabController(vsync: this, length: 3);
     controller.addListener(updateIndex);
   }
 
@@ -444,14 +458,7 @@ class _sps_questionario_midia_screen
     //limpar cache de imagem
     imageCache.clear();
     new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
-    String contImages = "";
-    String contVideos = "";
-    String contAnexos = "";
     SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
-//    objQuestionarioCqMidiaDao.contarMidias(this.widget._codigo_empresa,this.widget._codigo_programacao,this.widget._item_checklist).then((contImagens){
-//      print(contImagens.toString());
-//    });
-//    objQuestionarioCqMidiaDao.contarMidias(this.widget._codigo_empresa,this.widget._codigo_programacao,this.widget._item_checklist).then((value) => null)
     return DefaultTabController(
         length: 3,
         child: new Scaffold(
@@ -478,20 +485,27 @@ class _sps_questionario_midia_screen
             bottom: TabBar(controller: controller, tabs: [
               Tab(
                 icon: Badge(
-                  badgeContent: Text('', style: TextStyle(color: Colors.white, fontSize: 10)),
+                  badgeContent: Text(this.widget._qtImagens == '0' ? '' : this.widget._qtImagens, style: TextStyle(color: Colors.white, fontSize: 10)),
                   showBadge: true,
                   badgeColor: Color(0xFF004077),
                   child: Icon(Icons.collections ),
                 ),
               ),
               Tab(
-                icon: Icon(Icons.video_library),
+                icon: Badge(
+                  badgeContent: Text(this.widget._qtVideos == '0' ? '' : this.widget._qtVideos, style: TextStyle(color: Colors.white, fontSize: 10)),
+                  showBadge: true,
+                  badgeColor: Color(0xFF004077),
+                  child: Icon(Icons.video_library),
+                ),
               ),
               Tab(
-                icon: Icon(Icons.audiotrack),
-              ),
-              Tab(
-                icon: Icon(Icons.library_books),
+                icon: Badge(
+                  badgeContent: Text(this.widget._qtOutros == '0' ? '' : this.widget._qtOutros, style: TextStyle(color: Colors.white, fontSize: 10)),
+                  showBadge: true,
+                  badgeColor: Color(0xFF004077),
+                  child: Icon(Icons.library_books),
+                ),
               ),
             ]),
           ),
@@ -538,13 +552,75 @@ class _sps_questionario_midia_screen
               new Container(
                 color: Color(0xFFe9eef7),
                 child: Center(
-                  child: Text(
-                    'Nenhum áudio disponível.',
-                    style: TextStyle(color: Colors.black),
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                    future: objQuestionarioCqMidiaDao.listarArquivosOutros(this.widget._codigo_empresa,this.widget._codigo_programacao,this.widget._item_checklist),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                          break;
+                        case ConnectionState.waiting:
+                          return Progress();
+                          break;
+                        case ConnectionState.active:
+                          break;
+                        case ConnectionState.done:
+                          if (snapshot.hasError) {
+                            var werror;
+                            werror = snapshot.error.toString();
+                            return CenteredMessage(
+                              'Falha de conexão! \n\n(' + werror + ')',
+                              icon: Icons.error,
+                            );
+                          }
+                          if (erroConexao.msg_erro_conexao.toString() == "") {
+                            if (snapshot.data.isNotEmpty) {
+                              return Column(children: <Widget>[
+                                Expanded(
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.only(top: 5),
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                        color: Colors.white,
+                                        child: Column(
+                                          children: <Widget>[
+                                            //Tratar descrição da pergunta
+                                            ListTile(
+                                              trailing: Icon(Icons.description, color: Colors.green, size: 40),
+                                              title: Text(snapshot.data[index]["titulo_arquivo"] != "" ? '${snapshot.data[index]["titulo_arquivo"]}' +
+                                                  " - " +
+                                                  '${snapshot.data[index]["nome_arquivo"].toString().split('.').last}' : snapshot.data[index]["nome_arquivo"],
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.normal,
+                                                      fontSize: 15)),
+                                              subtitle: Text(""),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ]);
+                            } else {
+                              return CenteredMessage(
+                                'NÃO FOI ENCONTRADO NENHUM REGISTRO!',
+                                icon: Icons.warning,
+                              );
+                            }
+                          } else {
+                            return CenteredMessage(
+                              erroConexao.msg_erro_conexao.toString(),
+                              icon: Icons.warning,
+                            );
+                          }
+                          break;
+                      }
+                      return Text('Unkown error.');
+                    },
                   ),
                 ),
               ),
-              new Container(),
             ]),
             isLoading: _isLoading,
             // demo of some additional parameters
