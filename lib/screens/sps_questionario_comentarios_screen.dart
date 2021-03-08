@@ -30,6 +30,7 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
   final String _filtro;
   final String _filtroDescrProgramacao;
   final String _sessao_checklist;
+  final int _indexCard;
 
   sps_questionario_comentarios_screen(
       this._codigo_empresa,
@@ -46,7 +47,8 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
       this._origemUsuario,
       this._filtro,
       this._filtroDescrProgramacao,
-      this._sessao_checklist);
+      this._sessao_checklist,
+      this._indexCard);
 
   @override
   _sps_questionario_comentarios_screen createState() =>
@@ -65,7 +67,8 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
           this._origemUsuario,
           this._filtro,
           this._filtroDescrProgramacao,
-          this._sessao_checklist);
+          this._sessao_checklist,
+          this._indexCard);
 }
 
 class _sps_questionario_comentarios_screen
@@ -90,26 +93,8 @@ class _sps_questionario_comentarios_screen
       _origemUsuario,
       _filtro,
       _filtroDescrProgramacao,
-      _sessao_checklist);
-
-  //Executar Scrolling automático
-  ScrollController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = ScrollController();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        _controller
-            .animateTo(_controller.position.maxScrollExtent,
-                duration: Duration(seconds: 1), curve: Curves.ease)
-            .then(
-              (value) async {},
-            );
-      },
-    );
-  }
+      _sessao_checklist,
+      _indexCard);
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +138,8 @@ class _sps_questionario_comentarios_screen
                             this.widget._filtro,
                             this.widget._filtroDescrProgramacao,
                             this.widget._sessao_checklist,
-                            "RECARREGAR")),
+                            "RECARREGAR",
+                            this.widget._indexCard)),
                   );
                 },
               );
@@ -294,7 +280,8 @@ class _sps_questionario_comentarios_screen
             this.widget._filtro,
             this.widget._filtroDescrProgramacao,
             this.widget._sessao_checklist,
-            "RECARREGAR"),
+            "RECARREGAR",
+            this.widget._indexCard),
       ),
     );
   }

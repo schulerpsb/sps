@@ -181,6 +181,7 @@ class _sps_questionario_ch_lista_screen
                                                     ._filtroDescrProgramacao,
                                                 "PROXIMO",
                                                 "",
+                                                0,
                                               )),
                                     )
                                   : _popup_vencido(context);

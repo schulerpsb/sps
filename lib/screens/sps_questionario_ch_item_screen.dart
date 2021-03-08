@@ -32,6 +32,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
   final String _status_aprovacao;
   final String _filtro;
   final String _filtroDescrProgramacao;
+  int _indexCard;
   String _acao;
   String _sessao_checklist;
 
@@ -54,6 +55,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
       this._filtroDescrProgramacao,
       this._acao,
       this._sessao_checklist,
+      this._indexCard,
       {this.usuarioAtual = null});
 
   @override
@@ -72,6 +74,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
         this._filtroDescrProgramacao,
         this._acao,
         this._sessao_checklist,
+        this._indexCard,
       );
 }
 
@@ -95,7 +98,8 @@ class _sps_questionario_ch_item_screen
       _filtro,
       _filtroReferenciaProjeto,
       _acao,
-      _sessao_checklist);
+      _sessao_checklist,
+      _indexCard);
 
   var _singleValue = List();
 
@@ -108,7 +112,7 @@ class _sps_questionario_ch_item_screen
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
         axis: scrollDirection);
-    controller.scrollToIndex(3, preferPosition: AutoScrollPosition.begin);
+    controller.scrollToIndex(this.widget._indexCard, preferPosition: AutoScrollPosition.begin);
   }
 
   @override
@@ -359,7 +363,6 @@ class _sps_questionario_ch_item_screen
                                     ),
                                   );
                                 }
-                                //_scrollToIndex;
                               },
                             ),
                           ),
@@ -385,9 +388,6 @@ class _sps_questionario_ch_item_screen
         ),
       ),
     );
-  }
-  Future _scrollToIndex() async {
-    await controller.scrollToIndex(3, preferPosition: AutoScrollPosition.begin);
   }
 
   ListTile descricao_pergunta(
@@ -1005,11 +1005,10 @@ class _sps_questionario_ch_item_screen
       _wcomentarios,
       _wdescrComentarios,
       _wnaoSeAplica,
-      _windex) async {
+      _windexCard) async {
     var _wsincronizado = "";
 
     //Tratar "não se aplica"
-    print("adriano =>2 " + _wnaoSeAplica);
     if (_wnaoSeAplica == "SIM") {
       _wrespTexto = "";
       _wrespNumero = null;
@@ -1101,7 +1100,8 @@ class _sps_questionario_ch_item_screen
             this.widget._filtro,
             this.widget._filtroDescrProgramacao,
             this.widget._acao,
-            this.widget._sessao_checklist),
+            this.widget._sessao_checklist,
+            _windexCard),
       ),
     );
   }
@@ -1164,6 +1164,7 @@ class _sps_questionario_ch_item_screen
                               this.widget._filtroDescrProgramacao,
                               this.widget._acao,
                               this.widget._sessao_checklist,
+                              this.widget._indexCard,
                             ),
                           ),
                         );
@@ -1214,6 +1215,7 @@ class _sps_questionario_ch_item_screen
                 this.widget._filtro,
                 this.widget._filtroDescrProgramacao,
                 this.widget._sessao_checklist,
+                this.widget._indexCard,
               ),
             ),
           );

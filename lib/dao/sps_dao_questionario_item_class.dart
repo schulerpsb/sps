@@ -263,7 +263,6 @@ class SpsDaoQuestionarioItem {
     //debugPrint("query => " + _query);
     db.rawUpdate(_query);
     //debugPrint("SQLITE - Alterado resposta (checklist_item)");
-    print("adriano =>11 " + _hrespNaoSeAplica);
     return 1;
   }
 

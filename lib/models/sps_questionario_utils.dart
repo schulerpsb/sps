@@ -19,7 +19,6 @@ class spsQuestionarioUtils {
       String wregistroColaborador,
       String widentificacaoUtilizador,
       int witemChecklist) async {
-    debugPrint("Atualizar status resposta");
 
     var _wsincronizado = "";
 
@@ -35,6 +34,15 @@ class spsQuestionarioUtils {
 
     //Analisar status da resposta
     String _wstatusResposta;
+
+    //Analisar resposta CQ
+    if (result[0]["tipo_resposta"] == "RESPOSTA CQ") {
+      if (result[0]["resp_cq"] == "") {
+        _wstatusResposta = "PENDENTE";
+      } else {
+        _wstatusResposta = "PREENCHIDA";
+      }
+    }
 
     //Analisar resposta fixa
     if (result[0]["tipo_resposta"] == "RESPOSTA FIXA") {
