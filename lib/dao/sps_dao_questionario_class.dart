@@ -63,42 +63,55 @@ class SpsDaoQuestionario {
       if (dadosQuestionario[windex]['descr_comentarios'] == null) {
         dadosQuestionario[windex]['descr_comentarios'] = "";
       }
-      var _query = 'insert into checklist_lista values ("' +
-          dadosQuestionario[windex]['codigo_empresa'].toString() +
-          '",' +
-          dadosQuestionario[windex]['codigo_programacao'].toString() +
-          ',"' +
-          dadosQuestionario[windex]['registro_colaborador'].toString() +
-          '","' +
-          dadosQuestionario[windex]['identificacao_utilizador'].toString() +
-          '","' +
-          dadosQuestionario[windex]['codigo_grupo'].toString() +
-          '",' +
-          dadosQuestionario[windex]['codigo_checklist'].toString() +
-          ',"' +
-          dadosQuestionario[windex]['descr_programacao'].toString() +
-          '","' +
-          dadosQuestionario[windex]['dtfim_aplicacao'].toString() +
-          '","' +
-          dadosQuestionario[windex]['percentual_evolucao'].toString() +
-          '","' +
-          dadosQuestionario[windex]['status'].toString() +
-          '","' +
-          dadosQuestionario[windex]['referencia_parceiro'].toString() +
-          '","' +
-          dadosQuestionario[windex]['codigo_pedido'].toString() +
-          '",' +
-          dadosQuestionario[windex]['item_pedido'].toString() +
-          ',"' +
-          dadosQuestionario[windex]['codigo_projeto'].toString() +
-          '","' +
-          dadosQuestionario[windex]['descr_projeto'].toString() +
-          '","' +
-          dadosQuestionario[windex]['codigo_material'].toString() +
-          '","' +
-          dadosQuestionario[windex]['descr_comentarios'].toString() +
-          '",null)';
-      db.rawInsert(_query);
+      var _query2 =
+          'SELECT * FROM checklist_lista where codigo_empresa = "' +
+              dadosQuestionario[windex]['codigo_empresa'] +
+              '" and codigo_programacao = ' +
+              dadosQuestionario[windex]['codigo_programacao'].toString() +
+              ' and registro_colaborador = "' +
+              dadosQuestionario[windex]['registro_colaborador'] +
+              '" and identificacao_utilizador = "' +
+              dadosQuestionario[windex]['identificacao_utilizador'] +
+              '"';
+      List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
+      if (result2.length <= 0) {
+        var _query = 'insert into checklist_lista values ("' +
+            dadosQuestionario[windex]['codigo_empresa'].toString() +
+            '",' +
+            dadosQuestionario[windex]['codigo_programacao'].toString() +
+            ',"' +
+            dadosQuestionario[windex]['registro_colaborador'].toString() +
+            '","' +
+            dadosQuestionario[windex]['identificacao_utilizador'].toString() +
+            '","' +
+            dadosQuestionario[windex]['codigo_grupo'].toString() +
+            '",' +
+            dadosQuestionario[windex]['codigo_checklist'].toString() +
+            ',"' +
+            dadosQuestionario[windex]['descr_programacao'].toString() +
+            '","' +
+            dadosQuestionario[windex]['dtfim_aplicacao'].toString() +
+            '","' +
+            dadosQuestionario[windex]['percentual_evolucao'].toString() +
+            '","' +
+            dadosQuestionario[windex]['status'].toString() +
+            '","' +
+            dadosQuestionario[windex]['referencia_parceiro'].toString() +
+            '","' +
+            dadosQuestionario[windex]['codigo_pedido'].toString() +
+            '",' +
+            dadosQuestionario[windex]['item_pedido'].toString() +
+            ',"' +
+            dadosQuestionario[windex]['codigo_projeto'].toString() +
+            '","' +
+            dadosQuestionario[windex]['descr_projeto'].toString() +
+            '","' +
+            dadosQuestionario[windex]['codigo_material'].toString() +
+            '","' +
+            dadosQuestionario[windex]['descr_comentarios'].toString() +
+            '",null)';
+        db.rawInsert(_query);
+      }
       windex = windex + 1;
     }
     return 1;

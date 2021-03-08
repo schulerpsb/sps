@@ -112,7 +112,7 @@ class _sps_questionario_ch_item_screen
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
         axis: scrollDirection);
-    controller.scrollToIndex(this.widget._indexCard, preferPosition: AutoScrollPosition.begin);
+    controller.scrollToIndex(this.widget._indexCard, preferPosition: AutoScrollPosition.begin, duration: Duration(seconds: 1));
   }
 
   @override

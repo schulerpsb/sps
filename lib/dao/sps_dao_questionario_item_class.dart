@@ -94,84 +94,98 @@ class SpsDaoQuestionarioItem {
       if (dadosQuestionarioItem[windex]['resp_escala'].toString() == "") {
         dadosQuestionarioItem[windex]['resp_escala'] = null;
       }
-      var _query = 'insert into checklist_item values ("' +
+
+      var _query2 = 'SELECT * FROM checklist_item where codigo_empresa = "' +
           dadosQuestionarioItem[windex]['codigo_empresa'] +
-          '",' +
+          '" and codigo_programacao = ' +
           dadosQuestionarioItem[windex]['codigo_programacao'].toString() +
-          ',"' +
+          ' and registro_colaborador = "' +
           dadosQuestionarioItem[windex]['registro_colaborador'] +
-          '","' +
+          '" and identificacao_utilizador = "' +
           dadosQuestionarioItem[windex]['identificacao_utilizador'] +
-          '",' +
-          dadosQuestionarioItem[windex]['item_checklist'].toString() +
-          ',"' +
-          dadosQuestionarioItem[windex]['sessao_checklist'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['codigo_grupo'].toString() +
-          '",' +
-          dadosQuestionarioItem[windex]['codigo_checklist'].toString() +
-          ',' +
-          dadosQuestionarioItem[windex]['seq_pergunta'].toString() +
-          ',"' +
-          dadosQuestionarioItem[windex]['descr_pergunta'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['codigo_pergunta_dependente']
-              .toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['resposta_pergunta_dependente']
-              .toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['tipo_resposta'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['comentario_resposta_nao'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['descr_escala'].toString() +
-          '",' +
-          dadosQuestionarioItem[windex]['inicio_escala'].toString() +
-          ',' +
-          dadosQuestionarioItem[windex]['fim_escala'].toString() +
-          ',' +
-          dadosQuestionarioItem[windex]['intervalo_escala'].toString() +
-          ',' +
-          dadosQuestionarioItem[windex]['comentario_escala'].toString() +
-          ',"' +
-          dadosQuestionarioItem[windex]['midia'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['opcao_nao_se_aplica'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['comentarios'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['tipo_resposta_fixa'].toString() +
-          '",' +
-          dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() +
-          ',"' +
-          dadosQuestionarioItem[windex]['resp_simnao'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['resp_texto'].toString() +
-          '",' +
-          dadosQuestionarioItem[windex]['resp_numero'].toString() +
-          ',"' +
-          dadosQuestionarioItem[windex]['resp_data'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['resp_hora'].toString() +
-          '",' +
-          dadosQuestionarioItem[windex]['resp_escala'].toString() +
-          ',"' +
-          dadosQuestionarioItem[windex]['resp_cq'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['resp_nao_se_aplica'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['descr_comentarios'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['status_resposta'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['status_aprovacao'].toString() +
-          '","' +
-          dadosQuestionarioItem[windex]['sugestao_resposta'].toString() +
-          '","")';
-      //String _new_query = _query.replaceAll(',,',',0,');
-      //debugPrint("query => " + _query);
-      db.rawInsert(_query);
+          '" and item_checklist = ' +
+          dadosQuestionarioItem[windex]['item_checklist'].toString();
+      List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
+      if (result2.length <= 0) {
+        var _query = 'insert into checklist_item values ("' +
+            dadosQuestionarioItem[windex]['codigo_empresa'] +
+            '",' +
+            dadosQuestionarioItem[windex]['codigo_programacao'].toString() +
+            ',"' +
+            dadosQuestionarioItem[windex]['registro_colaborador'] +
+            '","' +
+            dadosQuestionarioItem[windex]['identificacao_utilizador'] +
+            '",' +
+            dadosQuestionarioItem[windex]['item_checklist'].toString() +
+            ',"' +
+            dadosQuestionarioItem[windex]['sessao_checklist'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['codigo_grupo'].toString() +
+            '",' +
+            dadosQuestionarioItem[windex]['codigo_checklist'].toString() +
+            ',' +
+            dadosQuestionarioItem[windex]['seq_pergunta'].toString() +
+            ',"' +
+            dadosQuestionarioItem[windex]['descr_pergunta'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['codigo_pergunta_dependente']
+                .toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['resposta_pergunta_dependente']
+                .toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['tipo_resposta'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['comentario_resposta_nao']
+                .toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['descr_escala'].toString() +
+            '",' +
+            dadosQuestionarioItem[windex]['inicio_escala'].toString() +
+            ',' +
+            dadosQuestionarioItem[windex]['fim_escala'].toString() +
+            ',' +
+            dadosQuestionarioItem[windex]['intervalo_escala'].toString() +
+            ',' +
+            dadosQuestionarioItem[windex]['comentario_escala'].toString() +
+            ',"' +
+            dadosQuestionarioItem[windex]['midia'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['opcao_nao_se_aplica'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['comentarios'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['tipo_resposta_fixa'].toString() +
+            '",' +
+            dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() +
+            ',"' +
+            dadosQuestionarioItem[windex]['resp_simnao'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['resp_texto'].toString() +
+            '",' +
+            dadosQuestionarioItem[windex]['resp_numero'].toString() +
+            ',"' +
+            dadosQuestionarioItem[windex]['resp_data'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['resp_hora'].toString() +
+            '",' +
+            dadosQuestionarioItem[windex]['resp_escala'].toString() +
+            ',"' +
+            dadosQuestionarioItem[windex]['resp_cq'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['resp_nao_se_aplica'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['descr_comentarios'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['status_resposta'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['status_aprovacao'].toString() +
+            '","' +
+            dadosQuestionarioItem[windex]['sugestao_resposta'].toString() +
+            '","")';
+        debugPrint("query => " + _query);
+        db.rawInsert(_query);
+      }
       windex = windex + 1;
     }
     return 1;
@@ -228,7 +242,6 @@ class SpsDaoQuestionarioItem {
     }
 
     //Tratar "não se aplica"
-    print ("adriano =>"+_hrespNaoSeAplica);
     if (_hrespNaoSeAplica == "SIM") {
       _hsincronizado = "D";
     }
@@ -407,13 +420,13 @@ class SpsDaoQuestionarioItem {
         SpsDaoQuestionarioMidia();
     await objQuestionarioCqMidiaDao.create_table();
     var _query = 'SELECT *, '
-        '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist > item.sessao_checklist) as sessao_posterior, '
-        '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist < item.sessao_checklist) as sessao_anterior,  '
-        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos,  '
-        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
-        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4")) as videos, '
-        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF")) as outros '
-        'FROM checklist_item item where item.codigo_empresa = "' +
+            '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist > item.sessao_checklist) as sessao_posterior, '
+            '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist < item.sessao_checklist) as sessao_anterior,  '
+            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos,  '
+            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
+            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4")) as videos, '
+            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF")) as outros '
+            'FROM checklist_item item where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and item.codigo_programacao = ' +
         _hcodigoProgramacao.toString();
@@ -464,6 +477,4 @@ class SpsDaoQuestionarioItem {
     db.rawUpdate(_query);
     return 1;
   }
-
-
 }
