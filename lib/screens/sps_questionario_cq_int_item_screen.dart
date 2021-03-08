@@ -426,6 +426,9 @@ class _sps_questionario_cq_int_item_screen
                                                     this.widget._origemUsuario,
                                                     this.widget._filtro,
                                                     this.widget._filtroReferenciaProjeto,
+                                                    snapshot.data[index]["imagens"].toString(),
+                                                    snapshot.data[index]["videos"].toString(),
+                                                    snapshot.data[index]["outros"].toString(),
                                                     funCallback: () {
                                                       print('voltei');
                                                       setState(() {

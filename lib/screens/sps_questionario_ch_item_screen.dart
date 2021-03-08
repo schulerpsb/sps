@@ -1143,6 +1143,9 @@ class _sps_questionario_ch_item_screen
                       null,
                       this.widget._filtro,
                       this.widget._filtroDescrProgramacao,
+                      snapshot.data[index]["imagens"].toString(),
+                      snapshot.data[index]["videos"].toString(),
+                      snapshot.data[index]["outros"].toString(),
                       funCallback: () {
                         //Recarregar tela
                         Navigator.pop;

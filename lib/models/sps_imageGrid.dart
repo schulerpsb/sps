@@ -203,7 +203,7 @@ class ImageGrid extends StatelessWidget {
                     itemCount: _listaArquivos.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        childAspectRatio: 3.0 / (tipo == 'image' ? 4.6 : 4.7)),
+                        childAspectRatio: 3.0 / (tipo == 'image' ? 5.0 : 5.1)),
                     itemBuilder: (context, index) {
                       indicemedia = index;
                       File file = new File(_listaArquivos[index]['caminho']);
