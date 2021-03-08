@@ -19,6 +19,7 @@ import 'package:sps/models/sps_questionario_midia.dart';
 import 'package:flutter/painting.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:sps/http/sps_http_questionario_midia_class.dart';
+import 'package:badges/badges.dart';
 
 class sps_questionario_midia_screen extends StatefulWidget {
   final Function() funCallback;
@@ -442,9 +443,14 @@ class _sps_questionario_midia_screen
   Widget build(BuildContext context) {
     //limpar cache de imagem
     imageCache.clear();
-    new Directory(
-            '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs')
-        .create();
+    new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
+//    String contImages = "";
+//    String contVideos = "";
+//    String contAnexos = "";
+//    SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+//    objQuestionarioCqMidiaDao.contarMidias(this.widget._codigo_empresa,this.widget._codigo_programacao,this.widget._item_checklist).then((contImagens){
+//      print(contImagens.toString());
+//    });
     return DefaultTabController(
         length: 3,
         child: new Scaffold(
@@ -470,7 +476,7 @@ class _sps_questionario_midia_screen
               ),
             bottom: TabBar(controller: controller, tabs: [
               Tab(
-                icon: Icon(Icons.photo),
+                icon: Icon(Icons.collections )
               ),
               Tab(
                 icon: Icon(Icons.video_library),
@@ -541,7 +547,8 @@ class _sps_questionario_midia_screen
             color: Colors.white,
           ),
           floatingActionButton: _bottomButtons(controller.index),
-        ));
+        )
+    );
   }
 }
 //FIM - Widget Build da classe  _sps_questionario_midia_screen
