@@ -444,13 +444,14 @@ class _sps_questionario_midia_screen
     //limpar cache de imagem
     imageCache.clear();
     new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
-//    String contImages = "";
-//    String contVideos = "";
-//    String contAnexos = "";
-//    SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+    String contImages = "";
+    String contVideos = "";
+    String contAnexos = "";
+    SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
 //    objQuestionarioCqMidiaDao.contarMidias(this.widget._codigo_empresa,this.widget._codigo_programacao,this.widget._item_checklist).then((contImagens){
 //      print(contImagens.toString());
 //    });
+//    objQuestionarioCqMidiaDao.contarMidias(this.widget._codigo_empresa,this.widget._codigo_programacao,this.widget._item_checklist).then((value) => null)
     return DefaultTabController(
         length: 3,
         child: new Scaffold(
@@ -476,7 +477,12 @@ class _sps_questionario_midia_screen
               ),
             bottom: TabBar(controller: controller, tabs: [
               Tab(
-                icon: Icon(Icons.collections )
+                icon: Badge(
+                  badgeContent: Text('', style: TextStyle(color: Colors.white, fontSize: 10)),
+                  showBadge: true,
+                  badgeColor: Color(0xFF004077),
+                  child: Icon(Icons.collections ),
+                ),
               ),
               Tab(
                 icon: Icon(Icons.video_library),

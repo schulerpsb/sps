@@ -155,7 +155,7 @@ class SpsDaoQuestionarioMidia {
   }
 
 
-  Future<Map<String, dynamic>> contarMidias(codigo_empresa, codigo_programacao, item_checklist) async {
+  Future<String> contarMidias(codigo_empresa, codigo_programacao, item_checklist) async {
     final Database db = await getDatabase();
     final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
     var _query;
@@ -171,7 +171,7 @@ class SpsDaoQuestionarioMidia {
         'videos': resultVideos[0]['qt'],
         'anexos': resultAnexos[0]['qt'],
       };
-    return dadosMidias;
+    return resultImagens[0]['qt'].toString();
   }
 
 }
