@@ -30,7 +30,7 @@ class spsUpDown {
     }
   }
 
-  Future<bool> downloadQuestionarioMidia(String ArquivoParaDownload, String destinoLocal) async {
+  Future<String> downloadQuestionarioMidia(String ArquivoParaDownload, String destinoLocal) async {
     try {
       Response response;
       Dio dio = new Dio();
@@ -41,12 +41,11 @@ class spsUpDown {
         return client;
       };
       response = await dio.download(ArquivoParaDownload, destinoLocal);
-      print(response);
-      return true;
+      //print(response);
+      return '1';
     } catch (e) {
-      print('Erro');
-      print(e);
-      return false;
+      //print(e.response.statusCode.toString());
+      return e.response.statusCode.toString();
     }
 
   }

@@ -21,12 +21,12 @@ class SpsQuestionarioMidia {
   Future<int> deletarQuestionarioMidia({String arquivo = "", String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0, int item_anexo = 0}) async {
     final spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
     final SpsDaoQuestionarioMidia objQuestionarioMidiaDao = SpsDaoQuestionarioMidia();
-    print('Arquivo a ser deletado==>'+arquivo);
     final delete = await objQuestionarioMidiaDao
         .deletarQuestionarioMidia(codigo_empresa: codigo_empresa,codigo_programacao: codigo_programacao,item_checklist: item_checklist, item_anexo: item_anexo);
     if (delete == 1) {
-      objspsMidiaUtils.deleteFile(arquivo);
-      print('Arquivo Apagado com sucesso!');
+      if(arquivo != "") {
+        objspsMidiaUtils.deleteFile(arquivo);
+      }
       return 1;
     } else {
       return 0;

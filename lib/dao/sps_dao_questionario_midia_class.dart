@@ -58,7 +58,7 @@ class SpsDaoQuestionarioMidia {
               dadosQuestionario[windex]['item_checklist'].toString() +
               " and item_anexo = " +
               dadosQuestionario[windex]['item_anexo'].toString();
-      print ("adriano =>"+_query2.toString());
+      //print ("adriano =>"+_query2.toString());
       List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
       if (result2.length <= 0) {
         db.insert('sps_checklist_tb_resp_anexo', dadosQuestionario[windex]);
