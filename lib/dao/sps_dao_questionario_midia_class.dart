@@ -47,13 +47,13 @@ class SpsDaoQuestionarioMidia {
     while (windex < wregistros) {
       var _query2 =
           'SELECT * FROM sps_checklist_tb_resp_anexo where codigo_empresa = "' +
-              dadosQuestionario[windex]['codigo_empresa'] +
+              dadosQuestionario[windex]['codigo_empresa'].toString() +
               '" and codigo_programacao = ' +
               dadosQuestionario[windex]['codigo_programacao'].toString() +
               ' and registro_colaborador = "' +
-              dadosQuestionario[windex]['registro_colaborador'] +
+              dadosQuestionario[windex]['registro_colaborador'].toString() +
               '" and identificacao_utilizador = "' +
-              dadosQuestionario[windex]['identificacao_utilizador'] +
+              dadosQuestionario[windex]['identificacao_utilizador'].toString() +
               '" and item_checklist = ' +
               dadosQuestionario[windex]['item_checklist'].toString() +
               " and item_anexo = " +
