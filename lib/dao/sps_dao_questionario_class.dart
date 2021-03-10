@@ -21,6 +21,7 @@ class SpsDaoQuestionario {
       'descr_projeto TEXT, '
       'codigo_material TEXT, '
       'descr_comentarios TEXT, '
+      'doc_action TEXT, '
       'sincronizado TEXT, '
       'PRIMARY KEY (codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador))';
 
@@ -45,7 +46,7 @@ class SpsDaoQuestionario {
     //debugPrint('Tabela (checklist_lista) criada com sucesso ou já existente!');
   }
 
-  Future<int> save(List<Map<String, dynamic>> dadosQuestionario) async {
+  Future<int> save(List<Map<String, dynamic>> dadosQuestionario,doc_action) async {
     final Database db = await getDatabase();
     await Future.forEach(dadosQuestionario, (questionario) async {
       if (questionario['registro_colaborador'] == null || questionario['registro_colaborador'] == "") {
@@ -124,6 +125,8 @@ class SpsDaoQuestionario {
             questionario['codigo_material'] +
             '","' +
             questionario['descr_comentarios'] +
+            '","' +
+            doc_action +
             '",null)';
 //        debugPrint("query => " + _query);
         await db.rawInsert(_query);
@@ -157,13 +160,13 @@ class SpsDaoQuestionario {
     return result;
   }
 
-  Future<int> emptyTable() async {
+  Future<int> emptyTable(doc_action) async {
     final Database db = await getDatabase();
-    return db.rawDelete('delete from checklist_lista where sincronizado is null or sincronizado = "null" or sincronizado = ""');
+    return db.rawDelete('delete from checklist_lista where (sincronizado is null or sincronizado = "null" or sincronizado = "") and doc_action = "'+doc_action+'"');
   }
 
   Future<List<Map<String, dynamic>>> listarQuestionarioGeral(_filtro,
-      _filtroReferenciaProjeto, _filtroDescrProgramacao, _origemUsuario) async {
+      _filtroReferenciaProjeto, _filtroDescrProgramacao, _origemUsuario, String doc_action) async {
     final Database db = await getDatabase();
     var _query = 'SELECT * FROM checklist_lista ';
     if (_filtro.toString() != "" && _filtro.toString() != "null") {
@@ -190,16 +193,17 @@ class SpsDaoQuestionario {
           _filtroDescrProgramacao.toString() +
           "%'";
     }
+    _query = _query + ' and doc_action = "'+doc_action+'"';
 
     //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
 
-  Future<List<Map<String, dynamic>>> contarQuestionarioGeral() async {
+  Future<List<Map<String, dynamic>>> contarQuestionarioGeral(String doc_action) async {
     final Database db = await getDatabase();
     var _query =
-        'SELECT status, count(*) as contador FROM checklist_lista group by status';
+        'SELECT status, count(*) as contador FROM checklist_lista where doc_action = "'+doc_action+'" group by status';
     //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;

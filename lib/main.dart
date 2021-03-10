@@ -97,7 +97,7 @@ void isolateSincronizacao(String arg) async  {
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Timer(Duration(seconds:5), (){
-    //final isolate = FlutterIsolate.spawn(isolateSincronizacao, "Início da sincronização em background - ISOLATE");
+    final isolate = FlutterIsolate.spawn(isolateSincronizacao, "Início da sincronização em background - ISOLATE");
   });
   //runApp(Sps(),
   //runApp(MaterialApp(home: sps_menu_screen()),

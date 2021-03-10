@@ -2,11 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
+import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
@@ -20,6 +19,7 @@ import 'package:sps/screens/sps_questionario_ch_lista_screen.dart';
 import 'package:badges/badges.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class sps_questionario_ch_item_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -115,6 +115,7 @@ class _sps_questionario_ch_item_screen
 
   @override
   Widget build(BuildContext context) {
+    print('Acao lista====>'+this.widget._acao.toString());
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
 
     return WillPopScope(
@@ -355,9 +356,7 @@ class _sps_questionario_ch_item_screen
                                                     context, snapshot, index),
                                               ],
                                             ),
-
                                             tratar_posicionar_lista(index),
-
                                           ],
                                         ),
                                       ),
@@ -980,9 +979,9 @@ class _sps_questionario_ch_item_screen
   }
 
   tratar_posicionar_lista(index) {
-    print ("adriano => "+this.widget._indexLista.toString());
+    //print ("adriano => "+this.widget._indexLista.toString());
     if (index == this.widget._indexLista) {
-      print ("adriano => entrou => "+this.widget._indexLista.toString());
+      //print ("adriano => entrou => "+this.widget._indexLista.toString());
       SchedulerBinding.instance.addPostFrameCallback(
             (_) {
           posicionaLista(this.widget._indexLista);
@@ -1021,41 +1020,41 @@ class _sps_questionario_ch_item_screen
       _wdescrComentarios = "";
     }
 
-    //Verificar se existe conexão
-    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-    final bool result = await ObjVerificarConexao.verificar_conexao();
-    if (result == true) {
-      //Gravar PostgreSQL (API REST)
-      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-          SpsHttpQuestionarioItem();
-      final retorno = await objQuestionarioItemHttp.QuestionarioSaveResposta(
-          _wcodigoEmpresa,
-          _wcodigoProgramacao,
-          _wregistroColaborador,
-          _widentificacaoUtilizador,
-          _witemChecklist,
-          _wrespTexto,
-          _wrespNumero,
-          _wrespData.toString(),
-          _wrespHora,
-          _wrespSimnao,
-          _wrespEscala.toString(),
-          _wdescrComentarios,
-          _wnaoSeAplica,
-          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
-              ? usuarioAtual.registro_usuario
-              : usuarioAtual.codigo_usuario);
-      if (retorno == true) {
-        _wsincronizado = "";
-        debugPrint("registro gravado PostgreSQL");
-      } else {
-        _wsincronizado = "N";
-        debugPrint("ERRO => registro não gravado PostgreSQL");
-      }
-    } else {
-      _wsincronizado = "N";
-    }
+//    //Verificar se existe conexão
+//    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+//    final bool result = await ObjVerificarConexao.verificar_conexao();
+//    if (result == true) {
+//      //Gravar PostgreSQL (API REST)
+//      final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
+//      final retorno = await objQuestionarioItemHttp.QuestionarioSaveResposta(
+//          _wcodigoEmpresa,
+//          _wcodigoProgramacao,
+//          _wregistroColaborador,
+//          _widentificacaoUtilizador,
+//          _witemChecklist,
+//          _wrespTexto,
+//          _wrespNumero,
+//          _wrespData.toString(),
+//          _wrespHora,
+//          _wrespSimnao,
+//          _wrespEscala.toString(),
+//          _wdescrComentarios,
+//          _wnaoSeAplica,
+//          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
+//              ? usuarioAtual.registro_usuario
+//              : usuarioAtual.codigo_usuario);
+//      if (retorno == true) {
+//        _wsincronizado = "";
+//        debugPrint("registro gravado PostgreSQL");
+//      } else {
+//        _wsincronizado = "N";
+//        debugPrint("ERRO => registro não gravado PostgreSQL");
+//      }
+//    } else {
+//      _wsincronizado = "N";
+//    }
 
+    _wsincronizado = "N";
     //Gravar SQlite
     final SpsDaoQuestionarioItem objQuestionarioItemDao =
         SpsDaoQuestionarioItem();
@@ -1144,12 +1143,18 @@ class _sps_questionario_ch_item_screen
                       snapshot.data[index]["status_aprovacao"],
                       null,
                       this.widget._filtro,
+                      index,
                       this.widget._filtroDescrProgramacao,
                       snapshot.data[index]["imagens"].toString(),
                       snapshot.data[index]["videos"].toString(),
                       snapshot.data[index]["outros"].toString(),
-                      funCallback: ({int index_posicao_retorno}) {
+                      "RECARREGAR",
+                      funCallback: ({int index_posicao_retorno, String acao}) {
+                        setState(() {
+                          this.widget._indexLista = index_posicao_retorno;
+                        });
                         //Recarregar tela
+                        Navigator.pop;
                         Navigator.pop;
                         Navigator.push(
                           context,
@@ -1167,7 +1172,7 @@ class _sps_questionario_ch_item_screen
                               this.widget._status_aprovacao,
                               this.widget._filtro,
                               this.widget._filtroDescrProgramacao,
-                              this.widget._acao,
+                              acao,
                               this.widget._sessao_checklist,
                               this.widget._indexLista,
                             ),

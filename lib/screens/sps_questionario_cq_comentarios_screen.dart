@@ -32,6 +32,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
   final String _origemUsuario;
   final String _tipoChecklist;
   final String _filtro;
+  final int _indexLista;
   final String _filtroReferenciaProjeto;
 
   sps_questionario_cq_comentarios_screen(
@@ -54,6 +55,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
       this._origemUsuario,
       this._tipoChecklist,
       this._filtro,
+      this._indexLista,
       this._filtroReferenciaProjeto);
 
   @override
@@ -78,6 +80,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
           this._origemUsuario,
           this._tipoChecklist,
           this._filtro,
+          this._indexLista,
           this._filtroReferenciaProjeto);
 }
 
@@ -109,6 +112,7 @@ class _sps_questionario_cq_comentarios_screen
       _origemUsuario,
       _tipoChecklist,
       _filtro,
+      _indexLista,
       _filtroReferenciaProjeto);
 
   //Executar Scrolling automático
@@ -176,6 +180,7 @@ class _sps_questionario_cq_comentarios_screen
                                     this.widget._status_aprovacao,
                                     this.widget._origemUsuario,
                                     this.widget._filtro,
+                                    this.widget._indexLista,
                                     this.widget._filtroReferenciaProjeto)
                                 : sps_questionario_cq_int_item_screen(
                                     this.widget._codigo_empresa,
@@ -194,6 +199,7 @@ class _sps_questionario_cq_comentarios_screen
                                     this.widget._status_aprovacao,
                                     this.widget._origemUsuario,
                                     this.widget._filtro,
+                                    this.widget._indexLista,
                                     this.widget._filtroReferenciaProjeto)),
                   );
                 },

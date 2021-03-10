@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
@@ -18,6 +19,7 @@ import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
 import 'package:badges/badges.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class sps_questionario_cq_ext_item_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -36,6 +38,7 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
   final String _status_aprovacao;
   final String _origemUsuario;
   final String _filtro;
+  int _indexLista;
   final String _filtroReferenciaProjeto;
 
   final sps_usuario usuarioAtual;
@@ -57,6 +60,7 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
       this._status_aprovacao,
       this._origemUsuario,
       this._filtro,
+      this._indexLista,
       this._filtroReferenciaProjeto,
       {this.usuarioAtual = null});
 
@@ -79,6 +83,7 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
         this._status_aprovacao,
         this._origemUsuario,
         this._filtro,
+        this._indexLista,
         this._filtroReferenciaProjeto,
       );
 }
@@ -90,6 +95,15 @@ class _sps_questionario_cq_ext_item_screen
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
+
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener =
+  ItemPositionsListener.create();
+
+  posicionaLista(indexLista) {
+    itemScrollController.scrollTo(
+        index: indexLista, duration: Duration(seconds: 1));
+  }
 
   _sps_questionario_cq_ext_item_screen(
       _codigo_empresa,
@@ -108,12 +122,14 @@ class _sps_questionario_cq_ext_item_screen
       _status_aprovacao,
       _origemUsuario,
       _filtro,
+      _indexLista,
       _filtroReferenciaProjeto);
 
   var _singleValue = List();
 
   @override
   Widget build(BuildContext context) {
+    print('Posicao lista==>'+this.widget._indexLista.toString());
     debugPrint("TELA => SPS_QUESTIONARIO_CQ_EXT_ITEM_SCREEN");
     return WillPopScope(
       onWillPop: () {
@@ -245,7 +261,9 @@ class _sps_questionario_cq_ext_item_screen
                       ),
                       //Construir lista de opções
                       Expanded(
-                        child: ListView.builder(
+                        child: ScrollablePositionedList.builder(
+                          itemScrollController: itemScrollController,
+                          itemPositionsListener: itemPositionsListener,
                           padding: EdgeInsets.only(top: 5),
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
@@ -430,13 +448,16 @@ class _sps_questionario_cq_ext_item_screen
                                                     ["status_aprovacao"],
                                                     this.widget._origemUsuario,
                                                     this.widget._filtro,
+                                                    index,
                                                     this.widget._filtroReferenciaProjeto,
                                                     snapshot.data[index]["imagens"].toString(),
                                                     snapshot.data[index]["videos"].toString(),
                                                     snapshot.data[index]["outros"].toString(),
-                                                    funCallback: ({int index_posicao_retorno}) {
-                                                        setState(() {
-                                                        });
+                                                    "",
+                                                    funCallback: ({int index_posicao_retorno, String acao}) {
+                                                      setState(() {
+                                                        this.widget._indexLista = index_posicao_retorno;
+                                                      });
                                                     },
                                                   )),
                                         );
@@ -482,6 +503,7 @@ class _sps_questionario_cq_ext_item_screen
                                               this.widget._origemUsuario,
                                               "CONTROLE DE QUALIDADE",
                                               this.widget._filtro,
+                                              index,
                                               this
                                                   .widget
                                                   ._filtroReferenciaProjeto,
@@ -490,8 +512,8 @@ class _sps_questionario_cq_ext_item_screen
                                         );
                                       },
                                     ),
-                                  ]),
-
+                                  ],
+                                  ),
                                   snapshot.data[index]["status_aprovacao"] ==
                                           "APROVADO"
                                       ? Text("\nAPROVADO PELO FOLLOW UP\n",
@@ -500,6 +522,7 @@ class _sps_questionario_cq_ext_item_screen
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold))
                                       : Text(""),
+                                  tratar_posicionar_lista(index),
                                 ],
                               ),
                             );
@@ -533,35 +556,35 @@ class _sps_questionario_cq_ext_item_screen
 
     var _wsincronizado = "";
 
-//    Verificar se existe conexão
-    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-    final bool result = await ObjVerificarConexao.verificar_conexao();
-    if (result == true) {
-      //Gravar PostgreSQL (API REST)
-      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-          SpsHttpQuestionarioItem();
-      final retorno = await objQuestionarioItemHttp.QuestionarioSaveOpcao(
-          _wcodigoEmpresa,
-          _wcodigoProgramacao,
-          _wregistroColaborador,
-          _widentificacaoUtilizador,
-          _witemChecklist,
-          _wrespCq,
-          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
-              ? usuarioAtual.registro_usuario
-              : usuarioAtual
-                  .codigo_usuario);
-      if (retorno == true) {
-        _wsincronizado = "";
-        debugPrint("registro gravado PostgreSQL");
-      } else {
-        _wsincronizado = "N";
-        debugPrint("ERRO => registro não gravado PostgreSQL");
-      }
-    } else {
-      _wsincronizado = "N";
-    }
-//    _wsincronizado = "N";
+////    Verificar se existe conexão
+//    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+//    final bool result = await ObjVerificarConexao.verificar_conexao();
+//    if (result == true) {
+//      //Gravar PostgreSQL (API REST)
+//      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
+//          SpsHttpQuestionarioItem();
+//      final retorno = await objQuestionarioItemHttp.QuestionarioSaveOpcao(
+//          _wcodigoEmpresa,
+//          _wcodigoProgramacao,
+//          _wregistroColaborador,
+//          _widentificacaoUtilizador,
+//          _witemChecklist,
+//          _wrespCq,
+//          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
+//              ? usuarioAtual.registro_usuario
+//              : usuarioAtual
+//                  .codigo_usuario);
+//      if (retorno == true) {
+//        _wsincronizado = "";
+//        debugPrint("registro gravado PostgreSQL");
+//      } else {
+//        _wsincronizado = "N";
+//        debugPrint("ERRO => registro não gravado PostgreSQL");
+//      }
+//    } else {
+//      _wsincronizado = "N";
+//    }
+    _wsincronizado = "N";
     //Gravar SQlite
     final SpsDaoQuestionarioItem objQuestionarioItemDao =
         SpsDaoQuestionarioItem();
@@ -575,6 +598,7 @@ class _sps_questionario_cq_ext_item_screen
         _wsincronizado);
     setState(() {});
     _singleValue[_windex] = _wrespCq;
+    this.widget._indexLista = _windex;
   }
 
   _popup_legenda(context) {
@@ -699,5 +723,18 @@ class _sps_questionario_cq_ext_item_screen
     this.widget._referencia_parceiro = _wnovaReferencia;
     setState(() {});
   }
+
+  tratar_posicionar_lista(index) {
+    //print ("adriano => "+this.widget._indexLista.toString());
+    if (index == this.widget._indexLista) {
+      SchedulerBinding.instance.addPostFrameCallback(
+            (_) {
+          posicionaLista(this.widget._indexLista);
+        },
+      );
+    }
+    return Text("");
+  }
+
 }
 

@@ -57,14 +57,14 @@ class SpsQuestionario {
 
     //Sincronização de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();
-    await objspsSincronizacao.sincronizarQuestionariosServerToLocal(origem_usuario, doc_action, registro_colaborador, identificacao_utilizador, tipo_frequencia, tipo_checklist, registro_aprovador);
+    await objspsSincronizacao.sincronizarQuestionariosServerToLocal(origem_usuario, doc_action, registro_colaborador, identificacao_utilizador, tipo_frequencia, tipo_checklist, registro_aprovador,);
 
     //Ler dados do SQlite (contar)
     if (_parametro == "CONTAR") {
       debugPrint("Ler dados do SQlite (Tabela: checklist_lista) contador");
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> DadosSessao =
-          await objQuestionarioDao.contarQuestionarioGeral();
+          await objQuestionarioDao.contarQuestionarioGeral(doc_action);
       return DadosSessao;
     }
 
@@ -74,7 +74,7 @@ class SpsQuestionario {
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> DadosSessao =
           await objQuestionarioDao.listarQuestionarioGeral(
-              _filtro, _filtroReferenciaProjeto, _filtroDescrProgramacao, _origemUsuario);
+              _filtro, _filtroReferenciaProjeto, _filtroDescrProgramacao, _origemUsuario, doc_action);
       return DadosSessao;
     }
   }

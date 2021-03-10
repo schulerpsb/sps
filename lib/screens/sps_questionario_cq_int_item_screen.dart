@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
@@ -6,12 +7,12 @@ import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
 import 'package:sps/models/sps_questionario_utils.dart';
-import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
 import 'package:badges/badges.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class sps_questionario_cq_int_item_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -30,6 +31,7 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
   final String _status_aprovacao;
   final String _origemUsuario;
   final String _filtro;
+  int _indexLista;
   final String _filtroReferenciaProjeto;
 
   sps_questionario_cq_int_item_screen(
@@ -49,6 +51,7 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
       this._status_aprovacao,
       this._origemUsuario,
       this._filtro,
+      this._indexLista,
       this._filtroReferenciaProjeto);
 
   @override
@@ -70,6 +73,7 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
           this._status_aprovacao,
           this._origemUsuario,
           this._filtro,
+          this._indexLista,
           this._filtroReferenciaProjeto);
 }
 
@@ -98,14 +102,24 @@ class _sps_questionario_cq_int_item_screen
       _status_aprovacao,
       _origemUsuario,
       _filtro,
+      _indexLista,
       _filtroReferenciaProjeto);
 
   var _singleValue = List();
   Color _resp_cq_cor;
-  int index_posicao = 0;
+
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener =
+  ItemPositionsListener.create();
+
+  posicionaLista(indexLista) {
+    itemScrollController.scrollTo(
+        index: indexLista, duration: Duration(seconds: 1));
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('Posicao lista==>'+this.widget._indexLista.toString());
     debugPrint("TELA => SPS_QUESTIONARIO_CQ_INT_ITEM_SCREEN");
     return WillPopScope(
       onWillPop: () {
@@ -231,7 +245,9 @@ class _sps_questionario_cq_int_item_screen
 
                       //Construir lista de opções
                       Expanded(
-                        child: ListView.builder(
+                        child: ScrollablePositionedList.builder(
+                          itemScrollController: itemScrollController,
+                          itemPositionsListener: itemPositionsListener,
                           padding: EdgeInsets.only(top: 5),
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
@@ -423,13 +439,15 @@ class _sps_questionario_cq_int_item_screen
                                                     ["status_aprovacao"],
                                                     this.widget._origemUsuario,
                                                     this.widget._filtro,
+                                                    index,
                                                     this.widget._filtroReferenciaProjeto,
                                                     snapshot.data[index]["imagens"].toString(),
                                                     snapshot.data[index]["videos"].toString(),
                                                     snapshot.data[index]["outros"].toString(),
-                                                    funCallback: ({int index_posicao_retorno}) {
+                                                    "",
+                                                    funCallback: ({int index_posicao_retorno, String acao}) {
                                                       setState(() {
-                                                        index_posicao = index_posicao_retorno;
+                                                        this.widget._indexLista = index_posicao_retorno;
                                                       });
                                                     },
                                                   )),
@@ -475,6 +493,7 @@ class _sps_questionario_cq_int_item_screen
                                               this.widget._origemUsuario,
                                               "CONTROLE DE QUALIDADE",
                                               this.widget._filtro,
+                                              index,
                                               this
                                                   .widget
                                                   ._filtroReferenciaProjeto,
@@ -483,7 +502,9 @@ class _sps_questionario_cq_int_item_screen
                                         );
                                       },
                                     ),
-                                  ])
+                                  ],
+                                  ),
+                                  tratar_posicionar_lista(index),
                                 ],
                               ),
                             );
@@ -514,7 +535,7 @@ class _sps_questionario_cq_int_item_screen
 
   _gravar_aprovacao(_wcodigoEmpresa, _wcodigoProgramacao, _witemChecklist,
       _wregistroAprovador, _wstatusAprovacao, _windex) async {
-
+    print('posicao      ==>'+ _windex.toString());
     var _wsincronizado = "";
 
     //Verificar se existe conexão
@@ -552,7 +573,21 @@ class _sps_questionario_cq_int_item_screen
         _wsincronizado);
     setState(() {});
     _singleValue[_windex] = _wstatusAprovacao;
+    this.widget._indexLista = _windex;
   }
+
+  tratar_posicionar_lista(index) {
+    //print ("adriano => "+this.widget._indexLista.toString());
+    if (index == this.widget._indexLista) {
+      SchedulerBinding.instance.addPostFrameCallback(
+            (_) {
+          posicionaLista(this.widget._indexLista);
+        },
+      );
+    }
+    return Text("");
+  }
+
 }
 
 
