@@ -108,11 +108,6 @@ class _sps_questionario_ch_item_screen
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
 
-  posicionaLista(indexLista) {
-    itemScrollController.scrollTo(
-        index: indexLista, duration: Duration(seconds: 1));
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
@@ -980,16 +975,15 @@ class _sps_questionario_ch_item_screen
   }
 
   tratar_posicionar_lista(index) {
-    print ("adriano => "+this.widget._indexLista.toString());
     if (index == this.widget._indexLista) {
-      print ("adriano => entrou => "+this.widget._indexLista.toString());
       SchedulerBinding.instance.addPostFrameCallback(
             (_) {
-          posicionaLista(this.widget._indexLista);
+              itemScrollController.jumpTo(index: index);
+              this.widget._indexLista = -1;
         },
       );
     }
-    return Text("");
+    return Container();
   }
 
   _gravar_resposta(
