@@ -70,7 +70,6 @@ class SpsDaoQuestionarioItem {
   Future<int> save(List<Map<String, dynamic>> dadosQuestionarioItem) async {
     final Database db = await getDatabase();
     await Future.forEach(dadosQuestionarioItem, (item) async {
-      //teste
       if (item['inicio_escala'].toString() == "") {
         item['inicio_escala'] = null;
       }

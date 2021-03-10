@@ -43,7 +43,6 @@ class SpsDaoQuestionarioMidia {
   Future<int> save(List<Map<String, dynamic>> dadosQuestionario) async {
     final Database db = await getDatabase();
     await Future.forEach(dadosQuestionario, (anexo) async {
-      //teste
       var _query2 =
           'SELECT * FROM sps_checklist_tb_resp_anexo where codigo_empresa = "' +
               anexo['codigo_empresa'].toString() +
