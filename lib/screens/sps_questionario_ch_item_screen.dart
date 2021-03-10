@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
@@ -12,13 +14,11 @@ import 'package:sps/models/sps_questionario_item_ch.dart';
 import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
-import 'package:sps/screens/sps_questionario_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_lista_screen.dart';
 import 'package:badges/badges.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 
 class sps_questionario_ch_item_screen extends StatefulWidget {
   final String _codigo_empresa;
@@ -32,7 +32,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
   final String _status_aprovacao;
   final String _filtro;
   final String _filtroDescrProgramacao;
-  int _indexCard;
+  int _indexLista;
   String _acao;
   String _sessao_checklist;
 
@@ -55,7 +55,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
       this._filtroDescrProgramacao,
       this._acao,
       this._sessao_checklist,
-      this._indexCard,
+      this._indexLista,
       {this.usuarioAtual = null});
 
   @override
@@ -74,7 +74,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
         this._filtroDescrProgramacao,
         this._acao,
         this._sessao_checklist,
-        this._indexCard,
+        this._indexLista,
       );
 }
 
@@ -99,27 +99,22 @@ class _sps_questionario_ch_item_screen
       _filtroReferenciaProjeto,
       _acao,
       _sessao_checklist,
-      _indexCard);
+      _indexLista);
 
   var _singleValue = List();
 
-  final scrollDirection = Axis.vertical;
-  AutoScrollController controller;
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener =
+      ItemPositionsListener.create();
 
-  void initState() {
-    super.initState();
-    controller = AutoScrollController(
-        viewportBoundaryGetter: () =>
-            Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
-        axis: scrollDirection);
-    controller.scrollToIndex(this.widget._indexCard, preferPosition: AutoScrollPosition.begin, duration: Duration(seconds: 1));
+  posicionaLista(indexLista) {
+    itemScrollController.scrollTo(
+        index: indexLista, duration: Duration(seconds: 1));
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
-
-    print ("adriano =>1 -> "+this.widget._acao);
 
     return WillPopScope(
       onWillPop: () {
@@ -312,9 +307,11 @@ class _sps_questionario_ch_item_screen
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 top: 5, left: 0, right: 0, bottom: 0),
-                            child: ListView.builder(
-                              controller: controller,
+                            child: ScrollablePositionedList.builder(
+                              //controller: _controller,
                               padding: EdgeInsets.only(top: 5),
+                              itemScrollController: itemScrollController,
+                              itemPositionsListener: itemPositionsListener,
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
                                 if (index == 0) {
@@ -323,10 +320,7 @@ class _sps_questionario_ch_item_screen
                                 }
                                 if (snapshot.data[index]["sessao_checklist"] ==
                                     this.widget._sessao_checklist) {
-                                  return AutoScrollTag(
-                                    key: ValueKey(index),
-                                    controller: controller,
-                                    index: index,
+                                  return Container(
                                     child: Card(
                                       color: Colors.white60,
                                       child: Padding(
@@ -338,7 +332,8 @@ class _sps_questionario_ch_item_screen
                                         child: Column(
                                           children: [
                                             //Tratar descrição da pergunta
-                                            descricao_pergunta(snapshot, index),
+                                            descricao_pergunta(
+                                                snapshot, index, 1),
 
                                             //Tratar montagem do questionario
                                             montar_questionario(
@@ -359,6 +354,9 @@ class _sps_questionario_ch_item_screen
                                                     context, snapshot, index),
                                               ],
                                             ),
+
+                                            tratar_posicionar_lista(index),
+
                                           ],
                                         ),
                                       ),
@@ -393,7 +391,8 @@ class _sps_questionario_ch_item_screen
   }
 
   ListTile descricao_pergunta(
-      AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
+      AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index, tamanho) {
+
     return ListTile(
       trailing: snapshot.data[index]["status_resposta"] == "PREENCHIDA"
           ? Icon(Icons.check, color: Colors.green, size: 40)
@@ -946,13 +945,6 @@ class _sps_questionario_ch_item_screen
 
   tratar_nao_se_aplica(BuildContext context,
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
-    //Tratar resposta fixa
-    //if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA FIXA") {
-    //Tratar resposta fixa (TEXTO/NUMERO/DATA/HORA)
-    // if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO" ||
-    //     snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO" ||
-    //     snapshot.data[index]["tipo_resposta_fixa"].toString() == "DATA"||
-    //     snapshot.data[index]["tipo_resposta_fixa"].toString() == "HORA") {
     return Align(
       alignment: Alignment.centerLeft,
       child: CheckboxListTile(
@@ -984,12 +976,20 @@ class _sps_questionario_ch_item_screen
         },
       ),
     );
-    //   } else {
-    //     return Container();
-    //   }
-    // } else {
-    //   return Container();
-    // }
+  }
+
+  tratar_posicionar_lista(index) {
+    print ("adriano => index ->"+index.toString());
+    print ("adriano => this.widget._indexLista ->"+this.widget._indexLista.toString());
+    if (index == this.widget._indexLista) {
+      print("adriano =>x ->" + this.widget._indexLista.toString());
+      SchedulerBinding.instance.addPostFrameCallback(
+            (_) {
+          posicionaLista(this.widget._indexLista);
+        },
+      );
+    }
+    return Text("");
   }
 
   _gravar_resposta(
@@ -1169,7 +1169,7 @@ class _sps_questionario_ch_item_screen
                               this.widget._filtroDescrProgramacao,
                               this.widget._acao,
                               this.widget._sessao_checklist,
-                              this.widget._indexCard,
+                              this.widget._indexLista,
                             ),
                           ),
                         );
@@ -1201,29 +1201,30 @@ class _sps_questionario_ch_item_screen
             ? Colors.black
             : Colors.blue,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => sps_questionario_comentarios_screen(
-                snapshot.data[index]["codigo_empresa"],
-                snapshot.data[index]["codigo_programacao"],
-                snapshot.data[index]["item_checklist"],
-                snapshot.data[index]["descr_comentarios"],
-                this.widget._registro_colaborador,
-                this.widget._identificacao_utilizador,
-                this.widget._codigo_grupo,
-                this.widget._codigo_checklist,
-                this.widget._descr_programacao,
-                this.widget._sincronizado,
-                snapshot.data[index]["status_aprovacao"],
-                null,
-                this.widget._filtro,
-                this.widget._filtroDescrProgramacao,
-                this.widget._sessao_checklist,
-                this.widget._indexCard,
-              ),
-            ),
-          );
+          posicionaLista(index);
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => sps_questionario_comentarios_screen(
+          //       snapshot.data[index]["codigo_empresa"],
+          //       snapshot.data[index]["codigo_programacao"],
+          //       snapshot.data[index]["item_checklist"],
+          //       snapshot.data[index]["descr_comentarios"],
+          //       this.widget._registro_colaborador,
+          //       this.widget._identificacao_utilizador,
+          //       this.widget._codigo_grupo,
+          //       this.widget._codigo_checklist,
+          //       this.widget._descr_programacao,
+          //       this.widget._sincronizado,
+          //       snapshot.data[index]["status_aprovacao"],
+          //       null,
+          //       this.widget._filtro,
+          //       this.widget._filtroDescrProgramacao,
+          //       this.widget._sessao_checklist,
+          //       this.widget._indexCard,
+          //     ),
+          //   ),
+          // );
         },
       );
     } else {

@@ -183,7 +183,7 @@ class SpsDaoQuestionarioItem {
             '","' +
             dadosQuestionarioItem[windex]['sugestao_resposta'].toString() +
             '","")';
-        //debugPrint("query => " + _query);
+        debugPrint("query => " + _query);
         db.rawInsert(_query);
       }
       windex = windex + 1;
@@ -426,15 +426,10 @@ class SpsDaoQuestionarioItem {
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4")) as videos, '
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF")) as outros '
-    //'0 as anexos,  '
-    //'0 as imagens,  '
-    //'0 as videos, '
-    //'0 as outros '
         'FROM checklist_item item where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and item.codigo_programacao = ' +
         _hcodigoProgramacao.toString();
-    print ("adriano => ação =>"+ _hacao.toString());
     if (_hacao.toString() == "PROXIMO") {
       _query = _query +
           ' and item.sessao_checklist > "' +
@@ -455,7 +450,7 @@ class SpsDaoQuestionarioItem {
         }
       }
     }
-    print("Adriano => " + _query);
+    //print("Query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
