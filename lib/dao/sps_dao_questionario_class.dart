@@ -47,73 +47,88 @@ class SpsDaoQuestionario {
 
   Future<int> save(List<Map<String, dynamic>> dadosQuestionario) async {
     final Database db = await getDatabase();
-    var wregistros = dadosQuestionario.length;
-    var windex = 0;
-    while (windex < wregistros) {
-      if (dadosQuestionario[windex]['registro_colaborador'] == null) {
-        dadosQuestionario[windex]['registro_colaborador'] = "";
+    await Future.forEach(dadosQuestionario, (questionario) async {
+      if (questionario['registro_colaborador'] == null || questionario['registro_colaborador'] == "") {
+        questionario['registro_colaborador'] = "";
       }
-      if (dadosQuestionario[windex]['identificacao_utilizador'] == null) {
-        dadosQuestionario[windex]['identificacao_utilizador'] = "";
+      if (questionario['identificacao_utilizador'] == null || questionario['identificacao_utilizador'] == "") {
+        questionario['identificacao_utilizador'] = "";
       }
-      if (dadosQuestionario[windex]['item_pedido'] == null ||
-          dadosQuestionario[windex]['item_pedido'] == "") {
-        dadosQuestionario[windex]['item_pedido'] = 0;
+      if (questionario['descr_projeto'] == null || questionario['descr_projeto'] == "") {
+        questionario['descr_projeto'] = "";
       }
-      if (dadosQuestionario[windex]['descr_comentarios'] == null) {
-        dadosQuestionario[windex]['descr_comentarios'] = "";
+      if (questionario['descr_comentarios'] == null || questionario['descr_comentarios'] == "") {
+        questionario['descr_comentarios'] = "";
+      }
+      if (questionario['codigo_grupo'] == null || questionario['codigo_grupo'] == "") {
+        questionario['codigo_grupo'] = "";
+      }
+      if (questionario['descr_programacao'] == null || questionario['descr_programacao'] == "") {
+        questionario['descr_programacao'] = "";
+      }
+      if (questionario['percentual_evolucao'] == null || questionario['percentual_evolucao'] == "") {
+        questionario['percentual_evolucao'] = 0;
+      }
+      if (questionario['item_pedido'] == null || questionario['item_pedido'] == "") {
+        questionario['item_pedido'] = 0;
+      }
+      if (questionario['descr_comentarios'] == null || questionario['descr_comentarios'] == "") {
+        questionario['descr_comentarios'] = "";
       }
       var _query2 =
           'SELECT * FROM checklist_lista where codigo_empresa = "' +
-              dadosQuestionario[windex]['codigo_empresa'] +
+              questionario['codigo_empresa'] +
               '" and codigo_programacao = ' +
-              dadosQuestionario[windex]['codigo_programacao'].toString() +
+              questionario['codigo_programacao'].toString() +
               ' and registro_colaborador = "' +
-              dadosQuestionario[windex]['registro_colaborador'] +
+              questionario['registro_colaborador'] +
               '" and identificacao_utilizador = "' +
-              dadosQuestionario[windex]['identificacao_utilizador'] +
+              questionario['identificacao_utilizador'] +
               '"';
+//      print('Fernando==>'+_query2.toString());
       List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
       if (result2.length <= 0) {
+//          print('aqui '+windex.toString());
+//        print('Fernando==>Inserir '+result2.length.toString());
         var _query = 'insert into checklist_lista values ("' +
-            dadosQuestionario[windex]['codigo_empresa'].toString() +
+            questionario['codigo_empresa'] +
             '",' +
-            dadosQuestionario[windex]['codigo_programacao'].toString() +
+            questionario['codigo_programacao'].toString() +
             ',"' +
-            dadosQuestionario[windex]['registro_colaborador'].toString() +
+            questionario['registro_colaborador'] +
             '","' +
-            dadosQuestionario[windex]['identificacao_utilizador'].toString() +
+            questionario['identificacao_utilizador'] +
             '","' +
-            dadosQuestionario[windex]['codigo_grupo'].toString() +
+            questionario['codigo_grupo'] +
             '",' +
-            dadosQuestionario[windex]['codigo_checklist'].toString() +
+            questionario['codigo_checklist'].toString() +
             ',"' +
-            dadosQuestionario[windex]['descr_programacao'].toString() +
+            questionario['descr_programacao'] +
             '","' +
-            dadosQuestionario[windex]['dtfim_aplicacao'].toString() +
-            '","' +
-            dadosQuestionario[windex]['percentual_evolucao'].toString() +
-            '","' +
-            dadosQuestionario[windex]['status'].toString() +
-            '","' +
-            dadosQuestionario[windex]['referencia_parceiro'].toString() +
-            '","' +
-            dadosQuestionario[windex]['codigo_pedido'].toString() +
+            questionario['dtfim_aplicacao'] +
             '",' +
-            dadosQuestionario[windex]['item_pedido'].toString() +
+            questionario['percentual_evolucao'].toString() +
             ',"' +
-            dadosQuestionario[windex]['codigo_projeto'].toString() +
+            questionario['status'] +
             '","' +
-            dadosQuestionario[windex]['descr_projeto'].toString() +
+            questionario['referencia_parceiro'] +
             '","' +
-            dadosQuestionario[windex]['codigo_material'].toString() +
+            questionario['codigo_pedido'] +
+            '",' +
+            questionario['item_pedido'].toString() +
+            ',"' +
+            questionario['codigo_projeto'] +
             '","' +
-            dadosQuestionario[windex]['descr_comentarios'].toString() +
+            questionario['descr_projeto'] +
+            '","' +
+            questionario['codigo_material'] +
+            '","' +
+            questionario['descr_comentarios'] +
             '",null)';
-        db.rawInsert(_query);
+//        debugPrint("query => " + _query);
+        await db.rawInsert(_query);
       }
-      windex = windex + 1;
-    }
+    });
     return 1;
   }
 

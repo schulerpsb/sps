@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'package:sps/http/sps_http_verificar_conexao_class.dart';
-import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
@@ -105,6 +102,7 @@ class _sps_questionario_cq_int_item_screen
 
   var _singleValue = List();
   Color _resp_cq_cor;
+  int index_posicao = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -429,9 +427,9 @@ class _sps_questionario_cq_int_item_screen
                                                     snapshot.data[index]["imagens"].toString(),
                                                     snapshot.data[index]["videos"].toString(),
                                                     snapshot.data[index]["outros"].toString(),
-                                                    funCallback: () {
-                                                      print('voltei');
+                                                    funCallback: ({int index_posicao_retorno}) {
                                                       setState(() {
+                                                        index_posicao = index_posicao_retorno;
                                                       });
                                                     },
                                                   )),

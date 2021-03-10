@@ -1146,7 +1146,7 @@ class _sps_questionario_ch_item_screen
                       snapshot.data[index]["imagens"].toString(),
                       snapshot.data[index]["videos"].toString(),
                       snapshot.data[index]["outros"].toString(),
-                      funCallback: () {
+                      funCallback: ({int index_posicao_retorno}) {
                         //Recarregar tela
                         Navigator.pop;
                         Navigator.push(

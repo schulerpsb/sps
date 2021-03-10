@@ -24,7 +24,7 @@ import 'package:sps/http/sps_http_questionario_midia_class.dart';
 import 'package:badges/badges.dart';
 
 class sps_questionario_midia_screen extends StatefulWidget {
-  final Function() funCallback;
+  final Function({int index_posicao_retorno}) funCallback;
   final String _codigo_empresa;
   final int _codigo_programacao;
   final int _item_checklist;
@@ -173,7 +173,6 @@ class _sps_questionario_midia_screen
       _picker
           .getVideo(source: source, maxDuration: const Duration(seconds: 60))
           .then((final PickedFile file) async {
-
         setState(() {
           _isLoading = true;
         });
@@ -208,25 +207,25 @@ class _sps_questionario_midia_screen
         //Processamento do arquivo capturado - Gerar thumbnail.
         await spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos);
 
-        //Verificar se existe conexão
-        final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-        final bool result = await ObjVerificarConexao.verificar_conexao();
-        if (result == true) {
-          //Gravação do registro na tabela de anexos Online
-          SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = new SpsHttpQuestionarioMidia();
-          _dadosArquivo['item_anexo'] = await objSpsHttpQuestionarioMidia.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
-
-          _dadosArquivo['sincronizado'] = 'M';
-          SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
-          //Gravação do registro na tabela de anexos do SQLITE
-          final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
-
-        }else{
+//        //Verificar se existe conexão
+//        final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+//        final bool result = await ObjVerificarConexao.verificar_conexao();
+//        if (result == true) {
+//          //Gravação do registro na tabela de anexos Online
+//          SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = new SpsHttpQuestionarioMidia();
+//          _dadosArquivo['item_anexo'] = await objSpsHttpQuestionarioMidia.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+//
+//          _dadosArquivo['sincronizado'] = 'M';
+//          SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+//          //Gravação do registro na tabela de anexos do SQLITE
+//          final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+//
+//        }else{
           _dadosArquivo['sincronizado'] = 'T';
           SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
           //Gravação do registro na tabela de anexos do SQLITE
           final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
-        }
+//        }
         //Atualizar Status das respostas
         spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
         final statusrespostas =  await objspsQuestionarioUtils.atualizar_status_resposta(
@@ -241,80 +240,87 @@ class _sps_questionario_midia_screen
         });
       });
     } else {
-      final pickedFile = await _picker.getImage(
+//      final pickedFile = await _picker.getImage(
+//        source: source,
+//        maxWidth: null,
+//        maxHeight: null,
+//        imageQuality: null,
+//      );
+      _picker.getImage(
         source: source,
         maxWidth: null,
         maxHeight: null,
         imageQuality: null,
-      );
-      if(pickedFile != null){
-        setState(() {
-          _isLoading = true;
-        });
-        spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
-        File arquivoNormalizado = await objspsMidiaUtils.normalizarArquivo(pickedFile.path.toString());
+      ).then((pickedFile) async {
+        if(pickedFile != null){
+          setState(() {
+            _isLoading = true;
+          });
+          spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
+          File arquivoNormalizado = await objspsMidiaUtils.normalizarArquivo(pickedFile.path.toString());
 
-        DateTime now = DateTime.now();
-        DateTime _currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
-        //Arquivo de imagem capturado
-        //Montagem do arquivo de dados para processamento do arquivo.
-        Map<String, dynamic> _dadosArquivo = new Map<String, dynamic>();
-        _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
-        _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
-        _dadosArquivo['item_checklist'] = this.widget._item_checklist;
-        _dadosArquivo['arquivo'] = arquivoNormalizado.path.toString();
-        if (usuarioAtual.tipo == "INTERNO") {
-          _dadosArquivo['registro_colaborador'] = this.widget._registro_colaborador;
-          _dadosArquivo['identificacao_utilizador'] = '';
-        } else {
-          _dadosArquivo['registro_colaborador'] = '';
-          _dadosArquivo['identificacao_utilizador'] = this.widget._identificacao_utilizador;
-        }
-        _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
-        _dadosArquivo['dthratualizacao'] = _currentTime.toString();
-        _dadosArquivo['dthranexo'] = _currentTime.toString();
+          DateTime now = DateTime.now();
+          DateTime _currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
+          //Arquivo de imagem capturado
+          //Montagem do arquivo de dados para processamento do arquivo.
+          Map<String, dynamic> _dadosArquivo = new Map<String, dynamic>();
+          _dadosArquivo['codigo_empresa'] = this.widget._codigo_empresa;
+          _dadosArquivo['codigo_programacao'] = this.widget._codigo_programacao;
+          _dadosArquivo['item_checklist'] = this.widget._item_checklist;
+          _dadosArquivo['arquivo'] = arquivoNormalizado.path.toString();
+          if (usuarioAtual.tipo == "INTERNO") {
+            _dadosArquivo['registro_colaborador'] = this.widget._registro_colaborador;
+            _dadosArquivo['identificacao_utilizador'] = '';
+          } else {
+            _dadosArquivo['registro_colaborador'] = '';
+            _dadosArquivo['identificacao_utilizador'] = this.widget._identificacao_utilizador;
+          }
+          _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
+          _dadosArquivo['dthratualizacao'] = _currentTime.toString();
+          _dadosArquivo['dthranexo'] = _currentTime.toString();
 
-        //Processamento do arquivo capturado - Renomear - mover.
-        final String arquivoMovido = await spsMidiaUtils.processarArquivoCapturado(tipo: ".jpg", dadosArquivo: _dadosArquivo);
-        _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
+          //Processamento do arquivo capturado - Renomear - mover.
+          final String arquivoMovido = await spsMidiaUtils.processarArquivoCapturado(tipo: ".jpg", dadosArquivo: _dadosArquivo);
+          _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
 
-        List _listaArquivos = new List();
-        _listaArquivos.add(arquivoMovido);
+          List _listaArquivos = new List();
+          _listaArquivos.add(arquivoMovido);
 
-        //Verificar se existe conexão
-        final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-        final bool result = await ObjVerificarConexao.verificar_conexao();
-        if (result == true) {
-
-          //Gravação do registro na tabela de anexos Online
-          SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = new SpsHttpQuestionarioMidia();
-          _dadosArquivo['item_anexo'] = await objSpsHttpQuestionarioMidia.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
-
-          _dadosArquivo['sincronizado'] = 'M';
-          //Gravação do registro na tabela de anexos do SQLITE
-          SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
-          final int arquivoGravadoSQLite = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
-          //print('gravei anexo Online');
-        }else{
+//        //Verificar se existe conexão
+//        final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+//        final bool result = await ObjVerificarConexao.verificar_conexao();
+//        if (result == true) {
+//
+//          //Gravação do registro na tabela de anexos Online
+//          SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = new SpsHttpQuestionarioMidia();
+//          _dadosArquivo['item_anexo'] = await objSpsHttpQuestionarioMidia.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+//
+//          _dadosArquivo['sincronizado'] = 'M';
+//          //Gravação do registro na tabela de anexos do SQLITE
+//          SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+//          final int arquivoGravadoSQLite = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+//          //print('gravei anexo Online');
+//        }else{
           _dadosArquivo['sincronizado'] = 'T';
           //Gravação do registro na tabela de anexos do SQLITE
           SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
           final int arquivoGravadoSQLite = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
           //print('gravei anexo offline');
+//        }
+          //Atualizar Status das respostas
+          spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
+          final statusrespostas =  await objspsQuestionarioUtils.atualizar_status_resposta(
+              _dadosArquivo['codigo_empresa'],
+              _dadosArquivo['codigo_programacao'],
+              _dadosArquivo['registro_colaborador'],
+              _dadosArquivo['identificacao_utilizador'],
+              _dadosArquivo['item_checklist']
+          );
+          setState(() {
+            _isLoading = false;
+          });
         }
-        //Atualizar Status das respostas
-        spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
-        final statusrespostas =  await objspsQuestionarioUtils.atualizar_status_resposta(
-            _dadosArquivo['codigo_empresa'],
-            _dadosArquivo['codigo_programacao'],
-            _dadosArquivo['registro_colaborador'],
-            _dadosArquivo['identificacao_utilizador'],
-            _dadosArquivo['item_checklist']
-        );
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      });
     }
   }
 
@@ -477,7 +483,7 @@ class _sps_questionario_midia_screen
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
                       Navigator.pop(context);
-                      widget.funCallback();
+                      widget.funCallback(index_posicao_retorno: 5);
                     },
                   );
                 },

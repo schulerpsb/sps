@@ -31,7 +31,7 @@ class SpsDaoLogin {
   Future<Database> getDatabase() async {
     final String dbPath = await getDatabasesPath();
     final String path = join(dbPath, 'sps.db');
-    debugPrint('CAMINHO DO SQLITE DB: $path');
+    //debugPrint('CAMINHO DO SQLITE DB: $path');
     return openDatabase(
       path,
       onCreate: (db, version) {

@@ -437,8 +437,7 @@ class spsSincronizacao {
       final bool result = await ObjVerificarConexao.verificar_conexao();
       if (result == true) {
         //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
-        debugPrint(
-            "Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
+        //debugPrint("Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite");
         final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
         final List<
             Map<String, dynamic>> dadosQuestionario = await objQuestionarioHttp
@@ -479,8 +478,7 @@ class spsSincronizacao {
       final bool result = await ObjVerificarConexao.verificar_conexao();
       if (result == true) {
         //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
-        debugPrint(
-            "Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
+        //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
         final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
         final List<Map<String, dynamic>> dadosQuestionarioItem =
         await objQuestionarioItemHttp.listarQuestionarioItem(
