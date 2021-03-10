@@ -1,14 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'file:///C:/Mobile/sps/lib/http/sps_http_verificar_conexao_class.dart';
-import 'package:sps/http/sps_http_questionario_item_class.dart';
-import 'package:sps/http/sps_http_questionario_midia_class.dart';
-import 'package:sps/models/sps_questionario_midia.dart';
 import 'package:sps/models/sps_sincronizacao.dart';
-import 'package:sps/models/sps_usuario_class.dart';
-import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 
 class SpsQuestionarioItem_ch {
   @override
@@ -25,20 +18,32 @@ class SpsQuestionarioItem_ch {
     final sessao_checklist = h_sessao_checklist;
     final codigo_empresa = h_codigo_empresa;
     final codigo_programacao = h_codigo_programacao;
-    final registro_colaborador = '';
-    final identificacao_utilizador = '';
+    final registro_colaborador = h_registro_colaborador;
+    final identificacao_utilizador = h_identificacao_utilizador;
     final codigo_grupo = h_codigo_grupo;
     final codigo_checklist = h_codigo_checklist;
 
     //Sincronização de itens  de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();
-    await objspsSincronizacao.sincronizarQuestionariosItensServerToLocal(acao, sessao_checklist, codigo_empresa, codigo_programacao, registro_colaborador, identificacao_utilizador, codigo_grupo, codigo_checklist, h_codigo_empresa, h_codigo_programacao);
+    await objspsSincronizacao.sincronizarQuestionariosItensServerToLocal(
+        acao,
+        sessao_checklist,
+        codigo_empresa,
+        codigo_programacao,
+        registro_colaborador,
+        identificacao_utilizador,
+        codigo_grupo,
+        codigo_checklist,
+        h_codigo_empresa,
+        h_codigo_programacao);
 
     //Ler dados do SQlite
     debugPrint("Ler dados do SQlite (Tabela: checklist_item)");
-    final SpsDaoQuestionarioItem objQuestionarioItemDao =  SpsDaoQuestionarioItem();
-    final List<Map<String, dynamic>> DadosSessao = await objQuestionarioItemDao
-        .listarQuestionarioItemLocal(h_codigo_empresa, h_codigo_programacao, h_acao, h_sessao_checklist);
+    final SpsDaoQuestionarioItem objQuestionarioItemDao =
+        SpsDaoQuestionarioItem();
+    final List<Map<String, dynamic>> DadosSessao =
+        await objQuestionarioItemDao.listarQuestionarioItemLocal(
+            h_codigo_empresa, h_codigo_programacao, h_acao, h_sessao_checklist);
     return DadosSessao;
   }
 }
