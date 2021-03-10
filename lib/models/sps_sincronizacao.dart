@@ -97,6 +97,7 @@ class spsSincronizacao {
       while (windex < _wregistros) {
         var _wsincronizado = "";
         var sincItem = 0;
+
         //Atualizar registro no PostgreSQL (via API REST) campo RESP_CQ
         final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
         final atualizacaoitem = await objQuestionarioItemHttp.QuestionarioSaveOpcao(
@@ -115,6 +116,20 @@ class spsSincronizacao {
           //debugPrint("ERRO => Dados do registro não sincronizado: " + result[windex].toString());
         }
 
+        //Atualizar registro no PostgreSQL (via API REST) campo status_aprovacao
+        final atualizacaostatus = await objQuestionarioItemHttp.QuestionarioSaveAprovacao(
+            result[windex]["codigo_empresa"],
+            result[windex]["codigo_programacao"].toString(),
+            result[windex]["item_checklist"].toString(),
+            result[windex]["status_aprovacao"],
+            usuarioAtual.tipo == "INTERNO" ||
+                usuarioAtual.tipo == "COLIGADA"
+                ? usuarioAtual.registro_usuario
+                : usuarioAtual.codigo_usuario);
+        if (atualizacaostatus != true) {
+          sincItem = 1;
+        }
+
         //Atualizar registro no PostgreSQL (via API REST) campo DESCR_COMENTARIOS
         final atualizacaoComentario = await objQuestionarioItemHttp.QuestionarioSaveComentario(
             "",
@@ -129,6 +144,29 @@ class spsSincronizacao {
                 ? usuarioAtual.registro_usuario
                 : usuarioAtual.codigo_usuario);
         if (atualizacaoComentario != true) {
+          sincItem = 1;
+          //debugPrint("ERRO => Dados do cometario do registro não sincronizado: " +result[windex].toString());
+        }
+
+        //Atualizar registro no PostgreSQL (via API REST) SAVE_RESPOSTA tipo checklist
+        final atualizacaoSaveResposta = await objQuestionarioItemHttp.QuestionarioSaveResposta(
+            result[windex]["codigo_empresa"],
+            result[windex]["codigo_programacao"].toString(),
+            result[windex]["registro_colaborador"],
+            result[windex]["identificacao_utilizador"],
+            result[windex]["item_checklist"].toString(),
+            result[windex]["resp_texto"],
+            result[windex]["resp_numero"],
+            result[windex]["resp_data"],
+            result[windex]["resp_hora"],
+            result[windex]["resp_simnao"],
+            result[windex]["resp_escala"].toString(),
+            result[windex]["comentarios"],
+            result[windex]["descr_comentarios"],
+            usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
+                ? usuarioAtual.registro_usuario
+                : usuarioAtual.codigo_usuario);
+        if (atualizacaoSaveResposta != true) {
           sincItem = 1;
           //debugPrint("ERRO => Dados do cometario do registro não sincronizado: " +result[windex].toString());
         }
@@ -256,8 +294,8 @@ class spsSincronizacao {
       debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
       bool StatuExternoCq = await sincronizarAnexosServerToLocal('EXTERNO', 'CONTROLE DE QUALIDADE',flip);
       bool StatuInternoCq = await sincronizarAnexosServerToLocal('INTERNO', 'CONTROLE DE QUALIDADE',flip);
-//      bool StatuExternoCheck = await sincronizarAnexosServerToLocal('EXTERNO', 'CHECKLIST',flip);
-//      bool StatuInternoCheck = await sincronizarAnexosServerToLocal('INTERNO', 'CHECKLIST',flip);
+      bool StatuExternoCheck = await sincronizarAnexosServerToLocal('EXTERNO', 'CHECKLIST',flip);
+      bool StatuInternoCheck = await sincronizarAnexosServerToLocal('INTERNO', 'CHECKLIST',flip);
 //      bool StatuExternoPesq = await sincronizarAnexosServerToLocal('EXTERNO', 'PESQUISA',flip);
 //      bool StatuInternoPesq = await sincronizarAnexosServerToLocal('INTERNO', 'PESQUISA',flip);
       debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
@@ -428,6 +466,8 @@ class spsSincronizacao {
         String tipo_frequencia,
         String tipo_checklist,
         String registro_aprovador) async {
+
+      debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
       //Criar tabela "checklist_lista" caso não exista
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final int resulcreate = await objQuestionarioDao.create_table();
@@ -451,11 +491,10 @@ class spsSincronizacao {
             registro_aprovador);
         if (dadosQuestionario != null) {
           final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-          final int resullimpar = await objQuestionarioDao.emptyTable();
-          final int resultsave = await objQuestionarioDao.save(dadosQuestionario);
+          final int resullimpar = await objQuestionarioDao.emptyTable(doc_action);
+          final int resultsave = await objQuestionarioDao.save(dadosQuestionario,doc_action);
         }
-        debugPrint(
-            "=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
+        debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
       }
     }
 

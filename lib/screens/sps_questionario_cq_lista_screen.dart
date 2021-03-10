@@ -195,6 +195,7 @@ class _sps_questionario_cq_lista_screen
                                                       ["status_aprovacao"],
                                                   this.widget._origemUsuario,
                                                   this.widget._filtro,
+                                                  0,
                                                   this
                                                       .widget
                                                       ._filtroReferenciaProjeto,
@@ -230,6 +231,7 @@ class _sps_questionario_cq_lista_screen
                                                       ["status_aprovacao"],
                                                   this.widget._origemUsuario,
                                                   this.widget._filtro,
+                                                  0,
                                                   this
                                                       .widget
                                                       ._filtroReferenciaProjeto,

@@ -24,7 +24,7 @@ import 'package:sps/http/sps_http_questionario_midia_class.dart';
 import 'package:badges/badges.dart';
 
 class sps_questionario_midia_screen extends StatefulWidget {
-  final Function({int index_posicao_retorno}) funCallback;
+  final Function({int index_posicao_retorno, String acao}) funCallback;
   final String _codigo_empresa;
   final int _codigo_programacao;
   final int _item_checklist;
@@ -43,10 +43,12 @@ class sps_questionario_midia_screen extends StatefulWidget {
   final String _status_aprovacao;
   final String _origemUsuario;
   final String _filtro;
+  final int    _indexLista;
   final String _filtroReferenciaProjeto;
   final String _qtImagens;
   final String _qtVideos;
   final String _qtOutros;
+  String _acao;
 
   sps_questionario_midia_screen(
       this._codigo_empresa,
@@ -67,10 +69,12 @@ class sps_questionario_midia_screen extends StatefulWidget {
       this._status_aprovacao,
       this._origemUsuario,
       this._filtro,
+      this._indexLista,
       this._filtroReferenciaProjeto,
       this._qtImagens,
       this._qtVideos,
       this._qtOutros,
+      this._acao,
       {this.funCallback});
 
   @override
@@ -94,10 +98,12 @@ class sps_questionario_midia_screen extends StatefulWidget {
           this._status_aprovacao,
           this._origemUsuario,
           this._filtro,
+          this._indexLista,
           this._filtroReferenciaProjeto,
           this._qtImagens,
           this._qtVideos,
           this._qtOutros,
+          this._acao,
           {this.funCallback}
       );
 }
@@ -129,10 +135,12 @@ class _sps_questionario_midia_screen
       _status_aprovacao,
       _origemUsuario,
       _filtro,
+      _indexLista,
       _filtroReferenciaProjeto,
       _qtImagens,
       _qtVideos,
       _qtOutros,
+      _acao,
       funCallback,
       );
 
@@ -462,6 +470,7 @@ class _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
     //limpar cache de imagem
+    print('Acao====>'+this.widget._acao.toString());
     imageCache.clear();
     new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
     SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
@@ -483,7 +492,7 @@ class _sps_questionario_midia_screen
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
                       Navigator.pop(context);
-                      widget.funCallback(index_posicao_retorno: 5);
+                      widget.funCallback(index_posicao_retorno: this.widget._indexLista, acao: this.widget._acao);
                     },
                   );
                 },
