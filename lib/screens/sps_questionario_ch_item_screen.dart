@@ -14,6 +14,7 @@ import 'package:sps/models/sps_questionario_item_ch.dart';
 import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
+import 'package:sps/screens/sps_questionario_comentarios_screen.dart';
 import 'package:sps/screens/sps_questionario_midia_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_lista_screen.dart';
 import 'package:badges/badges.dart';
@@ -979,10 +980,9 @@ class _sps_questionario_ch_item_screen
   }
 
   tratar_posicionar_lista(index) {
-    print ("adriano => index ->"+index.toString());
-    print ("adriano => this.widget._indexLista ->"+this.widget._indexLista.toString());
+    print ("adriano => "+this.widget._indexLista.toString());
     if (index == this.widget._indexLista) {
-      print("adriano =>x ->" + this.widget._indexLista.toString());
+      print ("adriano => entrou => "+this.widget._indexLista.toString());
       SchedulerBinding.instance.addPostFrameCallback(
             (_) {
           posicionaLista(this.widget._indexLista);
@@ -1007,7 +1007,7 @@ class _sps_questionario_ch_item_screen
       _wcomentarios,
       _wdescrComentarios,
       _wnaoSeAplica,
-      _windexCard) async {
+      _windexLista) async {
     var _wsincronizado = "";
 
     //Tratar "não se aplica"
@@ -1103,7 +1103,7 @@ class _sps_questionario_ch_item_screen
             this.widget._filtroDescrProgramacao,
             this.widget._acao,
             this.widget._sessao_checklist,
-            _windexCard),
+            _windexLista),
       ),
     );
   }
@@ -1201,30 +1201,29 @@ class _sps_questionario_ch_item_screen
             ? Colors.black
             : Colors.blue,
         onPressed: () {
-          posicionaLista(index);
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => sps_questionario_comentarios_screen(
-          //       snapshot.data[index]["codigo_empresa"],
-          //       snapshot.data[index]["codigo_programacao"],
-          //       snapshot.data[index]["item_checklist"],
-          //       snapshot.data[index]["descr_comentarios"],
-          //       this.widget._registro_colaborador,
-          //       this.widget._identificacao_utilizador,
-          //       this.widget._codigo_grupo,
-          //       this.widget._codigo_checklist,
-          //       this.widget._descr_programacao,
-          //       this.widget._sincronizado,
-          //       snapshot.data[index]["status_aprovacao"],
-          //       null,
-          //       this.widget._filtro,
-          //       this.widget._filtroDescrProgramacao,
-          //       this.widget._sessao_checklist,
-          //       this.widget._indexCard,
-          //     ),
-          //   ),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => sps_questionario_comentarios_screen(
+                snapshot.data[index]["codigo_empresa"],
+                snapshot.data[index]["codigo_programacao"],
+                snapshot.data[index]["item_checklist"],
+                snapshot.data[index]["descr_comentarios"],
+                this.widget._registro_colaborador,
+                this.widget._identificacao_utilizador,
+                this.widget._codigo_grupo,
+                this.widget._codigo_checklist,
+                this.widget._descr_programacao,
+                this.widget._sincronizado,
+                snapshot.data[index]["status_aprovacao"],
+                null,
+                this.widget._filtro,
+                this.widget._filtroDescrProgramacao,
+                this.widget._sessao_checklist,
+                index,
+              ),
+            ),
+          );
         },
       );
     } else {

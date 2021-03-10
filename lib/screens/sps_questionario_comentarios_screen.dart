@@ -30,7 +30,7 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
   final String _filtro;
   final String _filtroDescrProgramacao;
   final String _sessao_checklist;
-  final int _indexCard;
+  final int _indexLista;
 
   sps_questionario_comentarios_screen(
       this._codigo_empresa,
@@ -48,7 +48,7 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
       this._filtro,
       this._filtroDescrProgramacao,
       this._sessao_checklist,
-      this._indexCard);
+      this._indexLista);
 
   @override
   _sps_questionario_comentarios_screen createState() =>
@@ -68,7 +68,7 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
           this._filtro,
           this._filtroDescrProgramacao,
           this._sessao_checklist,
-          this._indexCard);
+          this._indexLista);
 }
 
 class _sps_questionario_comentarios_screen
@@ -94,7 +94,7 @@ class _sps_questionario_comentarios_screen
       _filtro,
       _filtroDescrProgramacao,
       _sessao_checklist,
-      _indexCard);
+      _indexLista);
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +139,7 @@ class _sps_questionario_comentarios_screen
                             this.widget._filtroDescrProgramacao,
                             "RECARREGAR",
                             this.widget._sessao_checklist,
-                            this.widget._indexCard)),
+                            this.widget._indexLista)),
                   );
                 },
               );
@@ -281,7 +281,7 @@ class _sps_questionario_comentarios_screen
             this.widget._filtroDescrProgramacao,
             "RECARREGAR",
             this.widget._sessao_checklist,
-            this.widget._indexCard),
+            this.widget._indexLista),
       ),
     );
   }
