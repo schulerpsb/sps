@@ -456,7 +456,7 @@ packages:
     source: hosted
     version: "1.0.1"
   scroll_to_index:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: scroll_to_index
       url: "https://pub.dartlang.org"
