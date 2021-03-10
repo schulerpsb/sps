@@ -42,29 +42,25 @@ class SpsDaoQuestionarioMidia {
 
   Future<int> save(List<Map<String, dynamic>> dadosQuestionario) async {
     final Database db = await getDatabase();
-    var wregistros = dadosQuestionario.length;
-    var windex = 0;
-    while (windex < wregistros) {
+    await Future.forEach(dadosQuestionario, (anexo) async {
       var _query2 =
           'SELECT * FROM sps_checklist_tb_resp_anexo where codigo_empresa = "' +
-              dadosQuestionario[windex]['codigo_empresa'].toString() +
+              anexo['codigo_empresa'].toString() +
               '" and codigo_programacao = ' +
-              dadosQuestionario[windex]['codigo_programacao'].toString() +
+              anexo['codigo_programacao'].toString() +
               ' and registro_colaborador = "' +
-              dadosQuestionario[windex]['registro_colaborador'].toString() +
+              anexo['registro_colaborador'].toString() +
               '" and identificacao_utilizador = "' +
-              dadosQuestionario[windex]['identificacao_utilizador'].toString() +
+              anexo['identificacao_utilizador'].toString() +
               '" and item_checklist = ' +
-              dadosQuestionario[windex]['item_checklist'].toString() +
+              anexo['item_checklist'].toString() +
               " and item_anexo = " +
-              dadosQuestionario[windex]['item_anexo'].toString();
+              anexo['item_anexo'].toString();
       List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
       if (result2.length <= 0) {
-        db.insert('sps_checklist_tb_resp_anexo', dadosQuestionario[windex]);
+        db.insert('sps_checklist_tb_resp_anexo', anexo);
       }
-      //debugPrint("Gravando anexos Lista => " + dadosQuestionario[windex].toString());
-      windex = windex + 1;
-    }
+    });
     return 1;
   }
 

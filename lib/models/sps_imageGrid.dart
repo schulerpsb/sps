@@ -95,7 +95,7 @@ class ImageGrid extends StatelessWidget {
                 icon: Icons.error,
               );
             } else {
-              print('PROCESSEI A CONSULTA');
+//              print('PROCESSEI A CONSULTA');
               List _listaArquivos = new List();
               if (snapshot.data.isNotEmpty) {
                 for (var i = 0; i < snapshot.data.length; i++) {
@@ -197,7 +197,7 @@ class ImageGrid extends StatelessWidget {
                   }
                 }
               }
-              print('LISTA DE ARQUVIOS ' + _listaArquivos.toString());
+//              print('LISTA DE ARQUVIOS ' + _listaArquivos.toString());
               if (_listaArquivos.length >= 1) {
                 return GridView.builder(
                     itemCount: _listaArquivos.length,
@@ -289,7 +289,7 @@ class ImageGrid extends StatelessWidget {
                                                                 child: Text("Sim"),
                                                                 onPressed: () {
                                                                   objSpsQuestionarioCqMidia.deletarQuestionarioMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
-                                                                    print('Feito');
+                                                                    //print('Feito');
                                                                     Navigator.of(context,
                                                                         rootNavigator:
                                                                         true)

@@ -69,125 +69,116 @@ class SpsDaoQuestionarioItem {
 
   Future<int> save(List<Map<String, dynamic>> dadosQuestionarioItem) async {
     final Database db = await getDatabase();
-    var wregistros = dadosQuestionarioItem.length;
-    var windex = 0;
-    while (windex < wregistros) {
-      if (dadosQuestionarioItem[windex]['inicio_escala'].toString() == "") {
-        dadosQuestionarioItem[windex]['inicio_escala'] = null;
+    await Future.forEach(dadosQuestionarioItem, (item) async {
+      if (item['inicio_escala'].toString() == "") {
+        item['inicio_escala'] = null;
       }
-      if (dadosQuestionarioItem[windex]['fim_escala'].toString() == "") {
-        dadosQuestionarioItem[windex]['fim_escala'] = null;
+      if (item['fim_escala'].toString() == "") {
+        item['fim_escala'] = null;
       }
-      if (dadosQuestionarioItem[windex]['intervalo_escala'].toString() == "") {
-        dadosQuestionarioItem[windex]['intervalo_escala'] = null;
+      if (item['intervalo_escala'].toString() == "") {
+        item['intervalo_escala'] = null;
       }
-      if (dadosQuestionarioItem[windex]['comentario_escala'].toString() == "") {
-        dadosQuestionarioItem[windex]['comentario_escala'] = null;
+      if (item['comentario_escala'].toString() == "") {
+        item['comentario_escala'] = null;
       }
-      if (dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() ==
-          "") {
-        dadosQuestionarioItem[windex]['tamanho_resposta_fixa'] = null;
+      if (item['tamanho_resposta_fixa'].toString() == "") {
+        item['tamanho_resposta_fixa'] = null;
       }
-      if (dadosQuestionarioItem[windex]['resp_numero'].toString() == "") {
-        dadosQuestionarioItem[windex]['resp_numero'] = null;
+      if (item['resp_numero'].toString() == "") {
+        item['resp_numero'] = null;
       }
-      if (dadosQuestionarioItem[windex]['resp_escala'].toString() == "") {
-        dadosQuestionarioItem[windex]['resp_escala'] = null;
+      if (item['resp_escala'].toString() == "") {
+        item['resp_escala'] = null;
       }
-
       var _query2 = 'SELECT * FROM checklist_item where codigo_empresa = "' +
-          dadosQuestionarioItem[windex]['codigo_empresa'] +
+          item['codigo_empresa'] +
           '" and codigo_programacao = ' +
-          dadosQuestionarioItem[windex]['codigo_programacao'].toString() +
+          item['codigo_programacao'].toString() +
           ' and registro_colaborador = "' +
-          dadosQuestionarioItem[windex]['registro_colaborador'] +
+          item['registro_colaborador'] +
           '" and identificacao_utilizador = "' +
-          dadosQuestionarioItem[windex]['identificacao_utilizador'] +
+          item['identificacao_utilizador'] +
           '" and item_checklist = ' +
-          dadosQuestionarioItem[windex]['item_checklist'].toString();
+          item['item_checklist'].toString();
       List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
       if (result2.length <= 0) {
         var _query = 'insert into checklist_item values ("' +
-            dadosQuestionarioItem[windex]['codigo_empresa'] +
+            item['codigo_empresa'] +
             '",' +
-            dadosQuestionarioItem[windex]['codigo_programacao'].toString() +
+            item['codigo_programacao'].toString() +
             ',"' +
-            dadosQuestionarioItem[windex]['registro_colaborador'] +
+            item['registro_colaborador'] +
             '","' +
-            dadosQuestionarioItem[windex]['identificacao_utilizador'] +
+            item['identificacao_utilizador'] +
             '",' +
-            dadosQuestionarioItem[windex]['item_checklist'].toString() +
+            item['item_checklist'].toString() +
             ',"' +
-            dadosQuestionarioItem[windex]['sessao_checklist'].toString() +
+            item['sessao_checklist'] +
             '","' +
-            dadosQuestionarioItem[windex]['codigo_grupo'].toString() +
+            item['codigo_grupo'] +
             '",' +
-            dadosQuestionarioItem[windex]['codigo_checklist'].toString() +
+            item['codigo_checklist'].toString() +
             ',' +
-            dadosQuestionarioItem[windex]['seq_pergunta'].toString() +
+            item['seq_pergunta'].toString() +
             ',"' +
-            dadosQuestionarioItem[windex]['descr_pergunta'].toString() +
+            item['descr_pergunta'] +
             '","' +
-            dadosQuestionarioItem[windex]['codigo_pergunta_dependente']
-                .toString() +
+            item['codigo_pergunta_dependente'] +
             '","' +
-            dadosQuestionarioItem[windex]['resposta_pergunta_dependente']
-                .toString() +
+            item['resposta_pergunta_dependente'] +
             '","' +
-            dadosQuestionarioItem[windex]['tipo_resposta'].toString() +
+            item['tipo_resposta'] +
             '","' +
-            dadosQuestionarioItem[windex]['comentario_resposta_nao']
-                .toString() +
+            item['comentario_resposta_nao'] +
             '","' +
-            dadosQuestionarioItem[windex]['descr_escala'].toString() +
+            item['descr_escala'] +
             '",' +
-            dadosQuestionarioItem[windex]['inicio_escala'].toString() +
+            item['inicio_escala'].toString() +
             ',' +
-            dadosQuestionarioItem[windex]['fim_escala'].toString() +
+            item['fim_escala'].toString() +
             ',' +
-            dadosQuestionarioItem[windex]['intervalo_escala'].toString() +
+            item['intervalo_escala'].toString() +
             ',' +
-            dadosQuestionarioItem[windex]['comentario_escala'].toString() +
+            item['comentario_escala'].toString() +
             ',"' +
-            dadosQuestionarioItem[windex]['midia'].toString() +
+            item['midia'] +
             '","' +
-            dadosQuestionarioItem[windex]['opcao_nao_se_aplica'].toString() +
+            item['opcao_nao_se_aplica'] +
             '","' +
-            dadosQuestionarioItem[windex]['comentarios'].toString() +
+            item['comentarios'] +
             '","' +
-            dadosQuestionarioItem[windex]['tipo_resposta_fixa'].toString() +
+            item['tipo_resposta_fixa']+
             '",' +
-            dadosQuestionarioItem[windex]['tamanho_resposta_fixa'].toString() +
+            item['tamanho_resposta_fixa'].toString() +
             ',"' +
-            dadosQuestionarioItem[windex]['resp_simnao'].toString() +
+            item['resp_simnao'] +
             '","' +
-            dadosQuestionarioItem[windex]['resp_texto'].toString() +
+            item['resp_texto'] +
             '",' +
-            dadosQuestionarioItem[windex]['resp_numero'].toString() +
+            item['resp_numero'].toString() +
             ',"' +
-            dadosQuestionarioItem[windex]['resp_data'].toString() +
+            item['resp_data'] +
             '","' +
-            dadosQuestionarioItem[windex]['resp_hora'].toString() +
+            item['resp_hora'] +
             '",' +
-            dadosQuestionarioItem[windex]['resp_escala'].toString() +
+            item['resp_escala'].toString() +
             ',"' +
-            dadosQuestionarioItem[windex]['resp_cq'].toString() +
+            item['resp_cq'] +
             '","' +
-            dadosQuestionarioItem[windex]['resp_nao_se_aplica'].toString() +
+            item['resp_nao_se_aplica'] +
             '","' +
-            dadosQuestionarioItem[windex]['descr_comentarios'].toString() +
+            item['descr_comentarios'] +
             '","' +
-            dadosQuestionarioItem[windex]['status_resposta'].toString() +
+            item['status_resposta'] +
             '","' +
-            dadosQuestionarioItem[windex]['status_aprovacao'].toString() +
+            item['status_aprovacao'] +
             '","' +
-            dadosQuestionarioItem[windex]['sugestao_resposta'].toString() +
+            item['sugestao_resposta'] +
             '","")';
-        debugPrint("query => " + _query);
-        db.rawInsert(_query);
+        await db.rawInsert(_query);
       }
-      windex = windex + 1;
-    }
+    });
     return 1;
   }
 
@@ -426,7 +417,7 @@ class SpsDaoQuestionarioItem {
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4")) as videos, '
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF")) as outros '
-        'FROM checklist_item item where item.codigo_empresa = "' +
+            'FROM checklist_item item where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and item.codigo_programacao = ' +
         _hcodigoProgramacao.toString();
@@ -450,7 +441,7 @@ class SpsDaoQuestionarioItem {
         }
       }
     }
-    //print("Query => " + _query);
+    //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
