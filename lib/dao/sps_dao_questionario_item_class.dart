@@ -265,7 +265,7 @@ class SpsDaoQuestionarioItem {
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
         _hitemChecklist.toString();
-    //debugPrint("query => " + _query);
+//    debugPrint("query => " + _query);
     db.rawUpdate(_query);
     //debugPrint("SQLITE - Alterado resposta (checklist_item)");
     return 1;
@@ -294,8 +294,8 @@ class SpsDaoQuestionarioItem {
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
         _hitemChecklist.toString();
+    print("query update status resposta ====> "+_query.toString());
     db.rawUpdate(_query);
-    //debugPrint("SQLITE - Alterado resposta (checklist_item)");
     return 1;
   }
 
