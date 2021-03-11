@@ -577,7 +577,6 @@ class _sps_questionario_cq_int_item_screen
   }
 
   tratar_posicionar_lista(index) {
-    //print ("adriano => "+this.widget._indexLista.toString());
     if (index == this.widget._indexLista) {
       SchedulerBinding.instance.addPostFrameCallback(
             (_) {

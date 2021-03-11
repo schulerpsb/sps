@@ -14,7 +14,7 @@ class SpsHttpQuestionarioItem {
   //static const baseUrl_saveStatusResposta = 'http://teklist.schuler.de/webapi/api/questionario/save_status_resposta.php';
 
   //Servidor DEV
-  static const baseUrl_read =
+  static const baseUrl_readItem =
       'http://10.17.20.45/webapi/api/questionario/read_item.php';
   static const baseUrl_saveOpcao =
       'http://10.17.20.45/webapi/api/questionario/save_opcao.php';
@@ -57,7 +57,7 @@ class SpsHttpQuestionarioItem {
 
     final Response response = await client
         .post(
-          baseUrl_read,
+          baseUrl_readItem,
           headers: {'Content-type': 'application/json'},
           body: dadosQuestionarioItemJson,
         )
