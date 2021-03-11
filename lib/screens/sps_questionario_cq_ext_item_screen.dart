@@ -692,28 +692,28 @@ class _sps_questionario_cq_ext_item_screen
 //    Verificar se existe conexão
     final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
     final bool result = await ObjVerificarConexao.verificar_conexao();
-    if (result == true) {
-      //Gravar PostgreSQL (API REST)
-      final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
-      final retorno = await objQuestionarioHttp.QuestionarioSaveReferencia(
-          _wcodigoEmpresa,
-          _wcodigoProgramacao,
-          _wnovaReferencia,
-          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
-              ? usuarioAtual.registro_usuario
-              : usuarioAtual
-                  .codigo_usuario);
-      if (retorno == true) {
-        _wsincronizado = "";
-        debugPrint("registro gravado PostgreSQL");
-      } else {
-        _wsincronizado = "N";
-        debugPrint("ERRO => registro não gravado PostgreSQL");
-      }
-    } else {
-      _wsincronizado = "N";
-    }
-//    _wsincronizado = "N";
+//    if (result == true) {
+//      //Gravar PostgreSQL (API REST)
+//      final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
+//      final retorno = await objQuestionarioHttp.QuestionarioSaveReferencia(
+//          _wcodigoEmpresa,
+//          _wcodigoProgramacao,
+//          _wnovaReferencia,
+//          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
+//              ? usuarioAtual.registro_usuario
+//              : usuarioAtual
+//                  .codigo_usuario);
+//      if (retorno == true) {
+//        _wsincronizado = "";
+//        debugPrint("registro gravado PostgreSQL");
+//      } else {
+//        _wsincronizado = "N";
+//        debugPrint("ERRO => registro não gravado PostgreSQL");
+//      }
+//    } else {
+//      _wsincronizado = "N";
+//    }
+    _wsincronizado = "N";
     //Gravar SQlite
     final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
     final int resultupdate = await objQuestionarioDao.update_referencia(
