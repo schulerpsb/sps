@@ -9,6 +9,12 @@ import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_lista_screen.dart';
 
 class sps_questionario_ch_filtro_screen extends StatefulWidget {
+  final String _tipo_questionario;
+
+  sps_questionario_ch_filtro_screen(
+    this._tipo_questionario,
+  );
+
   @override
   _sps_questionario_ch_filtro_screen createState() =>
       _sps_questionario_ch_filtro_screen();
@@ -37,7 +43,7 @@ class _sps_questionario_ch_filtro_screen
           backgroundColor: Color(0xFF004077),
           // Azul Schuler
           title: Text(
-            'CHECKLIST',
+            this.widget._tipo_questionario,
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -60,7 +66,12 @@ class _sps_questionario_ch_filtro_screen
         endDrawer: sps_drawer(spslogin: spslogin),
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: spsquestionario.listarQuestionario(
-              'INTERNO', 'CHECKLIST', 'CONTAR', null, null, _filtroDescrProgramacao),
+              'INTERNO',
+              this.widget._tipo_questionario,
+              'CONTAR',
+              null,
+              null,
+              _filtroDescrProgramacao),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
@@ -107,8 +118,11 @@ class _sps_questionario_ch_filtro_screen
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         sps_questionario_ch_lista_screen(
-                                                              "PENDENTE",
-                                                            null)),
+                                                            "PENDENTE",
+                                                            null,
+                                                            this
+                                                                .widget
+                                                                ._tipo_questionario)),
                                               )
                                             },
                                   color: Colors.purple,
@@ -148,8 +162,11 @@ class _sps_questionario_ch_filtro_screen
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         sps_questionario_ch_lista_screen(
-                                                             "PARCIAL",
-                                                            null)),
+                                                            "PARCIAL",
+                                                            null,
+                                                            this
+                                                                .widget
+                                                                ._tipo_questionario)),
                                               )
                                             },
                                   color: Colors.orange,
@@ -185,8 +202,11 @@ class _sps_questionario_ch_filtro_screen
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         sps_questionario_ch_lista_screen(
-                                                              "OK",
-                                                            null)),
+                                                            "OK",
+                                                            null,
+                                                            this
+                                                                .widget
+                                                                ._tipo_questionario)),
                                               )
                                             },
                                   color: Colors.green,
@@ -231,8 +251,7 @@ class _sps_questionario_ch_filtro_screen
                                           maxLines: 1,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText:
-                                                  'Informe a descrição'),
+                                              hintText: 'Informe a descrição'),
                                         ),
                                       ],
                                     ),
@@ -255,7 +274,10 @@ class _sps_questionario_ch_filtro_screen
                                                           sps_questionario_ch_lista_screen(
                                                               null,
                                                               _filtroDescrProgramacao
-                                                                  .text)),
+                                                                  .text,
+                                                              this
+                                                                  .widget
+                                                                  ._tipo_questionario)),
                                                 )
                                               },
                                     child: const Icon(Icons.search),

@@ -36,6 +36,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
   int _indexLista;
   String _acao;
   String _sessao_checklist;
+  final String _tipo_questionario;
 
   final sps_usuario usuarioAtual;
 
@@ -57,6 +58,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
       this._acao,
       this._sessao_checklist,
       this._indexLista,
+      this._tipo_questionario,
       {this.usuarioAtual = null});
 
   @override
@@ -76,6 +78,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
         this._acao,
         this._sessao_checklist,
         this._indexLista,
+        this._tipo_questionario,
       );
 }
 
@@ -100,7 +103,8 @@ class _sps_questionario_ch_item_screen
       _filtroReferenciaProjeto,
       _acao,
       _sessao_checklist,
-      _indexLista);
+      _indexLista,
+      _tipo_questionario);
 
   var _singleValue = List();
 
@@ -115,7 +119,7 @@ class _sps_questionario_ch_item_screen
 
   @override
   Widget build(BuildContext context) {
-    print('Acao lista====>'+this.widget._acao.toString());
+    print('Acao lista====>' + this.widget._acao.toString());
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
 
     return WillPopScope(
@@ -142,7 +146,8 @@ class _sps_questionario_ch_item_screen
                     MaterialPageRoute(
                         builder: (context) => sps_questionario_ch_lista_screen(
                             this.widget._filtro,
-                            this.widget._filtroDescrProgramacao)),
+                            this.widget._filtroDescrProgramacao,
+                            this.widget._tipo_questionario)),
                   );
                 },
               );
@@ -358,7 +363,6 @@ class _sps_questionario_ch_item_screen
                                             ),
 
                                             tratar_posicionar_lista(index),
-
                                           ],
                                         ),
                                       ),
@@ -394,7 +398,6 @@ class _sps_questionario_ch_item_screen
 
   ListTile descricao_pergunta(
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index, tamanho) {
-
     return ListTile(
       trailing: snapshot.data[index]["status_resposta"] == "PREENCHIDA"
           ? Icon(Icons.check, color: Colors.green, size: 40)
@@ -985,9 +988,9 @@ class _sps_questionario_ch_item_screen
     if (index == this.widget._indexLista) {
       //print ("adriano => entrou => "+this.widget._indexLista.toString());
       SchedulerBinding.instance.addPostFrameCallback(
-            (_) {
-              itemScrollController.jumpTo(index: index);
-              this.widget._indexLista = -1;
+        (_) {
+          itemScrollController.jumpTo(index: index);
+          this.widget._indexLista = -1;
         },
       );
     }
@@ -1105,7 +1108,8 @@ class _sps_questionario_ch_item_screen
             this.widget._filtroDescrProgramacao,
             this.widget._acao,
             this.widget._sessao_checklist,
-            _windexLista),
+            _windexLista,
+            this.widget._tipo_questionario),
       ),
     );
   }
@@ -1163,21 +1167,21 @@ class _sps_questionario_ch_item_screen
                           MaterialPageRoute(
                             builder: (context) =>
                                 sps_questionario_ch_item_screen(
-                              this.widget._codigo_empresa,
-                              this.widget._codigo_programacao,
-                              this.widget._registro_colaborador,
-                              this.widget._identificacao_utilizador,
-                              this.widget._codigo_grupo,
-                              this.widget._codigo_checklist,
-                              this.widget._descr_programacao,
-                              this.widget._sincronizado,
-                              this.widget._status_aprovacao,
-                              this.widget._filtro,
-                              this.widget._filtroDescrProgramacao,
-                              acao,
-                              this.widget._sessao_checklist,
-                              this.widget._indexLista,
-                            ),
+                                    this.widget._codigo_empresa,
+                                    this.widget._codigo_programacao,
+                                    this.widget._registro_colaborador,
+                                    this.widget._identificacao_utilizador,
+                                    this.widget._codigo_grupo,
+                                    this.widget._codigo_checklist,
+                                    this.widget._descr_programacao,
+                                    this.widget._sincronizado,
+                                    this.widget._status_aprovacao,
+                                    this.widget._filtro,
+                                    this.widget._filtroDescrProgramacao,
+                                    acao,
+                                    this.widget._sessao_checklist,
+                                    this.widget._indexLista,
+                                    this.widget._tipo_questionario),
                           ),
                         );
                       },
@@ -1228,6 +1232,7 @@ class _sps_questionario_ch_item_screen
                 this.widget._filtroDescrProgramacao,
                 this.widget._sessao_checklist,
                 index,
+                this.widget._tipo_questionario
               ),
             ),
           );

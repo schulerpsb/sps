@@ -68,7 +68,7 @@ class sps_menu_screen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => sps_questionario_ch_filtro_screen()),
+                            builder: (context) => sps_questionario_ch_filtro_screen("CHECKLIST")),
                       );
                     },
                     shape: RoundedRectangleBorder(
@@ -94,7 +94,7 @@ class sps_menu_screen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => sps_cotacao_screen()),
+                            builder: (context) => sps_questionario_ch_filtro_screen("PESQUISA")),
                       );
                     },
                     shape: RoundedRectangleBorder(

@@ -14,14 +14,15 @@ import 'package:intl/intl.dart';
 class sps_questionario_ch_lista_screen extends StatefulWidget {
   final String _filtro;
   final String _filtroDescrProgramacao;
+  final String _tipoQuestionario;
 
   sps_questionario_ch_lista_screen(
-      this._filtro, this._filtroDescrProgramacao);
+      this._filtro, this._filtroDescrProgramacao, this._tipoQuestionario);
 
   @override
   _sps_questionario_ch_lista_screen createState() =>
       _sps_questionario_ch_lista_screen(
-          this._filtro, this._filtroDescrProgramacao);
+          this._filtro, this._filtroDescrProgramacao, this._tipoQuestionario);
 }
 
 class _sps_questionario_ch_lista_screen
@@ -32,7 +33,7 @@ class _sps_questionario_ch_lista_screen
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
   _sps_questionario_ch_lista_screen(
-      _filtro, _filtroDescrProgramacao);
+      _filtro, _filtroDescrProgramacao, _tipoQuestionario);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class _sps_questionario_ch_lista_screen
           backgroundColor: Color(0xFF004077),
           // Azul Schuler
           title: Text(
-            'CHECKLIST',
+            this.widget._tipoQuestionario,
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -60,8 +61,8 @@ class _sps_questionario_ch_lista_screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            sps_questionario_ch_filtro_screen()),
+                        builder: (context) => sps_questionario_ch_filtro_screen(
+                            this.widget._tipoQuestionario)),
                   );
                 },
               );
@@ -72,7 +73,7 @@ class _sps_questionario_ch_lista_screen
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: spsquestionario.listarQuestionario(
               null,
-              'CHECKLIST',
+              this.widget._tipoQuestionario,
               'LISTAR',
               this.widget._filtro,
               null,
@@ -157,32 +158,40 @@ class _sps_questionario_ch_lista_screen
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               sps_questionario_ch_item_screen(
-                                                snapshot.data[index]
-                                                    ["codigo_empresa"],
-                                                snapshot.data[index]
-                                                    ["codigo_programacao"],
-                                                snapshot.data[index]
-                                                    ["registro_colaborador"],
-                                                snapshot.data[index][
-                                                    "identificacao_utilizador"],
-                                                snapshot.data[index]
-                                                    ["codigo_grupo"],
-                                                snapshot.data[index]
-                                                    ["codigo_checklist"],
-                                                snapshot.data[index]
-                                                    ["descr_programacao"],
-                                                snapshot.data[index]
-                                                    ["sincronizado"],
-                                                snapshot.data[index]
-                                                    ["status_aprovacao"],
-                                                this.widget._filtro,
-                                                this
-                                                    .widget
-                                                    ._filtroDescrProgramacao,
-                                                "PROXIMO",
-                                                "",
-                                                0,
-                                              )),
+                                                  snapshot.data[index][
+                                                      "codigo_empresa"],
+                                                  snapshot.data[index][
+                                                      "codigo_programacao"],
+                                                  snapshot.data[index][
+                                                      "registro_colaborador"],
+                                                  snapshot.data[
+                                                          index]
+                                                      [
+                                                      "identificacao_utilizador"],
+                                                  snapshot.data[index][
+                                                      "codigo_grupo"],
+                                                  snapshot
+                                                              .data[
+                                                          index][
+                                                      "codigo_checklist"],
+                                                  snapshot
+                                                              .data[
+                                                          index]
+                                                      ["descr_programacao"],
+                                                  snapshot.data[index]
+                                                      ["sincronizado"],
+                                                  snapshot.data[index]
+                                                      ["status_aprovacao"],
+                                                  this.widget._filtro,
+                                                  this
+                                                      .widget
+                                                      ._filtroDescrProgramacao,
+                                                  "PROXIMO",
+                                                  "",
+                                                  0,
+                                                  this
+                                                      .widget
+                                                      ._tipoQuestionario)),
                                     )
                                   : _popup_vencido(context);
                             },
