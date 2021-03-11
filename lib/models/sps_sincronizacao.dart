@@ -161,8 +161,8 @@ class spsSincronizacao {
             result[windex]["resp_hora"],
             result[windex]["resp_simnao"],
             result[windex]["resp_escala"].toString(),
-            result[windex]["comentarios"],
             result[windex]["descr_comentarios"],
+            result[windex]["resp_nao_se_aplica"],
             usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
                 ? usuarioAtual.registro_usuario
                 : usuarioAtual.codigo_usuario);
