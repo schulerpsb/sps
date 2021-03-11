@@ -484,7 +484,6 @@ class _sps_questionario_ch_item_screen
               suffixIcon: IconButton(
                 onPressed: () => {
                   this.widget._acao = "RECARREGAR",
-                  //ADRIANO = PONTO DE CHAMADA -> GRAVAR_RESPOSTA (BOTAO GRAVAR)
                   _gravar_resposta(
                       snapshot.data[index]["codigo_empresa"],
                       snapshot.data[index]["codigo_programacao"].toString(),
