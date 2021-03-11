@@ -70,7 +70,7 @@ void isolateSincronizacao(String arg) async  {
         print('Verificando a possibilidade de rodar a sincronização Dados em background - Recorrente');
         if(statusSincronizarQuestionarios == true){
           numsinc = 0;
-          print('Sincronizando Dados de questionários - Recorrente');
+          print('Sincronizando Dados de questionários - Recorrente - numsync:'+numsinc.toString());
           statusSincronizarQuestionarios = false;
           statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
         }else{
@@ -80,7 +80,7 @@ void isolateSincronizacao(String arg) async  {
           }else{
             numsinc++;
           }
-          print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - JA EXISTE UMA SINCRONIZAÇÃO EM ANDAMENTO');
+          print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - JA EXISTE UMA SINCRONIZAÇÃO EM ANDAMENTO - numsync:'+numsinc.toString());
         }
 
       }else{

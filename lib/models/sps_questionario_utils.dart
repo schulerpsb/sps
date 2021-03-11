@@ -164,8 +164,7 @@ class spsQuestionarioUtils {
 
       //Gravar SQlite
       final SpsDaoQuestionarioItem objQuestionarioItemDao =  SpsDaoQuestionarioItem();
-      final int resultupdate =
-          await objQuestionarioItemDao.update_status_resposta(
+      final int resultupdate = await objQuestionarioItemDao.update_status_resposta(
               wcodigoEmpresa,
               wcodigoProgramacao,
               wregistroColaborador,

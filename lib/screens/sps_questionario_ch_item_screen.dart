@@ -1070,8 +1070,7 @@ class _sps_questionario_ch_item_screen
 
     _wsincronizado = "N";
     //Gravar SQlite
-    final SpsDaoQuestionarioItem objQuestionarioItemDao =
-        SpsDaoQuestionarioItem();
+    final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
     final int resultupdate = await objQuestionarioItemDao.update_resposta(
         _wcodigoEmpresa,
         _wcodigoProgramacao,

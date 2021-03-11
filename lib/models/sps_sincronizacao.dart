@@ -171,6 +171,23 @@ class spsSincronizacao {
           //debugPrint("ERRO => Dados do cometario do registro não sincronizado: " +item.toString());
         }
 
+        //Atualizar registro no PostgreSQL (via API REST) SAVE_RESPOSTA tipo checklist
+        final atualizacaoStatusResposta = await objQuestionarioItemHttp.QuestionarioSaveStatusResposta(
+                 item["codigo_empresa"],
+                 item["codigo_programacao"],
+                 item["registro_colaborador"],
+                 item["identificacao_utilizador"],
+                 item["item_checklist"],
+                 item["status_resposta"],
+                 usuarioAtual.tipo == "INTERNO" ||
+                         usuarioAtual.tipo == "COLIGADA"
+                     ? usuarioAtual.registro_usuario
+                     : usuarioAtual.codigo_usuario);
+        if (atualizacaoStatusResposta != true) {
+          sincItem = 1;
+          //debugPrint("ERRO => Dados do cometario do registro não sincronizado: " +item.toString());
+        }
+
         if (sincItem == 0) {
           //print('Iniciando a limpeza dos itens a serem sincronizados');
           objQuestionarioItemDao.updateQuestionarioItemSincronizacao(
