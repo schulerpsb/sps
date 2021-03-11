@@ -156,7 +156,7 @@ class spsSincronizacao {
             item["identificacao_utilizador"],
             item["item_checklist"].toString(),
             item["resp_texto"],
-            item["resp_numero"],
+            item["resp_numero"].toString(),
             item["resp_data"],
             item["resp_hora"],
             item["resp_simnao"],

@@ -596,6 +596,16 @@ class _sps_questionario_cq_ext_item_screen
         _witemChecklist,
         _wrespCq,
         _wsincronizado);
+
+    //Atualizar status da resposta
+    spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
+    await objspsQuestionarioUtils.atualizar_status_resposta(
+        _wcodigoEmpresa,
+        int.parse(_wcodigoProgramacao),
+        _wregistroColaborador,
+        _widentificacaoUtilizador,
+        int.parse(_witemChecklist));
+
     setState(() {});
     _singleValue[_windex] = _wrespCq;
     this.widget._indexLista = _windex;

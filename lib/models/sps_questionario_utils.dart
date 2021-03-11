@@ -32,6 +32,8 @@ class spsQuestionarioUtils {
             widentificacaoUtilizador,
             witemChecklist);
 
+    print ("adriano =>1 =>"+result[0]["resp_numero"].toString());
+
     //Analisar status da resposta
     String _wstatusResposta;
 
@@ -130,35 +132,35 @@ class spsQuestionarioUtils {
     }
 
     if (_wstatusResposta != result[0]["status_resposta"]) {
-      //Verificar se existe conexão
-      final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-      final bool result = await ObjVerificarConexao.verificar_conexao();
-      if (result == true) {
-        //Gravar PostgreSQL (API REST)
-        final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-            SpsHttpQuestionarioItem();
-        final retorno =
-            await objQuestionarioItemHttp.QuestionarioSaveStatusResposta(
-                wcodigoEmpresa,
-                wcodigoProgramacao,
-                wregistroColaborador,
-                widentificacaoUtilizador,
-                witemChecklist,
-                _wstatusResposta,
-                usuarioAtual.tipo == "INTERNO" ||
-                        usuarioAtual.tipo == "COLIGADA"
-                    ? usuarioAtual.registro_usuario
-                    : usuarioAtual.codigo_usuario);
-        if (retorno == true) {
-          _wsincronizado = "";
-          debugPrint("registro gravado PostgreSQL");
-        } else {
-          _wsincronizado = "N";
-          debugPrint("ERRO => registro não gravado PostgreSQL");
-        }
-      } else {
+      // //Verificar se existe conexão
+      // final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+      // final bool result = await ObjVerificarConexao.verificar_conexao();
+      // if (result == true) {
+      //   //Gravar PostgreSQL (API REST)
+      //   final SpsHttpQuestionarioItem objQuestionarioItemHttp =
+      //       SpsHttpQuestionarioItem();
+      //   final retorno =
+      //       await objQuestionarioItemHttp.QuestionarioSaveStatusResposta(
+      //           wcodigoEmpresa,
+      //           wcodigoProgramacao,
+      //           wregistroColaborador,
+      //           widentificacaoUtilizador,
+      //           witemChecklist,
+      //           _wstatusResposta,
+      //           usuarioAtual.tipo == "INTERNO" ||
+      //                   usuarioAtual.tipo == "COLIGADA"
+      //               ? usuarioAtual.registro_usuario
+      //               : usuarioAtual.codigo_usuario);
+      //   if (retorno == true) {
+      //     _wsincronizado = "";
+      //     debugPrint("registro gravado PostgreSQL");
+      //   } else {
+      //     _wsincronizado = "N";
+      //     debugPrint("ERRO => registro não gravado PostgreSQL");
+      //   }
+      // } else {
         _wsincronizado = "N";
-      }
+      //}
 
       //Gravar SQlite
       final SpsDaoQuestionarioItem objQuestionarioItemDao =  SpsDaoQuestionarioItem();
@@ -171,6 +173,8 @@ class spsQuestionarioUtils {
               witemChecklist,
               _wstatusResposta,
               _wsincronizado);
+
+      print ("adriano =>2 => fechou");
     }
   }
 }

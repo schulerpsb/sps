@@ -129,7 +129,7 @@ class _sps_questionario_ch_item_screen
       }
     }
 
-    print ("adriano => "+this.widget._registro_colaborador.toString());
+    //print ("adriano => "+this.widget._registro_colaborador.toString());
 
     return WillPopScope(
       onWillPop: () {
@@ -484,6 +484,7 @@ class _sps_questionario_ch_item_screen
               suffixIcon: IconButton(
                 onPressed: () => {
                   this.widget._acao = "RECARREGAR",
+                  //ADRIANO = PONTO DE CHAMADA -> GRAVAR_RESPOSTA (BOTAO GRAVAR)
                   _gravar_resposta(
                       snapshot.data[index]["codigo_empresa"],
                       snapshot.data[index]["codigo_programacao"].toString(),
