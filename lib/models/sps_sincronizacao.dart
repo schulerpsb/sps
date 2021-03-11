@@ -82,7 +82,6 @@ class spsSincronizacao {
         }
 
         windexLista = windexLista + 1;
-
         await spsNotificacao.notificarProgresso(0, _wregistrosLista, windexLista, 'SPS - Atualização','Upload de Questionários', flip);
       }
       debugPrint("=== UPLOAD - FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) =============================================");
@@ -161,8 +160,8 @@ class spsSincronizacao {
             result[windex]["resp_hora"],
             result[windex]["resp_simnao"],
             result[windex]["resp_escala"].toString(),
-            result[windex]["comentarios"],
             result[windex]["descr_comentarios"],
+            result[windex]["resp_nao_se_aplica"],
             usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
                 ? usuarioAtual.registro_usuario
                 : usuarioAtual.codigo_usuario);

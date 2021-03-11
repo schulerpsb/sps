@@ -7,8 +7,6 @@ class SpsQuestionarioMidia {
   Future<List<Map<String, dynamic>>> listarQuestionarioMidia({String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0}) async {
       final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
       final int resulcreate = await objQuestionarioCqMidiaDao.create_table();
-      //final int resullimpar = await objQuestionarioCqMidiaDao.emptyTable();
-      //final int resultsave = await objQuestionarioCqMidiaDao.save(dadosQuestionario);
       final List<Map<String, dynamic>> DadosSessao = await objQuestionarioCqMidiaDao
           .listarQuestionarioMidia(codigo_empresa: codigo_empresa,codigo_programacao: codigo_programacao,item_checklist: item_checklist);
       if (DadosSessao != null) {
