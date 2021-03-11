@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'package:sps/http/sps_http_verificar_conexao_class.dart';
-import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_ch.dart';
@@ -24,8 +22,8 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class sps_questionario_ch_item_screen extends StatefulWidget {
   final String _codigo_empresa;
   final int _codigo_programacao;
-  final String _registro_colaborador;
-  final String _identificacao_utilizador;
+  String _registro_colaborador;
+  String _identificacao_utilizador;
   final String _codigo_grupo;
   final int _codigo_checklist;
   final String _descr_programacao;
@@ -119,8 +117,19 @@ class _sps_questionario_ch_item_screen
 
   @override
   Widget build(BuildContext context) {
-    print('Acao lista====>' + this.widget._acao.toString());
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
+
+    if (this.widget._tipo_questionario == "PESQUISA") {
+      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+        this.widget._registro_colaborador = sps_usuario().registro_usuario;
+        this.widget._identificacao_utilizador = '';
+      }else{
+        this.widget._registro_colaborador = '';
+        this.widget._identificacao_utilizador = sps_usuario().codigo_usuario;
+      }
+    }
+
+    print ("adriano => "+this.widget._registro_colaborador.toString());
 
     return WillPopScope(
       onWillPop: () {
@@ -984,9 +993,7 @@ class _sps_questionario_ch_item_screen
   }
 
   tratar_posicionar_lista(index) {
-    //print ("adriano => "+this.widget._indexLista.toString());
     if (index == this.widget._indexLista) {
-      //print ("adriano => entrou => "+this.widget._indexLista.toString());
       SchedulerBinding.instance.addPostFrameCallback(
         (_) {
           itemScrollController.jumpTo(index: index);
