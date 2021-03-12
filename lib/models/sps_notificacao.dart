@@ -30,11 +30,29 @@ class spsNotificacao {
         maxProgress: maxProgress,
         progress: progresso,
         playSound: false,
-        timeoutAfter: 3000,
+        timeoutAfter: 1000,
+        enableVibration: false,
         groupKey: 'com.android.example.sps');
 
     //Detalhes de especificções para IOS
-    const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: false);
+
+    final NotificationDetails platformChannelSpecifics =
+    NotificationDetails(androidPlatformChannelSpecifics,iOSPlatformChannelSpecifics);
+    await flip.show(id, title1, title2, platformChannelSpecifics, payload: 'item x');
+    return 1;
+  }
+
+  static Future<int> notificarProgressosilencioso(int id, int maxProgress, int progresso, String title1, String title2, FlutterLocalNotificationsPlugin flip) async {
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails('silent channel id', 'silent channel name',
+        'silent channel description',
+        playSound: false,
+        styleInformation: DefaultStyleInformation(true, true));
+
+    //Detalhes de especificções para IOS
+    const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: false);
+
     final NotificationDetails platformChannelSpecifics =
     NotificationDetails(androidPlatformChannelSpecifics,iOSPlatformChannelSpecifics);
     await flip.show(id, title1, title2, platformChannelSpecifics, payload: 'item x');

@@ -424,7 +424,9 @@ class spsSincronizacao {
                 String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' + '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
                 String destinoLocal = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' + AnexoServidor["nome_arquivo"].toString();
                 print('baixar ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
+
                 await spsNotificacao.notificarProgresso(indexQuestionario, registrosMidia, indexMidia, 'SPS - Atualização', 'Download de arquivos anexos', flip);
+
                 await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal).then((String statusDownload) async{
                   if (statusDownload == '1') {
                     print('Download efetuado ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
