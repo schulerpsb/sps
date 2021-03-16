@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sps/http/sps_http_verificar_conexao_class.dart';
-import 'package:thumbnails/thumbnails.dart';
+//import 'package:thumbnails/thumbnails.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class spsMidiaUtils {
 
@@ -24,18 +25,13 @@ class spsMidiaUtils {
     if(!checkPathExistence){
       new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
     }
-//    var fileList = _videospath
-//        .listSync()
-//        .map((item) => item.path)
-//        .where((item) => item.endsWith('.mp4'))
-//        .toList(growable: false);
-
     fileList.forEach( (item) async {
-      String thumb = await Thumbnails.getThumbnail(
-          thumbnailFolder: '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs',
-          videoFile: item,
-          imageType: ThumbFormat.JPEG,
-          quality: 30);
+        final thumb = await VideoThumbnail.thumbnailFile(
+          video: item,
+          thumbnailPath: '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs',
+          imageFormat: ImageFormat.JPEG,
+          quality: 30,
+        );
     });
   }
 
@@ -52,12 +48,12 @@ class spsMidiaUtils {
   }
 
 // when an output folder is not specified thumbnail are stored in app temporary directory
-  static Future<String> noFolder(path) async {
-    String thumb = await Thumbnails.getThumbnail(
-        videoFile: path, imageType: ThumbFormat.JPEG, quality: 30);
-    //print('Path to cache folder $thumb');
-    return thumb.toString();
-  }
+//  static Future<String> noFolder(path) async {
+//    String thumb = await Thumbnails.getThumbnail(
+//        videoFile: path, imageType: ThumbFormat.JPEG, quality: 30);
+//    //print('Path to cache folder $thumb');
+//    return thumb.toString();
+//  }
 
   Future<File> moveFile(File sourceFile, String newPath) async {
     try {

@@ -470,7 +470,7 @@ class _sps_questionario_midia_screen
   @override
   Widget build(BuildContext context) {
     //limpar cache de imagem
-    print('Acao====>'+this.widget._acao.toString());
+    //print('Acao====>'+this.widget._acao.toString());
     imageCache.clear();
     new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
     SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();

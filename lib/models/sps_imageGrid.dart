@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/media.dart';
@@ -10,6 +11,7 @@ import 'package:sps/screens/sps_imagePlayer_screen.dart';
 import 'package:sps/screens/sps_videoPlayer_screen.dart';
 import 'dart:io' as io;
 import 'package:flutter/painting.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ImageGrid extends StatelessWidget {
   final Directory directory;
@@ -74,6 +76,15 @@ class ImageGrid extends StatelessWidget {
       ).show();
     }
 
+    Future<File> getImageFileFromAssets(String path) async {
+      final byteData = await rootBundle.load('assets/$path');
+
+      final file = File('${(await getTemporaryDirectory()).path}/$path');
+      await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+      return file;
+    }
+
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: objSpsQuestionarioCqMidia.listarQuestionarioMidia(
           codigo_empresa: this.codigo_empresa,
@@ -129,8 +140,23 @@ class ImageGrid extends StatelessWidget {
                               _nomeArquivoSemExtensao +
                               '.jpg';
                       _listaArquivos.add(_registroArquivo);
-                    }
-//                    else {
+                    }else {
+                      Map<String, dynamic> _registroArquivo =
+                      new Map<String, dynamic>();
+                      _registroArquivo['codigo_empresa'] =
+                          snapshot.data[i]['codigo_empresa'].toString();
+                      _registroArquivo['codigo_programacao'] =
+                          snapshot.data[i]['codigo_programacao'].toString();
+                      _registroArquivo['item_checklist'] =
+                          snapshot.data[i]['item_checklist'].toString();
+                      _registroArquivo['item_anexo'] =
+                          snapshot.data[i]['item_anexo'].toString();
+                      _registroArquivo['nome_arquivo'] =
+                          snapshot.data[i]['nome_arquivo'].toString();
+                      _registroArquivo['titulo_arquivo'] =
+                          snapshot.data[i]['titulo_arquivo'].toString();
+                      _registroArquivo['caminho'] = 'images/noimage.jpg';
+                      _listaArquivos.add(_registroArquivo);
 //                      final SpsDaoQuestionarioMidia
 //                          objQuestionarioCqMidiaDao =
 //                          SpsDaoQuestionarioMidia();
@@ -144,7 +170,7 @@ class ImageGrid extends StatelessWidget {
 //                                  ['item_checklist'],
 //                              item_anexo: snapshot.data[i]['item_anexo'])
 //                          .then((value) => print('Registro apagado'));
-//                    }
+                    }
                   }
                   if ((_extensao == '.jpg' || _extensao == '.JPG' || _extensao == '.png' || _extensao == '.PNG') && tipo == 'image') {
                     String _nomeArquivoSemExtensao =
@@ -171,8 +197,23 @@ class ImageGrid extends StatelessWidget {
                           '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' +
                               snapshot.data[i]['nome_arquivo'].toString();
                       _listaArquivos.add(_registroArquivo);
-                    }
-//                    else {
+                    } else {
+                      Map<String, dynamic> _registroArquivo =
+                      new Map<String, dynamic>();
+                      _registroArquivo['codigo_empresa'] =
+                          snapshot.data[i]['codigo_empresa'].toString();
+                      _registroArquivo['codigo_programacao'] =
+                          snapshot.data[i]['codigo_programacao'].toString();
+                      _registroArquivo['item_checklist'] =
+                          snapshot.data[i]['item_checklist'].toString();
+                      _registroArquivo['item_anexo'] =
+                          snapshot.data[i]['item_anexo'].toString();
+                      _registroArquivo['nome_arquivo'] =
+                          snapshot.data[i]['nome_arquivo'].toString();
+                      _registroArquivo['titulo_arquivo'] =
+                          snapshot.data[i]['titulo_arquivo'].toString();
+                      _registroArquivo['caminho'] = 'images/noimage.jpg';
+                      _listaArquivos.add(_registroArquivo);
 //                      final SpsDaoQuestionarioMidia
 //                          objQuestionarioCqMidiaDao =
 //                          SpsDaoQuestionarioMidia();
@@ -186,7 +227,7 @@ class ImageGrid extends StatelessWidget {
 //                                  ['item_checklist'],
 //                              item_anexo: snapshot.data[i]['item_anexo'])
 //                          .then((value) => print('Registro apagado'));
-//                    }
+                    }
                   }
                 }
               }
@@ -237,84 +278,13 @@ class ImageGrid extends StatelessWidget {
                                       },
                                       child: Padding(
                                         padding: new EdgeInsets.all(0.0),
-                                        child: Image.file(
-                                          File(
-                                              _listaArquivos[index]['caminho']),
+                                        child: _listaArquivos[index]['caminho'].substring(0, 6) == 'images' ? Image.asset(_listaArquivos[index]['caminho']) : Image.file(File(_listaArquivos[index]['caminho']),
                                           fit: BoxFit.contain,
                                           height: 156,
                                         ),
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: CircleAvatar(
-                                            radius: 15,
-                                            backgroundColor: Colors.white,
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.delete,
-                                                color: Color(0xFF004077),
-                                                size: 15,
-                                              ),
-                                              onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext context) {
-                                                      return AlertDialog(
-                                                          title: Text("SPS App"),
-                                                          content: Text(
-                                                              "Deseja realmente apagar o arquivo?"),
-                                                          actions: [
-                                                            FlatButton(
-                                                              child: Text("Cancelar"),
-                                                              onPressed: () {
-                                                                Navigator.of(context,
-                                                                    rootNavigator:
-                                                                    true)
-                                                                    .pop();
-                                                              },
-                                                            ),
-                                                            FlatButton(
-                                                                child: Text("Sim"),
-                                                                onPressed: () {
-                                                                  objSpsQuestionarioCqMidia.deletarQuestionarioMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
-                                                                    //print('Feito');
-                                                                    Navigator.of(context,
-                                                                        rootNavigator:
-                                                                        true)
-                                                                        .pop();
-                                                                        funCallback();
-                                                                  });
-                                                                }),
-                                                          ]);
-                                                    });
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: CircleAvatar(
-                                            radius: 15,
-                                            backgroundColor: Colors.white,
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.edit,
-                                                color: Color(0xFF004077),
-                                                size: 15,
-                                              ),
-                                              onPressed: () {
-                                                _popup_titulo(_listaArquivos[index]['titulo_arquivo'].toString(),_listaArquivos[index]['codigo_empresa'],  int.parse(_listaArquivos[index]['codigo_programacao']), int.parse(_listaArquivos[index]['item_checklist']) ,int.parse(_listaArquivos[index]['item_anexo']));
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    _listaArquivos[index]['caminho'].substring(0, 6) != 'images' ? OpcoesEdicao(context, objSpsQuestionarioCqMidia, _listaArquivos, index, _popup_titulo, 1): OpcoesEdicao(context, objSpsQuestionarioCqMidia, _listaArquivos, index, _popup_titulo, 0),
                                   ]),
                               Align(
                                 alignment: Alignment.center,
@@ -375,6 +345,84 @@ class ImageGrid extends StatelessWidget {
       },
     );
 
+  }
+
+  Row OpcoesEdicao(BuildContext context, SpsQuestionarioMidia objSpsQuestionarioCqMidia, List _listaArquivos, int index, _popup_titulo(String titulo_arquivo, String codigo_empresa, int codigo_programacao, int item_checklist, int item_anexo), int show) {
+    if(show == 1){
+      return Row(
+        mainAxisAlignment:
+        MainAxisAlignment.spaceEvenly,
+        children: [
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: CircleAvatar(
+              radius: 15,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Color(0xFF004077),
+                  size: 15,
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                            title: Text("SPS App"),
+                            content: Text(
+                                "Deseja realmente apagar o arquivo?"),
+                            actions: [
+                              FlatButton(
+                                child: Text("Cancelar"),
+                                onPressed: () {
+                                  Navigator.of(context,
+                                      rootNavigator:
+                                      true)
+                                      .pop();
+                                },
+                              ),
+                              FlatButton(
+                                  child: Text("Sim"),
+                                  onPressed: () {
+                                    objSpsQuestionarioCqMidia.deletarQuestionarioMidia(arquivo: _listaArquivos[index]['caminho'].toString(), codigo_empresa: _listaArquivos[index]['codigo_empresa'],  codigo_programacao: int.parse(_listaArquivos[index]['codigo_programacao']), item_checklist: int.parse(_listaArquivos[index]['item_checklist']) ,item_anexo: int.parse(_listaArquivos[index]['item_anexo'])).then((value){
+                                      //print('Feito');
+                                      Navigator.of(context,
+                                          rootNavigator:
+                                          true)
+                                          .pop();
+                                      funCallback();
+                                    });
+                                  }),
+                            ]);
+                      });
+                },
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: CircleAvatar(
+              radius: 15,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: Color(0xFF004077),
+                  size: 15,
+                ),
+                onPressed: () {
+                  _popup_titulo(_listaArquivos[index]['titulo_arquivo'].toString(),_listaArquivos[index]['codigo_empresa'],  int.parse(_listaArquivos[index]['codigo_programacao']), int.parse(_listaArquivos[index]['item_checklist']) ,int.parse(_listaArquivos[index]['item_anexo']));
+                },
+              ),
+            ),
+          ),
+        ],
+      );
+    }else{
+      return Row(
+      );
+    }
   }
 
 }
