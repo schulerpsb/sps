@@ -35,8 +35,6 @@ class _sps_mediaPlayer_screen extends State<sps_videoPlayer_screen> {
   }
 
   Future<void> initializeVideoPlayer() async {
-    //var file = new File(
-    //    '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/c851fff0-b5a0-447f-ac20-95d8ad642a281692029997891007171.mp4');
     String videoPath;
     videoPath = this.widget._filePath.replaceAll('.jpg', '.mp4');
     videoPath = videoPath.replaceAll('/thumbs/', '/');

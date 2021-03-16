@@ -100,6 +100,9 @@ void main() {
   Timer(Duration(seconds:5), (){
     final isolate = FlutterIsolate.spawn(isolateSincronizacao, "Início da sincronização em background - ISOLATE");
   });
+  getApplicationDocumentsDirectory().then((value){
+    usuarioAtual.document_root_folder = value.path.toString();
+  });
   //runApp(Sps(),
   //runApp(MaterialApp(home: sps_menu_screen()),
   runApp(

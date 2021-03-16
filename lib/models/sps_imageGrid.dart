@@ -7,6 +7,7 @@ import 'package:sps/components/media.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sps/models/sps_questionario_midia.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_imagePlayer_screen.dart';
 import 'package:sps/screens/sps_videoPlayer_screen.dart';
 import 'dart:io' as io;
@@ -117,8 +118,8 @@ class ImageGrid extends StatelessWidget {
                               4);
                   if ((_extensao == '.mp4' || _extensao == '.MP4') && tipo == 'video') {
                     String _nomeArquivoSemExtensao = snapshot.data[i]['nome_arquivo'].toString().substring(0, snapshot.data[i]['nome_arquivo'].toString().length - 4);
-                    if (File('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' + snapshot.data[i]['nome_arquivo'].toString()).existsSync() == true
-                        && File('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs/' + _nomeArquivoSemExtensao + '.jpg')
+                    if (File(usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString()).existsSync() == true
+                        && File(usuarioAtual.document_root_folder.toString() + '/thumbs/' + _nomeArquivoSemExtensao + '.jpg')
                                 .existsSync() ==
                             true) {
                       Map<String, dynamic> _registroArquivo =
@@ -136,7 +137,7 @@ class ImageGrid extends StatelessWidget {
                       _registroArquivo['titulo_arquivo'] =
                           snapshot.data[i]['titulo_arquivo'].toString();
                       _registroArquivo['caminho'] =
-                          '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs/' +
+                          usuarioAtual.document_root_folder.toString()+ '/thumbs/' +
                               _nomeArquivoSemExtensao +
                               '.jpg';
                       _listaArquivos.add(_registroArquivo);
@@ -175,7 +176,9 @@ class ImageGrid extends StatelessWidget {
                   if ((_extensao == '.jpg' || _extensao == '.JPG' || _extensao == '.png' || _extensao == '.PNG') && tipo == 'image') {
                     String _nomeArquivoSemExtensao =
                         snapshot.data[i]['nome_arquivo'].toString();
-                    if (File('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' +
+                    print('verifica: '+ usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString());
+                    print('Existe: '+File(usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString()).existsSync().toString());
+                    if (File(usuarioAtual.document_root_folder.toString() + '/' +
                                 snapshot.data[i]['nome_arquivo'].toString())
                             .existsSync() ==
                         true) {
@@ -194,7 +197,7 @@ class ImageGrid extends StatelessWidget {
                       _registroArquivo['titulo_arquivo'] =
                           snapshot.data[i]['titulo_arquivo'].toString();
                       _registroArquivo['caminho'] =
-                          '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' +
+                          usuarioAtual.document_root_folder.toString() + '/' +
                               snapshot.data[i]['nome_arquivo'].toString();
                       _listaArquivos.add(_registroArquivo);
                     } else {

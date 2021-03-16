@@ -7,6 +7,7 @@ import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class spsMidiaUtils {
@@ -19,16 +20,15 @@ class spsMidiaUtils {
   }
 
   static Future<String> criarVideoThumb({List fileList}) async {
-    final Directory _thumbspath = new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs');
-//    final Directory _videospath = new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures');
+    final Directory _thumbspath = new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs');
     final checkPathExistence = await _thumbspath.exists();
     if(!checkPathExistence){
-      new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
+      new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs').create();
     }
     fileList.forEach( (item) async {
         final thumb = await VideoThumbnail.thumbnailFile(
           video: item,
-          thumbnailPath: '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs',
+          thumbnailPath: usuarioAtual.document_root_folder.toString() + '/thumbs',
           imageFormat: ImageFormat.JPEG,
           quality: 30,
         );
@@ -41,7 +41,7 @@ class spsMidiaUtils {
     DateFormat dateFormat = DateFormat("yyyyMMdd_HHmmss");
     DateTime now = DateTime.now();
     String _nomeArquivo = dateFormat.format(now)+'.'+_extensaoArquivo.toString();
-    String newPath = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/'+_nomeArquivo.toString();
+    String newPath = usuarioAtual.document_root_folder.toString() + '/' +_nomeArquivo.toString();
     final util  = new spsMidiaUtils();
     File arquivoRenomeado = await util.moveFile(sourceFile, newPath);
     return arquivoRenomeado.path;

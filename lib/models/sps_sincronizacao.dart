@@ -26,7 +26,7 @@ class spsSincronizacao {
   //Função que atualiza os dados de questionários(cabeçalho), itens e Anexos entre Local(Sqlite) e o Server(Rest API)
   static Future<bool> sincronizarQuestionarios() async {
     getApplicationDocumentsDirectory().then((value){
-      usuarioAtual.document_root_folder = value.toString();
+      usuarioAtual.document_root_folder = value.path.toString();
     });
     //print('Fernando' + usuarioAtual.document_root_folder);
     //instancia do mecanismo de notificação
@@ -262,7 +262,7 @@ class spsSincronizacao {
             FormData formData = FormData.fromMap({
               "files": [
                 await MultipartFile.fromFile(
-                    "/storage/emulated/0/Android/data/com.example.sps/files/Pictures/" +
+                    usuarioAtual.document_root_folder.toString() + '/' +
                         midia['nome_arquivo'].toString(),
                     filename: midia['nome_arquivo']
                         .toString()),
@@ -415,14 +415,14 @@ class spsSincronizacao {
           var indexMidia = 0;
           var registrosMidia = dadosDeAnexosServidor.length;
           await Future.forEach(dadosDeAnexosServidor, (AnexoServidor) async {
-            String path = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' +AnexoServidor["nome_arquivo"].toString();
+            String path = usuarioAtual.document_root_folder + '/' +AnexoServidor["nome_arquivo"].toString();
             //print('Verificar==> ' +AnexoServidor["nome_arquivo"].toString());
             bool status = await File(path).exists();
             if (status == false) {
               print('Arquivo da we ===>'+AnexoServidor["nome_arquivo"].toString());
               if(AnexoServidor["nome_arquivo"].toString() != null && AnexoServidor["nome_arquivo"].toString() != "null"){
                 String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' + '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
-                String destinoLocal = '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/' + AnexoServidor["nome_arquivo"].toString();
+                String destinoLocal = usuarioAtual.document_root_folder.toString() + '/' + AnexoServidor["nome_arquivo"].toString();
                 print('baixar ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
 
                 await spsNotificacao.notificarProgresso(indexQuestionario, registrosMidia, indexMidia, 'SPS - Atualização', 'Download de arquivos anexos', flip);

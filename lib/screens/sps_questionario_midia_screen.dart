@@ -161,10 +161,8 @@ class _sps_questionario_midia_screen
 
   TabController controller;
 
-  final Directory _photoDir = new Directory(
-      '/storage/emulated/0/Android/data/com.example.sps/files/Pictures');
-  final Directory _videoDir = new Directory(
-      '/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs');
+  final Directory _photoDir = new Directory(usuarioAtual.document_root_folder.toString());
+  final Directory _videoDir = new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs');
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -472,7 +470,7 @@ class _sps_questionario_midia_screen
     //limpar cache de imagem
     //print('Acao====>'+this.widget._acao.toString());
     imageCache.clear();
-    new Directory('/storage/emulated/0/Android/data/com.example.sps/files/Pictures/thumbs').create();
+    new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs').create();
     SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
     return DefaultTabController(
         length: 3,
