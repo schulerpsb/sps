@@ -563,8 +563,7 @@ class _sps_questionario_cq_int_item_screen
 //    }
     _wsincronizado = "N";
     //Gravar SQlite
-    final SpsDaoQuestionarioItem objQuestionarioItemDao =
-        SpsDaoQuestionarioItem();
+    final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
     final int resultupdate = await objQuestionarioItemDao.update_aprovacao(
         _wcodigoEmpresa,
         _wcodigoProgramacao,
@@ -577,8 +576,8 @@ class _sps_questionario_cq_int_item_screen
     await objspsQuestionarioUtils.atualizar_status_resposta(
         _wcodigoEmpresa,
         int.parse(_wcodigoProgramacao),
-        null,
-        null,
+        "",
+        "",
         int.parse(_witemChecklist));
 
     setState(() {});

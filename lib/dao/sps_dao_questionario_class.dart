@@ -125,7 +125,7 @@ class SpsDaoQuestionario {
             '","' +
             doc_action +
             '",null)';
-        debugPrint("adriano => " + _query);
+//        debugPrint("adriano => " + _query);
         await db.rawInsert(_query);
       }
     });
@@ -159,7 +159,6 @@ class SpsDaoQuestionario {
 
   Future<int> emptyTable(doc_action) async {
     final Database db = await getDatabase();
-    print ("ADRIANO =>"+'delete from checklist_lista where (sincronizado is null or sincronizado = "null" or sincronizado = "") and doc_action = "'+doc_action+'"');
     return db.rawDelete('delete from checklist_lista where (sincronizado is null or sincronizado = "null" or sincronizado = "") and doc_action = "'+doc_action+'"');
   }
 

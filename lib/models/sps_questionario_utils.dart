@@ -32,7 +32,6 @@ class spsQuestionarioUtils {
             widentificacaoUtilizador,
             witemChecklist);
 
-    print ("adriano =>1 =>"+result[0]["resp_numero"].toString());
 
     //Analisar status da resposta
     String _wstatusResposta;
@@ -173,7 +172,6 @@ class spsQuestionarioUtils {
               _wstatusResposta,
               _wsincronizado);
 
-      print ("adriano =>2 => fechou");
     }
   }
 }
