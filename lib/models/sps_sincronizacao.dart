@@ -122,10 +122,7 @@ class spsSincronizacao {
             item["codigo_programacao"].toString(),
             item["item_checklist"].toString(),
             item["status_aprovacao"],
-            usuarioAtual.tipo == "INTERNO" ||
-                usuarioAtual.tipo == "COLIGADA"
-                ? usuarioAtual.registro_usuario
-                : usuarioAtual.codigo_usuario);
+            usuarioAtual.registro_usuario);
         if (atualizacaostatus != true) {
           sincItem = 1;
         }
