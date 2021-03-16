@@ -16,7 +16,7 @@ class SpsDaoQuestionario {
       'status TEXT, '
       'referencia_parceiro TEXT, '
       'codigo_pedido TEXT, '
-      'item_pedido INTEGER, '
+      'item_pedido TEXT, '
       'codigo_projeto TEXT, '
       'descr_projeto TEXT, '
       'codigo_material TEXT, '
@@ -70,9 +70,6 @@ class SpsDaoQuestionario {
       if (questionario['percentual_evolucao'] == null || questionario['percentual_evolucao'] == "") {
         questionario['percentual_evolucao'] = 0;
       }
-      if (questionario['item_pedido'] == null || questionario['item_pedido'] == "") {
-        questionario['item_pedido'] = 0;
-      }
       if (questionario['descr_comentarios'] == null || questionario['descr_comentarios'] == "") {
         questionario['descr_comentarios'] = "";
       }
@@ -115,9 +112,9 @@ class SpsDaoQuestionario {
             questionario['referencia_parceiro'] +
             '","' +
             questionario['codigo_pedido'] +
-            '",' +
-            questionario['item_pedido'].toString() +
-            ',"' +
+            '","' +
+            questionario['item_pedido'] +
+            '","' +
             questionario['codigo_projeto'] +
             '","' +
             questionario['descr_projeto'] +
@@ -128,7 +125,7 @@ class SpsDaoQuestionario {
             '","' +
             doc_action +
             '",null)';
-//        debugPrint("query => " + _query);
+        debugPrint("adriano => " + _query);
         await db.rawInsert(_query);
       }
     });
@@ -162,6 +159,7 @@ class SpsDaoQuestionario {
 
   Future<int> emptyTable(doc_action) async {
     final Database db = await getDatabase();
+    print ("ADRIANO =>"+'delete from checklist_lista where (sincronizado is null or sincronizado = "null" or sincronizado = "") and doc_action = "'+doc_action+'"');
     return db.rawDelete('delete from checklist_lista where (sincronizado is null or sincronizado = "null" or sincronizado = "") and doc_action = "'+doc_action+'"');
   }
 

@@ -302,7 +302,7 @@ class texto_principal {
         "\n\n" +
         "PEDIDO: " +
         '${wsnapshot["codigo_pedido"]}' +
-        "/" +
+        " / " +
         '${wsnapshot["item_pedido"]}' +
         " (" +
         '${wsnapshot["codigo_material"]}' +

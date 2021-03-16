@@ -30,7 +30,7 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
   final int _codigo_checklist;
   final String _descr_programacao;
   final String _codigo_pedido;
-  final int _item_pedido;
+  final String _item_pedido;
   final String _codigo_material;
   String _referencia_parceiro;
   final String _codigo_projeto;
@@ -215,8 +215,8 @@ class _sps_questionario_cq_ext_item_screen
                                     "\n\n" +
                                     "PEDIDO: " +
                                     this.widget._codigo_pedido +
-                                    "/" +
-                                    this.widget._item_pedido.toString() +
+                                    " / " +
+                                    this.widget._item_pedido +
                                     " (" +
                                     this.widget._codigo_material +
                                     ")\n" +

@@ -23,7 +23,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
   final int _codigo_checklist;
   final String _descr_programacao;
   final String _codigo_pedido;
-  final int _item_pedido;
+  final String _item_pedido;
   final String _codigo_material;
   final String _referencia_parceiro;
   final String _codigo_projeto;
