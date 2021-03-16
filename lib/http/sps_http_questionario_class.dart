@@ -65,6 +65,7 @@ class SpsHttpQuestionario {
           'referencia_parceiro': element['referencia_parceiro'],
           'codigo_pedido': element['codigo_pedido'],
           'item_pedido': element['item_pedido'],
+          'nome_fornecedor': element['nome_fornecedor'],
           'codigo_projeto': element['codigo_projeto'],
           'descr_projeto': element['descr_projeto'],
           'codigo_material': element['codigo_material'],

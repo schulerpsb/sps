@@ -133,7 +133,7 @@ class _sps_questionario_cq_lista_screen
                             ),
                             subtitle: Text(
                                 texto_principal
-                                    .wtexto_principal(snapshot.data[index]),
+                                    .wtexto_principal(snapshot.data[index],this.widget._origemUsuario),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black)),
@@ -188,6 +188,8 @@ class _sps_questionario_cq_lista_screen
                                                   snapshot.data[index]
                                                       ["referencia_parceiro"],
                                                   snapshot.data[index]
+                                                      ["nome_fornecedor"],
+                                                  snapshot.data[index]
                                                       ["codigo_projeto"],
                                                   snapshot.data[index]
                                                       ["sincronizado"],
@@ -223,6 +225,8 @@ class _sps_questionario_cq_lista_screen
                                                       ["codigo_material"],
                                                   snapshot.data[index]
                                                       ["referencia_parceiro"],
+                                                  snapshot.data[index]
+                                                      ["nome_fornecedor"],
                                                   snapshot.data[index]
                                                       ["codigo_projeto"],
                                                   snapshot.data[index]
@@ -288,7 +292,7 @@ class _sps_questionario_cq_lista_screen
 }
 
 class texto_principal {
-  static String wtexto_principal(wsnapshot) {
+  static String wtexto_principal(wsnapshot, _origemUsuario) {
     String _texto_principal;
 
     final String _dtfim_aplicacao =
@@ -298,8 +302,17 @@ class texto_principal {
             "/" +
             wsnapshot["dtfim_aplicacao"].substring(0, 4);
 
+
     _texto_principal = '${wsnapshot["descr_programacao"]}' +
-        "\n\n" +
+        "\n\n";
+
+    if (_origemUsuario == "INTERNO") {
+      _texto_principal = _texto_principal +
+          "PARCEIRO: " +
+          '${wsnapshot["nome_fornecedor"]}'+"\n";
+    }
+
+    _texto_principal = _texto_principal +
         "PEDIDO: " +
         '${wsnapshot["codigo_pedido"]}' +
         " / " +
