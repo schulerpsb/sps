@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
@@ -6,7 +7,6 @@ import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/http/sps_http_questionario_midia_class.dart';
 import 'package:sps/http/sps_http_verificar_conexao_class.dart';
-import 'package:sps/models/sps_questionario_midia.dart';
 import 'package:sps/models/sps_updown.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/models/sps_notificacao.dart';
@@ -25,6 +25,10 @@ class spsSincronizacao {
 
   //Função que atualiza os dados de questionários(cabeçalho), itens e Anexos entre Local(Sqlite) e o Server(Rest API)
   static Future<bool> sincronizarQuestionarios() async {
+    getApplicationDocumentsDirectory().then((value){
+      usuarioAtual.document_root_folder = value.toString();
+    });
+    //print('Fernando' + usuarioAtual.document_root_folder);
     //instancia do mecanismo de notificação
     FlutterLocalNotificationsPlugin flip = spsNotificacao
         .iniciarNotificacaoGrupo();
@@ -122,10 +126,7 @@ class spsSincronizacao {
             item["codigo_programacao"].toString(),
             item["item_checklist"].toString(),
             item["status_aprovacao"],
-            usuarioAtual.tipo == "INTERNO" ||
-                usuarioAtual.tipo == "COLIGADA"
-                ? usuarioAtual.registro_usuario
-                : usuarioAtual.codigo_usuario);
+            usuarioAtual.registro_usuario);
         if (atualizacaostatus != true) {
           sincItem = 1;
         }
@@ -402,7 +403,6 @@ class spsSincronizacao {
           'identificacao_utilizador': questionario['identificacao_utilizador']
               .toString(),
         };
-
         final List<Map<String,
             dynamic>> dadosDeAnexosServidor = await objSpsHttpQuestionarioMidia
             .listarMidiaAll(dadosArquivo: dadosArquivo);
