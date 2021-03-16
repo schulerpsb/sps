@@ -38,6 +38,7 @@ class sps_questionario_midia_screen extends StatefulWidget {
   final String _item_pedido;
   final String _codigo_material;
   final String _referencia_parceiro;
+  final String _nome_fornecedor;
   final String _codigo_projeto;
   final String _sincronizado;
   final String _status_aprovacao;
@@ -64,6 +65,7 @@ class sps_questionario_midia_screen extends StatefulWidget {
       this._item_pedido,
       this._codigo_material,
       this._referencia_parceiro,
+      this._nome_fornecedor,
       this._codigo_projeto,
       this._sincronizado,
       this._status_aprovacao,
@@ -93,6 +95,7 @@ class sps_questionario_midia_screen extends StatefulWidget {
           this._item_pedido,
           this._codigo_material,
           this._referencia_parceiro,
+          this._nome_fornecedor,
           this._codigo_projeto,
           this._sincronizado,
           this._status_aprovacao,
@@ -130,6 +133,7 @@ class _sps_questionario_midia_screen
       _item_pedido,
       _codigo_material,
       _referencia_parceiro,
+      _nome_fornecedor,
       _codigo_projeto,
       _sincronizado,
       _status_aprovacao,

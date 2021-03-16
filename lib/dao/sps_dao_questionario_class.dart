@@ -17,6 +17,7 @@ class SpsDaoQuestionario {
       'referencia_parceiro TEXT, '
       'codigo_pedido TEXT, '
       'item_pedido TEXT, '
+      'nome_fornecedor TEXT, '
       'codigo_projeto TEXT, '
       'descr_projeto TEXT, '
       'codigo_material TEXT, '
@@ -114,6 +115,8 @@ class SpsDaoQuestionario {
             questionario['codigo_pedido'] +
             '","' +
             questionario['item_pedido'] +
+            '","' +
+            questionario['nome_fornecedor'] +
             '","' +
             questionario['codigo_projeto'] +
             '","' +
