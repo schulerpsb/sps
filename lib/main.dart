@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:cron/cron.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'http/sps_http_verificar_conexao_class.dart';
 import 'models/sps_login.dart';
 import 'models/sps_sincronizacao.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 
 void isolateSincronizacao(String arg) async  {
   final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
