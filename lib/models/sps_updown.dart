@@ -45,7 +45,11 @@ class spsUpDown {
       return '1';
     } catch (e) {
       //print(e.response.statusCode.toString());
-      return e.response.statusCode.toString();
+      if (Platform.isAndroid) {
+        return e.response.statusCode.toString();
+      } else if (Platform.isIOS) {
+        return e.toString();
+      }
     }
 
   }

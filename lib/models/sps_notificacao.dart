@@ -32,7 +32,7 @@ class spsNotificacao {
         playSound: false,
         timeoutAfter: 1000,
         enableVibration: false,
-        groupKey: 'com.android.example.sps');
+        groupKey: 'com.android.schuler.sps');
 
     //Detalhes de especificções para IOS
     const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: false);
@@ -68,7 +68,7 @@ class spsNotificacao {
         priority: Priority.High,
         onlyAlertOnce: true,
         playSound: false,
-        groupKey: 'com.android.example.sps');
+        groupKey: 'com.android.schuler.sps');
 
     //Detalhes de especificções para IOS
     const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails();
