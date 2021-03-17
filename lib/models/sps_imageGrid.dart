@@ -173,8 +173,8 @@ class ImageGrid extends StatelessWidget {
                   if ((_extensao == '.jpg' || _extensao == '.JPG' || _extensao == '.png' || _extensao == '.PNG') && tipo == 'image') {
                     String _nomeArquivoSemExtensao =
                         snapshot.data[i]['nome_arquivo'].toString();
-                    print('verifica: '+ usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString());
-                    print('Existe: '+File(usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString()).existsSync().toString());
+                    // print('verifica: '+ usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString());
+                    // print('Existe: '+File(usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString()).existsSync().toString());
                     if (File(usuarioAtual.document_root_folder.toString() + '/' +
                                 snapshot.data[i]['nome_arquivo'].toString())
                             .existsSync() ==
@@ -240,6 +240,18 @@ class ImageGrid extends StatelessWidget {
                         childAspectRatio: 3.0 / (tipo == 'image' ? 5.0 : 5.1)),
                     itemBuilder: (context, index) {
                       indicemedia = index;
+                      var thumbnaodisponivel;
+                      thumbnaodisponivel = "";
+                      if(tipo == 'video'){
+                        // print('video thumb'+_listaArquivos[index]['caminho'].toString());
+                        if (File(_listaArquivos[index]['caminho'].toString()).existsSync() == false) {
+                          // var videoPath = _listaArquivos[index]['caminho'].replaceAll('.jpg', '.mp4');
+                          // videoPath = videoPath.replaceAll('/thumbs/', '/');
+                          // _listaArquivos[index]['caminho'] = videoPath;
+                          thumbnaodisponivel = 'images/noimage.jpg';
+                        }
+                        // print('video '+_listaArquivos[index]['caminho'].toString());
+                      }
                       File file = new File(_listaArquivos[index]['caminho']);
                       String name = file.path.split('/').last;
                       return Card(
@@ -276,9 +288,10 @@ class ImageGrid extends StatelessWidget {
                                           print(er);
                                         }),
                                       },
+
                                       child: Padding(
                                         padding: new EdgeInsets.all(0.0),
-                                        child: _listaArquivos[index]['caminho'].substring(0, 6) == 'images' ? Image.asset(_listaArquivos[index]['caminho']) : Image.file(File(_listaArquivos[index]['caminho']),
+                                        child: thumbnaodisponivel != "" ? Image.asset(thumbnaodisponivel) : _listaArquivos[index]['caminho'].substring(0, 6) == 'images' ? Image.asset(_listaArquivos[index]['caminho']) : Image.file(File(_listaArquivos[index]['caminho']),
                                           fit: BoxFit.contain,
                                           height: 156,
                                         ),

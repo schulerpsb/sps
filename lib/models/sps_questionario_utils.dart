@@ -217,11 +217,7 @@ class CustomRadioWidget<T> extends StatelessWidget {
               decoration: ShapeDecoration(
                 shape: CircleBorder(),
                 gradient: LinearGradient(
-                  colors: value == groupValue
-                      ? [
-                          Colors.black,
-                          Colors.blue,
-                        ]
+                  colors: value == groupValue ? [Colors.black, Colors.blue,]
                       : [
                           Theme.of(context).scaffoldBackgroundColor,
                           Theme.of(context).scaffoldBackgroundColor,
