@@ -190,6 +190,8 @@ class _sps_questionario_cq_lista_screen
                                                   snapshot.data[index]
                                                       ["nome_fornecedor"],
                                                   snapshot.data[index]
+                                                      ["qtde_pedido"],
+                                                  snapshot.data[index]
                                                       ["codigo_projeto"],
                                                   snapshot.data[index]
                                                       ["sincronizado"],
@@ -227,6 +229,8 @@ class _sps_questionario_cq_lista_screen
                                                       ["referencia_parceiro"],
                                                   snapshot.data[index]
                                                       ["nome_fornecedor"],
+                                                  snapshot.data[index]
+                                                      ["qtde_pedido"],
                                                   snapshot.data[index]
                                                       ["codigo_projeto"],
                                                   snapshot.data[index]
@@ -324,6 +328,8 @@ class texto_principal {
         '${wsnapshot["referencia_parceiro"]}' +
         "\nPROJETO: " +
         '${wsnapshot["codigo_projeto"]}' +
+        "\nQUANTIDADE: " +
+        '${wsnapshot["qtde_pedido"]}' +
         "\n\n" +
         "PRAZO: " +
         _dtfim_aplicacao;

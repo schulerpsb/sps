@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
+import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
@@ -27,6 +28,7 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
   final String _codigo_material;
   String _referencia_parceiro;
   final String _nome_fornecedor;
+  final int _qtde_pedido;
   final String _codigo_projeto;
   final String _sincronizado;
   final String _status_aprovacao;
@@ -48,6 +50,7 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
       this._codigo_material,
       this._referencia_parceiro,
       this._nome_fornecedor,
+      this._qtde_pedido,
       this._codigo_projeto,
       this._sincronizado,
       this._status_aprovacao,
@@ -71,6 +74,7 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
           this._codigo_material,
           this._referencia_parceiro,
           this._nome_fornecedor,
+          this._qtde_pedido,
           this._codigo_projeto,
           this._sincronizado,
           this._status_aprovacao,
@@ -101,6 +105,7 @@ class _sps_questionario_cq_int_item_screen
       _codigo_material,
       _referencia_parceiro,
       _nome_fornecedor,
+      _qtde_pedido,
       _codigo_projeto,
       _sincronizado,
       _status_aprovacao,
@@ -438,6 +443,7 @@ class _sps_questionario_cq_int_item_screen
                                                     this.widget._codigo_material,
                                                     this.widget._referencia_parceiro,
                                                     this.widget._nome_fornecedor,
+                                                    this.widget._qtde_pedido,
                                                     this.widget._codigo_projeto,
                                                     this.widget._sincronizado,
                                                     snapshot.data[index]
@@ -492,6 +498,7 @@ class _sps_questionario_cq_int_item_screen
                                               this.widget._codigo_material,
                                               this.widget._referencia_parceiro,
                                               this.widget._nome_fornecedor,
+                                              this.widget._qtde_pedido,
                                               this.widget._codigo_projeto,
                                               this.widget._sincronizado,
                                               snapshot.data[index]
@@ -576,6 +583,12 @@ class _sps_questionario_cq_int_item_screen
         _witemChecklist,
         _wstatusAprovacao,
         _wsincronizado);
+
+    //Analisar e Atualizar Status da Lista (cabecalho) em função da aprovação
+    final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+    final int resultupdateLista = await objQuestionarioDao.update_status_lista_aprovacao(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao);
 
     //Atualizar status da resposta
     spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();

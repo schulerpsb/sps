@@ -18,6 +18,7 @@ class SpsDaoQuestionario {
       'codigo_pedido TEXT, '
       'item_pedido TEXT, '
       'nome_fornecedor TEXT, '
+      'qtde_pedido INTEGER, '
       'codigo_projeto TEXT, '
       'descr_projeto TEXT, '
       'codigo_material TEXT, '
@@ -74,6 +75,9 @@ class SpsDaoQuestionario {
       if (questionario['descr_comentarios'] == null || questionario['descr_comentarios'] == "") {
         questionario['descr_comentarios'] = "";
       }
+      if (questionario['qtde_pedido'] == null || questionario['qtde_pedido'] == "") {
+        questionario['qtde_pedido'] = 0;
+      }
       var _query2 =
           'SELECT * FROM checklist_lista where codigo_empresa = "' +
               questionario['codigo_empresa'] +
@@ -117,7 +121,9 @@ class SpsDaoQuestionario {
             questionario['item_pedido'] +
             '","' +
             questionario['nome_fornecedor'] +
-            '","' +
+            '",' +
+            questionario['qtde_pedido'].toString() +
+            ',"' +
             questionario['codigo_projeto'] +
             '","' +
             questionario['descr_projeto'] +
@@ -149,6 +155,36 @@ class SpsDaoQuestionario {
     //debugPrint("query => " + _query);
     db.rawUpdate(_query);
     //debugPrint("Alterado referencia (checklist_lista) => " + _hreferencia);
+    return 1;
+  }
+
+  Future<int> update_status_lista_aprovacao(_hcodigoEmpresa, _hcodigoProgramacao) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_lista '
+                 'set status = case when (SELECT count(*) '
+                 '                         FROM checklist_item '
+                 '                         where codigo_empresa = "'+ _hcodigoEmpresa + '" '
+                 '                           AND CODIGO_PROGRAMACAO = ' + _hcodigoProgramacao.toString() +
+                 '                           AND status_aprovacao <> "APROVADO") = 0 then '
+                 '                 "OK" '
+                 '             else '
+                 '                 case when (SELECT count(*) '
+                 '                           FROM checklist_item '
+                 '                           where codigo_empresa = "'+ _hcodigoEmpresa + '" '
+                 '                           AND CODIGO_PROGRAMACAO = ' + _hcodigoProgramacao.toString() +
+                 '                           AND status_aprovacao <> "PENDENTE") <> 0 then '
+                 '                     "PARCIAL" '
+                 '                 else '
+                 '                     "PENDENTE" '
+                 '                 end	'
+                 '            end,	'
+                 ' sincronizado = "N" '
+        ' where codigo_empresa = "' +
+        _hcodigoEmpresa +
+        '" and codigo_programacao = ' +
+        _hcodigoProgramacao.toString();
+    debugPrint("query adriano => " + _query);
+    db.rawUpdate(_query);
     return 1;
   }
 
@@ -193,7 +229,8 @@ class SpsDaoQuestionario {
           _filtroDescrProgramacao.toString() +
           "%'";
     }
-    _query = _query + ' and doc_action = "'+doc_action+'"';
+    _query = _query + ' and doc_action = "'+doc_action+'" ' +
+        'order by dtfim_aplicacao';
 
     //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
