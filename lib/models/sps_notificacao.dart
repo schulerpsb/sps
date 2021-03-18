@@ -43,6 +43,34 @@ class spsNotificacao {
     return 1;
   }
 
+  static Future<int> notificarInicioProgressoIndeterminado(int id, String title1, String title2, FlutterLocalNotificationsPlugin flip) async {
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+        'indeterminate progress channel',
+        'indeterminate progress channel',
+        'indeterminate progress channel description',
+        channelShowBadge: false,
+        importance: Importance.max,
+        priority: Priority.high,
+        onlyAlertOnce: true,
+        showProgress: true,
+        indeterminate: true,
+        playSound: false,
+        enableVibration: false,
+        groupKey: 'com.android.schuler.sps'
+    );
+
+    //Detalhes de especificções para IOS
+    const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: false);
+
+    final NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
+    await flip.show(id, title1, title2, platformChannelSpecifics, payload: 'item x');
+
+    return 1;
+  }
+
   static Future<int> notificarProgressosilencioso(int id, int maxProgress, int progresso, String title1, String title2, FlutterLocalNotificationsPlugin flip) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails('silent channel id', 'silent channel name',
@@ -78,5 +106,9 @@ class spsNotificacao {
     return 1;
   }
 
+  static Future<int> cancelarNotificacao(int id, FlutterLocalNotificationsPlugin flip) async {
+    await flip.cancel(id);
+    return 1;
+  }
 
 }

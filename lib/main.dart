@@ -77,7 +77,7 @@ void isolateSincronizacao(String arg) async  {
           statusSincronizarQuestionarios = false;
           statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
         }else{
-          if(numsinc == 3){
+          if(numsinc == 50){
             statusSincronizarQuestionarios = true;
             numsinc = 0;
           }else{

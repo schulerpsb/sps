@@ -30,8 +30,8 @@ class spsSincronizacao {
     });
     //print('Fernando' + usuarioAtual.document_root_folder);
     //instancia do mecanismo de notificação
-    FlutterLocalNotificationsPlugin flip = spsNotificacao
-        .iniciarNotificacaoGrupo();
+    FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
+    int jaNotificado = 0;
 
     //Criar tabela "checklist_lista" caso não exista
     final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
@@ -58,6 +58,12 @@ class spsSincronizacao {
       //Ler dados não sincronizados do SQlite
       final List<Map<String, dynamic>> resultLista = await objQuestionarioDao.select_sincronizacao();
       var _wregistrosLista = resultLista.length;
+      if(resultLista.length > 0){
+        if(jaNotificado == 0){
+          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS-Schuler Production System','Sincronização de Dados', flip);
+          jaNotificado = 1;
+        }
+      }
       //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +resultLista.toString() +")");
       var windexLista = 0;
       await Future.forEach(resultLista, (questionario) async {
@@ -85,7 +91,6 @@ class spsSincronizacao {
           print('=== === UPLOAD - Update dados de Referência. Código programação: '+questionario["codigo_programacao"].toString());
         }
         windexLista = windexLista + 1;
-        await spsNotificacao.notificarProgresso(0, _wregistrosLista, windexLista, 'SPS - Atualização','Upload de Questionários', flip);
       });
 //      while (windexLista < _wregistrosLista) {
 //
@@ -97,6 +102,12 @@ class spsSincronizacao {
       final List<Map<String, dynamic>> result =
       await objQuestionarioItemDao.selectSincronizacaoItens();
       var _wregistros = result.length;
+      if(result.length > 0){
+        if(jaNotificado == 0){
+          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS - Schuler Production System','Sincronização de Dados', flip);
+          jaNotificado = 1;
+        }
+      }
       //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +_wregistros.toString() +")");
       var windex = 0;
       await Future.forEach(result, (item) async {
@@ -200,7 +211,6 @@ class spsSincronizacao {
           print('=== === UPLOAD - Update dados de Item, comentários, aprovação e respostas. Codigo_programação: '+item["codigo_programacao"].toString()+', item: '+item["item_checklist"].toString());
         }
         windex = windex + 1;
-        await spsNotificacao.notificarProgresso(1, _wregistros, windex, 'SPS - Atualização', 'Upload de Itens', flip);
       });
 //      while (windex < _wregistros) {
 //      }
@@ -211,6 +221,12 @@ class spsSincronizacao {
       //Ler dados não sincronizados do SQlite
       final List<Map<String, dynamic>> resultMidia = await objSpsDaoQuestionarioMidia.select_sincronizacao();
       var _wregistrosMidia = resultMidia.length;
+      if(resultMidia.length > 0){
+        if(jaNotificado == 0){
+          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS - Schuler Production System','Sincronização de Dados', flip);
+          jaNotificado = 1;
+        }
+      }
       //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +_wregistrosMidia.toString() +")");
       var windexMidia = 0;
       Map<String, dynamic> dadosArquivo;
@@ -303,7 +319,6 @@ class spsSincronizacao {
           //debugPrint("ERRO ao processar arquivo no servidor: " + midia.toString());
         }
         windexMidia = windexMidia + 1;
-        await spsNotificacao.notificarProgresso(2, _wregistrosMidia, windexMidia, 'SPS - Atualização','Upload de arquivos anexos', flip);
       });
 //      while (windexMidia < _wregistrosMidia) {
 //
@@ -313,20 +328,22 @@ class spsSincronizacao {
 
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
       debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
-      bool StatuExternoCq = await sincronizarAnexosServerToLocal('EXTERNO', 'CONTROLE DE QUALIDADE',flip);
-      bool StatuInternoCq = await sincronizarAnexosServerToLocal('INTERNO', 'CONTROLE DE QUALIDADE',flip);
-      bool StatuExternoCheck = await sincronizarAnexosServerToLocal('EXTERNO', 'CHECKLIST',flip);
-      bool StatuInternoCheck = await sincronizarAnexosServerToLocal('INTERNO', 'CHECKLIST',flip);
-      bool StatuExternoPesq = await sincronizarAnexosServerToLocal('EXTERNO', 'PESQUISA',flip);
-      bool StatuInternoPesq = await sincronizarAnexosServerToLocal('INTERNO', 'PESQUISA',flip);
+      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'CONTROLE DE QUALIDADE',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'CONTROLE DE QUALIDADE',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'CHECKLIST',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'CHECKLIST',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'PESQUISA',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'PESQUISA',flip, jaNotificado);
       debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
+      jaNotificado = 0;
+      await spsNotificacao.cancelarNotificacao(0, flip);
     }
 
     return true;
   }
 
-  static Future<bool> sincronizarAnexosServerToLocal(_origemUsuario,_tipoChecklist,flip) async {
+  static Future<int> sincronizarAnexosServerToLocal(_origemUsuario,_tipoChecklist,flip, jaNotificado) async {
 
     //Tipos de usuário: "INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS
     final SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = SpsHttpQuestionarioMidia();
@@ -419,14 +436,15 @@ class spsSincronizacao {
             //print('Verificar==> ' +AnexoServidor["nome_arquivo"].toString());
             bool status = await File(path).exists();
             if (status == false) {
-              print('Arquivo da we ===>'+AnexoServidor["nome_arquivo"].toString());
+                if(jaNotificado == 0){
+                  await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS - Schuler Production System','Sincronização de Dados', flip);
+                  jaNotificado = 1;
+                }
+//              print('Arquivo da web ===>'+AnexoServidor["nome_arquivo"].toString());
               if(AnexoServidor["nome_arquivo"].toString() != null && AnexoServidor["nome_arquivo"].toString() != "null"){
                 String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' + '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
                 String destinoLocal = usuarioAtual.document_root_folder.toString() + '/' + AnexoServidor["nome_arquivo"].toString();
                 print('baixar ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
-
-                await spsNotificacao.notificarProgresso(indexQuestionario, registrosMidia, indexMidia, 'SPS - Atualização', 'Download de arquivos anexos', flip);
-
                 await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal).then((String statusDownload) async{
                   if (statusDownload == '1') {
                     print('Download efetuado ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
@@ -442,7 +460,6 @@ class spsSincronizacao {
                       spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value) => null);
                       //print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
                     }
-                    await spsNotificacao.notificarProgresso(indexQuestionario, registrosMidia, indexMidia,'SPS - Atualização', 'Download de arquivos anexos', flip);
                   } else {
                     if(statusDownload == '404'){
                       var dadosApagarArquivoComErro = null;
@@ -461,7 +478,6 @@ class spsSincronizacao {
                         'sincronizado': 'D',
                       };
                       var retorno1Midia = await objSpsHttpQuestionarioMidia.atualizarQuestionarioMidia(dadosArquivo: dadosApagarArquivoComErro);
-                      //await spsNotificacao.notificarErro(900 + indexQuestionario + indexMidia, 'SPS - Falha no download', 'Verifique arquivo na WEB - Cod-Prog:'+AnexoServidor["codigo_programacao"].toString()+' item: '+AnexoServidor["item_checklist"].toString(), flip);
                       print('ERRO ao processar download de Anexos de midia - Server to Local! ' +ArquivoParaDownload.toString());
                     }
                   }
@@ -487,7 +503,12 @@ class spsSincronizacao {
 //      }
       debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE Anexos (Tabela: sps_checklist_tb_resp_anexo) =============================================");
     }
-    return true;
+    if(jaNotificado == 0){
+      return 0;
+    }else{
+      return 1;
+    }
+
   }
 
 
