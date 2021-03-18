@@ -130,8 +130,6 @@ class _sps_questionario_ch_item_screen
       }
     }
 
-    //print ("adriano => "+this.widget._registro_colaborador.toString());
-
     return WillPopScope(
       onWillPop: () {
         return new Future(() => false);

@@ -134,7 +134,7 @@ class SpsDaoQuestionario {
             '","' +
             doc_action +
             '",null)';
-//        debugPrint("adriano => " + _query);
+//        debugPrint("Query => " + _query);
         await db.rawInsert(_query);
       }
     });
@@ -183,7 +183,7 @@ class SpsDaoQuestionario {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString();
-    debugPrint("query adriano => " + _query);
+    debugPrint("query => " + _query);
     db.rawUpdate(_query);
     return 1;
   }
@@ -221,7 +221,7 @@ class SpsDaoQuestionario {
         _hregistroColaborador +
         '" and identificacao_utilizador = "' +
         _hidentificacaoUtilizador + '"';
-    debugPrint("query adriano => " + _query);
+    //debugPrint("query => " + _query);
     db.rawUpdate(_query);
     return 1;
   }

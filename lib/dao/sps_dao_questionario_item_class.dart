@@ -391,7 +391,7 @@ class SpsDaoQuestionarioItem {
             _hidentificacaoUtilizador.toString() +
             '" and a.item_checklist = ' +
             _hitemChecklist.toString();
-    print("query adriano => " + _query);
+    //print("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
