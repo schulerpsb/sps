@@ -12,10 +12,7 @@ class spsNotificacao {
     FlutterLocalNotificationsPlugin flip = new FlutterLocalNotificationsPlugin();
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid = new AndroidInitializationSettings('@mipmap/ic_stat_icone');
-    var initializationSettingsIOS = new IOSInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false);
+    var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flip.initialize(initializationSettings);
     return flip;

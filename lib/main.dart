@@ -11,6 +11,8 @@ import 'http/sps_http_verificar_conexao_class.dart';
 import 'models/sps_login.dart';
 import 'models/sps_sincronizacao.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:sps/models/sps_notificacao.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void isolateSincronizacao(String arg) async  {
   final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
@@ -97,6 +99,7 @@ void isolateSincronizacao(String arg) async  {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
   Timer(Duration(seconds:5), (){
     final isolate = FlutterIsolate.spawn(isolateSincronizacao, "Início da sincronização em background - ISOLATE");
   });
