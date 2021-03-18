@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
+import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
@@ -1094,6 +1095,14 @@ class _sps_questionario_ch_item_screen
         _wregistroColaborador,
         _widentificacaoUtilizador,
         int.parse(_witemChecklist));
+
+    //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
+    final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+    final int resultupdateLista = await objQuestionarioDao.update_lista_status_resposta(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao,
+        _wregistroColaborador,
+        _widentificacaoUtilizador);
 
     //Recarregar tela
     Navigator.pop;

@@ -38,10 +38,10 @@ class spsQuestionarioUtils {
 
     //Analisar resposta CQ
     if (result[0]["tipo_resposta"] == "RESPOSTA CQ") {
-      if (result[0]["resp_cq"] == "") {
-        _wstatusResposta = "PENDENTE";
-      } else {
+      if (result[0]["resp_cq"] == 'APROVADO' || result[0]["resp_cq"] == 'NÃO SE APLICA') {
         _wstatusResposta = "PREENCHIDA";
+      } else {
+        _wstatusResposta = "PENDENTE";
       }
     }
 

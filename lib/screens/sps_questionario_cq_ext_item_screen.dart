@@ -618,6 +618,14 @@ class _sps_questionario_cq_ext_item_screen
         _widentificacaoUtilizador,
         int.parse(_witemChecklist));
 
+    //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
+    final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+    final int resultupdateLista = await objQuestionarioDao.update_lista_status_resposta(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao,
+       '',
+       '');
+
     setState(() {});
     _singleValue[_windex] = _wrespCq;
     this.widget._indexLista = _windex;

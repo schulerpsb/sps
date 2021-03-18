@@ -70,6 +70,9 @@ class SpsDaoQuestionarioItem {
   Future<int> save(List<Map<String, dynamic>> dadosQuestionarioItem) async {
     final Database db = await getDatabase();
     await Future.forEach(dadosQuestionarioItem, (item) async {
+      item['registro_colaborador'] = "";
+      item['identificacao_utilizador'] = "";
+
       if (item['inicio_escala'].toString() == "") {
         item['inicio_escala'] = null;
       }
@@ -378,7 +381,7 @@ class SpsDaoQuestionarioItem {
       _hitemChecklist) async {
     final Database db = await getDatabase();
     var _query =
-        'SELECT *, (select count(*) from sps_checklist_tb_resp_anexo b where b.codigo_empresa = a.codigo_empresa and b.codigo_programacao = a.codigo_programacao and b.registro_colaborador = a.registro_colaborador and b.identificacao_utilizador = a.identificacao_utilizador and b.item_checklist = a.item_checklist) as qtde_anexos FROM checklist_item a where codigo_empresa = "' +
+        'SELECT *, (select count(*) from sps_checklist_tb_resp_anexo b where b.codigo_empresa = a.codigo_empresa and b.codigo_programacao = a.codigo_programacao and b.registro_colaborador = a.registro_colaborador and b.identificacao_utilizador = a.identificacao_utilizador and b.item_checklist = a.item_checklist and sincronizado <> "D") as qtde_anexos FROM checklist_item a where codigo_empresa = "' +
             _hcodigoEmpresa +
             '" and a.codigo_programacao = ' +
             _hcodigoProgramacao.toString() +
@@ -388,7 +391,7 @@ class SpsDaoQuestionarioItem {
             _hidentificacaoUtilizador.toString() +
             '" and a.item_checklist = ' +
             _hitemChecklist.toString();
-    //print("query => " + _query);
+    print("query adriano => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }

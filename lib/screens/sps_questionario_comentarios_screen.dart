@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/http//sps_http_verificar_conexao_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
@@ -266,6 +267,14 @@ class _sps_questionario_comentarios_screen
         _wregistroColaborador,
         _widentificacaoUtilizador,
         _witemChecklist);
+
+    //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
+    final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+    final int resultupdateLista = await objQuestionarioDao.update_lista_status_resposta(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao,
+        _wregistroColaborador,
+        _widentificacaoUtilizador);
 
     //Retornar para tela de itens do questionário
     Navigator.pop;
