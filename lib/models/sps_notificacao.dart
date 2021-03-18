@@ -12,10 +12,7 @@ class spsNotificacao {
     FlutterLocalNotificationsPlugin flip = new FlutterLocalNotificationsPlugin();
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid = new AndroidInitializationSettings('@mipmap/ic_stat_icone');
-    var initializationSettingsIOS = new IOSInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false);
+    var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flip.initialize(initializationSettings);
     return flip;
@@ -43,6 +40,34 @@ class spsNotificacao {
     final NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
     await flip.show(id, title1, title2, platformChannelSpecifics, payload: 'item x');
+    return 1;
+  }
+
+  static Future<int> notificarInicioProgressoIndeterminado(int id, String title1, String title2, FlutterLocalNotificationsPlugin flip) async {
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+        'indeterminate progress channel',
+        'indeterminate progress channel',
+        'indeterminate progress channel description',
+        channelShowBadge: false,
+        importance: Importance.max,
+        priority: Priority.high,
+        onlyAlertOnce: true,
+        showProgress: true,
+        indeterminate: true,
+        playSound: false,
+        enableVibration: false,
+        groupKey: 'com.android.schuler.sps'
+    );
+
+    //Detalhes de especificções para IOS
+    const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: false);
+
+    final NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
+    await flip.show(id, title1, title2, platformChannelSpecifics, payload: 'item x');
+
     return 1;
   }
 
@@ -81,5 +106,9 @@ class spsNotificacao {
     return 1;
   }
 
+  static Future<int> cancelarNotificacao(int id, FlutterLocalNotificationsPlugin flip) async {
+    await flip.cancel(id);
+    return 1;
+  }
 
 }
