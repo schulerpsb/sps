@@ -114,7 +114,7 @@ packages:
     source: hosted
     version: "2.1.1"
   cron:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: cron
       url: "https://pub.dartlang.org"
@@ -149,7 +149,7 @@ packages:
     source: hosted
     version: "1.0.0"
   dio:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: dio
       url: "https://pub.dartlang.org"
@@ -203,7 +203,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_isolate:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_isolate
       url: "https://pub.dartlang.org"
@@ -217,19 +217,19 @@ packages:
     source: hosted
     version: "0.8.1"
   flutter_local_notifications:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.0+1"
+    version: "4.0.1+2"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.0+1"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -586,6 +586,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety.2"
+  timezone:
+    dependency: transitive
+    description:
+      name: timezone
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.1"
   transparent_image:
     dependency: "direct main"
     description:
