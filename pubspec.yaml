@@ -21,6 +21,10 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  dio: ^3.0.10
+  flutter_isolate: ^1.0.0+15
+  cron: ^0.2.4
+  flutter_local_notifications: ^4.0.1+2
   exif:
   flutter:
     sdk: flutter
@@ -56,10 +60,6 @@ dependencies:
   cupertino_icons: ^1.0.0
 
 dev_dependencies:
-  dio: ^3.0.10
-  flutter_isolate: ^1.0.0+15
-  flutter_local_notifications: ^1.4.4+2
-  cron: ^0.2.4
   video_player: ^1.0.0
   flutter_test:
     sdk: flutter
