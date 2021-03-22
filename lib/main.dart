@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,6 +8,7 @@ import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cron/cron.dart';
 import 'package:sps/models/sps_usuario_class.dart';
+import 'dao/sps_dao_sincronizacao_class.dart';
 import 'http/sps_http_verificar_conexao_class.dart';
 import 'models/sps_login.dart';
 import 'models/sps_sincronizacao.dart';
@@ -14,14 +16,14 @@ import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:sps/models/sps_notificacao.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void isolateSincronizacao(String arg) async  {
+void isolateSincronizacao(int arg) async  {
   final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
   final SpsLogin spslogin = SpsLogin();
   final cron = Cron();
   DateTime now = new DateTime.now();
   DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
   print('Verificando sincronização '+ dataHoraAtual.toString());
-  print(arg);
+  print('ISOLATE===> '+arg.toString());
   bool statusSincronizarQuestionarios = true;
 
   //verificação para inicio da primeira execução
@@ -53,6 +55,7 @@ void isolateSincronizacao(String arg) async  {
   //  bool statusSincronizandoArquivos = false;
   int numsinc;
   cron.schedule(Schedule.parse('* * * * *'), () async {
+    print('ISOLATE===> '+arg.toString());
     DateTime now = new DateTime.now();
     DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
     print('Verificando sincronização recorrente '+ dataHoraAtual.toString());
@@ -71,21 +74,25 @@ void isolateSincronizacao(String arg) async  {
         usuarioAtual.registro_usuario = dadosSessao[0]['registro_usuario'];
         //Inicio da sincronização Recorrente de 1 em 1 minuto
         print('Verificando a possibilidade de rodar a sincronização Dados em background - Recorrente');
-        if(statusSincronizarQuestionarios == true){
-          numsinc = 0;
-          print('Sincronizando Dados de questionários - Recorrente - numsync:'+numsinc.toString());
-          statusSincronizarQuestionarios = false;
-          statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
-        }else{
-          if(numsinc == 50){
-            statusSincronizarQuestionarios = true;
+        if(usuarioAtual.id_isolate == arg){
+          if(statusSincronizarQuestionarios == true){
             numsinc = 0;
+            print('Sincronizando Dados de questionários - Recorrente - numsync:'+numsinc.toString());
+            statusSincronizarQuestionarios = false;
+            statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
           }else{
-            numsinc++;
+            if(numsinc == 50){
+              statusSincronizarQuestionarios = true;
+              numsinc = 0;
+            }else{
+              numsinc++;
+            }
+            print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - JA EXISTE UMA SINCRONIZAÇÃO EM ANDAMENTO - numsync:'+numsinc.toString());
           }
-          print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - JA EXISTE UMA SINCRONIZAÇÃO EM ANDAMENTO - numsync:'+numsinc.toString());
+        }else{
+          print('ISOLATE ENCERRADO ===> '+arg.toString());
+          cron.close();
         }
-
       }else{
         print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - SEM DADOS DE LOGON LOCAL');
       }
@@ -100,8 +107,19 @@ void isolateSincronizacao(String arg) async  {
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
+  SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
+  objSpsDaoSincronizacao.create_table();
+  objSpsDaoSincronizacao.emptyTable();
+  Map<String, dynamic> dadosSincronizacao;
+  dadosSincronizacao = null;
+  dadosSincronizacao = {
+    'id_isolate': 1,
+    'data_ultima_sincronizacao': '',
+    'status': 0,
+  };
+  objSpsDaoSincronizacao.save(dadosSincronizacao);
   Timer(Duration(seconds:5), (){
-    final isolate = FlutterIsolate.spawn(isolateSincronizacao, "Início da sincronização em background - ISOLATE");
+    final isolate = FlutterIsolate.spawn(isolateSincronizacao, 1);//  String codigo_usuario;
   });
   getApplicationDocumentsDirectory().then((value){
     usuarioAtual.document_root_folder = value.path.toString();

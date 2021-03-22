@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
+import 'package:sps/dao/sps_dao_sincronizacao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
+import '../main.dart';
 
-class sps_drawer extends StatelessWidget {
-  const sps_drawer({
+class sps_drawer extends StatefulWidget {
+  sps_drawer({
     Key key,
     @required this.spslogin,
   }) : super(key: key);
@@ -16,9 +19,16 @@ class sps_drawer extends StatelessWidget {
   final SpsLogin spslogin;
 
   @override
+  _sps_drawerState createState() => _sps_drawerState();
+}
+
+class _sps_drawerState extends State<sps_drawer> {
+  var dadosSincronizacaoAtual;
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
-      future: spslogin.verificaUsuarioAutenticado(),
+      future: widget.spslogin.verificaUsuarioAutenticado(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -40,6 +50,7 @@ class sps_drawer extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: <Widget>[
+                    //Cabecalho do drawer
                     SizedBox(
                       height: 88.0,
                       child: new DrawerHeader(
@@ -57,7 +68,7 @@ class sps_drawer extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text("Schuler production system",style: TextStyle(color: Colors.white)),
+                              child: Text("Schuler production system", style: TextStyle(color: Colors.white)),
                             ),
                             usuarioAtual.mensagem == "nao_permitir_trocar" ?
                             IconButton(
@@ -72,16 +83,17 @@ class sps_drawer extends StatelessWidget {
                                   ),
                                 );
                               },
-                            ): Text(''),
+                            ) : Text(''),
                           ],
                         ),
                         decoration: new BoxDecoration(color: Color(0xFF004077)),
                       ),
                     ),
+                    //Dados do usuario
                     SizedBox(
                       height: 45.0,
                       child: ListTile(
-                        title: Text("Usuário: "+snapshot.data[0]['codigo_usuario'].toString()),
+                        title: Text("Usuário: " + snapshot.data[0]['codigo_usuario'].toString()),
                         onTap: () {
                           Navigator.pop(context);
                         },
@@ -90,7 +102,7 @@ class sps_drawer extends StatelessWidget {
                     SizedBox(
                       height: 45.0,
                       child: ListTile(
-                        title: Text("Nome: "+snapshot.data[0]['nome_usuario'].toString()),
+                        title: Text("Nome: " + snapshot.data[0]['nome_usuario'].toString()),
                         onTap: () {
                           Navigator.pop(context);
                         },
@@ -99,7 +111,7 @@ class sps_drawer extends StatelessWidget {
                     SizedBox(
                       height: 45.0,
                       child: ListTile(
-                        title: Text("E-mail: "+snapshot.data[0]['email_usuario'].toString()),
+                        title: Text("E-mail: " + snapshot.data[0]['email_usuario'].toString()),
                         onTap: () {
                           Navigator.pop(context);
                         },
@@ -108,10 +120,36 @@ class sps_drawer extends StatelessWidget {
                     SizedBox(
                       height: 80.0,
                       child: ListTile(
-                        title: Text("Tipo: "+snapshot.data[0]['tipo'].toString()),
+                        title: Text("Tipo: " + snapshot.data[0]['tipo'].toString()),
                         onTap: () {
                           Navigator.pop(context);
                         },
+                      ),
+                    ),
+                    //Cabecalho Status de conexao
+                    SizedBox(
+                      height: 25.0,
+                      child: new Container(
+                        padding: const EdgeInsets.only(left: 30.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Status da sincronização", style: TextStyle(color: Colors.white)),
+                        ),
+                        decoration: new BoxDecoration(color: Color(0xFF004077)),
+                      ),
+                    ),
+                    // Dados de status de conexao
+                    statusAtualizacao(context),
+                    //Cabecalho de sair ou trocar usuario
+                    SizedBox(
+                      height: 25.0,
+                      child: new Container(
+                        padding: const EdgeInsets.only(left: 30.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Conta", style: TextStyle(color: Colors.white)),
+                        ),
+                        decoration: new BoxDecoration(color: Color(0xFF004077)),
                       ),
                     ),
                     usuarioAtual.mensagem == "permitir_trocar" ?
@@ -123,7 +161,7 @@ class sps_drawer extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.person),
                             onPressed: () {
-                              spslogin.logoutUser();
+                              widget.spslogin.logoutUser();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -136,7 +174,7 @@ class sps_drawer extends StatelessWidget {
                           ),
                           FlatButton(
                             onPressed: () {
-                              spslogin.logoutUser();
+                              widget.spslogin.logoutUser();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -174,7 +212,7 @@ class sps_drawer extends StatelessWidget {
                   ],
                 ),
               );
-            }else{
+            } else {
               return Drawer(
                 child: ListView(
                   padding: EdgeInsets.zero,
@@ -216,5 +254,237 @@ class sps_drawer extends StatelessWidget {
         return Text('Unkown error');
       },
     );
+  }
+
+  SizedBox statusAtualizacao(BuildContext context) {
+    var statusTexto;
+    if ((usuarioAtual.data_ultima_sincronizacao.toString() == "null" || usuarioAtual.data_ultima_sincronizacao.toString() == null || usuarioAtual.data_ultima_sincronizacao.toString() == "") && usuarioAtual.status_sincronizacao != 2) {
+      return SizedBox(
+        height: 40.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.sync),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                          title: Text("SPS App - Sincronização"),
+                          content: Text("Deseja sincronizar os dados com servidor agora?"),
+                          actions: [
+                            FlatButton(
+                              child: Text("Cancelar"),
+                              onPressed: () {
+                                Navigator.of(context,
+                                    rootNavigator:
+                                    true)
+                                    .pop();
+                              },
+                            ),
+                            FlatButton(
+                                child: Text("Sim"),
+                                onPressed: () {
+                                  final isolate = FlutterIsolate.spawn(isolateSincronizacao, usuarioAtual.id_isolate + 1);
+                                  SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
+                                  objSpsDaoSincronizacao.emptyTable();
+                                  Map<String, dynamic> dadosSincronizacao;
+                                  dadosSincronizacao = null;
+                                  dadosSincronizacao = {
+                                    'id_isolate': usuarioAtual.id_isolate + 1,
+                                    'data_ultima_sincronizacao': '',
+                                    'status': 0,
+                                  };
+                                  objSpsDaoSincronizacao.save(dadosSincronizacao);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return HomeSpsAuthenticatedFromLocal();
+                                      },
+                                    ),
+                                  );
+                                }),
+                          ]);
+                    });
+              },
+            ),
+            FlatButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                          title: Text("SPS App - Sincronização"),
+                          content: Text("Deseja sincronizar os dados com servidor agora?"),
+                          actions: [
+                            FlatButton(
+                              child: Text("Cancelar"),
+                              onPressed: () {
+                                Navigator.of(context,
+                                    rootNavigator:
+                                    true)
+                                    .pop();
+                              },
+                            ),
+                            FlatButton(
+                                child: Text("Sim"),
+                                onPressed: () {
+                                  final isolate = FlutterIsolate.spawn(isolateSincronizacao, usuarioAtual.id_isolate + 1);
+                                  SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
+                                  objSpsDaoSincronizacao.emptyTable();
+                                  Map<String, dynamic> dadosSincronizacao;
+                                  dadosSincronizacao = null;
+                                  dadosSincronizacao = {
+                                    'id_isolate': usuarioAtual.id_isolate + 1,
+                                    'data_ultima_sincronizacao': '',
+                                    'status': 0,
+                                  };
+                                  objSpsDaoSincronizacao.save(dadosSincronizacao);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return HomeSpsAuthenticatedFromLocal();
+                                      },
+                                    ),
+                                  );
+                                }),
+                          ]);
+                    });
+              },
+              child: Text("Não sincronizado! Sincronizar?"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      if (usuarioAtual.status_sincronizacao == 1) {
+        return SizedBox(
+          height: 40.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.sync),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                            title: Text("SPS App - Sincronização"),
+                            content: Text("Deseja sincronizar os dados com servidor agora?"),
+                            actions: [
+                              FlatButton(
+                                child: Text("Cancelar"),
+                                onPressed: () {
+                                  Navigator.of(context,
+                                      rootNavigator:
+                                      true)
+                                      .pop();
+                                },
+                              ),
+                              FlatButton(
+                                  child: Text("Sim"),
+                                  onPressed: () {
+                                    final isolate = FlutterIsolate.spawn(isolateSincronizacao, usuarioAtual.id_isolate + 1);
+                                    SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
+                                    objSpsDaoSincronizacao.emptyTable();
+                                    Map<String, dynamic> dadosSincronizacao;
+                                    dadosSincronizacao = null;
+                                    dadosSincronizacao = {
+                                      'id_isolate': usuarioAtual.id_isolate + 1,
+                                      'data_ultima_sincronizacao': '',
+                                      'status': 0,
+                                    };
+                                    objSpsDaoSincronizacao.save(dadosSincronizacao);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return HomeSpsAuthenticatedFromLocal();
+                                        },
+                                      ),
+                                    );
+                                  }),
+                            ]);
+                      });
+                },
+              ),
+              FlatButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                            title: Text("SPS App - Sincronização"),
+                            content: Text("Deseja sincronizar os dados com servidor agora?"),
+                            actions: [
+                              FlatButton(
+                                child: Text("Cancelar"),
+                                onPressed: () {
+                                  Navigator.of(context,
+                                      rootNavigator:
+                                      true)
+                                      .pop();
+                                },
+                              ),
+                              FlatButton(
+                                  child: Text("Sim"),
+                                  onPressed: () {
+                                    final isolate = FlutterIsolate.spawn(isolateSincronizacao, usuarioAtual.id_isolate + 1);
+                                    SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
+                                    objSpsDaoSincronizacao.emptyTable();
+                                    Map<String, dynamic> dadosSincronizacao;
+                                    dadosSincronizacao = null;
+                                    dadosSincronizacao = {
+                                      'id_isolate': usuarioAtual.id_isolate + 1,
+                                      'data_ultima_sincronizacao': '',
+                                      'status': 0,
+                                    };
+                                    objSpsDaoSincronizacao.save(dadosSincronizacao);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return HomeSpsAuthenticatedFromLocal();
+                                        },
+                                      ),
+                                    );
+                                  }),
+                            ]);
+                      });
+                },
+                child: Text(usuarioAtual.data_ultima_sincronizacao.toString()),
+              ),
+            ],
+          ),
+        );
+      }
+      if (usuarioAtual.status_sincronizacao == 2) {
+        return SizedBox(
+          height: 40.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.sync_problem),
+                onPressed: () {
+                },
+              ),
+              FlatButton(
+                onPressed: () {
+                },
+                child: Text("Em andamento...Favor aguardar."),
+              ),
+            ],
+          ),
+        );
+      }
+      if (usuarioAtual.status_sincronizacao == null) {
+        statusTexto = "Dispositivo não sincronizado.";
+      }
+    }
   }
 }
