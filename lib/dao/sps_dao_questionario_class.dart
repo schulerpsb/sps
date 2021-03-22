@@ -134,7 +134,7 @@ class SpsDaoQuestionario {
             '","' +
             doc_action +
             '",null)';
-//        debugPrint("adriano => " + _query);
+//        debugPrint("Query => " + _query);
         await db.rawInsert(_query);
       }
     });
@@ -158,7 +158,7 @@ class SpsDaoQuestionario {
     return 1;
   }
 
-  Future<int> update_status_lista_aprovacao(_hcodigoEmpresa, _hcodigoProgramacao) async {
+  Future<int> update_lista_status_aprovacao(_hcodigoEmpresa, _hcodigoProgramacao) async {
     final Database db = await getDatabase();
     var _query = 'update checklist_lista '
                  'set status = case when (SELECT count(*) '
@@ -183,7 +183,45 @@ class SpsDaoQuestionario {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString();
-    debugPrint("query adriano => " + _query);
+    debugPrint("query => " + _query);
+    db.rawUpdate(_query);
+    return 1;
+  }
+
+  Future<int> update_lista_status_resposta(_hcodigoEmpresa, _hcodigoProgramacao, _hregistroColaborador, _hidentificacaoUtilizador) async {
+    final Database db = await getDatabase();
+    var _query = 'update checklist_lista '
+        'set status = case when (SELECT count(*) '
+        '                         FROM checklist_item '
+        '                         where codigo_empresa = "'+ _hcodigoEmpresa + '" '
+        '                           AND codigo_programacao = ' + _hcodigoProgramacao.toString() +
+        '                           AND registro_colaborador = "' + _hregistroColaborador + '" '
+        '                           AND identificacao_utilizador = "' + _hidentificacaoUtilizador + '" '
+        '                           AND status_resposta <> "PREENCHIDA") = 0 then '
+            '                 "OK" '
+            '             else '
+            '                 case when (SELECT count(*) '
+            '                           FROM checklist_item '
+            '                           where codigo_empresa = "'+ _hcodigoEmpresa + '" '
+        '                           AND CODIGO_PROGRAMACAO = ' + _hcodigoProgramacao.toString() +
+        '                           AND registro_colaborador = "' + _hregistroColaborador + '" '
+        '                           AND identificacao_utilizador = "' + _hidentificacaoUtilizador + '" '
+        '                           AND status_resposta <> "PENDENTE") <> 0 then '
+            '                     "PARCIAL" '
+            '                 else '
+            '                     "PENDENTE" '
+            '                 end	'
+            '            end,	'
+            ' sincronizado = "N" '
+            ' where codigo_empresa = "' +
+        _hcodigoEmpresa +
+        '" and codigo_programacao = ' +
+        _hcodigoProgramacao.toString() +
+        ' and registro_colaborador = "' +
+        _hregistroColaborador +
+        '" and identificacao_utilizador = "' +
+        _hidentificacaoUtilizador + '"';
+    //debugPrint("query => " + _query);
     db.rawUpdate(_query);
     return 1;
   }

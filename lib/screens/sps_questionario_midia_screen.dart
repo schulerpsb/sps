@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
+import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
@@ -249,6 +250,13 @@ class _sps_questionario_midia_screen
             _dadosArquivo['identificacao_utilizador'],
             _dadosArquivo['item_checklist']
         );
+        //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
+        final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+        final int resultupdateLista = await objQuestionarioDao.update_lista_status_resposta(
+            _dadosArquivo['codigo_empresa'],
+            _dadosArquivo['codigo_programacao'],
+            _dadosArquivo['registro_colaborador'],
+            _dadosArquivo['identificacao_utilizador']);
         setState(() {
           _isLoading = false;
         });
@@ -330,6 +338,13 @@ class _sps_questionario_midia_screen
               _dadosArquivo['identificacao_utilizador'],
               _dadosArquivo['item_checklist']
           );
+          //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
+          final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+          final int resultupdateLista = await objQuestionarioDao.update_lista_status_resposta(
+              _dadosArquivo['codigo_empresa'],
+              _dadosArquivo['codigo_programacao'],
+              _dadosArquivo['registro_colaborador'],
+              _dadosArquivo['identificacao_utilizador']);
           setState(() {
             _isLoading = false;
           });

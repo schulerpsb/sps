@@ -584,9 +584,9 @@ class _sps_questionario_cq_int_item_screen
         _wstatusAprovacao,
         _wsincronizado);
 
-    //Analisar e Atualizar Status da Lista (cabecalho) em função da aprovação
+    //Analisar e Atualizar Status da Lista (cabecalho) em função do status da aprovação
     final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-    final int resultupdateLista = await objQuestionarioDao.update_status_lista_aprovacao(
+    final int resultupdateLista = await objQuestionarioDao.update_lista_status_aprovacao(
         _wcodigoEmpresa,
         _wcodigoProgramacao);
 

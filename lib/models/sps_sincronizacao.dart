@@ -581,7 +581,7 @@ class spsSincronizacao {
       }
     }
 
-    //Função que atualiza os dados de itens de qustionario do Server(Rest API) para o Local(Sqlite)
+    //Função que atualiza os dados de itens de questionario do Server(Rest API) para o Local(Sqlite)
     Future<SpsDaoQuestionarioItem> sincronizarQuestionariosItensServerToLocal(
         acao, sessao_checklist, codigo_empresa, codigo_programacao,
         String registro_colaborador, String identificacao_utilizador,
