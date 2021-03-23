@@ -54,7 +54,7 @@ void isolateSincronizacao(int arg) async  {
   //Verificação recorrente - 1 em 1 minuto
   //  bool statusSincronizandoArquivos = false;
   int numsinc;
-  cron.schedule(Schedule.parse('* * * * *'), () async {
+  cron.schedule(Schedule.parse('*/15 * * * *'), () async {
     print('ISOLATE===> '+arg.toString());
     DateTime now = new DateTime.now();
     DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);

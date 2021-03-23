@@ -32,6 +32,7 @@ class _HomeSpsAuthenticatedFromServerState
 
 
   final SpsLogin spslogin = SpsLogin();
+  int id_isolate;
 
   _HomeSpsAuthenticatedFromServerState(_controladorusuario, _controladorsenha);
 
@@ -114,13 +115,18 @@ class _HomeSpsAuthenticatedFromServerState
                   usuarioAtual.status_usuario = snapshot.data[0]['status_usuario'];
                   usuarioAtual.tipo = snapshot.data[0]['tipo'];
                   usuarioAtual.registro_usuario =snapshot.data[0]['registro_usuario'];
-                  final isolate = FlutterIsolate.spawn(isolateSincronizacao, usuarioAtual.id_isolate + 1);
+                  if(usuarioAtual.id_isolate == null || usuarioAtual.id_isolate == "null" || usuarioAtual.id_isolate == ""){
+                    id_isolate = 1;
+                  }else {
+                    id_isolate = usuarioAtual.id_isolate + 1;
+                  }
+                  final isolate = FlutterIsolate.spawn(isolateSincronizacao, id_isolate);
                   SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
                   objSpsDaoSincronizacao.emptyTable();
                   Map<String, dynamic> dadosSincronizacao;
                   dadosSincronizacao = null;
                   dadosSincronizacao = {
-                    'id_isolate': usuarioAtual.id_isolate + 1,
+                    'id_isolate': id_isolate,
                     'data_ultima_sincronizacao': '',
                     'status': 0,
                   };

@@ -34,6 +34,19 @@ class spsSincronizacao {
 
     SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
     var dadosSincronizacaoAtual = await objSpsDaoSincronizacao.listaDadosSincronizacao();
+    if(dadosSincronizacaoAtual.length < 1){
+      objSpsDaoSincronizacao.create_table();
+      objSpsDaoSincronizacao.emptyTable();
+      Map<String, dynamic> dadosSincronizacao;
+      dadosSincronizacao = null;
+      dadosSincronizacao = {
+        'id_isolate': 1,
+        'data_ultima_sincronizacao': '',
+        'status': 0,
+      };
+      objSpsDaoSincronizacao.save(dadosSincronizacao);
+      var dadosSincronizacaoAtual = await objSpsDaoSincronizacao.listaDadosSincronizacao();
+    }
     Map<String, dynamic> dadosSincronizacao;
     dadosSincronizacao = null;
     dadosSincronizacao = {
