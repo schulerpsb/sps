@@ -23,6 +23,7 @@ import 'package:flutter/painting.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:sps/http/sps_http_questionario_midia_class.dart';
 import 'package:badges/badges.dart';
+import 'package:sps/screens/sps_pdf_viewer_screen.dart';
 
 class sps_questionario_midia_screen extends StatefulWidget {
   final Function({int index_posicao_retorno, String acao}) funCallback;
@@ -622,7 +623,7 @@ class _sps_questionario_midia_screen
                                           children: <Widget>[
                                             //Tratar descrição da pergunta
                                             ListTile(
-                                              trailing: Icon(Icons.description, color: Colors.green, size: 40),
+                                              trailing: snapshot.data[index]["nome_arquivo"].toString().split('.').last == "PDF" || snapshot.data[index]["nome_arquivo"].toString().split('.').last == "pdf" ? Icon(Icons.picture_as_pdf, color: Colors.green, size: 40) : Icon(Icons.description, color: Colors.grey, size: 40),
                                               title: Text(snapshot.data[index]["titulo_arquivo"] != "" ? '${snapshot.data[index]["titulo_arquivo"]}' +
                                                   " - " +
                                                   '${snapshot.data[index]["nome_arquivo"].toString().split('.').last}' : snapshot.data[index]["nome_arquivo"],
@@ -630,9 +631,20 @@ class _sps_questionario_midia_screen
                                                       fontWeight: FontWeight.normal,
                                                       fontSize: 15)),
                                               subtitle: Text(""),
+                                              onTap: () {
+                                                snapshot.data[index]["nome_arquivo"].toString().split('.').last == "PDF" || snapshot.data[index]["nome_arquivo"].toString().split('.').last == "pdf" ?
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PDFScreen(path: usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[index]['nome_arquivo'].toString()),
+                                                  ),
+                                                ) : '';
+                                              },
                                             ),
                                           ],
                                         ),
+
                                       );
                                     },
                                   ),
