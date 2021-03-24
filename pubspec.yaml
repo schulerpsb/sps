@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  flutter_pdfview: ^1.0.4
   dio: ^3.0.10
   flutter_isolate: ^1.0.0+15
   cron: ^0.2.4

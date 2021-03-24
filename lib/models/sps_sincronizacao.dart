@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
+import 'package:sps/dao/sps_dao_sincronizacao_class.dart';
 import 'package:sps/http/sps_http_questionario_class.dart';
 import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/http/sps_http_questionario_midia_class.dart';
@@ -28,6 +29,32 @@ class spsSincronizacao {
     getApplicationDocumentsDirectory().then((value){
       usuarioAtual.document_root_folder = value.path.toString();
     });
+    DateTime now = new DateTime.now();
+    DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+
+    SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
+    var dadosSincronizacaoAtual = await objSpsDaoSincronizacao.listaDadosSincronizacao();
+    if(dadosSincronizacaoAtual.length < 1){
+      objSpsDaoSincronizacao.create_table();
+      objSpsDaoSincronizacao.emptyTable();
+      Map<String, dynamic> dadosSincronizacao;
+      dadosSincronizacao = null;
+      dadosSincronizacao = {
+        'id_isolate': 1,
+        'data_ultima_sincronizacao': '',
+        'status': 0,
+      };
+      objSpsDaoSincronizacao.save(dadosSincronizacao);
+      var dadosSincronizacaoAtual = await objSpsDaoSincronizacao.listaDadosSincronizacao();
+    }
+    Map<String, dynamic> dadosSincronizacao;
+    dadosSincronizacao = null;
+    dadosSincronizacao = {
+      'id_isolate': dadosSincronizacaoAtual[0]['id_isolate'],
+      'status': 2,
+    };
+    objSpsDaoSincronizacao.update(dadosSincronizacao);
+
     //print('Fernando' + usuarioAtual.document_root_folder);
     //instancia do mecanismo de notificação
     FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
@@ -337,6 +364,21 @@ class spsSincronizacao {
       debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
       jaNotificado = 0;
+
+      DateTime now = new DateTime.now();
+      DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
+
+      var dadosSincronizacaoAtual = await objSpsDaoSincronizacao.listaDadosSincronizacao();
+      await objSpsDaoSincronizacao.emptyTable();
+      Map<String, dynamic> dadosSincronizacao;
+      dadosSincronizacao = null;
+      dadosSincronizacao = {
+        'id_isolate': dadosSincronizacaoAtual[0]['id_isolate'],
+        'data_ultima_sincronizacao': dataHoraAtual.toString(),
+        'status': 1,
+      };
+      objSpsDaoSincronizacao.save(dadosSincronizacao);
+
       await spsNotificacao.cancelarNotificacao(0, flip);
     }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_login_class.dart';
+import 'package:sps/dao/sps_dao_sincronizacao_class.dart';
 import 'package:sps/http/sps_http_login_class.dart';
 import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_usuario_class.dart';
@@ -52,6 +53,19 @@ class SpsLogin {
         final bool conectado = await ObjVerificarConexao.verificar_conexao();
         if (conectado == true) {
           print("O CELULAR ESTA CONECTADO AO SERVIDOR - ONLINE ========>");
+          //Verifica status sincronizacao
+          SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
+          objSpsDaoSincronizacao.listaDadosSincronizacao().then((dadosSincronizacao){
+             if(dadosSincronizacao.length > 0){
+               usuarioAtual.id_isolate = dadosSincronizacao[0]['id_isolate'];
+               usuarioAtual.data_ultima_sincronizacao = dadosSincronizacao[0]['data_ultima_sincronizacao'].toString();
+               usuarioAtual.status_sincronizacao = dadosSincronizacao[0]['status'];
+             }else{
+               usuarioAtual.id_isolate = 1;
+               usuarioAtual.data_ultima_sincronizacao = '';
+               usuarioAtual.status_sincronizacao = 0;
+             }
+          });
           //Verifica os dados do usuaario no servior
           final SpsHttpLogin objLoginHttp = SpsHttpLogin(DadosSessao[0]['codigo_usuario'], DadosSessao[0]['senha_usuario']);
           final Map<String, dynamic> dadosUsuario = await objLoginHttp.listaUsuariofromserver(

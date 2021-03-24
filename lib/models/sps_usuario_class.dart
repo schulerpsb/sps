@@ -22,6 +22,9 @@ class sps_usuario {
   String registro_usuario;
   String mensagem;
   String document_root_folder;
+  int id_isolate;
+  String data_ultima_sincronizacao;
+  int status_sincronizacao;
 
   factory sps_usuario() {
     return _sps_usuario;
