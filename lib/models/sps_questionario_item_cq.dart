@@ -5,7 +5,7 @@ import 'package:sps/models/sps_sincronizacao.dart';
 
 class SpsQuestionarioItem {
   @override
-  Future<List<Map<String, dynamic>>> listarQuestionarioItem(
+    Future<List<Map<String, dynamic>>> listarQuestionarioItem(
       h_origem_usuario,
       h_codigo_empresa,
       h_codigo_programacao,

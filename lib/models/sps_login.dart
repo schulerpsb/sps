@@ -1,3 +1,4 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_login_class.dart';
 import 'package:sps/dao/sps_dao_sincronizacao_class.dart';
@@ -20,6 +21,7 @@ class SpsLogin {
         usuario, senha);
     if (dadosUsuario['mensagem'] == "") {
       dadosUsuario.remove('mensagem');
+      dadosUsuario.remove('chave');
       final SpsDaoLogin objLoginDao = SpsDaoLogin();
       final int resulcreate = await objLoginDao.create_table();
       final int resullimpar = await objLoginDao.emptyTable(dadosUsuario);

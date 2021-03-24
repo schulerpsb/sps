@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
 import 'Json_interceptor.dart';
@@ -10,18 +11,37 @@ class SpsHttpLogin {
   //static const baseUrl = 'https://teklist.schuler.de/webapi/api/login/read.php';
   //Servidor DEV
   static const baseUrlAutentica = 'http://10.17.20.45/webapi/api/login/read.php';
+  static const baseUrlAutenticaJWT = 'http://10.17.20.45/webapi/api/login/readjwt.php';
   static const baseUrlListaUsuario = 'http://10.17.20.45/webapi/api/login/read_usuario.php';
   static const baseUrlLEsqueciMinhaSenha = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';
 
   SpsHttpLogin(this.usuario, this.senha);
 
   Future<Map<String, dynamic>> efetuaLogin(String usuario, String senha) async {
-    final Map<String, dynamic> dadosParaLogon = {
-      'codigo_usuario': usuario,
-      'senha_usuario': senha,
-    };
 
-    final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
+//    final Map<String, dynamic> dadosParaLogon = {
+//      'codigo_usuario': usuario,
+//      'senha_usuario': senha,
+//    };
+//    final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
+
+    //implementação de JWT
+    String token;
+    final jwt = JWT(
+      {
+        'iis': 'ChecklistApp',
+        'sub': usuario,
+        'codigo_usuario': usuario,
+        'senha_usuario': senha
+      },
+    );
+    token = jwt.sign(SecretKey('schulerchecklistApp2021'));
+    print('Token Para Login: $token\n');
+
+    final String dadosParaLogonJson = jsonEncode(token);
+    //FIM implementação de JWT
+    print('Token Para Login JSON: $dadosParaLogonJson\n');
+
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -29,7 +49,8 @@ class SpsHttpLogin {
 
     final Response response = await client
         .post(
-          baseUrlAutentica,
+//          baseUrlAutentica,
+          baseUrlAutenticaJWT,
           headers: {'Content-type': 'application/json'},
           body: dadosParaLogonJson,
         )
