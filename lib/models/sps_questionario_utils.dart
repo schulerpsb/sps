@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'package:sps/http/sps_http_questionario_item_class.dart';
-import 'package:sps/http/sps_http_verificar_conexao_class.dart';
-import 'package:sps/models/sps_usuario_class.dart';
-import 'package:sps/models/sps_usuario_class.dart';
-
 
 class spsQuestionarioUtils {
   @override
@@ -38,17 +33,13 @@ class spsQuestionarioUtils {
 
     //Analisar resposta CQ
     if (result[0]["tipo_resposta"] == "RESPOSTA CQ") {
-      if (result[0]["resp_cq"] == 'APROVADO' || result[0]["resp_cq"] == 'NÃO SE APLICA') {
-        _wstatusResposta = "PREENCHIDA";
-      } else {
-        _wstatusResposta = "PENDENTE";
-      }
+      _wstatusResposta = "PREENCHIDA";
     }
 
     //Analisar resposta fixa
     if (result[0]["tipo_resposta"] == "RESPOSTA FIXA") {
       if (result[0]["tipo_resposta_fixa"] == "TEXTO") {
-        if (result[0]["resp_texto"] == "") {
+        if (result[0]["resp_texto"] == "" || result[0]["resp_texto"] == null) {
           _wstatusResposta = "PENDENTE";
         } else {
           _wstatusResposta = "PREENCHIDA";
@@ -64,14 +55,14 @@ class spsQuestionarioUtils {
         }
       }
       if (result[0]["tipo_resposta_fixa"] == "DATA") {
-        if (result[0]["resp_data"] == "") {
+        if (result[0]["resp_data"] == "" || result[0]["resp_data"] == null) {
           _wstatusResposta = "PENDENTE";
         } else {
           _wstatusResposta = "PREENCHIDA";
         }
       }
       if (result[0]["tipo_resposta_fixa"] == "HORA") {
-        if (result[0]["resp_hora"] == "") {
+        if (result[0]["resp_hora"] == "" || result[0]["resp_hora"] == null) {
           _wstatusResposta = "PENDENTE";
         } else {
           _wstatusResposta = "PREENCHIDA";
@@ -81,7 +72,7 @@ class spsQuestionarioUtils {
 
     //Analisar resposta sim/não
     if (result[0]["tipo_resposta"] == "RESPOSTA SIM/NÃO") {
-      if (result[0]["resp_simnao"] == "") {
+      if (result[0]["resp_simnao"] == "" || result[0]["resp_simnao"] == null) {
         _wstatusResposta = "PENDENTE";
       } else {
         _wstatusResposta = "PREENCHIDA";
@@ -90,7 +81,7 @@ class spsQuestionarioUtils {
 
     //Analisar resposta por escala
     if (result[0]["tipo_resposta"] == "RESPOSTA POR ESCALA") {
-      if (result[0]["resp_escala"] == "") {
+      if (result[0]["resp_escala"] == "" || result[0]["resp_escala"] == null) {
         _wstatusResposta = "PENDENTE";
       } else {
         _wstatusResposta = "PREENCHIDA";
@@ -99,20 +90,20 @@ class spsQuestionarioUtils {
 
     //Analisar comentário
     if (result[0]["comentarios"] == "OBRIGATORIO") {
-      if (result[0]["descr_comentarios"] == "") {
+      if (result[0]["descr_comentarios"] == "" || result[0]["descr_comentarios"] == null) {
         _wstatusResposta = "PENDENTE";
       }
     }
     if (result[0]["comentario_resposta_nao"] == "OBRIGATORIO") {
       if (result[0]["resp_simnao"] == "NÃO") {
-        if (result[0]["descr_comentarios"] == "") {
+        if (result[0]["descr_comentarios"] == "" || result[0]["descr_comentarios"] == null) {
           _wstatusResposta = "PENDENTE";
         }
       }
     }
     if (result[0]["comentario_escala"] != null && result[0]["resp_escala"] != null) {
       if (result[0]["resp_escala"] < result[0]["comentario_escala"]) {
-        if (result[0]["descr_comentarios"].toString() == "") {
+        if (result[0]["descr_comentarios"] == "" || result[0]["descr_comentarios"] == null) {
           _wstatusResposta = "PENDENTE";
         }
       }
@@ -131,35 +122,7 @@ class spsQuestionarioUtils {
     }
 
     if (_wstatusResposta != result[0]["status_resposta"]) {
-      // //Verificar se existe conexão
-      // final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-      // final bool result = await ObjVerificarConexao.verificar_conexao();
-      // if (result == true) {
-      //   //Gravar PostgreSQL (API REST)
-      //   final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-      //       SpsHttpQuestionarioItem();
-      //   final retorno =
-      //       await objQuestionarioItemHttp.QuestionarioSaveStatusResposta(
-      //           wcodigoEmpresa,
-      //           wcodigoProgramacao,
-      //           wregistroColaborador,
-      //           widentificacaoUtilizador,
-      //           witemChecklist,
-      //           _wstatusResposta,
-      //           usuarioAtual.tipo == "INTERNO" ||
-      //                   usuarioAtual.tipo == "COLIGADA"
-      //               ? usuarioAtual.registro_usuario
-      //               : usuarioAtual.codigo_usuario);
-      //   if (retorno == true) {
-      //     _wsincronizado = "";
-      //     debugPrint("registro gravado PostgreSQL");
-      //   } else {
-      //     _wsincronizado = "N";
-      //     debugPrint("ERRO => registro não gravado PostgreSQL");
-      //   }
-      // } else {
         _wsincronizado = "N";
-      //}
 
       //Gravar SQlite
       final SpsDaoQuestionarioItem objQuestionarioItemDao =  SpsDaoQuestionarioItem();
