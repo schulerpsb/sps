@@ -318,14 +318,14 @@ class _sps_questionario_cq_ext_item_screen
                                         // Tratar Legenda das opções
                                         Padding(
                                             padding: EdgeInsets.fromLTRB(
-                                                5, 0, 0, 5)),
+                                                0, 0, 0, 0)),
                                         IconButton(
                                             icon: Icon(Icons.info_outline,
-                                                size: 20),
+                                                size: 15),
                                             color: Colors.red,
                                             onPressed: () =>
                                                 _popup_legenda(context)),
-                                        Text(" "),
+                                        Text(""),
 
                                         // Tratar Opções
                                         Container(
@@ -348,7 +348,7 @@ class _sps_questionario_cq_ext_item_screen
                                                 : {},
                                           ),
                                         ),
-                                        Text("  "),
+                                        Text(" "),
                                         Container(
                                           color: Colors.red,
                                           child: CustomRadioWidget(
@@ -369,7 +369,7 @@ class _sps_questionario_cq_ext_item_screen
                                                 : {},
                                           ),
                                         ),
-                                        Text("  "),
+                                        Text(" "),
                                         Container(
                                           color: Colors.orange,
                                           child: CustomRadioWidget(
@@ -390,7 +390,7 @@ class _sps_questionario_cq_ext_item_screen
                                                 : {},
                                           ),
                                         ),
-                                        Text("  "),
+                                        Text(" "),
                                         Container(
                                           color: Colors.green,
                                           child: CustomRadioWidget(
@@ -411,7 +411,7 @@ class _sps_questionario_cq_ext_item_screen
                                                 : {},
                                           ),
                                         ),
-                                        Text("   "),
+                                        Text(" "),
                                         //Tratar Mídias
                                         IconButton(
                                           icon: Badge(
@@ -533,7 +533,7 @@ class _sps_questionario_cq_ext_item_screen
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold)),
 
-                                        Text("   "),
+                                        Text(" "),
                                         //Tratar Comentários
                                         IconButton(
                                           icon: Icon(Icons.comment, size: 30),

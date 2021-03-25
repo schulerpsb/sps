@@ -38,11 +38,11 @@ class sps_menu_screen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(height: 40),
+              Container(height: 30),
               Container(
-                width: 350,
+                width: 360,
                 height: 80,
-                padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -69,11 +69,11 @@ class sps_menu_screen extends StatelessWidget {
                   color: Color(0xFF004077),
                 ),
               ),
-              Container(height: 30),
+              Container(height: 10),
               Container(
-                width: 350,
+                width: 360,
                 height: 80,
-                padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -98,11 +98,11 @@ class sps_menu_screen extends StatelessWidget {
                   color: Color(0xFF004077),
                 ),
               ),
-              Container(height: 30),
+              Container(height: 10),
               Container(
-                width: 350,
+                width: 360,
                 height: 80,
-                padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -127,11 +127,11 @@ class sps_menu_screen extends StatelessWidget {
                   color: Color(0xFF004077),
                 ),
               ),
-              Container(height: 60),
+              Container(height: 40),
               Container(
-                width: 350,
+                width: 360,
                 height: 80,
-                padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -156,11 +156,11 @@ class sps_menu_screen extends StatelessWidget {
                   color: Color(0xFF004077),
                 ),
               ),
-              Container(height: 40),
+              Container(height: 30),
               Container(
-                width: 350,
+                width: 360,
                 height: 80,
-                padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -189,7 +189,7 @@ class sps_menu_screen extends StatelessWidget {
           ),
         ),
         Container(
-          height: 60,
+          height: 50,
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(

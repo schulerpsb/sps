@@ -28,6 +28,7 @@ void isolateSincronizacao(int arg) async  {
 
   //verificação para inicio da primeira execução
   final bool conectadoInicial = await ObjVerificarConexao.verificar_conexao();
+  //if (conectadoInicial == true && 1 != 1) { //Adriano (para testes)
   if (conectadoInicial == true) {
     //Verifica se existe usuário logado
     List<Map<String, dynamic>> dadosSessaoInicial = await spslogin.verificaUsuarioAutenticado();

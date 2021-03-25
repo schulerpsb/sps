@@ -253,7 +253,7 @@ class _sps_questionario_cq_lista_screen
                     );
                   } else {
                     return CenteredMessage(
-                      'Checklist não encontrado.',
+                      'Checklist não encontrado',
                       icon: Icons.warning,
                     );
                   }
