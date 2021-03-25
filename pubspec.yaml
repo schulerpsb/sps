@@ -21,6 +21,8 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+
+  flutter_secure_storage: ^3.3.3
   flutter_pdfview: ^1.0.4
   dio: ^3.0.10
   flutter_isolate: ^1.0.0+15
@@ -49,6 +51,7 @@ dependencies:
   scrollable_positioned_list: ^0.1.10
   video_thumbnail: ^0.2.5
   path_provider: ^1.6.27
+  dart_jsonwebtoken: ^1.6.2
 
   # Dependências para o DB
   sqflite:

@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'Json_interceptor.dart';
 
 class SpsHttpLogin {
@@ -16,12 +19,20 @@ class SpsHttpLogin {
   SpsHttpLogin(this.usuario, this.senha);
 
   Future<Map<String, dynamic>> efetuaLogin(String usuario, String senha) async {
-    final Map<String, dynamic> dadosParaLogon = {
-      'codigo_usuario': usuario,
-      'senha_usuario': senha,
-    };
+//    implementação de JWT somente para o Login
+    String token;
+    final jwt = JWT(
+      {
+        'iis': 'ChecklistApp',
+        'sub': usuario,
+        'codigo_usuario': usuario,
+        'senha_usuario': senha
+      },
+    );
+    token = jwt.sign(SecretKey('schulerchecklistApp2021'));
+    final String dadosParaLogonJson = jsonEncode(token);
+//    FIM implementação de JWT somente para o Login
 
-    final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -75,11 +86,31 @@ class SpsHttpLogin {
   }
 
   Future<Map<String, dynamic>> listaUsuariofromserver(String usuario) async {
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_usuario': usuario
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
     final Map<String, dynamic> dadosParaLogon = {
       'codigo_usuario': usuario,
+      'jwt': token,
     };
-
     final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -133,11 +164,30 @@ class SpsHttpLogin {
   }
 
   Future<Map<String, dynamic>> esqueciMinhaSenha(String usuario) async {
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_usuario': usuario
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
     final Map<String, dynamic> dadosParaLogon = {
       'codigo_usuario': usuario,
+      'jwt': token,
     };
-
     final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
