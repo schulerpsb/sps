@@ -13,22 +13,12 @@ class SpsHttpLogin {
   //static const baseUrl = 'https://teklist.schuler.de/webapi/api/login/read.php';
   //Servidor DEV
   static const baseUrlAutentica = 'http://10.17.20.45/webapi/api/login/read.php';
-  static const baseUrlAutenticaJWT = 'http://10.17.20.45/webapi/api/login/readjwt.php';
   static const baseUrlListaUsuario = 'http://10.17.20.45/webapi/api/login/read_usuario.php';
-  static const baseUrlListaUsuarioJWT = 'http://10.17.20.45/webapi/api/login/read_usuariojwt.php';
   static const baseUrlLEsqueciMinhaSenha = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';
-  static const baseUrlLEsqueciMinhaSenhaJWT = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';
 
   SpsHttpLogin(this.usuario, this.senha);
 
   Future<Map<String, dynamic>> efetuaLogin(String usuario, String senha) async {
-
-//    final Map<String, dynamic> dadosParaLogon = {
-//      'codigo_usuario': usuario,
-//      'senha_usuario': senha,
-//    };
-//    final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
-
 //    implementação de JWT somente para o Login
     String token;
     final jwt = JWT(
@@ -50,8 +40,7 @@ class SpsHttpLogin {
 
     final Response response = await client
         .post(
-//          baseUrlAutentica,
-          baseUrlAutenticaJWT,
+          baseUrlAutentica,
           headers: {'Content-type': 'application/json'},
           body: dadosParaLogonJson,
         )
@@ -129,8 +118,7 @@ class SpsHttpLogin {
 
     final Response response = await client
         .post(
-//      baseUrlListaUsuario,
-      baseUrlListaUsuarioJWT,
+      baseUrlListaUsuario,
       headers: {'Content-type': 'application/json'},
       body: dadosParaLogonJson,
     )
@@ -207,8 +195,7 @@ class SpsHttpLogin {
 
     final Response response = await client
         .post(
-//      baseUrlLEsqueciMinhaSenha,
-      baseUrlLEsqueciMinhaSenhaJWT,
+      baseUrlLEsqueciMinhaSenha,
       headers: {'Content-type': 'application/json'},
       body: dadosParaLogonJson,
     )
