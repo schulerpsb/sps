@@ -6,7 +6,7 @@ import 'Json_interceptor.dart';
 
 class SpsHttpQuestionarioItem {
   //Servidor de produção
-  //static const baseUrl_read = 'https://teklist.schuler.de/webapi/api/questionario/read_item.php';
+  //static const baseUrl_readItem = 'https://teklist.schuler.de/webapi/api/questionario/read_item.php';
   //static const baseUrl_saveOpcao = 'https://teklist.schuler.de/webapi/api/questionario/save_opcao.php';
   //static const baseUrl_saveComentarios = 'http://teklist.schuler.de/webapi/api/questionario/save_comentarios.php';
   //static const baseUrl_saveAprovacao = 'http://teklist.schuler.de/webapi/api/questionario/save_aprovacao.php';

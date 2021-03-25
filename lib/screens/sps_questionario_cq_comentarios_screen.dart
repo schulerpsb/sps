@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
-import 'package:sps/http/sps_http_verificar_conexao_class.dart';
-import 'package:sps/http/sps_http_questionario_item_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_cq.dart';
 import 'package:sps/models/sps_usuario_class.dart';

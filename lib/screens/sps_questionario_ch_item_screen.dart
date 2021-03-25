@@ -619,17 +619,17 @@ class _sps_questionario_ch_item_screen
                       locale: Locale("pt"),
                       firstDate: DateTime(1900),
                       initialDate: currentValue ??
-                          snapshot.data[index]["resp_data"].toString() != ""
+                              snapshot.data[index]["resp_data"].toString() != ""
                           ? DateTime(
-                          int.parse(snapshot.data[index]["resp_data"]
-                              .toString()
-                              .substring(0, 4)),
-                          int.parse(snapshot.data[index]["resp_data"]
-                              .toString()
-                              .substring(5, 7)),
-                          int.parse(snapshot.data[index]["resp_data"]
-                              .toString()
-                              .substring(8, 10)))
+                              int.parse(snapshot.data[index]["resp_data"]
+                                  .toString()
+                                  .substring(0, 4)),
+                              int.parse(snapshot.data[index]["resp_data"]
+                                  .toString()
+                                  .substring(5, 7)),
+                              int.parse(snapshot.data[index]["resp_data"]
+                                  .toString()
+                                  .substring(8, 10)))
                           : DateTime.now(),
                       lastDate: DateTime(2100),
                       cancelText: "",
@@ -867,6 +867,7 @@ class _sps_questionario_ch_item_screen
                   0) {
             return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
+                //Preparar opções
                 List<Widget> _listaOpcoes = [];
                 //sentido - escala maior para meno
                 if (snapshot.data[index]["inicio_escala"] <
@@ -953,6 +954,7 @@ class _sps_questionario_ch_item_screen
                   }
                 }
 
+                //Exibir opções
                 return Column(
                   children: <Widget>[
                     Column(
@@ -968,7 +970,69 @@ class _sps_questionario_ch_item_screen
               },
             );
           } else {
-            return TextField();
+            //Tratar resposta Multipla
+            if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA MULTIPLA") {
+              return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  //Preparar opções
+                  List<Widget> _listaOpcoes = [];
+                  var _ocorrencia = snapshot.data[index]["inicio_escala"];
+                  while (_ocorrencia <= snapshot.data[index]["fim_escala"]) {
+                    _listaOpcoes.add(
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              CustomRadioWidget(
+                                height: 20,
+                                value: _ocorrencia,
+                                groupValue: _wrespEscala == null
+                                    ? snapshot.data[index]["resp_escala"]
+                                    : _wrespEscala,
+                                onChanged: (val) => {
+                                  tabConteudo[snapshot.data[index]
+                                          ["item_checklist"]][1] =
+                                      "RESPOSTA POR ESCALA",
+                                  tabConteudo[snapshot.data[index]
+                                      ["item_checklist"]][2] = val.toString(),
+                                  setState(
+                                    () {
+                                      _wrespEscala = val;
+                                    },
+                                  )
+                                },
+                              ),
+                              Text(_ocorrencia.toString(),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                    _ocorrencia =
+                        _ocorrencia + snapshot.data[index]["intervalo_escala"];
+                  }
+
+                  //Exibir opções
+                  return Column(
+                    children: <Widget>[
+                      Column(
+                        children: [
+                          Text(
+                            snapshot.data[index]["descr_escala"],
+                          ),
+                        ],
+                      ),
+                      Column(children: _listaOpcoes),
+                    ],
+                  );
+                },
+              );
+            } else {
+              return TextField();
+            }
           }
         }
       }

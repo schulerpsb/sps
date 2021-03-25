@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/http//sps_http_verificar_conexao_class.dart';
@@ -10,10 +9,6 @@ import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_item_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_ext_item_screen.dart';
-import 'package:intl/intl.dart';
-import 'Dart:io';
-import 'package:sps/screens/sps_questionario_cq_int_item_screen.dart';
 
 class sps_questionario_comentarios_screen extends StatefulWidget {
   final String _codigo_empresa;
