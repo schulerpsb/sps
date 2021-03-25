@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'Json_interceptor.dart';
 
 class SpsHttpLogin {
@@ -13,7 +15,9 @@ class SpsHttpLogin {
   static const baseUrlAutentica = 'http://10.17.20.45/webapi/api/login/read.php';
   static const baseUrlAutenticaJWT = 'http://10.17.20.45/webapi/api/login/readjwt.php';
   static const baseUrlListaUsuario = 'http://10.17.20.45/webapi/api/login/read_usuario.php';
+  static const baseUrlListaUsuarioJWT = 'http://10.17.20.45/webapi/api/login/read_usuariojwt.php';
   static const baseUrlLEsqueciMinhaSenha = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';
+  static const baseUrlLEsqueciMinhaSenhaJWT = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';
 
   SpsHttpLogin(this.usuario, this.senha);
 
@@ -25,7 +29,7 @@ class SpsHttpLogin {
 //    };
 //    final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
 
-    //implementação de JWT
+//    implementação de JWT somente para o Login
     String token;
     final jwt = JWT(
       {
@@ -36,11 +40,8 @@ class SpsHttpLogin {
       },
     );
     token = jwt.sign(SecretKey('schulerchecklistApp2021'));
-    print('Token Para Login: $token\n');
-
     final String dadosParaLogonJson = jsonEncode(token);
-    //FIM implementação de JWT
-    print('Token Para Login JSON: $dadosParaLogonJson\n');
+//    FIM implementação de JWT somente para o Login
 
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
@@ -96,11 +97,31 @@ class SpsHttpLogin {
   }
 
   Future<Map<String, dynamic>> listaUsuariofromserver(String usuario) async {
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_usuario': usuario
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
     final Map<String, dynamic> dadosParaLogon = {
       'codigo_usuario': usuario,
+      'jwt': token,
     };
-
     final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -108,7 +129,8 @@ class SpsHttpLogin {
 
     final Response response = await client
         .post(
-      baseUrlListaUsuario,
+//      baseUrlListaUsuario,
+      baseUrlListaUsuarioJWT,
       headers: {'Content-type': 'application/json'},
       body: dadosParaLogonJson,
     )
@@ -154,11 +176,30 @@ class SpsHttpLogin {
   }
 
   Future<Map<String, dynamic>> esqueciMinhaSenha(String usuario) async {
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_usuario': usuario
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
     final Map<String, dynamic> dadosParaLogon = {
       'codigo_usuario': usuario,
+      'jwt': token,
     };
-
     final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -166,7 +207,8 @@ class SpsHttpLogin {
 
     final Response response = await client
         .post(
-      baseUrlLEsqueciMinhaSenha,
+//      baseUrlLEsqueciMinhaSenha,
+      baseUrlLEsqueciMinhaSenhaJWT,
       headers: {'Content-type': 'application/json'},
       body: dadosParaLogonJson,
     )

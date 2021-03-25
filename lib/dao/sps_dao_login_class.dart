@@ -46,7 +46,7 @@ class SpsDaoLogin {
   Future<int> create_table() async {
     final Database db = await getDatabase();
     db.execute(SpsDaoLogin.tableSql);
-    debugPrint('Tabela (sps_tb_usuario) criada com sucesso ou já existente!');
+    //debugPrint('Tabela (sps_tb_usuario) criada com sucesso ou já existente!');
     //criação de registro de teste
     //db.execute(SpsDaoLogin.SqlInsertTest);
     //debugPrint('Regsitro de teste criado com sucesso!');
