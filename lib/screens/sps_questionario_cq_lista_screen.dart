@@ -253,7 +253,7 @@ class _sps_questionario_cq_lista_screen
                     );
                   } else {
                     return CenteredMessage(
-                      'Checklist não encontrado.',
+                      'Checklist não encontrado',
                       icon: Icons.warning,
                     );
                   }
@@ -331,13 +331,13 @@ class texto_principal {
         "\nQUANTIDADE: " +
         '${wsnapshot["qtde_pedido"]}' +
         "\n\n" +
-        "PRAZO: " +
-        _dtfim_aplicacao;
+        "DT.FIM CHECKLIST: " +
+        _dtfim_aplicacao + "\n";
 
     if (wsnapshot["status"] == "PARCIAL") {
       var formato = new NumberFormat("##0.00", "en_US");
       _texto_principal = _texto_principal +
-          "        EVOLUÇÃO: " +
+          "EVOLUÇÃO: " +
           formato.format(wsnapshot["percentual_evolucao"]).toString() +
           " %";
     }

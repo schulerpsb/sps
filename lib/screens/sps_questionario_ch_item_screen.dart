@@ -39,9 +39,6 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
 
   final sps_usuario usuarioAtual;
 
-  //String _acao = "";
-  //String _sessao_checklist = "";
-
   sps_questionario_ch_item_screen(
       this._codigo_empresa,
       this._codigo_programacao,
@@ -116,6 +113,13 @@ class _sps_questionario_ch_item_screen
         index: indexLista, duration: Duration(seconds: 1));
   }
 
+  var tabConteudo = new List.generate(100, (_) => new List(4));
+
+  String _exibirSalvar = "SIM";
+  var _wrespEscala;
+  var _wrespSimNao;
+  var _wrespNaoSeAplica;
+
   @override
   Widget build(BuildContext context) {
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
@@ -124,7 +128,7 @@ class _sps_questionario_ch_item_screen
       if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
         this.widget._registro_colaborador = sps_usuario().registro_usuario;
         this.widget._identificacao_utilizador = '';
-      }else{
+      } else {
         this.widget._registro_colaborador = '';
         this.widget._identificacao_utilizador = sps_usuario().codigo_usuario;
       }
@@ -149,14 +153,65 @@ class _sps_questionario_ch_item_screen
               return IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => sps_questionario_ch_lista_screen(
-                            this.widget._filtro,
-                            this.widget._filtroDescrProgramacao,
-                            this.widget._tipo_questionario)),
+                  var _salvar_pendente = false;
+                  print("adriano =>" + tabConteudo.toString());
+                  tabConteudo.forEach(
+                    (element) async {
+                      if (element[1] != null) {
+                        _salvar_pendente = true;
+                        print("adriano =>aqui");
+                      }
+                    },
                   );
+                  if (_salvar_pendente == true) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("SPS App"),
+                          content: Text(
+                              "Você ainda não salvou o questionário, deseja realmente descartar?"),
+                          actions: [
+                            FlatButton(
+                              child: Text("Não (Retornar ao questionário)"),
+                              onPressed: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("Sim (Descartar)"),
+                              onPressed: () {
+                                Navigator.pop;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          sps_questionario_ch_lista_screen(
+                                              this.widget._filtro,
+                                              this
+                                                  .widget
+                                                  ._filtroDescrProgramacao,
+                                              this.widget._tipo_questionario)),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    Navigator.pop;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              sps_questionario_ch_lista_screen(
+                                  this.widget._filtro,
+                                  this.widget._filtroDescrProgramacao,
+                                  this.widget._tipo_questionario)),
+                    );
+                  }
                 },
               );
             },
@@ -224,6 +279,7 @@ class _sps_questionario_ch_item_screen
                           ),
                         ),
 
+                        //Tratar sessão
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -381,6 +437,45 @@ class _sps_questionario_ch_item_screen
                             ),
                           ),
                         ),
+
+                        Container(
+                          padding: EdgeInsets.fromLTRB(5, 3, 5, 0),
+                        ),
+
+                        //Tratar botão SALVAR
+                        Container(
+                          width: 130,
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                          child: RaisedButton.icon(
+                            onPressed: () {
+                              _exibirSalvar == "SIM"
+                                  ? _gravar_resposta(
+                                      this.widget._codigo_empresa,
+                                      this.widget._codigo_programacao,
+                                      this.widget._registro_colaborador,
+                                      this.widget._identificacao_utilizador,
+                                    )
+                                  : "";
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            label: Text(
+                              'SALVAR',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            icon: Icon(
+                              Icons.save,
+                              color: Colors.white,
+                            ),
+                            textColor: Colors.white,
+                            splashColor:
+                                _exibirSalvar == "" ? null : Colors.red,
+                            color:
+                                _exibirSalvar == "" ? Colors.grey : Colors.blue,
+                          ),
+                        ),
                       ],
                     );
                   } else {
@@ -413,13 +508,29 @@ class _sps_questionario_ch_item_screen
       title: Text(
           '${snapshot.data[index]["seq_pergunta"]}' +
               " - " +
-              '${snapshot.data[index]["descr_pergunta"]}',
+              '${snapshot.data[index]["descr_pergunta"]}' +
+              " - " +
+              '${snapshot.data[index]["item_checklist"]}',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
     );
   }
 
   montar_questionario(BuildContext context,
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
+    //Identificar item_checklist na tabela de memoria
+    tabConteudo[snapshot.data[index]["item_checklist"]][0] =
+        snapshot.data[index]["item_checklist"];
+
+    //Verificar se conteudo esta como "não se aplica"
+    if (tabConteudo[snapshot.data[index]["item_checklist"]][1] == null) {
+      if (snapshot.data[index]["resp_nao_se_aplica"].toString() == "SIM") {
+        tabConteudo[snapshot.data[index]["item_checklist"]][3] =
+            "NÃO SE APLICA";
+      } else {
+        tabConteudo[snapshot.data[index]["item_checklist"]][3] = "";
+      }
+    }
+
     //Tratar resposta fixa
     if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA FIXA") {
       //Tratar resposta fixa (TEXTO/NUMERO/DATA/HORA)
@@ -427,23 +538,30 @@ class _sps_questionario_ch_item_screen
           snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO" ||
           snapshot.data[index]["tipo_resposta_fixa"].toString() == "DATA" ||
           snapshot.data[index]["tipo_resposta_fixa"].toString() == "HORA") {
-        TextEditingController _respTexto = TextEditingController();
-        TextEditingController _respNumero = TextEditingController();
-        TextEditingController _respData = TextEditingController();
-        TextEditingController _respHora = TextEditingController();
+        TextEditingController _resposta = TextEditingController();
         if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO") {
-          _respTexto.text = snapshot.data[index]["resp_texto"];
+          if (tabConteudo[snapshot.data[index]["item_checklist"]][2] == null) {
+            _resposta.text = snapshot.data[index]["resp_texto"];
+          } else {
+            _resposta.text =
+                tabConteudo[snapshot.data[index]["item_checklist"]][2];
+          }
         }
         if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO") {
-          _respNumero.text = snapshot.data[index]["resp_numero"]
-              .toString()
-              .replaceAll("null", "");
+          if (tabConteudo[snapshot.data[index]["item_checklist"]][2] == null) {
+            _resposta.text = snapshot.data[index]["resp_numero"]
+                .toString()
+                .replaceAll("null", "");
+          } else {
+            _resposta.text =
+                tabConteudo[snapshot.data[index]["item_checklist"]][2];
+          }
         }
         if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "DATA") {
-          _respData.text = snapshot.data[index]["resp_data"];
+          _resposta.text = snapshot.data[index]["resp_data"];
         }
         if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "HORA") {
-          _respHora.text = snapshot.data[index]["resp_hora"];
+          _resposta.text = snapshot.data[index]["resp_hora"];
         }
         //Ajustar tamanho do campo
         int _linhas;
@@ -459,9 +577,7 @@ class _sps_questionario_ch_item_screen
         if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO" ||
             snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO") {
           return TextField(
-            controller: snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO"
-                ? _respTexto
-                : _respNumero,
+            controller: _resposta,
             maxLines: _linhas,
             inputFormatters: [
               LengthLimitingTextInputFormatter(
@@ -471,6 +587,12 @@ class _sps_questionario_ch_item_screen
             keyboardType: snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO"
                 ? TextInputType.text
                 : TextInputType.number,
+            onChanged: (novoTexto) => {
+              tabConteudo[snapshot.data[index]["item_checklist"]][1] =
+                  snapshot.data[index]["tipo_resposta_fixa"].toString(),
+              tabConteudo[snapshot.data[index]["item_checklist"]][2] =
+                  novoTexto,
+            },
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
@@ -480,28 +602,6 @@ class _sps_questionario_ch_item_screen
               hintText: snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO"
                   ? snapshot.data[index]["sugestao_resposta"]
                   : "",
-              suffixIcon: IconButton(
-                onPressed: () => {
-                  this.widget._acao = "RECARREGAR",
-                  _gravar_resposta(
-                      snapshot.data[index]["codigo_empresa"],
-                      snapshot.data[index]["codigo_programacao"].toString(),
-                      snapshot.data[index]["registro_colaborador"],
-                      snapshot.data[index]["identificacao_utilizador"],
-                      snapshot.data[index]["item_checklist"].toString(),
-                      _respTexto.text,
-                      _respNumero.text,
-                      _respData.text,
-                      _respHora.text,
-                      snapshot.data[index]["resp_simnao"],
-                      snapshot.data[index]["resp_escala"],
-                      snapshot.data[index]["comentarios"],
-                      snapshot.data[index]["descr_comentarios"],
-                      "",
-                      index),
-                },
-                icon: Icon(Icons.save),
-              ),
             ),
           );
         } else {
@@ -519,24 +619,23 @@ class _sps_questionario_ch_item_screen
                       locale: Locale("pt"),
                       firstDate: DateTime(1900),
                       initialDate: currentValue ??
-                              snapshot.data[index]["resp_data"].toString() != ""
+                          snapshot.data[index]["resp_data"].toString() != ""
                           ? DateTime(
-                              int.parse(snapshot.data[index]["resp_data"]
-                                  .toString()
-                                  .substring(0, 4)),
-                              int.parse(snapshot.data[index]["resp_data"]
-                                  .toString()
-                                  .substring(5, 7)),
-                              int.parse(snapshot.data[index]["resp_data"]
-                                  .toString()
-                                  .substring(8, 10)))
+                          int.parse(snapshot.data[index]["resp_data"]
+                              .toString()
+                              .substring(0, 4)),
+                          int.parse(snapshot.data[index]["resp_data"]
+                              .toString()
+                              .substring(5, 7)),
+                          int.parse(snapshot.data[index]["resp_data"]
+                              .toString()
+                              .substring(8, 10)))
                           : DateTime.now(),
                       lastDate: DateTime(2100),
                       cancelText: "",
                       builder: (BuildContext context, Widget child) {
                         return MediaQuery(
-                          data: MediaQuery.of(context)
-                              .copyWith(alwaysUse24HourFormat: true),
+                          data: MediaQuery.of(context),
                           child: child,
                         );
                       },
@@ -545,41 +644,15 @@ class _sps_questionario_ch_item_screen
                   },
                   onChanged: (dt) {
                     try {
-                      this.widget._acao = "RECARREGAR";
-                      _gravar_resposta(
-                          snapshot.data[index]["codigo_empresa"],
-                          snapshot.data[index]["codigo_programacao"].toString(),
-                          snapshot.data[index]["registro_colaborador"],
-                          snapshot.data[index]["identificacao_utilizador"],
-                          snapshot.data[index]["item_checklist"].toString(),
-                          _respTexto.text,
-                          _respNumero.text,
-                          dt.toString().substring(0, 10),
-                          _respHora.text,
-                          snapshot.data[index]["resp_simnao"],
-                          snapshot.data[index]["resp_escala"],
-                          snapshot.data[index]["comentarios"],
-                          snapshot.data[index]["descr_comentarios"],
-                          "",
-                          index);
+                      tabConteudo[snapshot.data[index]["item_checklist"]][1] =
+                          snapshot.data[index]["tipo_resposta_fixa"];
+                      tabConteudo[snapshot.data[index]["item_checklist"]][2] =
+                          dt.toString().substring(0, 10);
                     } catch (e) {
-                      this.widget._acao = "RECARREGAR";
-                      _gravar_resposta(
-                          snapshot.data[index]["codigo_empresa"],
-                          snapshot.data[index]["codigo_programacao"].toString(),
-                          snapshot.data[index]["registro_colaborador"],
-                          snapshot.data[index]["identificacao_utilizador"],
-                          snapshot.data[index]["item_checklist"].toString(),
-                          _respTexto.text,
-                          _respNumero.text,
-                          "",
-                          _respHora.text,
-                          snapshot.data[index]["resp_simnao"],
-                          snapshot.data[index]["resp_escala"],
-                          snapshot.data[index]["comentarios"],
-                          snapshot.data[index]["descr_comentarios"],
-                          "",
-                          index);
+                      tabConteudo[snapshot.data[index]["item_checklist"]][1] =
+                          snapshot.data[index]["tipo_resposta_fixa"];
+                      tabConteudo[snapshot.data[index]["item_checklist"]][2] =
+                          "";
                     }
                   },
                 ),
@@ -603,6 +676,7 @@ class _sps_questionario_ch_item_screen
                         context: context,
                         initialTime: TimeOfDay.fromDateTime(
                             currentValue ?? DateTime.now()),
+                        cancelText: "",
                         builder: (BuildContext context, Widget child) {
                           return MediaQuery(
                             data: MediaQuery.of(context)
@@ -615,45 +689,15 @@ class _sps_questionario_ch_item_screen
                     },
                     onChanged: (hr) {
                       try {
-                        if (hr.toString().substring(11, 19) != "00:00:00") {
-                          this.widget._acao = "RECARREGAR";
-                          _gravar_resposta(
-                              snapshot.data[index]["codigo_empresa"],
-                              snapshot.data[index]["codigo_programacao"]
-                                  .toString(),
-                              snapshot.data[index]["registro_colaborador"],
-                              snapshot.data[index]["identificacao_utilizador"],
-                              snapshot.data[index]["item_checklist"].toString(),
-                              _respTexto.text,
-                              _respNumero.text,
-                              _respData.text,
-                              hr.toString().substring(11, 19),
-                              snapshot.data[index]["resp_simnao"],
-                              snapshot.data[index]["resp_escala"],
-                              snapshot.data[index]["comentarios"],
-                              snapshot.data[index]["descr_comentarios"],
-                              "",
-                              index);
-                        }
+                        tabConteudo[snapshot.data[index]["item_checklist"]][1] =
+                            snapshot.data[index]["tipo_resposta_fixa"];
+                        tabConteudo[snapshot.data[index]["item_checklist"]][2] =
+                            hr.toString().substring(11, 19);
                       } catch (e) {
-                        this.widget._acao = "RECARREGAR";
-                        _gravar_resposta(
-                            snapshot.data[index]["codigo_empresa"],
-                            snapshot.data[index]["codigo_programacao"]
-                                .toString(),
-                            snapshot.data[index]["registro_colaborador"],
-                            snapshot.data[index]["identificacao_utilizador"],
-                            snapshot.data[index]["item_checklist"].toString(),
-                            _respTexto.text,
-                            _respNumero.text,
-                            _respData.text,
-                            "",
-                            snapshot.data[index]["resp_simnao"],
-                            snapshot.data[index]["resp_escala"],
-                            snapshot.data[index]["comentarios"],
-                            snapshot.data[index]["descr_comentarios"],
-                            "",
-                            index);
+                        tabConteudo[snapshot.data[index]["item_checklist"]][1] =
+                            snapshot.data[index]["tipo_resposta_fixa"];
+                        tabConteudo[snapshot.data[index]["item_checklist"]][2] =
+                            "";
                       }
                     },
                   ),
@@ -670,10 +714,10 @@ class _sps_questionario_ch_item_screen
     } else {
       //Tratar resposta sim/não
       if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA SIM/NÃO") {
-        return Column(
-          children: <Widget>[
-            Column(
-              children: [
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              children: <Widget>[
                 Row(
                   children: [
                     Text("     "),
@@ -681,26 +725,19 @@ class _sps_questionario_ch_item_screen
                       child: CustomRadioWidget(
                         height: 20,
                         value: "SIM",
-                        groupValue: snapshot.data[index]["resp_simnao"],
-                        onChanged: (value) => {
-                          this.widget._acao = "RECARREGAR",
-                          _gravar_resposta(
-                              snapshot.data[index]["codigo_empresa"],
-                              snapshot.data[index]["codigo_programacao"]
-                                  .toString(),
-                              snapshot.data[index]["registro_colaborador"],
-                              snapshot.data[index]["identificacao_utilizador"],
-                              snapshot.data[index]["item_checklist"].toString(),
-                              snapshot.data[index]["resp_texto"],
-                              snapshot.data[index]["resp_numero"],
-                              snapshot.data[index]["resp_data"],
-                              snapshot.data[index]["resp_hora"],
-                              "SIM",
-                              snapshot.data[index]["resp_escala"],
-                              snapshot.data[index]["comentarios"],
-                              snapshot.data[index]["descr_comentarios"],
-                              "",
-                              index)
+                        groupValue: _wrespSimNao == null
+                            ? snapshot.data[index]["resp_simnao"]
+                            : _wrespSimNao,
+                        onChanged: (val) => {
+                          tabConteudo[snapshot.data[index]["item_checklist"]]
+                              [1] = "RESPOSTA SIM/NÃO",
+                          tabConteudo[snapshot.data[index]["item_checklist"]]
+                              [2] = "SIM",
+                          setState(
+                            () {
+                              _wrespSimNao = val;
+                            },
+                          )
                         },
                       ),
                     ),
@@ -712,26 +749,19 @@ class _sps_questionario_ch_item_screen
                       child: CustomRadioWidget(
                         height: 20,
                         value: "NÃO",
-                        groupValue: snapshot.data[index]["resp_simnao"],
-                        onChanged: (value) => {
-                          this.widget._acao = "RECARREGAR",
-                          _gravar_resposta(
-                              snapshot.data[index]["codigo_empresa"],
-                              snapshot.data[index]["codigo_programacao"]
-                                  .toString(),
-                              snapshot.data[index]["registro_colaborador"],
-                              snapshot.data[index]["identificacao_utilizador"],
-                              snapshot.data[index]["item_checklist"].toString(),
-                              snapshot.data[index]["resp_texto"],
-                              snapshot.data[index]["resp_numero"],
-                              snapshot.data[index]["resp_data"],
-                              snapshot.data[index]["resp_hora"],
-                              "NÃO",
-                              snapshot.data[index]["resp_escala"],
-                              snapshot.data[index]["comentarios"],
-                              snapshot.data[index]["descr_comentarios"],
-                              "",
-                              index)
+                        groupValue: _wrespSimNao == null
+                            ? snapshot.data[index]["resp_simnao"]
+                            : _wrespSimNao,
+                        onChanged: (val) => {
+                          tabConteudo[snapshot.data[index]["item_checklist"]]
+                              [1] = "RESPOSTA SIM/NÃO",
+                          tabConteudo[snapshot.data[index]["item_checklist"]]
+                              [2] = "NÃO",
+                          setState(
+                            () {
+                              _wrespSimNao = val;
+                            },
+                          )
                         },
                       ),
                     ),
@@ -741,8 +771,8 @@ class _sps_questionario_ch_item_screen
                   ],
                 )
               ],
-            ),
-          ],
+            );
+          },
         );
       } else {
         //Tratar resposta por escala (resposta livre)
@@ -757,82 +787,77 @@ class _sps_questionario_ch_item_screen
             _currentSliderValue =
                 (snapshot.data[index]["resp_escala"] as num).toDouble();
           }
-
-          return Column(
-            children: <Widget>[
-              Column(
-                children: [
-                  Text(
-                    snapshot.data[index]["descr_escala"],
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                children: <Widget>[
+                  Column(
                     children: [
-                      Container(
-                        child: Text(
-                            snapshot.data[index]["inicio_escala"].toString(),
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
+                      Text(
+                        snapshot.data[index]["descr_escala"],
                       ),
-                      Container(
-                        width: 350,
-                        child: Slider(
-                          value: _currentSliderValue,
-                          min: (snapshot.data[index]["inicio_escala"] as num)
-                              .toDouble(),
-                          max: (snapshot.data[index]["fim_escala"] as num)
-                              .toDouble(),
-                          label: _currentSliderValue.toString(),
-                          onChanged: (value) {
-                            //_currentSliderValue = value;
-                          },
-                          onChangeEnd: (value) {
-                            _currentSliderValue = value;
-                            this.widget._acao = "RECARREGAR";
-                            _gravar_resposta(
-                                snapshot.data[index]["codigo_empresa"],
-                                snapshot.data[index]["codigo_programacao"]
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            child: Text(
+                                snapshot.data[index]["inicio_escala"]
                                     .toString(),
-                                snapshot.data[index]["registro_colaborador"],
-                                snapshot.data[index]
-                                    ["identificacao_utilizador"],
-                                snapshot.data[index]["item_checklist"]
-                                    .toString(),
-                                snapshot.data[index]["resp_texto"],
-                                snapshot.data[index]["resp_numero"],
-                                snapshot.data[index]["resp_data"],
-                                snapshot.data[index]["resp_hora"],
-                                snapshot.data[index]["resp_simnao"],
-                                value.round().toString(),
-                                snapshot.data[index]["comentarios"],
-                                snapshot.data[index]["descr_comentarios"],
-                                "",
-                                index);
-                          },
-                        ),
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                          ),
+                          Container(
+                            width: 350,
+                            child: Slider(
+                              value: _currentSliderValue,
+                              min:
+                                  (snapshot.data[index]["inicio_escala"] as num)
+                                      .toDouble(),
+                              max: (snapshot.data[index]["fim_escala"] as num)
+                                  .toDouble(),
+                              divisions:
+                                  snapshot.data[index]["fim_escala"].round(),
+                              label: _currentSliderValue.toString(),
+                              onChanged: (val) {
+                                _currentSliderValue = val;
+                                tabConteudo[snapshot.data[index]
+                                        ["item_checklist"]][1] =
+                                    "RESPOSTA POR ESCALA";
+                                tabConteudo[snapshot.data[index]
+                                        ["item_checklist"]][2] =
+                                    val.round().toString();
+                                setState(
+                                  () {
+                                    _currentSliderValue = val;
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                                snapshot.data[index]["fim_escala"].toString(),
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                          )
+                        ],
                       ),
-                      Container(
-                        child: Text(
-                            snapshot.data[index]["fim_escala"].toString(),
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold)),
-                      )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(_currentSliderValue.toString().replaceAll(".0", ""),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ],
-              ),
-              Column(
-                children: [
-                  Text(_currentSliderValue.toString().replaceAll(".0", ""),
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ],
+              );
+            },
           );
         } else {
           //Tratar resposta por escala (com intervalo)
@@ -840,17 +865,107 @@ class _sps_questionario_ch_item_screen
               int.parse(snapshot.data[index]["intervalo_escala"].toString(),
                       onError: (e) => 0) !=
                   0) {
-            return Column(
-              children: <Widget>[
-                Column(
-                  children: [
-                    Text(
-                      snapshot.data[index]["descr_escala"],
+            return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                List<Widget> _listaOpcoes = [];
+                //sentido - escala maior para meno
+                if (snapshot.data[index]["inicio_escala"] <
+                    snapshot.data[index]["fim_escala"]) {
+                  var _ocorrencia = snapshot.data[index]["inicio_escala"];
+                  while (_ocorrencia <= snapshot.data[index]["fim_escala"]) {
+                    _listaOpcoes.add(
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              CustomRadioWidget(
+                                height: 20,
+                                value: _ocorrencia,
+                                groupValue: _wrespEscala == null
+                                    ? snapshot.data[index]["resp_escala"]
+                                    : _wrespEscala,
+                                onChanged: (val) => {
+                                  tabConteudo[snapshot.data[index]
+                                          ["item_checklist"]][1] =
+                                      "RESPOSTA POR ESCALA",
+                                  tabConteudo[snapshot.data[index]
+                                      ["item_checklist"]][2] = val.toString(),
+                                  setState(
+                                    () {
+                                      _wrespEscala = val;
+                                    },
+                                  )
+                                },
+                              ),
+                              Text(_ocorrencia.toString(),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                    _ocorrencia =
+                        _ocorrencia + snapshot.data[index]["intervalo_escala"];
+                  }
+                }
+                //sentido - escala menor para maior
+                if (snapshot.data[index]["inicio_escala"] >
+                    snapshot.data[index]["fim_escala"]) {
+                  var _ocorrencia = snapshot.data[index]["inicio_escala"];
+                  while (_ocorrencia >= snapshot.data[index]["fim_escala"]) {
+                    _listaOpcoes.add(
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              CustomRadioWidget(
+                                height: 20,
+                                value: _ocorrencia,
+                                groupValue: _wrespEscala == null
+                                    ? snapshot.data[index]["resp_escala"]
+                                    : _wrespEscala,
+                                onChanged: (val) => {
+                                  tabConteudo[snapshot.data[index]
+                                          ["item_checklist"]][1] =
+                                      "RESPOSTA POR ESCALA",
+                                  tabConteudo[snapshot.data[index]
+                                      ["item_checklist"]][2] = val.toString(),
+                                  setState(
+                                    () {
+                                      _wrespEscala = val;
+                                    },
+                                  )
+                                },
+                              ),
+                              Text(_ocorrencia.toString(),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                    _ocorrencia =
+                        _ocorrencia - snapshot.data[index]["intervalo_escala"];
+                  }
+                }
+
+                return Column(
+                  children: <Widget>[
+                    Column(
+                      children: [
+                        Text(
+                          snapshot.data[index]["descr_escala"],
+                        ),
+                      ],
                     ),
+                    Column(children: _listaOpcoes),
                   ],
-                ),
-                Column(children: escala_opcoes(snapshot, index)),
-              ],
+                );
+              },
             );
           } else {
             return TextField();
@@ -860,134 +975,51 @@ class _sps_questionario_ch_item_screen
     }
   }
 
-  List<Widget> escala_opcoes(
-      AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
-    List<Widget> _listaOpcoes = [];
-    //sentido - escala maior para menor
-    if (snapshot.data[index]["inicio_escala"] <
-        snapshot.data[index]["fim_escala"]) {
-      var _ocorrencia = snapshot.data[index]["inicio_escala"];
-      while (_ocorrencia <= snapshot.data[index]["fim_escala"]) {
-        _listaOpcoes.add(
-          Column(
-            children: [
-              Row(
-                children: [
-                  CustomRadioWidget(
-                    height: 20,
-                    value: _ocorrencia,
-                    groupValue: snapshot.data[index]["resp_escala"],
-                    onChanged: (value) => {
-                      this.widget._acao = "RECARREGAR",
-                      _gravar_resposta(
-                          snapshot.data[index]["codigo_empresa"],
-                          snapshot.data[index]["codigo_programacao"].toString(),
-                          snapshot.data[index]["registro_colaborador"],
-                          snapshot.data[index]["identificacao_utilizador"],
-                          snapshot.data[index]["item_checklist"].toString(),
-                          snapshot.data[index]["resp_texto"],
-                          snapshot.data[index]["resp_numero"],
-                          snapshot.data[index]["resp_data"],
-                          snapshot.data[index]["resp_hora"],
-                          snapshot.data[index]["resp_simnao"],
-                          value.toString(),
-                          snapshot.data[index]["comentarios"],
-                          snapshot.data[index]["descr_comentarios"],
-                          "",
-                          index)
-                    },
-                  ),
-                  Text(_ocorrencia.toString(),
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ],
-          ),
-        );
-        _ocorrencia = _ocorrencia + snapshot.data[index]["intervalo_escala"];
-      }
-    }
-    //sentido - escala menor para maior
-    if (snapshot.data[index]["inicio_escala"] >
-        snapshot.data[index]["fim_escala"]) {
-      var _ocorrencia = snapshot.data[index]["inicio_escala"];
-      while (_ocorrencia >= snapshot.data[index]["fim_escala"]) {
-        _listaOpcoes.add(
-          Column(
-            children: [
-              Row(
-                children: [
-                  CustomRadioWidget(
-                    height: 20,
-                    value: _ocorrencia,
-                    groupValue: snapshot.data[index]["resp_escala"],
-                    onChanged: (value) => {
-                      this.widget._acao = "RECARREGAR",
-                      _gravar_resposta(
-                          snapshot.data[index]["codigo_empresa"],
-                          snapshot.data[index]["codigo_programacao"].toString(),
-                          snapshot.data[index]["registro_colaborador"],
-                          snapshot.data[index]["identificacao_utilizador"],
-                          snapshot.data[index]["item_checklist"].toString(),
-                          snapshot.data[index]["resp_texto"],
-                          snapshot.data[index]["resp_numero"],
-                          snapshot.data[index]["resp_data"],
-                          snapshot.data[index]["resp_hora"],
-                          snapshot.data[index]["resp_simnao"],
-                          value.toString(),
-                          snapshot.data[index]["comentarios"],
-                          snapshot.data[index]["descr_comentarios"],
-                          "",
-                          index)
-                    },
-                  ),
-                  Text(_ocorrencia.toString(),
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ],
-          ),
-        );
-        _ocorrencia = _ocorrencia - snapshot.data[index]["intervalo_escala"];
-      }
-    }
-    return _listaOpcoes;
-  }
-
   tratar_nao_se_aplica(BuildContext context,
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: CheckboxListTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        title: Text("Não se aplica",
-            style: TextStyle(
-                fontSize: 15, color: Colors.blue, fontWeight: FontWeight.bold)),
-        value: snapshot.data[index]["resp_nao_se_aplica"].toString() == ""
-            ? false
-            : true,
-        onChanged: (value) {
-          this.widget._acao = "RECARREGAR";
-          _gravar_resposta(
-              snapshot.data[index]["codigo_empresa"],
-              snapshot.data[index]["codigo_programacao"].toString(),
-              snapshot.data[index]["registro_colaborador"],
-              snapshot.data[index]["identificacao_utilizador"],
-              snapshot.data[index]["item_checklist"].toString(),
-              snapshot.data[index]["resp_texto"],
-              snapshot.data[index]["resp_numero"],
-              snapshot.data[index]["resp_data"],
-              snapshot.data[index]["resp_hora"],
-              snapshot.data[index]["resp_simnao"],
-              snapshot.data[index]["resp_escala"],
-              snapshot.data[index]["comentarios"],
-              snapshot.data[index]["descr_comentarios"],
-              value == true ? "SIM" : "",
-              index);
-        },
-      ),
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return Align(
+          alignment: Alignment.centerLeft,
+          child: CheckboxListTile(
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Text("Não se aplica",
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold)),
+            value: _wrespNaoSeAplica == null
+                ? snapshot.data[index]["resp_nao_se_aplica"].toString() == "" ||
+                        snapshot.data[index]["resp_nao_se_aplica"] == null
+                    ? false
+                    : true
+                : _wrespNaoSeAplica,
+            onChanged: (val) {
+              if (val == true) {
+                if (tabConteudo[snapshot.data[index]["item_checklist"]][1] ==
+                    null) {
+                  tabConteudo[snapshot.data[index]["item_checklist"]][1] =
+                      "NÃO SE APLICA";
+                }
+                tabConteudo[snapshot.data[index]["item_checklist"]][3] =
+                    "NÃO SE APLICA";
+              } else {
+                if (tabConteudo[snapshot.data[index]["item_checklist"]][1] ==
+                    null) {
+                  tabConteudo[snapshot.data[index]["item_checklist"]][1] =
+                      "NÃO SE APLICA";
+                }
+                tabConteudo[snapshot.data[index]["item_checklist"]][3] = "";
+              }
+              setState(
+                () {
+                  _wrespNaoSeAplica = val;
+                },
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -1004,103 +1036,114 @@ class _sps_questionario_ch_item_screen
   }
 
   _gravar_resposta(
-      _wcodigoEmpresa,
-      _wcodigoProgramacao,
-      _wregistroColaborador,
-      _widentificacaoUtilizador,
-      _witemChecklist,
-      _wrespTexto,
-      _wrespNumero,
-      _wrespData,
-      _wrespHora,
-      _wrespSimnao,
-      _wrespEscala,
-      _wcomentarios,
-      _wdescrComentarios,
-      _wnaoSeAplica,
-      _windexLista) async {
-    var _wsincronizado = "";
+    _wcodigoEmpresa,
+    _wcodigoProgramacao,
+    _wregistroColaborador,
+    _widentificacaoUtilizador,
+  ) async {
+    var _wsincronizado = "N";
+    var _witemChecklist;
+    var _wrespTexto;
+    var _wrespNumero;
+    var _wrespData;
+    var _wrespHora;
+    var _wrespSimnao;
+    var _wrespEscala;
 
-    //Tratar "não se aplica"
-    if (_wnaoSeAplica == "SIM") {
-      _wrespTexto = "";
-      _wrespNumero = null;
-      _wrespData = "";
-      _wrespHora = "";
-      _wrespSimnao = "";
-      _wrespEscala = null;
-      _wdescrComentarios = "";
-    }
+    await Future.forEach(
+      tabConteudo,
+      (element) async {
+        if (element[1] != null) {
+          _witemChecklist = element[0];
 
-//    //Verificar se existe conexão
-//    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-//    final bool result = await ObjVerificarConexao.verificar_conexao();
-//    if (result == true) {
-//      //Gravar PostgreSQL (API REST)
-//      final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
-//      final retorno = await objQuestionarioItemHttp.QuestionarioSaveResposta(
-//          _wcodigoEmpresa,
-//          _wcodigoProgramacao,
-//          _wregistroColaborador,
-//          _widentificacaoUtilizador,
-//          _witemChecklist,
-//          _wrespTexto,
-//          _wrespNumero,
-//          _wrespData.toString(),
-//          _wrespHora,
-//          _wrespSimnao,
-//          _wrespEscala.toString(),
-//          _wdescrComentarios,
-//          _wnaoSeAplica,
-//          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA"
-//              ? usuarioAtual.registro_usuario
-//              : usuarioAtual.codigo_usuario);
-//      if (retorno == true) {
-//        _wsincronizado = "";
-//        debugPrint("registro gravado PostgreSQL");
-//      } else {
-//        _wsincronizado = "N";
-//        debugPrint("ERRO => registro não gravado PostgreSQL");
-//      }
-//    } else {
-//      _wsincronizado = "N";
-//    }
+          //Limpar variaveis
+          _wrespTexto = "";
+          _wrespNumero = null;
+          _wrespData = "";
+          _wrespHora = "";
+          _wrespSimnao = "";
+          _wrespEscala = null;
 
-    _wsincronizado = "N";
-    //Gravar SQlite
-    final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
-    final int resultupdate = await objQuestionarioItemDao.update_resposta(
-        _wcodigoEmpresa,
-        _wcodigoProgramacao,
-        _wregistroColaborador,
-        _widentificacaoUtilizador,
-        _witemChecklist,
-        _wrespTexto,
-        _wrespNumero,
-        _wrespData,
-        _wrespHora,
-        _wrespSimnao,
-        _wrespEscala,
-        _wnaoSeAplica,
-        _wdescrComentarios,
-        _wsincronizado);
+          if (element[3] != "NÃO SE APLICA") {
+            //Carregar variaveis
+            if (element[1] == "TEXTO") {
+              _wrespTexto = element[2];
+            }
+            if (element[1] == "NUMERO") {
+              _wrespNumero = element[2];
+            }
+            if (element[1] == "DATA") {
+              _wrespData = element[2];
+            }
+            if (element[1] == "HORA") {
+              _wrespHora = element[2];
+            }
+            if (element[1] == "RESPOSTA SIM/NÃO") {
+              _wrespSimnao = element[2];
+            }
+            if (element[1] == "RESPOSTA POR ESCALA") {
+              _wrespEscala = element[2];
+            }
 
-    //Atualizar status da resposta
-    spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
-    await objspsQuestionarioUtils.atualizar_status_resposta(
-        _wcodigoEmpresa,
-        int.parse(_wcodigoProgramacao),
-        _wregistroColaborador,
-        _widentificacaoUtilizador,
-        int.parse(_witemChecklist));
+            //Gravar SQlite (Respostas)
+            final SpsDaoQuestionarioItem objQuestionarioItemDao =
+                SpsDaoQuestionarioItem();
+            final int resultupdate =
+                await objQuestionarioItemDao.update_resposta(
+                    _wcodigoEmpresa,
+                    _wcodigoProgramacao,
+                    _wregistroColaborador,
+                    _widentificacaoUtilizador,
+                    _witemChecklist,
+                    _wrespTexto,
+                    _wrespNumero,
+                    _wrespData,
+                    _wrespHora,
+                    _wrespSimnao,
+                    _wrespEscala,
+                    _wsincronizado);
+          }
+
+          if (element[1] == "NÃO SE APLICA" || element[3] == "NÃO SE APLICA") {
+            //Gravar SQlite (Respostas)
+            final SpsDaoQuestionarioItem objQuestionarioItemDao =
+                SpsDaoQuestionarioItem();
+            final int resultupdate =
+                await objQuestionarioItemDao.update_resposta_nao_se_aplica(
+                    _wcodigoEmpresa,
+                    _wcodigoProgramacao,
+                    _wregistroColaborador,
+                    _widentificacaoUtilizador,
+                    _witemChecklist,
+                    element[3] == "NÃO SE APLICA" ? "SIM" : "",
+                    _wsincronizado);
+          }
+
+          //Atualizar status da resposta
+          spsQuestionarioUtils objspsQuestionarioUtils =
+              new spsQuestionarioUtils();
+          await objspsQuestionarioUtils.atualizar_status_resposta(
+              _wcodigoEmpresa,
+              _wcodigoProgramacao,
+              _wregistroColaborador,
+              _widentificacaoUtilizador,
+              _witemChecklist);
+        }
+      },
+    );
 
     //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
     final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-    final int resultupdateLista = await objQuestionarioDao.update_lista_status_resposta(
-        _wcodigoEmpresa,
-        _wcodigoProgramacao,
-        _wregistroColaborador,
-        _widentificacaoUtilizador);
+    final int resultupdateLista =
+        await objQuestionarioDao.update_lista_status_resposta(
+            _wcodigoEmpresa,
+            _wcodigoProgramacao,
+            _wregistroColaborador,
+            _widentificacaoUtilizador);
+
+    //Limpar matriz
+    tabConteudo.clear();
+    tabConteudo = new List.generate(100, (_) => new List(4));
 
     //Recarregar tela
     Navigator.pop;
@@ -1119,9 +1162,9 @@ class _sps_questionario_ch_item_screen
             this.widget._status_aprovacao,
             this.widget._filtro,
             this.widget._filtroDescrProgramacao,
-            this.widget._acao,
+            "RECARREGAR",
             this.widget._sessao_checklist,
-            _windexLista,
+            this.widget._indexLista,
             this.widget._tipo_questionario),
       ),
     );
@@ -1223,7 +1266,8 @@ class _sps_questionario_ch_item_screen
                 snapshot.data[index]["comentario_escala"])) {
       return IconButton(
         icon: Icon(Icons.comment, size: 30),
-        color: snapshot.data[index]["descr_comentarios"] == ""
+        color: snapshot.data[index]["descr_comentarios"] == "" ||
+                snapshot.data[index]["descr_comentarios"] == null
             ? Colors.black
             : Colors.blue,
         onPressed: () {
@@ -1231,24 +1275,23 @@ class _sps_questionario_ch_item_screen
             context,
             MaterialPageRoute(
               builder: (context) => sps_questionario_comentarios_screen(
-                snapshot.data[index]["codigo_empresa"],
-                snapshot.data[index]["codigo_programacao"],
-                snapshot.data[index]["item_checklist"],
-                snapshot.data[index]["descr_comentarios"],
-                this.widget._registro_colaborador,
-                this.widget._identificacao_utilizador,
-                this.widget._codigo_grupo,
-                this.widget._codigo_checklist,
-                this.widget._descr_programacao,
-                this.widget._sincronizado,
-                snapshot.data[index]["status_aprovacao"],
-                null,
-                this.widget._filtro,
-                this.widget._filtroDescrProgramacao,
-                this.widget._sessao_checklist,
-                index,
-                this.widget._tipo_questionario
-              ),
+                  snapshot.data[index]["codigo_empresa"],
+                  snapshot.data[index]["codigo_programacao"],
+                  snapshot.data[index]["item_checklist"],
+                  snapshot.data[index]["descr_comentarios"],
+                  this.widget._registro_colaborador,
+                  this.widget._identificacao_utilizador,
+                  this.widget._codigo_grupo,
+                  this.widget._codigo_checklist,
+                  this.widget._descr_programacao,
+                  this.widget._sincronizado,
+                  snapshot.data[index]["status_aprovacao"],
+                  null,
+                  this.widget._filtro,
+                  this.widget._filtroDescrProgramacao,
+                  this.widget._sessao_checklist,
+                  index,
+                  this.widget._tipo_questionario),
             ),
           );
         },

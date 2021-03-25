@@ -32,161 +32,164 @@ class sps_menu_screen extends StatelessWidget {
     }else{
       _origemUsuario = "EXTERNO";
     }
-    return Column(
+    return ListView(
       children: <Widget>[
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 40, left: 27, right: 20, bottom: 5),
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => _origemUsuario == "EXTERNO"
-                                ? sps_questionario_cq_ext_filtro_screen()
-                                : sps_questionario_cq_int_filtro_screen()),
-                      );
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    icon: Icon(Icons.check_circle, color: Colors.white, size: 25.0),
-                    label: Text(
-                      'FOLLOW-UP                                                         ',
-                      style: TextStyle(color: Colors.white, fontSize: 12.0),
-                      textAlign: TextAlign.center,
-                    ),
-                    padding: EdgeInsets.fromLTRB(5, 20, 5, 20),
-                    textColor: Colors.white,
-                    splashColor: Colors.white,
-                    color: Color(0xFF004077),
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(height: 30),
+              Container(
+                width: 360,
+                height: 80,
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: RaisedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => _origemUsuario == "EXTERNO"
+                              ? sps_questionario_cq_ext_filtro_screen()
+                              : sps_questionario_cq_int_filtro_screen()),
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(10.0))),
+                  label: Text(
+                    'FOLLOW-UP',
+                    style: TextStyle(color: Colors.white),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 10, left: 27, right: 20, bottom: 5),
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => sps_questionario_ch_filtro_screen("CHECKLIST")),
-                      );
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    icon:
-                        Icon(Icons.fact_check_outlined, color: Colors.white, size: 25.0),
-                    label: Text(
-                      'CHECKLIST                                                         ',
-                      style: TextStyle(color: Colors.white, fontSize: 12.0),
-                      textAlign: TextAlign.center,
-                    ),
-                    padding: EdgeInsets.fromLTRB(5, 20, 5, 20),
-                    textColor: Colors.white,
-                    splashColor: Colors.white,
-                    color: Color(0xFF004077),
+                  icon: Icon(
+                    Icons.check_circle,
+                    color: Colors.white,
                   ),
+                  textColor: Colors.white,
+                  splashColor: Colors.red,
+                  color: Color(0xFF004077),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 10, left: 27, right: 20, bottom: 5),
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => sps_questionario_ch_filtro_screen("PESQUISA")),
-                      );
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    icon: Icon(Icons.web,
-                        color: Colors.white, size: 25.0),
-                    label: Text(
-                      'PESQUISA                                                           ',
-                      style: TextStyle(color: Colors.white, fontSize: 12.0),
-                      textAlign: TextAlign.center,
-                    ),
-                    padding: EdgeInsets.fromLTRB(5, 20, 5, 20),
-                    textColor: Colors.white,
-                    splashColor: Colors.white,
-                    color: Color(0xFF004077),
+              ),
+              Container(height: 10),
+              Container(
+                width: 360,
+                height: 80,
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: RaisedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => sps_questionario_ch_filtro_screen("CHECKLIST")),
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(10.0))),
+                  label: Text(
+                    'CHECKLIST',
+                    style: TextStyle(color: Colors.white),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 5, left: 27, right: 20, bottom: 20),
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => sps_feedback_screen()),
-                      );
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    icon:
-                    Icon(Icons.equalizer, color: Colors.white, size: 25.0),
-                    label: Text(
-                      'GESTÃO DE FORNECEDORES (FEEDBACK)',
-                      style: TextStyle(color: Colors.white, fontSize: 12.0),
-                      textAlign: TextAlign.center,
-                    ),
-                    padding: EdgeInsets.fromLTRB(10, 40, 5, 40),
-                    textColor: Colors.white,
-                    splashColor: Colors.white,
-                    color: Color(0xFF004077),
+                  icon: Icon(
+                    Icons.fact_check_outlined,
+                    color: Colors.white,
                   ),
+                  textColor: Colors.white,
+                  splashColor: Colors.red,
+                  color: Color(0xFF004077),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 5, left: 27, right: 20, bottom: 20),
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => sps_cotacao_screen()),
-                      );
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    icon: Icon(Icons.monetization_on,
-                        color: Colors.white, size: 25.0),
-                    label: Text(
-                      'GESTÃO DE FORNECEDORES (COTAÇÃO) ',
-                      style: TextStyle(color: Colors.white, fontSize: 12.0),
-                      textAlign: TextAlign.center,
-                    ),
-                    padding: EdgeInsets.fromLTRB(10, 40, 5, 30),
-                    textColor: Colors.white,
-                    splashColor: Colors.white,
-                    color: Color(0xFF004077),
+              ),
+              Container(height: 10),
+              Container(
+                width: 360,
+                height: 80,
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: RaisedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => sps_questionario_ch_filtro_screen("PESQUISA")),
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(10.0))),
+                  label: Text(
+                    'PESQUISA',
+                    style: TextStyle(color: Colors.white),
                   ),
+                  icon: Icon(
+                    Icons.web,
+                    color: Colors.white,
+                  ),
+                  textColor: Colors.white,
+                  splashColor: Colors.red,
+                  color: Color(0xFF004077),
                 ),
-              ],
-            ),
+              ),
+              Container(height: 40),
+              Container(
+                width: 360,
+                height: 80,
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: RaisedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => sps_feedback_screen()),
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(10.0))),
+                  label: Text(
+                    'GESTÃO DE FORNECEDORES (FEEDBACK)',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: Icon(
+                    Icons.equalizer,
+                    color: Colors.white,
+                  ),
+                  textColor: Colors.white,
+                  splashColor: Colors.red,
+                  color: Color(0xFF004077),
+                ),
+              ),
+              Container(height: 30),
+              Container(
+                width: 360,
+                height: 80,
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: RaisedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => sps_cotacao_screen()),
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(10.0))),
+                  label: Text(
+                    'GESTÃO DE FORNECEDORES (COTAÇÃO)',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: Icon(
+                    Icons.monetization_on,
+                    color: Colors.white,
+                  ),
+                  textColor: Colors.white,
+                  splashColor: Colors.red,
+                  color: Color(0xFF004077),
+                ),
+              ),
+            ],
           ),
         ),
         Container(
-          height: 30,
+          height: 50,
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
@@ -204,7 +207,7 @@ class sps_menu_screen extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-              'Version 1.0.1 (19/02/2021)\n',
+              'Version 1.0.0 (22/03/2021)\n',
               style: TextStyle(
                 color: Color(0xFF004077),
                 fontSize: 12.0,
