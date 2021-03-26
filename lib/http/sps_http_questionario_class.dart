@@ -103,7 +103,7 @@ class SpsHttpQuestionario {
   }
 
   Future QuestionarioSaveReferencia(String codigo_empresa, int codigo_programacao, String referencia_parceiro, String usuresponsavel) async {
-
+      print('aqui atualiza');
 //    implementação de JWT comum
     String token;
     final jwt = JWT(
@@ -130,6 +130,7 @@ class SpsHttpQuestionario {
       'jwt': token,
     };
     final String dadosQuestionarioJson = jsonEncode(dadosParaLogon);
+    print('token: '+dadosQuestionarioJson.toString());
 //    FIM implementação de JWT comum
 
 
