@@ -14,18 +14,12 @@ class SpsHttpQuestionarioItem {
   //static const baseUrl_saveStatusResposta = 'http://teklist.schuler.de/webapi/api/questionario/save_status_resposta.php';
 
   //Servidor DEV
-  static const baseUrl_readItem =
-      'http://10.17.20.45/webapi/api/questionario/read_item.php';
-  static const baseUrl_saveOpcao =
-      'http://10.17.20.45/webapi/api/questionario/save_opcao.php';
-  static const baseUrl_saveComentarios =
-      'http://10.17.20.45/webapi/api/questionario/save_comentarios.php';
-  static const baseUrl_saveAprovacao =
-      'http://10.17.20.45/webapi/api/questionario/save_aprovacao.php';
-  static const baseUrl_saveResposta =
-      'http://10.17.20.45/webapi/api/questionario/save_resposta.php';
-  static const baseUrl_saveStatusResposta =
-      'http://10.17.20.45/webapi/api/questionario/save_status_resposta.php';
+  static const baseUrl_readItem = 'http://10.17.20.45/webapi/api/questionario/read_item.php';
+  static const baseUrl_saveOpcao = 'http://10.17.20.45/webapi/api/questionario/save_opcao.php';
+  static const baseUrl_saveComentarios = 'http://10.17.20.45/webapi/api/questionario/save_comentarios.php';
+  static const baseUrl_saveAprovacao = 'http://10.17.20.45/webapi/api/questionario/save_aprovacao.php';
+  static const baseUrl_saveResposta = 'http://10.17.20.45/webapi/api/questionario/save_resposta.php';
+  static const baseUrl_saveStatusResposta = 'http://10.17.20.45/webapi/api/questionario/save_status_resposta.php';
 
   SpsHttpQuestionarioItem();
 
