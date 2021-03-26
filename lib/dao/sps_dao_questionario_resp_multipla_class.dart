@@ -200,7 +200,7 @@ class SpsDaoQuestionarioRespMultipla {
     return result;
   }
 
-  Future<int> emptyTable(_hcodigoEmpresa, _hcodigoProgramacao) async {
+  Future<int> emptyTable(_hcodigoEmpresa, _hcodigoProgramacao, _hregistroColaborador, _hidentificacaoUtilizador, _hcodigoGrupo, _hcodigoChecklist ) async {
     final Database db = await getDatabase();
     var _query = 'delete from checklist_resp_multipla where codigo_empresa = "' +
         _hcodigoEmpresa +
@@ -217,7 +217,7 @@ class SpsDaoQuestionarioRespMultipla {
     final SpsDaoQuestionarioRespMultipla objQuestionarioRespMultiplaDao =
     SpsDaoQuestionarioRespMultipla();
     await objQuestionarioRespMultiplaDao.create_table();
-    var _query = 'SELECT * FROM checklist_item where item.codigo_empresa = "' +
+    var _query = 'SELECT * FROM checklist_resp_multipla where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString() +

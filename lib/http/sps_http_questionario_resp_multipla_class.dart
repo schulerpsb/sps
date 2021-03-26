@@ -17,8 +17,6 @@ class SpsHttpQuestionarioRespMultipla {
   SpsHttpQuestionarioRespMultipla();
 
   Future<List<Map<String, dynamic>>> listarQuestionarioRespMultipla(
-      String acao,
-      String sessao_checklist,
       String codigo_empresa,
       int codigo_programacao,
       String registro_colaborador,
@@ -26,8 +24,6 @@ class SpsHttpQuestionarioRespMultipla {
       String codigo_grupo,
       int codigo_checklist) async {
     final Map<String, dynamic> keyQuestionarioRespMultipla = {
-      'acao': acao,
-      'sessao_checklist': sessao_checklist,
       'codigo_empresa': codigo_empresa,
       'codigo_programacao': codigo_programacao,
       'registro_colaborador': registro_colaborador,
@@ -35,6 +31,8 @@ class SpsHttpQuestionarioRespMultipla {
       'codigo_grupo': codigo_grupo,
       'codigo_checklist': codigo_checklist,
     };
+
+    print ("adriano =>2 ->"+codigo_empresa+"->"+codigo_programacao.toString());
 
     final String dadosQuestionarioRespMultiplaJson = jsonEncode(keyQuestionarioRespMultipla);
 

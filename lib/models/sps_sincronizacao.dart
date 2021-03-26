@@ -825,4 +825,48 @@ class spsSincronizacao {
     }
     return objQuestionarioItemDao;
   }
+
+  //Função que atualiza os dados de itens de questionario do Server(Rest API) para o Local(Sqlite)
+  Future<SpsDaoQuestionarioRespMultipla> sincronizarQuestionariosRespMultiplaServerToLocal(
+      h_codigo_empresa,
+      h_codigo_programacao,
+      h_registro_colaborador,
+      h_identificacao_utilizador,
+      h_codigo_grupo,
+      h_codigo_checklist) async {
+    //Criar tabela "checklist_item" caso não exista
+    final SpsDaoQuestionarioRespMultipla objQuestionarioRespMultiplaDao =
+    SpsDaoQuestionarioRespMultipla();
+    final int resulcreate = await objQuestionarioRespMultiplaDao.create_table();
+
+    //Verificar se existe conexão
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
+      //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
+      //debugPrint("Ler registros do PostgreSQL (via API REST) - Resp Multipla / Deletar dados do SQlite / Gravar dados no SQlite");
+      final SpsHttpQuestionarioRespMultipla objQuestionarioRespMultiplaHttp =
+      SpsHttpQuestionarioRespMultipla();
+      final List<Map<String, dynamic>> dadosQuestionarioRespMultipla =
+      await objQuestionarioRespMultiplaHttp.listarQuestionarioRespMultipla(
+          h_codigo_empresa,
+          h_codigo_programacao,
+          h_registro_colaborador,
+          h_identificacao_utilizador,
+          h_codigo_grupo,
+          h_codigo_checklist);
+      if (dadosQuestionarioRespMultipla != null) {
+        final SpsDaoQuestionarioRespMultipla objQuestionarioRespMultiplaDao =
+        SpsDaoQuestionarioRespMultipla();
+        final int resullimpar = await objQuestionarioRespMultiplaDao.emptyTable(
+            h_codigo_empresa, h_codigo_programacao, h_registro_colaborador,
+            h_identificacao_utilizador,
+            h_codigo_grupo,
+            h_codigo_checklist);
+        final int resultsave =
+        await objQuestionarioRespMultiplaDao.save(dadosQuestionarioRespMultipla);
+      }
+    }
+    return objQuestionarioRespMultiplaDao;
+  }
 }

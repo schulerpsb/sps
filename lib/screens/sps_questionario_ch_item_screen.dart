@@ -9,6 +9,7 @@ import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_ch.dart';
+import 'package:sps/models/sps_questionario_resp_multipla_ch.dart';
 import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
@@ -80,8 +81,13 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
 
 class _sps_questionario_ch_item_screen
     extends State<sps_questionario_ch_item_screen> {
+  //Carregar Itens
   final SpsQuestionarioItem_ch spsQuestionarioItem_ch =
       SpsQuestionarioItem_ch();
+
+  //Carregar respostas multiplas
+  final SpsQuestionarioRespMultipla_ch spsQuestionarioRespMultipla_ch =
+      SpsQuestionarioRespMultipla_ch();
 
   final SpsLogin spslogin = SpsLogin();
 
@@ -154,12 +160,10 @@ class _sps_questionario_ch_item_screen
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   var _salvar_pendente = false;
-                  print("adriano =>" + tabConteudo.toString());
                   tabConteudo.forEach(
                     (element) async {
                       if (element[1] != null) {
                         _salvar_pendente = true;
-                        print("adriano =>aqui");
                       }
                     },
                   );
@@ -972,64 +976,111 @@ class _sps_questionario_ch_item_screen
           } else {
             //Tratar resposta Multipla
             if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA MULTIPLA") {
-              return StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  //Preparar opções
-                  List<Widget> _listaOpcoes = [];
-                  var _ocorrencia = snapshot.data[index]["inicio_escala"];
-                  while (_ocorrencia <= snapshot.data[index]["fim_escala"]) {
-                    _listaOpcoes.add(
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              CustomRadioWidget(
-                                height: 20,
-                                value: _ocorrencia,
-                                groupValue: _wrespEscala == null
-                                    ? snapshot.data[index]["resp_escala"]
-                                    : _wrespEscala,
-                                onChanged: (val) => {
-                                  tabConteudo[snapshot.data[index]
-                                          ["item_checklist"]][1] =
-                                      "RESPOSTA POR ESCALA",
-                                  tabConteudo[snapshot.data[index]
-                                      ["item_checklist"]][2] = val.toString(),
-                                  setState(
-                                    () {
-                                      _wrespEscala = val;
-                                    },
-                                  )
-                                },
-                              ),
-                              Text(_ocorrencia.toString(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                    _ocorrencia =
-                        _ocorrencia + snapshot.data[index]["intervalo_escala"];
-                  }
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: spsQuestionarioRespMultipla_ch
+                    .listarQuestionarioRespMultipla_ch(
+                        snapshot.data[0]["codigo_empresa"],
+                        snapshot.data[0]["codigo_programacao"],
+                        snapshot.data[0]["registro_colaborador"],
+                        snapshot.data[0]["identificacao_utilizador"],
+                        snapshot.data[0]["codigo_grupo"],
+                        snapshot.data[0]["codigo_checklist"],
+                        snapshot.data[0]["item_checklist"]),
+                builder: (context, snapshot2) {
+                  _singleValue.clear();
+                  //debugPrint(snapshot.data.toString());
+                  switch (snapshot2.connectionState) {
+                    case ConnectionState.none:
+                      break;
+                    case ConnectionState.waiting:
+                      return Progress();
+                      break;
+                    case ConnectionState.active:
+                      break;
+                    case ConnectionState.done:
+                      if (snapshot2.hasError) {
+                        var werror;
+                        werror = snapshot2.error.toString();
+                        return CenteredMessage(
+                          'Falha de conexão! \n\n(' + werror + ')',
+                          icon: Icons.error,
+                        );
+                      }
 
-                  //Exibir opções
-                  return Column(
-                    children: <Widget>[
-                      Column(
-                        children: [
-                          Text(
-                            snapshot.data[index]["descr_escala"],
-                          ),
-                        ],
-                      ),
-                      Column(children: _listaOpcoes),
-                    ],
-                  );
+                      if (erroConexao.msg_erro_conexao.toString() == "") {
+                        if (snapshot2.data.isNotEmpty) {
+                          itemBuilder2:
+                          (context, index2) {
+                            print("adriano =>" +
+                                snapshot2.data[0]["codigo_programacao"]
+                                    .toString());
+                            return Container();
+                          };
+                        }
+                      }
+                  }
                 },
               );
+
+              // return StatefulBuilder(
+              //   builder: (BuildContext context, StateSetter setState) {
+              //     //Preparar opções
+              //     List<Widget> _listaOpcoes = [];
+              //     var _ocorrencia = snapshot.data[index]["inicio_escala"];
+              //     while (_ocorrencia <= snapshot.data[index]["fim_escala"]) {
+              //       _listaOpcoes.add(
+              //         Column(
+              //           children: [
+              //             Row(
+              //               children: [
+              //                 CustomRadioWidget(
+              //                   height: 20,
+              //                   value: _ocorrencia,
+              //                   groupValue: _wrespEscala == null
+              //                       ? snapshot.data[index]["resp_escala"]
+              //                       : _wrespEscala,
+              //                   onChanged: (val) => {
+              //                     tabConteudo[snapshot.data[index]
+              //                             ["item_checklist"]][1] =
+              //                         "RESPOSTA POR ESCALA",
+              //                     tabConteudo[snapshot.data[index]
+              //                         ["item_checklist"]][2] = val.toString(),
+              //                     setState(
+              //                       () {
+              //                         _wrespEscala = val;
+              //                       },
+              //                     )
+              //                   },
+              //                 ),
+              //                 Text(_ocorrencia.toString(),
+              //                     style: TextStyle(
+              //                         fontSize: 20,
+              //                         fontWeight: FontWeight.bold)),
+              //               ],
+              //             ),
+              //           ],
+              //         ),
+              //       );
+              //       _ocorrencia =
+              //           _ocorrencia + snapshot.data[index]["intervalo_escala"];
+              //     }
+              //
+              //     //Exibir opções
+              //     return Column(
+              //       children: <Widget>[
+              //         Column(
+              //           children: [
+              //             Text(
+              //               snapshot.data[index]["descr_escala"],
+              //             ),
+              //           ],
+              //         ),
+              //         Column(children: _listaOpcoes),
+              //       ],
+              //     );
+              //   },
+              // );
+              return TextField();
             } else {
               return TextField();
             }
