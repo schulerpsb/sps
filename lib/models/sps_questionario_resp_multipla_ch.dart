@@ -14,7 +14,7 @@ class SpsQuestionarioRespMultipla_ch {
       h_codigo_checklist,
       h_item_checklist) async {
 
-    print ("adriano =>1 ->"+h_codigo_empresa+"->"+h_codigo_programacao.toString()+"->"+h_item_checklist.toString());
+    //print ("adriano =>1 ->"+h_codigo_empresa+"->"+h_codigo_programacao.toString()+"->"+h_item_checklist.toString());
 
     //Sincronização de itens  de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();

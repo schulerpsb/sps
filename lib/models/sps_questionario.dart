@@ -9,6 +9,8 @@ class SpsQuestionario {
   Future<List<Map<String, dynamic>>> listarQuestionario(
       _origemUsuario, _tipoChecklist, _parametro, _filtro, _filtroReferenciaProjeto, _filtroDescrProgramacao) async {
 
+    print ("SpsQuestionario -> listarQuestionario");
+
     //Tipos de usuário: "INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS
 
     String registro_colaborador;

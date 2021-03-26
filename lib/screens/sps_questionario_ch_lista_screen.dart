@@ -37,7 +37,7 @@ class _sps_questionario_ch_lista_screen
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("TELA => SPS_QUESTIONARIO_CH_SCREEN");
+    debugPrint("TELA => SPS_QUESTIONARIO_CH_LISTA_SCREEN");
 
     return WillPopScope(
       onWillPop: () {

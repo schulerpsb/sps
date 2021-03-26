@@ -32,8 +32,6 @@ class SpsHttpQuestionarioRespMultipla {
       'codigo_checklist': codigo_checklist,
     };
 
-    print ("adriano =>2 ->"+codigo_empresa+"->"+codigo_programacao.toString());
-
     final String dadosQuestionarioRespMultiplaJson = jsonEncode(keyQuestionarioRespMultipla);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [

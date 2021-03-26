@@ -44,6 +44,7 @@ class SpsDaoQuestionarioRespMultipla {
   Future<int> save(
       List<Map<String, dynamic>> dadosQuestionarioRespMultipla) async {
     final Database db = await getDatabase();
+    print ("adriano =>"+dadosQuestionarioRespMultipla.toString());
     await Future.forEach(dadosQuestionarioRespMultipla, (item) async {
       item['registro_colaborador'] = "";
       item['identificacao_utilizador'] = "";
@@ -68,6 +69,7 @@ class SpsDaoQuestionarioRespMultipla {
               ' and subcodigo_tpresposta = "' +
               item['subcodigo_tpresposta'] +
               '"';
+      print ("adriano => query => "+ _query2.toString());
       List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
       if (result2.length <= 0) {
         var _query = 'insert into checklist_resp_multipla values ("' +
@@ -95,6 +97,7 @@ class SpsDaoQuestionarioRespMultipla {
             '","' +
             item['texto_adicional'] +
             '","")';
+        print ("adriano => query => "+ _query.toString());
         await db.rawInsert(_query);
       }
     });
@@ -217,12 +220,12 @@ class SpsDaoQuestionarioRespMultipla {
     final SpsDaoQuestionarioRespMultipla objQuestionarioRespMultiplaDao =
     SpsDaoQuestionarioRespMultipla();
     await objQuestionarioRespMultiplaDao.create_table();
-    var _query = 'SELECT * FROM checklist_resp_multipla where item.codigo_empresa = "' +
+    var _query = 'SELECT * FROM checklist_resp_multipla where codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString() +
         ' and item_checklist = ' +
-        _hitemChecklist +
+        _hitemChecklist.toString() +
         ' order by codigo_tpresposta, subcodigo_tpresposta';
     //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
