@@ -660,10 +660,8 @@ class spsSincronizacao {
       if (ResultadoSave != 1) {
         print('ERRO ao processar dados de Anexos de midia - Server to Local! ' +ResultadoSave.toString());
       }
-      return objQuestionarioItemDao;
+
     //Verificar se existe conexão
-    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-    final bool result = await ObjVerificarConexao.verificar_conexao();
     if (result == true) {
       //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
       //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");

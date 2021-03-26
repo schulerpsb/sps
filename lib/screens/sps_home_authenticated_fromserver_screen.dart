@@ -120,7 +120,7 @@ class _HomeSpsAuthenticatedFromServerState
                   }else {
                     id_isolate = usuarioAtual.id_isolate + 1;
                   }
-                  final isolate = FlutterIsolate.spawn(isolateSincronizacao, id_isolate);
+                  final isolate = FlutterIsolate.spawn(isolateSincronizacao, id_isolate); // comentar para não executar sincronizaçã (ADRIANO)
                   SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
                   objSpsDaoSincronizacao.emptyTable();
                   Map<String, dynamic> dadosSincronizacao;

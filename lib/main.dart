@@ -28,8 +28,7 @@ void isolateSincronizacao(int arg) async  {
 
   //verificação para inicio da primeira execução
   final bool conectadoInicial = await ObjVerificarConexao.verificar_conexao();
-  if (conectadoInicial == true && 1 != 1) { //Adriano (para testes)
-  //if (conectadoInicial == true) {
+  if (conectadoInicial == true) {
     //Verifica se existe usuário logado
     List<Map<String, dynamic>> dadosSessaoInicial = await spslogin.verificaUsuarioAutenticado();
     print(dadosSessaoInicial.toString());
@@ -62,8 +61,7 @@ void isolateSincronizacao(int arg) async  {
     print('Verificando sincronização recorrente '+ dataHoraAtual.toString());
 
     final bool conectadoRecorrente = await ObjVerificarConexao.verificar_conexao();
-    if (conectadoRecorrente == true && 1 != 1) { //Adriano (para testes)
-    //if (conectadoRecorrente == true) {
+    if (conectadoRecorrente == true) {
       //Verifica se existe usuário logado
       List<Map<String, dynamic>> dadosSessao = await spslogin.verificaUsuarioAutenticado();
       if(dadosSessao.length >= 1){
@@ -121,7 +119,7 @@ void main() {
   };
   objSpsDaoSincronizacao.save(dadosSincronizacao);
   Timer(Duration(seconds:5), (){
-    final isolate = FlutterIsolate.spawn(isolateSincronizacao, 1);//  String codigo_usuario;
+    final isolate = FlutterIsolate.spawn(isolateSincronizacao, 1);// comentar para não executar sincronizaçã (ADRIANO)
   });
   getApplicationDocumentsDirectory().then((value){
     usuarioAtual.document_root_folder = value.path.toString();
