@@ -627,12 +627,30 @@ class spsSincronizacao {
             codigo_checklist);
         if (dadosQuestionarioItem != null) {
           final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
-          final int resullimpar = await objQuestionarioItemDao.emptyTable(
-              h_codigo_empresa, h_codigo_programacao);
-          final int resultsave = await objQuestionarioItemDao.save(
-              dadosQuestionarioItem);
+          final int resullimpar = await objQuestionarioItemDao.emptyTable(h_codigo_empresa, h_codigo_programacao);
+          final int resultsave = await objQuestionarioItemDao.save(dadosQuestionarioItem);
         }
 
+      }
+
+      //Baixar tabela de anexos - Somente dados! obs: Os arquivos dos anexos são baixados pela sinronização
+      final SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = SpsHttpQuestionarioMidia();
+      Map<String, dynamic> dadosArquivo;
+      dadosArquivo = {
+        'codigo_empresa': codigo_empresa,
+        'codigo_programacao': codigo_programacao.toString(),
+        'registro_colaborador': registro_colaborador,
+        'identificacao_utilizador': identificacao_utilizador.toString(),
+      };
+      final List<Map<String,
+          dynamic>> dadosDeAnexosServidor = await objSpsHttpQuestionarioMidia
+          .listarMidiaAll(dadosArquivo: dadosArquivo);
+      //print('Sincronizar o arquivo do servidor====>' +dadosDeAnexosServidor.toString());
+      final int criarTabelaLocal = await objSpsDaoQuestionarioMidia.create_table();
+      final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia.emptyTable(codigo_programacao.toString());
+      final int ResultadoSave = await objSpsDaoQuestionarioMidia.save(dadosDeAnexosServidor);
+      if (ResultadoSave != 1) {
+        print('ERRO ao processar dados de Anexos de midia - Server to Local! ' +ResultadoSave.toString());
       }
       return objQuestionarioItemDao;
     }
