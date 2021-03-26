@@ -10,7 +10,7 @@ class SpsHttpQuestionarioMidia {
   //Servidor DEV
   static const UrlIsertMidia = 'http://10.17.20.45/webapi/api/midia/create.php';
   static const UrlReadMidia = 'http://10.17.20.45/webapi/api/midia/read.php';
-    static const UrlUpdateMidia = 'http://10.17.20.45/webapi/api/midia/update.php';
+  static const UrlUpdateMidia = 'http://10.17.20.45/webapi/api/midia/update.php';
   static const UrlReadMidiaAll = 'http://10.17.20.45/webapi/api/midia/read_all.php';
 
   SpsHttpQuestionarioMidia();
