@@ -122,26 +122,27 @@ class _sps_questionario_comentarios_screen
               return IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => sps_questionario_ch_item_screen(
-                            this.widget._codigo_empresa,
-                            this.widget._codigo_programacao,
-                            this.widget._registro_colaborador,
-                            this.widget._identificacao_utilizador,
-                            this.widget._codigo_grupo,
-                            this.widget._codigo_checklist,
-                            this.widget._descr_programacao,
-                            this.widget._sincronizado,
-                            this.widget._status_aprovacao,
-                            this.widget._filtro,
-                            this.widget._filtroDescrProgramacao,
-                            "RECARREGAR",
-                            this.widget._sessao_checklist,
-                            this.widget._indexLista,
-                            this.widget._tipo_questionario)),
-                  );
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                        builder: (context) => sps_questionario_ch_item_screen(
+//                            this.widget._codigo_empresa,
+//                            this.widget._codigo_programacao,
+//                            this.widget._registro_colaborador,
+//                            this.widget._identificacao_utilizador,
+//                            this.widget._codigo_grupo,
+//                            this.widget._codigo_checklist,
+//                            this.widget._descr_programacao,
+//                            this.widget._sincronizado,
+//                            this.widget._status_aprovacao,
+//                            this.widget._filtro,
+//                            this.widget._filtroDescrProgramacao,
+//                            "RECARREGAR",
+//                            this.widget._sessao_checklist,
+//                            this.widget._indexLista,
+//                            this.widget._tipo_questionario)),
+//                  );
+                Navigator.pop(context);
                 },
               );
             },
@@ -273,26 +274,26 @@ class _sps_questionario_comentarios_screen
 
     //Retornar para tela de itens do questionário
     Navigator.pop;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => sps_questionario_ch_item_screen(
-            this.widget._codigo_empresa,
-            this.widget._codigo_programacao,
-            this.widget._registro_colaborador,
-            this.widget._identificacao_utilizador,
-            this.widget._codigo_grupo,
-            this.widget._codigo_checklist,
-            this.widget._descr_programacao,
-            this.widget._sincronizado,
-            this.widget._status_aprovacao,
-            this.widget._filtro,
-            this.widget._filtroDescrProgramacao,
-            "RECARREGAR",
-            this.widget._sessao_checklist,
-            this.widget._indexLista,
-            this.widget._tipo_questionario),
-      ),
-    );
+//    Navigator.push(
+//      context,
+//      MaterialPageRoute(
+//        builder: (context) => sps_questionario_ch_item_screen(
+//            this.widget._codigo_empresa,
+//            this.widget._codigo_programacao,
+//            this.widget._registro_colaborador,
+//            this.widget._identificacao_utilizador,
+//            this.widget._codigo_grupo,
+//            this.widget._codigo_checklist,
+//            this.widget._descr_programacao,
+//            this.widget._sincronizado,
+//            this.widget._status_aprovacao,
+//            this.widget._filtro,
+//            this.widget._filtroDescrProgramacao,
+//            "RECARREGAR",
+//            this.widget._sessao_checklist,
+//            this.widget._indexLista,
+//            this.widget._tipo_questionario),
+//      ),
+//    );
   }
 }

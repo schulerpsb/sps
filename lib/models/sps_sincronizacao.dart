@@ -623,8 +623,7 @@ class spsSincronizacao {
         //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
         //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
         final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
-        final List<Map<String, dynamic>> dadosQuestionarioItem =
-        await objQuestionarioItemHttp.listarQuestionarioItem(
+        final List<Map<String, dynamic>> dadosQuestionarioItem = await objQuestionarioItemHttp.listarQuestionarioItem(
             acao,
             sessao_checklist,
             codigo_empresa,
@@ -661,31 +660,6 @@ class spsSincronizacao {
         print('ERRO ao processar dados de Anexos de midia - Server to Local! ' +ResultadoSave.toString());
       }
 
-    //Verificar se existe conexão
-    if (result == true) {
-      //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
-      //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
-      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-          SpsHttpQuestionarioItem();
-      final List<Map<String, dynamic>> dadosQuestionarioItem =
-          await objQuestionarioItemHttp.listarQuestionarioItem(
-              acao,
-              sessao_checklist,
-              codigo_empresa,
-              codigo_programacao,
-              registro_colaborador,
-              identificacao_utilizador,
-              codigo_grupo,
-              codigo_checklist);
-      if (dadosQuestionarioItem != null) {
-        final SpsDaoQuestionarioItem objQuestionarioItemDao =
-            SpsDaoQuestionarioItem();
-        final int resullimpar = await objQuestionarioItemDao.emptyTable(
-            h_codigo_empresa, h_codigo_programacao);
-        final int resultsave =
-            await objQuestionarioItemDao.save(dadosQuestionarioItem);
-      }
-    }
     return objQuestionarioItemDao;
   }
 
@@ -726,8 +700,7 @@ class spsSincronizacao {
             h_identificacao_utilizador,
             h_codigo_grupo,
             h_codigo_checklist);
-        final int resultsave =
-        await objQuestionarioRespMultiplaDao.save(dadosQuestionarioRespMultipla);
+        final int resultsave =  await objQuestionarioRespMultiplaDao.save(dadosQuestionarioRespMultipla);
       }
     }
     return objQuestionarioRespMultiplaDao;
