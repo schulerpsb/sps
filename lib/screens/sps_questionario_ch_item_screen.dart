@@ -81,13 +81,12 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
 
 class _sps_questionario_ch_item_screen
     extends State<sps_questionario_ch_item_screen> {
+
   //Carregar Itens
-  final SpsQuestionarioItem_ch spsQuestionarioItem_ch =
-      SpsQuestionarioItem_ch();
+  final SpsQuestionarioItem_ch spsQuestionarioItem_ch = SpsQuestionarioItem_ch();
 
   //Carregar respostas multiplas
-  final SpsQuestionarioRespMultipla_ch spsQuestionarioRespMultipla_ch =
-      SpsQuestionarioRespMultipla_ch();
+  final SpsQuestionarioRespMultipla_ch spsQuestionarioRespMultipla_ch = SpsQuestionarioRespMultipla_ch();
 
   final SpsLogin spslogin = SpsLogin();
 
@@ -125,6 +124,23 @@ class _sps_questionario_ch_item_screen
   var _wrespEscala;
   var _wrespSimNao;
   var _wrespNaoSeAplica;
+
+
+//  Future<List<Map<String, dynamic>>> _futureListarQuestionarioItem;
+//
+//  @override
+//  void initState() {
+//    _futureListarQuestionarioItem = spsQuestionarioItem_ch.listarQuestionarioItem_ch(
+//        this.widget._codigo_empresa,
+//        this.widget._codigo_programacao,
+//        this.widget._registro_colaborador,
+//        this.widget._identificacao_utilizador,
+//        this.widget._codigo_grupo,
+//        this.widget._codigo_checklist,
+//        this.widget._acao,
+//        this.widget._sessao_checklist);
+//    super.initState();
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -282,7 +298,6 @@ class _sps_questionario_ch_item_screen
                             ),
                           ),
                         ),
-
                         //Tratar sessão
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -377,7 +392,6 @@ class _sps_questionario_ch_item_screen
                             ),
                           ],
                         ),
-
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(
@@ -390,11 +404,9 @@ class _sps_questionario_ch_item_screen
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
                                 if (index == 0) {
-                                  this.widget._sessao_checklist =
-                                      snapshot.data[0]["sessao_checklist"];
+                                  this.widget._sessao_checklist = snapshot.data[0]["sessao_checklist"];
                                 }
-                                if (snapshot.data[index]["sessao_checklist"] ==
-                                    this.widget._sessao_checklist) {
+                                if (snapshot.data[index]["sessao_checklist"] == this.widget._sessao_checklist) {
                                   return Container(
                                     child: Card(
                                       color: Colors.white60,
@@ -429,23 +441,21 @@ class _sps_questionario_ch_item_screen
                                                     context, snapshot, index),
                                               ],
                                             ),
-
-                                            tratar_posicionar_lista(index),
+//                                            tratar_posicionar_lista(index),
                                           ],
                                         ),
                                       ),
                                     ),
                                   );
                                 }
+
                               },
                             ),
                           ),
                         ),
-
                         Container(
                           padding: EdgeInsets.fromLTRB(5, 3, 5, 0),
                         ),
-
                         //Tratar botão SALVAR
                         Container(
                           width: 130,
@@ -977,8 +987,7 @@ class _sps_questionario_ch_item_screen
             //Tratar resposta Multipla
             if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA MULTIPLA") {
               FutureBuilder<List<Map<String, dynamic>>>(
-                future: spsQuestionarioRespMultipla_ch
-                    .listarQuestionarioRespMultipla_ch(
+                future: spsQuestionarioRespMultipla_ch.listarQuestionarioRespMultipla_ch(
                         snapshot.data[0]["codigo_empresa"],
                         snapshot.data[0]["codigo_programacao"],
                         snapshot.data[0]["registro_colaborador"],
@@ -1326,35 +1335,6 @@ class _sps_questionario_ch_item_screen
                       snapshot.data[index]["videos"].toString(),
                       snapshot.data[index]["outros"].toString(),
                       "RECARREGAR",
-                      funCallback: ({int index_posicao_retorno, String acao}) {
-                        setState(() {
-                          this.widget._indexLista = index_posicao_retorno;
-                        });
-                        //Recarregar tela
-                        Navigator.pop;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                sps_questionario_ch_item_screen(
-                                    this.widget._codigo_empresa,
-                                    this.widget._codigo_programacao,
-                                    this.widget._registro_colaborador,
-                                    this.widget._identificacao_utilizador,
-                                    this.widget._codigo_grupo,
-                                    this.widget._codigo_checklist,
-                                    this.widget._descr_programacao,
-                                    this.widget._sincronizado,
-                                    this.widget._status_aprovacao,
-                                    this.widget._filtro,
-                                    this.widget._filtroDescrProgramacao,
-                                    acao,
-                                    this.widget._sessao_checklist,
-                                    this.widget._indexLista,
-                                    this.widget._tipo_questionario),
-                          ),
-                        );
-                      },
                     )),
           );
         },
