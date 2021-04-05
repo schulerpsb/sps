@@ -128,12 +128,7 @@ class _sps_questionario_ch_lista_screen
                                       ? Colors.black
                                       : Colors.red),
                             ),
-                            subtitle: Text(
-                                texto_principal
-                                    .wtexto_principal(snapshot.data[index]),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
+                            subtitle: prepararTextoPrincipal(snapshot, index),
                             trailing: snapshot.data[index]["status"] == "OK"
                                 ? Icon(
                                     Icons.check,
@@ -244,30 +239,36 @@ class _sps_questionario_ch_lista_screen
   }
 }
 
-class texto_principal {
-  static String wtexto_principal(wsnapshot) {
-    String _texto_principal;
-
-    final String _dtfim_aplicacao =
-        wsnapshot["dtfim_aplicacao"].substring(8, 10) +
-            "/" +
-            wsnapshot["dtfim_aplicacao"].substring(5, 7) +
-            "/" +
-            wsnapshot["dtfim_aplicacao"].substring(0, 4);
-
-    _texto_principal = '${wsnapshot["descr_programacao"]}' +
-        "\n\n" +
-        "DT.FIM CHECKLIST: " +
-        _dtfim_aplicacao + "\n";
-
-    if (wsnapshot["status"] == "PARCIAL") {
-      var formato = new NumberFormat("##0.00", "en_US");
-      _texto_principal = _texto_principal +
-          "EVOLUÇÃO: " +
-          formato.format(wsnapshot["percentual_evolucao"]).toString() +
-          " %";
-    }
-
-    return _texto_principal;
-  }
+RichText prepararTextoPrincipal(
+    AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
+  var formato = new NumberFormat("##0.00", "en_US");
+  return RichText(
+    text: new TextSpan(
+      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      children: <TextSpan>[
+        new TextSpan(
+          text: "\nDT.FIM CHECKLIST: ",
+          style: TextStyle(color: Colors.grey),
+        ),
+        new TextSpan(
+            text: snapshot.data[index]["dtfim_aplicacao"].substring(8, 10) +
+                "/" +
+                snapshot.data[index]["dtfim_aplicacao"].substring(5, 7) +
+                "/" +
+                snapshot.data[index]["dtfim_aplicacao"].substring(0, 4) +
+                "\n"),
+        new TextSpan(
+          text: snapshot.data[index]["status"] == "PARCIAL" ? "EVOLUÇÃO: " : "",
+          style: TextStyle(color: Colors.grey),
+        ),
+        new TextSpan(
+            text: snapshot.data[index]["status"] == "PARCIAL"
+                ? formato
+                        .format(snapshot.data[index]["percentual_evolucao"])
+                        .toString() +
+                    " %\n"
+                : ""),
+      ],
+    ),
+  );
 }

@@ -37,6 +37,8 @@ class _sps_questionario_cq_lista_screen
   _sps_questionario_cq_lista_screen(
       _origemUsuario, _filtro, _filtroReferenciaProjeto);
 
+  var formato = new NumberFormat("##0.00", "en_US");
+
   @override
   Widget build(BuildContext context) {
     debugPrint("TELA => SPS_QUESTIONARIO_CQ_LISTA_SCREEN");
@@ -131,12 +133,7 @@ class _sps_questionario_cq_lista_screen
                                       ? Colors.black
                                       : Colors.red),
                             ),
-                            subtitle: Text(
-                                texto_principal
-                                    .wtexto_principal(snapshot.data[index],this.widget._origemUsuario),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
+                            subtitle: prepararTextoPrincipal(snapshot, index),
                             trailing: snapshot.data[index]["status"] == "OK"
                                 ? Icon(
                                     Icons.check,
@@ -272,6 +269,85 @@ class _sps_questionario_cq_lista_screen
     );
   }
 
+  RichText prepararTextoPrincipal(
+      AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
+    return RichText(
+      text: new TextSpan(
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        children: <TextSpan>[
+          new TextSpan(
+              text: snapshot.data[index]["descr_programacao"] + "\n\n"),
+
+          new TextSpan(
+            text: this.widget._origemUsuario == "INTERNO" ? "PARCEIRO:       " : "",
+            style: TextStyle(color: Colors.grey),
+          ),
+          new TextSpan(
+              text: this.widget._origemUsuario == "INTERNO"
+                  ? snapshot.data[index]["nome_fornecedor"] + "\n"
+                  : "\n"),
+
+          new TextSpan(
+            text: "PEDIDO:            ",
+            style: TextStyle(color: Colors.grey),
+          ),
+          new TextSpan(
+              text: snapshot.data[index]["codigo_pedido"] +
+                  " / " +
+                  snapshot.data[index]["item_pedido"]),
+          new TextSpan(
+              text: " (" + snapshot.data[index]["codigo_material"] + ")\n",
+              style: TextStyle(color: Colors.blue)),
+
+          new TextSpan(
+            text: "REFERÊNCIA:  ",
+            style: TextStyle(color: Colors.grey),
+          ),
+          new TextSpan(
+              text: snapshot.data[index]["referencia_parceiro"] + "\n"),
+
+          new TextSpan(
+            text: "PROJETO:        ",
+            style: TextStyle(color: Colors.grey),
+          ),
+
+          new TextSpan(text: snapshot.data[index]["codigo_projeto"] + "\n"),
+          new TextSpan(
+            text: "QUANTIDADE: ",
+            style: TextStyle(color: Colors.grey),
+          ),
+          new TextSpan(
+              text: snapshot.data[index]["qtde_pedido"].toString() + "\n\n"),
+
+          new TextSpan(
+            text: "DT.FIM CHECKLIST: ",
+            style: TextStyle(color: Colors.grey),
+          ),
+          new TextSpan(
+              text: snapshot.data[index]["dtfim_aplicacao"].substring(8, 10) +
+                  "/" +
+                  snapshot.data[index]["dtfim_aplicacao"].substring(5, 7) +
+                  "/" +
+                  snapshot.data[index]["dtfim_aplicacao"].substring(0, 4) +
+                  "\n"),
+
+          new TextSpan(
+            text:
+                snapshot.data[index]["status"] == "PARCIAL" ? "EVOLUÇÃO: " : "",
+            style: TextStyle(color: Colors.grey),
+          ),
+          new TextSpan(
+              text: snapshot.data[index]["status"] == "PARCIAL"
+                  ? formato
+                          .format(snapshot.data[index]["percentual_evolucao"])
+                          .toString() +
+                      " %\n"
+                  : ""),
+        ],
+      ),
+    );
+  }
+
   _popup_vencido(context) {
     Alert(
       context: context,
@@ -292,56 +368,5 @@ class _sps_questionario_cq_lista_screen
             onPressed: () => Navigator.of(context, rootNavigator: true).pop())
       ],
     ).show();
-  }
-}
-
-class texto_principal {
-  static String wtexto_principal(wsnapshot, _origemUsuario) {
-    String _texto_principal;
-
-    final String _dtfim_aplicacao =
-        wsnapshot["dtfim_aplicacao"].substring(8, 10) +
-            "/" +
-            wsnapshot["dtfim_aplicacao"].substring(5, 7) +
-            "/" +
-            wsnapshot["dtfim_aplicacao"].substring(0, 4);
-
-
-    _texto_principal = '${wsnapshot["descr_programacao"]}' +
-        "\n\n";
-
-    if (_origemUsuario == "INTERNO") {
-      _texto_principal = _texto_principal +
-          "PARCEIRO: " +
-          '${wsnapshot["nome_fornecedor"]}'+"\n";
-    }
-
-    _texto_principal = _texto_principal +
-        "PEDIDO: " +
-        '${wsnapshot["codigo_pedido"]}' +
-        " / " +
-        '${wsnapshot["item_pedido"]}' +
-        " (" +
-        '${wsnapshot["codigo_material"]}' +
-        ")\n" +
-        "REFERÊNCIA: " +
-        '${wsnapshot["referencia_parceiro"]}' +
-        "\nPROJETO: " +
-        '${wsnapshot["codigo_projeto"]}' +
-        "\nQUANTIDADE: " +
-        '${wsnapshot["qtde_pedido"]}' +
-        "\n\n" +
-        "DT.FIM CHECKLIST: " +
-        _dtfim_aplicacao + "\n";
-
-    if (wsnapshot["status"] == "PARCIAL") {
-      var formato = new NumberFormat("##0.00", "en_US");
-      _texto_principal = _texto_principal +
-          "EVOLUÇÃO: " +
-          formato.format(wsnapshot["percentual_evolucao"]).toString() +
-          " %";
-    }
-
-    return _texto_principal;
   }
 }

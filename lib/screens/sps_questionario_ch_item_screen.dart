@@ -987,8 +987,8 @@ class _sps_questionario_ch_item_screen
                         snapshot.data[0]["codigo_checklist"],
                         snapshot.data[0]["item_checklist"]),
                 builder: (context, snapshot2) {
+                  print("adriano =>X ->"+snapshot2.toString());
                   _singleValue.clear();
-                  //debugPrint(snapshot.data.toString());
                   switch (snapshot2.connectionState) {
                     case ConnectionState.none:
                       break;
@@ -1009,13 +1009,10 @@ class _sps_questionario_ch_item_screen
 
                       if (erroConexao.msg_erro_conexao.toString() == "") {
                         if (snapshot2.data.isNotEmpty) {
-                          itemBuilder2:
-                          (context, index2) {
-                            print("adriano =>" +
+                            print("adriano =>X" +
                                 snapshot2.data[0]["codigo_programacao"]
                                     .toString());
                             return Container();
-                          };
                         }
                       }
                   }

@@ -229,6 +229,7 @@ class SpsDaoQuestionarioRespMultipla {
         ' order by codigo_tpresposta, subcodigo_tpresposta';
     //debugPrint("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    print ("adriano =>2 "+ result.toString());
     return result;
   }
 
