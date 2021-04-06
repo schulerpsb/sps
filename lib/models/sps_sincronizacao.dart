@@ -363,24 +363,23 @@ class spsSincronizacao {
 
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
       debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens e Anexos) =============================================");
-
+      String tipo;
       debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista) =============================================");
       //Sincronização de questionarios Server to Local
       spsSincronizacao objspsSincronizacao = spsSincronizacao();
-      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal('EXTERNO', '', '', '', '', 'CONTROLE DE QUALIDADE', '',flip, jaNotificado);
-      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal('INTERNO', '', '', '', '', 'CONTROLE DE QUALIDADE', '',flip, jaNotificado);
-      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal('EXTERNO', '', '', '', '', 'CHECKLIST', '',flip, jaNotificado);
-      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal('INTERNO', '', '', '', '', 'CHECKLIST', '',flip, jaNotificado);
-      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal('EXTERNO', '', '', '', '', 'PESQUISA', '',flip, jaNotificado);
-      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal('INTERNO', '', '', '', '', 'PESQUISA', '',flip, jaNotificado);
+      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+        tipo = "INTERNO";
+      } else {
+        tipo = "EXTERNO";
+      }
+      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'CONTROLE DE QUALIDADE', '',flip, jaNotificado);
+      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'CHECKLIST', '',flip, jaNotificado);
+      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'PESQUISA', '',flip, jaNotificado);
       debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista)  =============================================");
 
-      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'CONTROLE DE QUALIDADE',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'CONTROLE DE QUALIDADE',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'CHECKLIST',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'CHECKLIST',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'PESQUISA',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'PESQUISA',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CONTROLE DE QUALIDADE',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CHECKLIST',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'PESQUISA',flip, jaNotificado);
       debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens e Anexos) =============================================");
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
       jaNotificado = 0;
