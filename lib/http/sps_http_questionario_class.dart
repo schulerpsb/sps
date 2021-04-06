@@ -130,7 +130,6 @@ class SpsHttpQuestionario {
       'jwt': token,
     };
     final String dadosQuestionarioJson = jsonEncode(dadosParaLogon);
-    print('token: '+dadosQuestionarioJson.toString());
 //    FIM implementação de JWT comum
 
 
