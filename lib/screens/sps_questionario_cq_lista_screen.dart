@@ -299,12 +299,12 @@ class _sps_questionario_cq_lista_screen
               text: " (" + snapshot.data[index]["codigo_material"] + ")\n",
               style: TextStyle(color: Colors.blue)),
 
-          new TextSpan(
-            text: "REFERÊNCIA:  ",
-            style: TextStyle(color: Colors.grey),
-          ),
-          new TextSpan(
-              text: snapshot.data[index]["referencia_parceiro"] + "\n"),
+            new TextSpan(
+              text: snapshot.data[index]["referencia_parceiro"] != "" ?"REFERÊNCIA:  " :"",
+              style: TextStyle(color: Colors.grey),
+            ),
+            new TextSpan(
+                text: snapshot.data[index]["referencia_parceiro"] != "" ?snapshot.data[index]["referencia_parceiro"] + "\n" :""),
 
           new TextSpan(
             text: "PROJETO:        ",
