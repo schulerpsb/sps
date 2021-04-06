@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'Json_interceptor.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
 class SpsHttpQuestionarioItem {
   //Servidor de produção
@@ -14,12 +17,12 @@ class SpsHttpQuestionarioItem {
   //static const baseUrl_saveStatusResposta = 'http://teklist.schuler.de/webapi/api/questionario/save_status_resposta.php';
 
   //Servidor DEV
-  static const baseUrl_readItem = 'http://10.17.20.45/webapi/api/questionario/read_item.php';
-  static const baseUrl_saveOpcao = 'http://10.17.20.45/webapi/api/questionario/save_opcao.php';
-  static const baseUrl_saveComentarios = 'http://10.17.20.45/webapi/api/questionario/save_comentarios.php';
-  static const baseUrl_saveAprovacao = 'http://10.17.20.45/webapi/api/questionario/save_aprovacao.php';
-  static const baseUrl_saveResposta = 'http://10.17.20.45/webapi/api/questionario/save_resposta.php';
-  static const baseUrl_saveStatusResposta = 'http://10.17.20.45/webapi/api/questionario/save_status_resposta.php';
+  static const baseUrl_readItem = 'http://10.17.20.45/webapi/api/questionario/read_item.php'; //ok jwt
+  static const baseUrl_saveOpcao = 'http://10.17.20.45/webapi/api/questionario/save_opcao.php'; //ok jwt
+  static const baseUrl_saveComentarios = 'http://10.17.20.45/webapi/api/questionario/save_comentarios.php'; //ok jwt
+  static const baseUrl_saveAprovacao = 'http://10.17.20.45/webapi/api/questionario/save_aprovacao.php'; //ok jwt
+  static const baseUrl_saveResposta = 'http://10.17.20.45/webapi/api/questionario/save_resposta.php'; //ok jwt
+  static const baseUrl_saveStatusResposta = 'http://10.17.20.45/webapi/api/questionario/save_status_resposta.php'; //ok jwt
 
   SpsHttpQuestionarioItem();
 
@@ -32,18 +35,38 @@ class SpsHttpQuestionarioItem {
       String identificacao_utilizador,
       String codigo_grupo,
       int codigo_checklist) async {
-    final Map<String, dynamic> keyQuestionarioItem = {
-      'acao': acao,
-      'sessao_checklist': sessao_checklist,
-      'codigo_empresa': codigo_empresa,
-      'codigo_programacao': codigo_programacao,
-      'registro_colaborador': registro_colaborador,
-      'identificacao_utilizador': identificacao_utilizador,
-      'codigo_grupo': codigo_grupo,
-      'codigo_checklist': codigo_checklist,
-    };
 
-    final String dadosQuestionarioItemJson = jsonEncode(keyQuestionarioItem);
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'acao': acao,
+        'sessao_checklist': sessao_checklist,
+        'codigo_empresa': codigo_empresa,
+        'codigo_programacao': codigo_programacao,
+        'registro_colaborador': registro_colaborador,
+        'identificacao_utilizador': identificacao_utilizador,
+        'codigo_grupo': codigo_grupo,
+        'codigo_checklist': codigo_checklist,
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
+    };
+    final String dadosQuestionarioItemJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -115,16 +138,39 @@ class SpsHttpQuestionarioItem {
       String item_checklist,
       String resp_cq,
       String usuresponsavel) async {
-    final Map<String, dynamic> fieldQuestionario = {
-      'codigo_empresa': codigo_empresa,
-      'codigo_programacao': codigo_programacao,
-      'registro_colaborador': registro_colaborador,
-      'identificacao_utilizador': identificacao_utilizador,
-      'item_checklist': item_checklist,
-      'resp_cq': resp_cq,
-      'usuresponsavel': usuresponsavel,
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': codigo_empresa,
+        'codigo_programacao': codigo_programacao,
+        'registro_colaborador': registro_colaborador,
+        'identificacao_utilizador': identificacao_utilizador,
+        'item_checklist': item_checklist,
+        'resp_cq': resp_cq,
+        'usuresponsavel': usuresponsavel,
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
     };
-    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+    final String dadosQuestionarioJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
+
+
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -153,16 +199,37 @@ class SpsHttpQuestionarioItem {
       String item_checklist,
       String resp_cq,
       String usuresponsavel) async {
-    final Map<String, dynamic> fieldQuestionario = {
-      'codigo_empresa': codigo_empresa,
-      'codigo_programacao': codigo_programacao,
-      'registro_colaborador': registro_colaborador,
-      'identificacao_utilizador': identificacao_utilizador,
-      'item_checklist': item_checklist,
-      'resp_cq': resp_cq,
-      'usuresponsavel': usuresponsavel,
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': codigo_empresa,
+        'codigo_programacao': codigo_programacao,
+        'registro_colaborador': registro_colaborador,
+        'identificacao_utilizador': identificacao_utilizador,
+        'item_checklist': item_checklist,
+        'resp_cq': resp_cq,
+        'usuresponsavel': usuresponsavel,
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
     };
-    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+    final String dadosQuestionarioJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -198,23 +265,44 @@ class SpsHttpQuestionarioItem {
       String descr_comentarios,
       String resp_nao_se_aplica,
       String usuresponsavel) async {
-    final Map<String, dynamic> fieldQuestionario = {
-      'codigo_empresa': codigo_empresa,
-      'codigo_programacao': codigo_programacao,
-      'registro_colaborador': registro_colaborador,
-      'identificacao_utilizador': identificacao_utilizador,
-      'item_checklist': item_checklist,
-      'resp_texto': resp_texto,
-      'resp_numero': resp_numero,
-      'resp_data': resp_data,
-      'resp_hora': resp_hora,
-      'resp_simnao': resp_simnao,
-      'resp_escala': resp_escala,
-      'descr_comentarios': descr_comentarios,
-      'resp_nao_se_aplica': resp_nao_se_aplica,
-      'usuresponsavel': usuresponsavel,
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': codigo_empresa,
+        'codigo_programacao': codigo_programacao,
+        'registro_colaborador': registro_colaborador,
+        'identificacao_utilizador': identificacao_utilizador,
+        'item_checklist': item_checklist,
+        'resp_texto': resp_texto,
+        'resp_numero': resp_numero,
+        'resp_data': resp_data,
+        'resp_hora': resp_hora,
+        'resp_simnao': resp_simnao,
+        'resp_escala': resp_escala,
+        'descr_comentarios': descr_comentarios,
+        'resp_nao_se_aplica': resp_nao_se_aplica,
+        'usuresponsavel': usuresponsavel,
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
     };
-    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+    final String dadosQuestionarioJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -243,16 +331,37 @@ class SpsHttpQuestionarioItem {
       int item_checklist,
       String status_resposta,
       String usuresponsavel) async {
-    final Map<String, dynamic> fieldQuestionario = {
-      'codigo_empresa': codigo_empresa,
-      'codigo_programacao': codigo_programacao,
-      'registro_colaborador': registro_colaborador,
-      'identificacao_utilizador': identificacao_utilizador,
-      'item_checklist': item_checklist,
-      'status_resposta': status_resposta,
-      'usuresponsavel': usuresponsavel,
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': codigo_empresa,
+        'codigo_programacao': codigo_programacao,
+        'registro_colaborador': registro_colaborador,
+        'identificacao_utilizador': identificacao_utilizador,
+        'item_checklist': item_checklist,
+        'status_resposta': status_resposta,
+        'usuresponsavel': usuresponsavel,
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
     };
-    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+    final String dadosQuestionarioJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -279,14 +388,34 @@ class SpsHttpQuestionarioItem {
       String item_checklist,
       String status_aprovacao,
       String usuresponsavel) async {
-    final Map<String, dynamic> fieldQuestionario = {
-      'codigo_empresa': codigo_empresa,
-      'codigo_programacao': codigo_programacao,
-      'item_checklist': item_checklist,
-      'status_aprovacao': status_aprovacao,
-      'usuresponsavel': usuresponsavel,
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': codigo_empresa,
+        'codigo_programacao': codigo_programacao,
+        'item_checklist': item_checklist,
+        'status_aprovacao': status_aprovacao,
+        'usuresponsavel': usuresponsavel,
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
     };
-    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+    final String dadosQuestionarioJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -316,17 +445,38 @@ class SpsHttpQuestionarioItem {
       String item_checklist,
       String descr_comentarios,
       String usuresponsavel) async {
-    final Map<String, dynamic> fieldQuestionario = {
-      'origem_usuario': origem_usuario,
-      'codigo_empresa': codigo_empresa,
-      'codigo_programacao': codigo_programacao,
-      'registro_colaborador': registro_colaborador,
-      'identificacao_utilizador': identificacao_utilizador,
-      'item_checklist': item_checklist,
-      'descr_comentarios': descr_comentarios,
-      'usuresponsavel': usuresponsavel,
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'origem_usuario': origem_usuario,
+        'codigo_empresa': codigo_empresa,
+        'codigo_programacao': codigo_programacao,
+        'registro_colaborador': registro_colaborador,
+        'identificacao_utilizador': identificacao_utilizador,
+        'item_checklist': item_checklist,
+        'descr_comentarios': descr_comentarios,
+        'usuresponsavel': usuresponsavel,
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
     };
-    final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
+    final String dadosQuestionarioJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),

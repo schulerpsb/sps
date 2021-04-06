@@ -12,9 +12,9 @@ class SpsHttpLogin {
   //Servidor de produção.
   //static const baseUrl = 'https://teklist.schuler.de/webapi/api/login/read.php';
   //Servidor DEV
-  static const baseUrlAutentica = 'http://10.17.20.45/webapi/api/login/read.php';
-  static const baseUrlListaUsuario = 'http://10.17.20.45/webapi/api/login/read_usuario.php';
-  static const baseUrlLEsqueciMinhaSenha = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';
+  static const baseUrlAutentica = 'http://10.17.20.45/webapi/api/login/read.php';//ok jwt
+  static const baseUrlListaUsuario = 'http://10.17.20.45/webapi/api/login/read_usuario.php';//ok jwt
+  static const baseUrlLEsqueciMinhaSenha = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';//ok jwt
 
   SpsHttpLogin(this.usuario, this.senha);
 

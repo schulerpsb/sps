@@ -13,9 +13,9 @@ class SpsHttpQuestionario {
   //static const baseUrl_saveReferencia = 'https://teklist.schuler.de/webapi/api/questionario/save_referencia.php';
 
   //Servidor DEV
-  static const baseUrl_read_lista = 'http://10.17.20.45/webapi/api/questionario/read_lista.php';
-  static const baseUrl_read_lista_cq_int = 'http://10.17.20.45/webapi/api/questionario/read_lista_cq_int.php';
-  static const baseUrl_saveReferencia = 'http://10.17.20.45/webapi/api/questionario/save_referencia.php';
+  static const baseUrl_read_lista = 'http://10.17.20.45/webapi/api/questionario/read_lista.php';//ok jwt
+  static const baseUrl_read_lista_cq_int = 'http://10.17.20.45/webapi/api/questionario/read_lista_cq_int.php';//ok jwt
+  static const baseUrl_saveReferencia = 'http://10.17.20.45/webapi/api/questionario/save_referencia.php';//ok jwt
 
   SpsHttpQuestionario();
 

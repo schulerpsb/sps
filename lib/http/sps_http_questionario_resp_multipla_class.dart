@@ -9,10 +9,8 @@ class SpsHttpQuestionarioRespMultipla {
   //static const baseUrl_saveRespMultipla = 'https://teklist.schuler.de/webapi/api/questionario/save_resp_multipla.php';
 
   //Servidor DEV
-  static const baseUrl_readRespMultipla =
-      'http://10.17.20.45/webapi/api/questionario/read_resp_multipla.php';
-  static const baseUrl_saveRespMultipla =
-      'http://10.17.20.45/webapi/api/questionario/save_resp_multipla.php';
+  static const baseUrl_readRespMultipla = 'http://10.17.20.45/webapi/api/questionario/read_resp_multipla.php';
+  static const baseUrl_saveRespMultipla = 'http://10.17.20.45/webapi/api/questionario/save_resp_multipla.php';
 
   SpsHttpQuestionarioRespMultipla();
 
