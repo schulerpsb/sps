@@ -417,7 +417,7 @@ class _sps_questionario_cq_int_item_screen
                                               child: CustomRadioWidget(
                                                 value: "REJEITADO",
                                                 groupValue: _singleValue[index],
-                                                onChanged: (value) => _gravar_aprovacao(
+                                                onChanged: (value) => _gravar_rejeicao(
                                                     '${snapshot.data[index]["codigo_empresa"]}',
                                                     '${snapshot.data[index]["codigo_programacao"]}',
                                                     '${snapshot.data[index]["item_checklist"]}',
@@ -674,14 +674,24 @@ class _sps_questionario_cq_int_item_screen
     var _wsincronizado = "";
 
     _wsincronizado = "N";
-    //Gravar SQlite
+    //Gravar SQlite (Resp_cq)
     final SpsDaoQuestionarioItem objQuestionarioItemDao =
     SpsDaoQuestionarioItem();
-    final int resultupdate = await objQuestionarioItemDao.update_aprovacao(
+    final int resultupdate = await objQuestionarioItemDao.update_opcao(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao,
+        '',
+        '',
+        _witemChecklist,
+        'REJEITADO',
+        _wsincronizado);
+
+    //Gravar SQlite (status_aprovacao)
+    final int resultupdate2 = await objQuestionarioItemDao.update_aprovacao(
         _wcodigoEmpresa,
         _wcodigoProgramacao,
         _witemChecklist,
-        _wstatusAprovacao,
+        'PENDENTE',
         _wsincronizado);
 
     //Analisar e Atualizar Status da Lista (cabecalho) em função do status da aprovação
