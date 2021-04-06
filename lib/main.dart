@@ -119,7 +119,7 @@ void main() {
   };
   objSpsDaoSincronizacao.save(dadosSincronizacao);
   Timer(Duration(seconds:5), (){
-    final isolate = FlutterIsolate.spawn(isolateSincronizacao, 1);// comentar para não executar sincronizaçã (ADRIANO)
+    //final isolate = FlutterIsolate.spawn(isolateSincronizacao, 1);// comentar para não executar sincronização (ADRIANO)
   });
   getApplicationDocumentsDirectory().then((value){
     usuarioAtual.document_root_folder = value.path.toString();

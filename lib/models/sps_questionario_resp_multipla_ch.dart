@@ -14,8 +14,6 @@ class SpsQuestionarioRespMultipla_ch {
       h_codigo_checklist,
       h_item_checklist) async {
 
-    //print ("adriano =>1 ->"+h_codigo_empresa+"->"+h_codigo_programacao.toString()+"->"+h_item_checklist.toString());
-
     //Sincronização de itens  de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();
     await objspsSincronizacao.sincronizarQuestionariosRespMultiplaServerToLocal(
@@ -33,6 +31,8 @@ class SpsQuestionarioRespMultipla_ch {
     final List<Map<String, dynamic>> DadosSessao =
         await objQuestionarioRespMultiplaDao.listarQuestionarioRespMultiplaLocal(
             h_codigo_empresa, h_codigo_programacao, h_item_checklist);
+
+    print ("adriano =>1 ->"+DadosSessao.toString());
     return DadosSessao;
   }
 }
