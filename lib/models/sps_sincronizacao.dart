@@ -364,18 +364,29 @@ class spsSincronizacao {
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
       debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens e Anexos) =============================================");
       String tipo;
-      debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista) =============================================");
-      //Sincronização de questionarios Server to Local
-      spsSincronizacao objspsSincronizacao = spsSincronizacao();
-      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+      String registro_colaborador;
+      String identificacao_utilizador;
+      if (usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA") {
         tipo = "INTERNO";
+        registro_colaborador = usuarioAtual.registro_usuario;
+        identificacao_utilizador = 'SCHULER';
       } else {
         tipo = "EXTERNO";
+        registro_colaborador = '';
+        identificacao_utilizador = usuarioAtual.codigo_usuario;
       }
+
+      spsSincronizacao objspsSincronizacao = spsSincronizacao();
+
+    debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista) =============================================");
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'CONTROLE DE QUALIDADE', '',flip, jaNotificado);
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'CHECKLIST', '',flip, jaNotificado);
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'PESQUISA', '',flip, jaNotificado);
-      debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista)  =============================================");
+    debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista)  =============================================");
+
+    debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE ITENS (Tabela: checklist_item) =============================================");
+      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosItensServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
+    debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE ITENS (Tabela: checklist_item)  =============================================");
 
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CONTROLE DE QUALIDADE',flip, jaNotificado);
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CHECKLIST',flip, jaNotificado);
@@ -661,7 +672,7 @@ class spsSincronizacao {
       }
   }
 
-    //Função que atualiza os dados de itens de questionario do Server(Rest API) para o Local(Sqlite)
+    //Função que atualiza os dados de itens de questionario do Server(Rest API) para o Local(Sqlite) por demanda ao entrar no questionário
     Future<SpsDaoQuestionarioItem> sincronizarQuestionariosItensServerToLocal(
         acao, sessao_checklist, codigo_empresa, codigo_programacao,
         String registro_colaborador, String identificacao_utilizador,
@@ -721,6 +732,36 @@ class spsSincronizacao {
 
     return objQuestionarioItemDao;
   }
+
+  //Função que atualiza Todos os dados de itens de questionario do Server(Rest API) para o Local(Sqlite) - via sincronização
+  Future<int> sincronizarQuestionariosTodosItensServerToLocal(String codigo_empresa, String registro_colaborador, String identificacao_utilizador,flip, jaNotificado) async {
+
+    //Criar tabela "checklist_item" caso não exista
+    final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
+    final int resulcreate = await objQuestionarioItemDao.create_table();
+
+    //Verificar se existe conexão
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
+      //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
+      //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
+      final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
+      final List<Map<String, dynamic>> dadosQuestionarioItem = await objQuestionarioItemHttp.listarQuestionarioItemAll(codigo_empresa, registro_colaborador,identificacao_utilizador);
+      if (dadosQuestionarioItem != null) {
+        final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
+        final int resullimpar = await objQuestionarioItemDao.emptyTableSincronizacao(codigo_empresa);
+        final int resultsave = await objQuestionarioItemDao.save(dadosQuestionarioItem);
+      }
+
+    }
+    if(jaNotificado == 0){
+      return 0;
+    }else{
+      return 1;
+    }
+  }
+
 
   //Função que atualiza os dados de itens de questionario do Server(Rest API) para o Local(Sqlite)
   Future<SpsDaoQuestionarioRespMultipla> sincronizarQuestionariosRespMultiplaServerToLocal(

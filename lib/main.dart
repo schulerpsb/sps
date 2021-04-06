@@ -40,6 +40,7 @@ void isolateSincronizacao(int arg) async  {
       usuarioAtual.status_usuario = dadosSessaoInicial[0]['status_usuario'];
       usuarioAtual.tipo = dadosSessaoInicial[0]['tipo'];
       usuarioAtual.registro_usuario = dadosSessaoInicial[0]['registro_usuario'];
+      usuarioAtual.codigo_planta = dadosSessaoInicial[0]['codigo_planta'].toString();
       //Inicio da sincronização Recorrente de 1 em 1 minuto
       print('Sincronizando Dados em background - Primeira execução');
       print('Sincronizando Dados de questionários - Primeira execução');
@@ -72,6 +73,7 @@ void isolateSincronizacao(int arg) async  {
         usuarioAtual.status_usuario = dadosSessao[0]['status_usuario'];
         usuarioAtual.tipo = dadosSessao[0]['tipo'];
         usuarioAtual.registro_usuario = dadosSessao[0]['registro_usuario'];
+        usuarioAtual.codigo_planta = dadosSessao[0]['codigo_planta'].toString();
         //Inicio da sincronização Recorrente de 1 em 1 minuto
         print('Verificando a possibilidade de rodar a sincronização Dados em background - Recorrente');
         if(usuarioAtual.id_isolate == arg){
