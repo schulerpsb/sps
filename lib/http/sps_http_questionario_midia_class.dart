@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'Json_interceptor.dart';
 
 class SpsHttpQuestionarioMidia {
@@ -8,20 +11,46 @@ class SpsHttpQuestionarioMidia {
   //static const baseUrl = 'https://teklist.schuler.de/webapi/api/questionario/read.php';
 
   //Servidor DEV
-  static const UrlIsertMidia = 'http://10.17.20.45/webapi/api/midia/create.php';
-  static const UrlReadMidia = 'http://10.17.20.45/webapi/api/midia/read.php';
-  static const UrlUpdateMidia = 'http://10.17.20.45/webapi/api/midia/update.php';
   static const UrlReadMidiaAll = 'http://10.17.20.45/webapi/api/midia/read_all.php';
+  static const UrlReadMidia = 'http://10.17.20.45/webapi/api/midia/read.php';
+  static const UrlIsertMidia = 'http://10.17.20.45/webapi/api/midia/create.php';
+  static const UrlUpdateMidia = 'http://10.17.20.45/webapi/api/midia/update.php';
 
   SpsHttpQuestionarioMidia();
 
   Future<List<Map<String, dynamic>>> listarMidiaAll({Map<String, dynamic> dadosArquivo}) async {
-    final Map<String, dynamic> keyMidia = {
-      'codigo_empresa': dadosArquivo['codigo_empresa'],
-      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
-    };
 
-    final String dadosMidiaJson = jsonEncode(keyMidia);
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': dadosArquivo['codigo_empresa'],
+        'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
+    };
+    final String dadosMidiaJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
+
+//    final Map<String, dynamic> keyMidia = {
+//      'codigo_empresa': dadosArquivo['codigo_empresa'],
+//      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+//    };
+//    final String dadosMidiaJson = jsonEncode(keyMidia);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -62,16 +91,47 @@ class SpsHttpQuestionarioMidia {
   }
 
   Future<List<Map<String, dynamic>>> listarMidia({Map<String, dynamic> dadosArquivo}) async {
-    final Map<String, dynamic> keyMidia = {
-      'codigo_empresa': dadosArquivo['codigo_empresa'],
-      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
-      'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
-      'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
-      'item_checklist': dadosArquivo['item_checklist'].toString(),
-      'item_anexo': dadosArquivo['item_anexo'].toString(),
-    };
 
-    final String dadosMidiaJson = jsonEncode(keyMidia);
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': dadosArquivo['codigo_empresa'],
+        'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+        'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
+        'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
+        'item_checklist': dadosArquivo['item_checklist'].toString(),
+        'item_anexo': dadosArquivo['item_anexo'].toString(),
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
+    };
+    final String dadosMidiaJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
+
+//    final Map<String, dynamic> keyMidia = {
+//      'codigo_empresa': dadosArquivo['codigo_empresa'],
+//      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+//      'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
+//      'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
+//      'item_checklist': dadosArquivo['item_checklist'].toString(),
+//      'item_anexo': dadosArquivo['item_anexo'].toString(),
+//    };
+//
+//    final String dadosMidiaJson = jsonEncode(keyMidia);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -115,21 +175,57 @@ class SpsHttpQuestionarioMidia {
     if(dadosArquivo['titulo_arquivo'] == null){
       dadosArquivo['titulo_arquivo'] = '';
     }
-    final Map<String, dynamic> keyMidia = {
-      'codigo_empresa': dadosArquivo['codigo_empresa'],
-      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
-      'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
-      'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
-      'item_checklist': dadosArquivo['item_checklist'].toString(),
-      'item_anexo': dadosArquivo['item_anexo'].toString(),
-      'nome_arquivo': dadosArquivo['nome_arquivo'].toString(),
-      'titulo_arquivo': dadosArquivo['titulo_arquivo'].toString(),
-      'usuresponsavel': dadosArquivo['usuresponsavel'].toString(),
-      'dthratualizacao': dadosArquivo['dthratualizacao'].toString(),
-      'dthranexo': dadosArquivo['dthranexo'].toString(),
-    };
 
-    final String dadosMidiaJson = jsonEncode(keyMidia);
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': dadosArquivo['codigo_empresa'],
+        'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+        'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
+        'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
+        'item_checklist': dadosArquivo['item_checklist'].toString(),
+        'item_anexo': dadosArquivo['item_anexo'].toString(),
+        'nome_arquivo': dadosArquivo['nome_arquivo'].toString(),
+        'titulo_arquivo': dadosArquivo['titulo_arquivo'].toString(),
+        'usuresponsavel': dadosArquivo['usuresponsavel'].toString(),
+        'dthratualizacao': dadosArquivo['dthratualizacao'].toString(),
+        'dthranexo': dadosArquivo['dthranexo'].toString(),
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
+    };
+    final String dadosMidiaJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
+
+//    final Map<String, dynamic> keyMidia = {
+//      'codigo_empresa': dadosArquivo['codigo_empresa'],
+//      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+//      'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
+//      'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
+//      'item_checklist': dadosArquivo['item_checklist'].toString(),
+//      'item_anexo': dadosArquivo['item_anexo'].toString(),
+//      'nome_arquivo': dadosArquivo['nome_arquivo'].toString(),
+//      'titulo_arquivo': dadosArquivo['titulo_arquivo'].toString(),
+//      'usuresponsavel': dadosArquivo['usuresponsavel'].toString(),
+//      'dthratualizacao': dadosArquivo['dthratualizacao'].toString(),
+//      'dthranexo': dadosArquivo['dthranexo'].toString(),
+//    };
+//
+//    final String dadosMidiaJson = jsonEncode(keyMidia);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -156,22 +252,59 @@ class SpsHttpQuestionarioMidia {
   }
 
   Future<String> atualizarQuestionarioMidia({Map<String, dynamic> dadosArquivo}) async {
-    final Map<String, dynamic> keyMidia = {
-      'codigo_empresa': dadosArquivo['codigo_empresa'],
-      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
-      'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
-      'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
-      'item_checklist': dadosArquivo['item_checklist'].toString(),
-      'item_anexo': dadosArquivo['item_anexo'].toString(),
-      'nome_arquivo': dadosArquivo['nome_arquivo'].toString(),
-      'titulo_arquivo': dadosArquivo['titulo_arquivo'].toString(),
-      'usuresponsavel': dadosArquivo['usuresponsavel'].toString(),
-      'dthratualizacao': dadosArquivo['dthratualizacao'].toString(),
-      'dthranexo': dadosArquivo['dthranexo'].toString(),
-      'sincronizado': dadosArquivo['sincronizado'].toString(),
-    };
 
-    final String dadosMidiaJson = jsonEncode(keyMidia);
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': dadosArquivo['codigo_empresa'],
+        'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+        'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
+        'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
+        'item_checklist': dadosArquivo['item_checklist'].toString(),
+        'item_anexo': dadosArquivo['item_anexo'].toString(),
+        'nome_arquivo': dadosArquivo['nome_arquivo'].toString(),
+        'titulo_arquivo': dadosArquivo['titulo_arquivo'].toString(),
+        'usuresponsavel': dadosArquivo['usuresponsavel'].toString(),
+        'dthratualizacao': dadosArquivo['dthratualizacao'].toString(),
+        'dthranexo': dadosArquivo['dthranexo'].toString(),
+        'sincronizado': dadosArquivo['sincronizado'].toString(),
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
+    };
+    final String dadosMidiaJson = jsonEncode(dadosParaLogon);
+//    FIM implementação de JWT comum
+
+//    final Map<String, dynamic> keyMidia = {
+//      'codigo_empresa': dadosArquivo['codigo_empresa'],
+//      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+//      'registro_colaborador': dadosArquivo['registro_colaborador'].toString(),
+//      'identificacao_utilizador': dadosArquivo['identificacao_utilizador'].toString(),
+//      'item_checklist': dadosArquivo['item_checklist'].toString(),
+//      'item_anexo': dadosArquivo['item_anexo'].toString(),
+//      'nome_arquivo': dadosArquivo['nome_arquivo'].toString(),
+//      'titulo_arquivo': dadosArquivo['titulo_arquivo'].toString(),
+//      'usuresponsavel': dadosArquivo['usuresponsavel'].toString(),
+//      'dthratualizacao': dadosArquivo['dthratualizacao'].toString(),
+//      'dthranexo': dadosArquivo['dthranexo'].toString(),
+//      'sincronizado': dadosArquivo['sincronizado'].toString(),
+//    };
+//
+//    final String dadosMidiaJson = jsonEncode(keyMidia);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),

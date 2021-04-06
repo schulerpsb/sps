@@ -362,14 +362,25 @@ class spsSincronizacao {
       debugPrint("UPLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização Local(Sqlite) para o servidor(Rest API) - Cabeçalhos, Itens e anexos) =============================================");
 
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
-      debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
-      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'CONTROLE DE QUALIDADE',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'CONTROLE DE QUALIDADE',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'CHECKLIST',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'CHECKLIST',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('EXTERNO', 'PESQUISA',flip, jaNotificado);
-      jaNotificado = await sincronizarAnexosServerToLocal('INTERNO', 'PESQUISA',flip, jaNotificado);
-      debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens) =============================================");
+      debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens e Anexos) =============================================");
+      String tipo;
+      debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista) =============================================");
+      //Sincronização de questionarios Server to Local
+      spsSincronizacao objspsSincronizacao = spsSincronizacao();
+      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+        tipo = "INTERNO";
+      } else {
+        tipo = "EXTERNO";
+      }
+      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'CONTROLE DE QUALIDADE', '',flip, jaNotificado);
+      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'CHECKLIST', '',flip, jaNotificado);
+      jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'PESQUISA', '',flip, jaNotificado);
+      debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista)  =============================================");
+
+      jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CONTROLE DE QUALIDADE',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CHECKLIST',flip, jaNotificado);
+      jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'PESQUISA',flip, jaNotificado);
+      debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens e Anexos) =============================================");
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
       jaNotificado = 0;
 
@@ -563,15 +574,54 @@ class spsSincronizacao {
 
 
     //Função que atualiza os dados de questionários(cabeçalho) do Server(Rest API) para o Local(Sqlite)
-    Future sincronizarQuestionariosServerToLocal(origem_usuario,
+  Future<int> sincronizarQuestionariosServerToLocal(origem_usuario,
         String doc_action,
         String registro_colaborador,
         String identificacao_utilizador,
         String tipo_frequencia,
         String tipo_checklist,
-        String registro_aprovador) async {
+        String registro_aprovador,flip, jaNotificado) async {
 
-      debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
+    if(doc_action == null || doc_action == "null" ||  doc_action == ""){
+      String _tipo_checklist;
+      if (tipo_checklist == "CONTROLE DE QUALIDADE") {
+        doc_action = 'PREENCHER_CQ';
+        _tipo_checklist = 'CHECKLIST';
+        tipo_frequencia = 'CONTROLE DE QUALIDADE';
+        if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+          registro_colaborador = sps_usuario().registro_usuario;
+          identificacao_utilizador = 'SCHULER';
+        } else {
+          registro_colaborador = '';
+          identificacao_utilizador = sps_usuario().codigo_usuario;
+        }
+        registro_aprovador = sps_usuario().registro_usuario;
+      }
+      if (tipo_checklist == "CHECKLIST") {
+        doc_action = 'PREENCHER_CHECKLIST';
+        _tipo_checklist = 'CHECKLIST';
+        tipo_frequencia = 'ESPORADICA';
+        registro_colaborador = sps_usuario().registro_usuario;
+        identificacao_utilizador = '';
+        registro_aprovador = '';
+      }
+      if (tipo_checklist == "PESQUISA") {
+        doc_action = 'PREENCHER_PESQUISA';
+        _tipo_checklist = 'PESQUISA';
+        tipo_frequencia = 'ESPORADICA';
+        if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+          registro_colaborador = sps_usuario().registro_usuario;
+          identificacao_utilizador = '';
+        } else {
+          registro_colaborador = '';
+          identificacao_utilizador = sps_usuario().codigo_usuario;
+        }
+        registro_aprovador = '';
+      }
+      tipo_checklist = _tipo_checklist;
+    }
+
+      debugPrint("=== INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista -> ORIGEM_USUARIO: "+origem_usuario.toString()+" TIPO_CHECKLIST: "+tipo_checklist.toString()+" TIPO_FREQUENCIA: "+tipo_frequencia.toString()+") ============================================");
       //Criar tabela "checklist_lista" caso não exista
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final int resulcreate = await objQuestionarioDao.create_table();
@@ -594,13 +644,22 @@ class spsSincronizacao {
             tipo_checklist,
             registro_aprovador);
         if (dadosQuestionario != null) {
+          if(jaNotificado == 0 && flip != null){
+            await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS - Schuler Production System','Sincronização de Dados', flip);
+            jaNotificado = 1;
+          }
           final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
           final int resullimpar = await objQuestionarioDao.emptyTable(doc_action);
           final int resultsave = await objQuestionarioDao.save(dadosQuestionario,doc_action);
         }
-        debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) ============================================");
+        debugPrint("=== FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista -> ORIGEM_USUARIO: "+origem_usuario.toString()+" TIPO_CHECKLIST: "+tipo_checklist.toString()+" TIPO_FREQUENCIA: "+tipo_frequencia.toString()+") ============================================");
       }
-    }
+      if(jaNotificado == 0){
+        return 0;
+      }else{
+        return 1;
+      }
+  }
 
     //Função que atualiza os dados de itens de questionario do Server(Rest API) para o Local(Sqlite)
     Future<SpsDaoQuestionarioItem> sincronizarQuestionariosItensServerToLocal(

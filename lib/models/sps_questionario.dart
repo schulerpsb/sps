@@ -59,7 +59,7 @@ class SpsQuestionario {
 
     //Sincronização de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();
-    await objspsSincronizacao.sincronizarQuestionariosServerToLocal(origem_usuario, doc_action, registro_colaborador, identificacao_utilizador, tipo_frequencia, tipo_checklist, registro_aprovador,);
+    await objspsSincronizacao.sincronizarQuestionariosServerToLocal(origem_usuario, doc_action, registro_colaborador, identificacao_utilizador, tipo_frequencia, tipo_checklist, registro_aprovador,null,null);
 
     //Ler dados do SQlite (contar)
     if (_parametro == "CONTAR") {
