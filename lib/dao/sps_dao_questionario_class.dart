@@ -183,7 +183,7 @@ class SpsDaoQuestionario {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString();
-    debugPrint("query => " + _query);
+//    debugPrint("query => " + _query);
     db.rawUpdate(_query);
     return 1;
   }
