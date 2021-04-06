@@ -404,6 +404,49 @@ class _sps_questionario_cq_int_item_screen
                                           : Text(""),
                                       Text("    "),
 
+                                      (snapshot.data[index]["resp_cq"] ==
+                                                      "NÃO SE APLICA" ||
+                                                  snapshot.data[index]
+                                                          ["resp_cq"] ==
+                                                      "APROVADO") &&
+                                              snapshot.data[index]
+                                                      ["status_resposta"] ==
+                                                  "PREENCHIDA"
+                                          ? Container(
+                                              color: Colors.red,
+                                              child: CustomRadioWidget(
+                                                value: "REJEITADO",
+                                                groupValue: _singleValue[index],
+                                                onChanged: (value) => _gravar_aprovacao(
+                                                    '${snapshot.data[index]["codigo_empresa"]}',
+                                                    '${snapshot.data[index]["codigo_programacao"]}',
+                                                    '${snapshot.data[index]["item_checklist"]}',
+                                                    '${snapshot.data[index]["registro_aprovador"]}',
+                                                    value,
+                                                    index),
+                                              ),
+                                            )
+                                          : Text(""),
+                                      (snapshot.data[index]["resp_cq"] ==
+                                                      "NÃO SE APLICA" ||
+                                                  snapshot.data[index]
+                                                          ["resp_cq"] ==
+                                                      "APROVADO") &&
+                                              snapshot.data[index]
+                                                      ["status_resposta"] ==
+                                                  "PREENCHIDA"
+                                          ? Text(" REJEITADO",
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold))
+                                          : Text(""),
+                                      Text("    "),
+                                    ],
+                                  ),
+
+                                  Row(
+                                    children: <Widget>[
                                       //Tratar Mídias
                                       IconButton(
                                         icon: Badge(
@@ -600,33 +643,40 @@ class _sps_questionario_cq_int_item_screen
     print('posicao      ==>' + _windex.toString());
     var _wsincronizado = "";
 
-    //Verificar se existe conexão
-//    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-//    final bool result = await ObjVerificarConexao.verificar_conexao();
-//    if (result == true) {
-//      //Gravar PostgreSQL (API REST)
-//      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-//          SpsHttpQuestionarioItem();
-//      final retorno = await objQuestionarioItemHttp.QuestionarioSaveAprovacao(
-//          _wcodigoEmpresa,
-//          _wcodigoProgramacao,
-//          _witemChecklist,
-//          _wstatusAprovacao,
-//          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
-//      if (retorno == true) {
-//        _wsincronizado = "";
-//        debugPrint("registro gravado PostgreSQL");
-//      } else {
-//        _wsincronizado = "N";
-//        debugPrint("ERRO => registro não gravado PostgreSQL");
-//      }
-//    } else {
-//      _wsincronizado = "N";
-//    }
     _wsincronizado = "N";
     //Gravar SQlite
     final SpsDaoQuestionarioItem objQuestionarioItemDao =
         SpsDaoQuestionarioItem();
+    final int resultupdate = await objQuestionarioItemDao.update_aprovacao(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao,
+        _witemChecklist,
+        _wstatusAprovacao,
+        _wsincronizado);
+
+    //Analisar e Atualizar Status da Lista (cabecalho) em função do status da aprovação
+    final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+    final int resultupdateLista = await objQuestionarioDao
+        .update_lista_status_aprovacao(_wcodigoEmpresa, _wcodigoProgramacao);
+
+    //Atualizar status da resposta
+    spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
+    await objspsQuestionarioUtils.atualizar_status_resposta(_wcodigoEmpresa,
+        int.parse(_wcodigoProgramacao), "", "", int.parse(_witemChecklist));
+
+    setState(() {});
+    _singleValue[_windex] = _wstatusAprovacao;
+    this.widget._indexLista = _windex;
+  }
+
+  _gravar_rejeicao(_wcodigoEmpresa, _wcodigoProgramacao, _witemChecklist,
+      _wregistroAprovador, _wstatusAprovacao, _windex) async {
+    var _wsincronizado = "";
+
+    _wsincronizado = "N";
+    //Gravar SQlite
+    final SpsDaoQuestionarioItem objQuestionarioItemDao =
+    SpsDaoQuestionarioItem();
     final int resultupdate = await objQuestionarioItemDao.update_aprovacao(
         _wcodigoEmpresa,
         _wcodigoProgramacao,
