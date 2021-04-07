@@ -44,7 +44,7 @@ class SpsDaoQuestionarioRespMultipla {
   Future<int> save(
       List<Map<String, dynamic>> dadosQuestionarioRespMultipla) async {
     final Database db = await getDatabase();
-    print ("adriano =>"+dadosQuestionarioRespMultipla.toString());
+    //print ("adriano =>"+dadosQuestionarioRespMultipla.toString());
     await Future.forEach(dadosQuestionarioRespMultipla, (item) async {
       item['registro_colaborador'] = "";
       item['identificacao_utilizador'] = "";
