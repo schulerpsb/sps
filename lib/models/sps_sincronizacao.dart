@@ -57,7 +57,6 @@ class spsSincronizacao {
     };
     objSpsDaoSincronizacao.update(dadosSincronizacao);
 
-    //print('Fernando' + usuarioAtual.document_root_folder);
     //instancia do mecanismo de notificação
     FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
     int jaNotificado = 0;
@@ -67,21 +66,32 @@ class spsSincronizacao {
     final int resulcreateLista = await objQuestionarioDao.create_table();
 
     //Criar tabela "checklist_item" caso não exista
-    final SpsDaoQuestionarioItem objQuestionarioItemDao =
-    SpsDaoQuestionarioItem();
+    final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
     final int resulcreateitem = await objQuestionarioItemDao.create_table();
 
     //Criar tabela "checklist_resp_multipla" caso não exista
-    final SpsDaoQuestionarioRespMultipla objQuestionarioRespMultiplaDao =
-        SpsDaoQuestionarioRespMultipla();
-    final int resulcreaterespmultipla =
-        await objQuestionarioRespMultiplaDao.create_table();
+    final SpsDaoQuestionarioRespMultipla objQuestionarioRespMultiplaDao = SpsDaoQuestionarioRespMultipla();
+    final int resulcreaterespmultipla =  await objQuestionarioRespMultiplaDao.create_table();
 
     //Criar tabela "sps_checklist_tb_resp_anexo" caso não exista
-    final SpsDaoQuestionarioMidia objSpsDaoQuestionarioMidia =
-    SpsDaoQuestionarioMidia();
-    final int resulcreateMidia =
-    await objSpsDaoQuestionarioMidia.create_table();
+    final SpsDaoQuestionarioMidia objSpsDaoQuestionarioMidia = SpsDaoQuestionarioMidia();
+    final int resulcreateMidia = await objSpsDaoQuestionarioMidia.create_table();
+
+    //Instancia da propria classe afim de utilizar metodos proprios.
+    spsSincronizacao objspsSincronizacao = spsSincronizacao();
+
+    String tipo;
+    String registro_colaborador;
+    String identificacao_utilizador;
+    if (usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA") {
+      tipo = "INTERNO";
+      registro_colaborador = usuarioAtual.registro_usuario;
+      identificacao_utilizador = 'SCHULER';
+    } else {
+      tipo = "EXTERNO";
+      registro_colaborador = '';
+      identificacao_utilizador = usuarioAtual.codigo_usuario;
+    }
 
     //Verificar se existe conexão
     final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
@@ -251,6 +261,51 @@ class spsSincronizacao {
 //      }
       debugPrint("=== UPLOAD - FIM INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
 
+      debugPrint("=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+      //Ler dados não sincronizados do SQlite
+      final List<Map<String, dynamic>> resultListaRespMultipla = await objQuestionarioRespMultiplaDao.selectSincronizacaoRespMultipla();
+      if(resultListaRespMultipla.length > 0){
+        if(jaNotificado == 0){
+          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS-Schuler Production System','Sincronização de Dados', flip);
+          jaNotificado = 1;
+        }
+      }
+      //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +resultLista.toString() +")");
+      await Future.forEach(resultListaRespMultipla, (RespMultipla) async {
+        var _wsincronizado = "";
+        var sincListaRespMultipla = 0;
+        //Atualizar registro no PostgreSQL (via API REST)
+        final SpsHttpQuestionarioRespMultipla objSpsHttpQuestionarioRespMultipla = SpsHttpQuestionarioRespMultipla();
+        final atualizacaoListaRespMultipla = await objSpsHttpQuestionarioRespMultipla.QuestionarioSaveRespMultipla(
+            RespMultipla["codigo_empresa"],
+            RespMultipla["codigo_programacao"],
+            RespMultipla["registro_colaborador"],
+            RespMultipla["identificacao_utilizador"],
+            RespMultipla["item_checklist"],
+            RespMultipla["subcodigo_resposta"],
+            RespMultipla["texto_adicional"],
+            usuarioAtual.codigo_usuario,
+            RespMultipla["sincronizado"],);
+        if (atualizacaoListaRespMultipla != true) {
+          sincListaRespMultipla = 1;
+          //debugPrint("ERRO => registro sincronizado: " +resultLista[windexLista].toString());
+        }
+        if (sincListaRespMultipla == 0) {
+          //print('Iniciando a limpeza dos itens a serem sincronizados');
+          objQuestionarioRespMultiplaDao.updateQuestionarioRespMultiplaSincronizacao(
+                RespMultipla["codigo_empresa"],
+                RespMultipla["codigo_programacao"],
+                RespMultipla["registro_colaborador"],
+                RespMultipla["identificacao_utilizador"],
+                RespMultipla["item_checklist"],
+                RespMultipla["subcodigo_resposta"]
+              );
+          print('=== === UPLOAD - Update dados de Multplas reespostas. Código programação: '+RespMultipla["codigo_programacao"].toString() + 'item_checklist: '+RespMultipla["item_checklist"].toString() + 'subcodigo_resposta: '+RespMultipla["subcodigo_resposta"].toString());
+        }
+      });
+
+      debugPrint("=== UPLOAD - FIM SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+
       debugPrint("=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
 
       //Ler dados não sincronizados do SQlite
@@ -361,23 +416,8 @@ class spsSincronizacao {
       debugPrint("=== UPLOAD - FIM SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
       debugPrint("UPLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização Local(Sqlite) para o servidor(Rest API) - Cabeçalhos, Itens e anexos) =============================================");
 
-//DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
-      debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens e Anexos) =============================================");
-      String tipo;
-      String registro_colaborador;
-      String identificacao_utilizador;
-      if (usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA") {
-        tipo = "INTERNO";
-        registro_colaborador = usuarioAtual.registro_usuario;
-        identificacao_utilizador = 'SCHULER';
-      } else {
-        tipo = "EXTERNO";
-        registro_colaborador = '';
-        identificacao_utilizador = usuarioAtual.codigo_usuario;
-      }
-
-      spsSincronizacao objspsSincronizacao = spsSincronizacao();
-
+//DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens, resposatas multiplas e Anexos)
+    debugPrint("DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens, resposatas multiplas e Anexos) =============================================");
     debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE QUESTIONARIOS (Tabela: checklist_lista) =============================================");
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'CONTROLE DE QUALIDADE', '',flip, jaNotificado);
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosServerToLocal(tipo, '', '', '', '', 'CHECKLIST', '',flip, jaNotificado);
@@ -388,11 +428,15 @@ class spsSincronizacao {
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosItensServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
     debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE ITENS (Tabela: checklist_item)  =============================================");
 
+    debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+//    jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosRespMultiplaServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
+    debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla)  =============================================");
+
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CONTROLE DE QUALIDADE',flip, jaNotificado);
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CHECKLIST',flip, jaNotificado);
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'PESQUISA',flip, jaNotificado);
-      debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens e Anexos) =============================================");
-//DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Anexos (to be done: Cabeçalhos, Itens)
+      debugPrint("DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens, resposatas multiplas e Anexos) =============================================");
+//DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens, resposatas multiplas e Anexos)
       jaNotificado = 0;
 
       DateTime now = new DateTime.now();
@@ -689,6 +733,7 @@ class spsSincronizacao {
       //Verificar se existe conexão
       final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
       final bool result = await ObjVerificarConexao.verificar_conexao();
+      print('conexao==> '+result.toString());
       if (result == true) {
         //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
         //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
@@ -708,28 +753,27 @@ class spsSincronizacao {
           final int resultsave = await objQuestionarioItemDao.save(dadosQuestionarioItem);
         }
 
-      }
+        //Baixar tabela de anexos - Somente dados! obs: Os arquivos dos anexos são baixados pela sinronização
+        final SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = SpsHttpQuestionarioMidia();
+        Map<String, dynamic> dadosArquivo;
+        dadosArquivo = {
+          'codigo_empresa': codigo_empresa,
+          'codigo_programacao': codigo_programacao.toString(),
+          'registro_colaborador': registro_colaborador,
+          'identificacao_utilizador': identificacao_utilizador.toString(),
+        };
+        final List<Map<String,
+            dynamic>> dadosDeAnexosServidor = await objSpsHttpQuestionarioMidia
+            .listarMidiaAll(dadosArquivo: dadosArquivo);
+        //print('Sincronizar o arquivo do servidor====>' +dadosDeAnexosServidor.toString());
+        final int criarTabelaLocal = await objSpsDaoQuestionarioMidia.create_table();
+        final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia.emptyTable(codigo_programacao.toString());
+        final int ResultadoSave = await objSpsDaoQuestionarioMidia.save(dadosDeAnexosServidor);
+        if (ResultadoSave != 1) {
+          print('ERRO ao processar dados de Anexos de midia - Server to Local! ' +ResultadoSave.toString());
+        }
 
-      //Baixar tabela de anexos - Somente dados! obs: Os arquivos dos anexos são baixados pela sinronização
-      final SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = SpsHttpQuestionarioMidia();
-      Map<String, dynamic> dadosArquivo;
-      dadosArquivo = {
-        'codigo_empresa': codigo_empresa,
-        'codigo_programacao': codigo_programacao.toString(),
-        'registro_colaborador': registro_colaborador,
-        'identificacao_utilizador': identificacao_utilizador.toString(),
-      };
-      final List<Map<String,
-          dynamic>> dadosDeAnexosServidor = await objSpsHttpQuestionarioMidia
-          .listarMidiaAll(dadosArquivo: dadosArquivo);
-      //print('Sincronizar o arquivo do servidor====>' +dadosDeAnexosServidor.toString());
-      final int criarTabelaLocal = await objSpsDaoQuestionarioMidia.create_table();
-      final int limparTabeLaLOCAL = await objSpsDaoQuestionarioMidia.emptyTable(codigo_programacao.toString());
-      final int ResultadoSave = await objSpsDaoQuestionarioMidia.save(dadosDeAnexosServidor);
-      if (ResultadoSave != 1) {
-        print('ERRO ao processar dados de Anexos de midia - Server to Local! ' +ResultadoSave.toString());
       }
-
     return objQuestionarioItemDao;
   }
 
@@ -749,6 +793,10 @@ class spsSincronizacao {
       final SpsHttpQuestionarioItem objQuestionarioItemHttp = SpsHttpQuestionarioItem();
       final List<Map<String, dynamic>> dadosQuestionarioItem = await objQuestionarioItemHttp.listarQuestionarioItemAll(codigo_empresa, registro_colaborador,identificacao_utilizador);
       if (dadosQuestionarioItem != null) {
+        if(jaNotificado == 0 && flip != null){
+          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS - Schuler Production System','Sincronização de Dados', flip);
+          jaNotificado = 1;
+        }
         final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
         final int resullimpar = await objQuestionarioItemDao.emptyTableSincronizacao(codigo_empresa);
         final int resultsave = await objQuestionarioItemDao.save(dadosQuestionarioItem);
@@ -763,7 +811,7 @@ class spsSincronizacao {
   }
 
 
-  //Função que atualiza os dados de itens de questionario do Server(Rest API) para o Local(Sqlite)
+  //Função que atualiza os dados de respostas multiplas de questionario do Server(Rest API) para o Local(Sqlite) sob demanda ao entrar no questionário
   Future<SpsDaoQuestionarioRespMultipla> sincronizarQuestionariosRespMultiplaServerToLocal(
       h_codigo_empresa,
       h_codigo_programacao,
@@ -805,4 +853,38 @@ class spsSincronizacao {
     }
     return objQuestionarioRespMultiplaDao;
   }
+
+  //Função que atualiza Todos os dados de respostas multiplas de questionario do Server(Rest API) para o Local(Sqlite) - via sincronização
+  Future<int> sincronizarQuestionariosTodosRespMultiplaServerToLocal(String codigo_empresa, String registro_colaborador, String identificacao_utilizador,flip, jaNotificado) async {
+
+    //Criar tabela "checklist_resp_multipla" caso não exista
+    final SpsDaoQuestionarioRespMultipla objQuestionarioRespMultiplaDao = SpsDaoQuestionarioRespMultipla();
+    final int resulcreaterespmultipla =  await objQuestionarioRespMultiplaDao.create_table();
+
+    //Verificar se existe conexão
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
+      //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
+      //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
+      final SpsHttpQuestionarioRespMultipla objSpsHttpQuestionarioRespMultipla = SpsHttpQuestionarioRespMultipla();
+      final List<Map<String, dynamic>> dadosRespMultipla = await objSpsHttpQuestionarioRespMultipla.listarQuestionarioRespMultiplaAll(codigo_empresa, registro_colaborador,identificacao_utilizador);
+      if (dadosRespMultipla != null) {
+        if(jaNotificado == 0 && flip != null){
+          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS - Schuler Production System','Sincronização de Dados', flip);
+          jaNotificado = 1;
+        }
+        final int resullimpar = await objQuestionarioRespMultiplaDao.emptyTableSincronizacao(codigo_empresa);
+        final int resultsave = await objQuestionarioRespMultiplaDao.save(dadosRespMultipla);
+      }
+
+    }
+    if(jaNotificado == 0){
+      return 0;
+    }else{
+      return 1;
+    }
+  }
+
+
 }

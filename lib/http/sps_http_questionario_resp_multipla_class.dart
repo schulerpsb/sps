@@ -10,6 +10,7 @@ class SpsHttpQuestionarioRespMultipla {
 
   //Servidor DEV
   static const baseUrl_readRespMultipla = 'http://10.17.20.45/webapi/api/questionario/read_resp_multipla.php';
+  static const baseUrl_readRespMultiplaAll = 'http://10.17.20.45/webapi/api/questionario/read_resp_multipla_all.php';
   static const baseUrl_saveRespMultipla = 'http://10.17.20.45/webapi/api/questionario/save_resp_multipla.php';
 
   SpsHttpQuestionarioRespMultipla();
@@ -70,6 +71,58 @@ class SpsHttpQuestionarioRespMultipla {
     return transactionJsonRespMultiplaOcorrencias;
   }
 
+  Future<List<Map<String, dynamic>>> listarQuestionarioRespMultiplaAll(
+      String codigo_empresa,
+      String registro_colaborador,
+      String identificacao_utilizador,
+      ) async {
+    final Map<String, dynamic> keyQuestionarioRespMultipla = {
+      'codigo_empresa': codigo_empresa,
+      'registro_colaborador': registro_colaborador,
+      'identificacao_utilizador': identificacao_utilizador,
+    };
+
+    final String dadosQuestionarioRespMultiplaJson = jsonEncode(keyQuestionarioRespMultipla);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      baseUrl_readRespMultiplaAll,
+      headers: {'Content-type': 'application/json'},
+      body: dadosQuestionarioRespMultiplaJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+    final List<Map<String, dynamic>> transactionJsonList = jsonDecode(response.body);
+
+    final List<Map<String, dynamic>> transactionJsonRespMultiplaOcorrencias = [];
+    Map<String, dynamic> transactionJsonMap = null;
+    for (Map<String, dynamic> element in transactionJsonList) {
+      transactionJsonMap = {
+        'codigo_empresa': element['codigo_empresa'],
+        'codigo_programacao': element['codigo_programacao'],
+        'registro_colaborador': element['registro_colaborador'],
+        'identificacao_utilizador': element['identificacao_utilizador'],
+        'item_checklist': element['item_checklist'],
+        'codigo_tpresposta': element['codigo_tpresposta'],
+        'subcodigo_tpresposta': element['subcodigo_tpresposta'],
+        'descr_sub_tpresposta': element['descr_sub_tpresposta'],
+        'tamanho_texto_adicional': element['tamanho_texto_adicional'],
+        'obrigatorio_texto_adicional': element['obrigatorio_texto_adicional'],
+        'subcodigo_resposta': element['subcodigo_resposta'],
+        'texto_adicional': element['texto_adicional'],
+      };
+      transactionJsonRespMultiplaOcorrencias.add(transactionJsonMap);
+    }
+    return transactionJsonRespMultiplaOcorrencias;
+  }
+
   Future QuestionarioSaveRespMultipla(
       String codigo_empresa,
       String codigo_programacao,
@@ -79,7 +132,7 @@ class SpsHttpQuestionarioRespMultipla {
       String subcodigo_resposta,
       String texto_adicional,
       String usuresponsavel,
-      String salvarDeletar) async {
+      String sincronizado) async {
     final Map<String, dynamic> fieldQuestionario = {
       'codigo_empresa': codigo_empresa,
       'codigo_programacao': codigo_programacao,
@@ -89,7 +142,7 @@ class SpsHttpQuestionarioRespMultipla {
       'subcodigo_resposta': subcodigo_resposta,
       'texto_adicional': texto_adicional,
       'usuresponsavel': usuresponsavel,
-      'salvarDeletar': salvarDeletar,
+      'sincronizado': sincronizado,
     };
     final String dadosQuestionarioJson = jsonEncode(fieldQuestionario);
 

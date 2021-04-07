@@ -214,6 +214,15 @@ class SpsDaoQuestionarioRespMultipla {
     return db.rawDelete(_query);
   }
 
+  Future<int> emptyTableSincronizacao(_hcodigoEmpresa) async {
+    final Database db = await getDatabase();
+    var _query = 'delete from checklist_resp_multipla where codigo_empresa = "' +
+        _hcodigoEmpresa +
+        '" and (sincronizado is null or sincronizado = "")';
+    //debugPrint("query => " + _query);
+    return db.rawDelete(_query);
+  }
+
   Future<List<Map<String, dynamic>>> listarQuestionarioRespMultiplaLocal(
       _hcodigoEmpresa, _hcodigoProgramacao, _hitemChecklist) async {
     final Database db = await getDatabase();
