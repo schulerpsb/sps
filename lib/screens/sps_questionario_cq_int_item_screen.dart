@@ -127,7 +127,6 @@ class _sps_questionario_cq_int_item_screen
 
   @override
   Widget build(BuildContext context) {
-    print('Posicao lista==>' + this.widget._indexLista.toString());
     debugPrint("TELA => SPS_QUESTIONARIO_CQ_INT_ITEM_SCREEN");
     return WillPopScope(
       onWillPop: () {
