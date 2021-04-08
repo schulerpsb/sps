@@ -569,12 +569,12 @@ class spsSincronizacao {
                     String tipoArquivo = arquivoLocal.path
                         .split('.')
                         .last;
-                    if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4') {
+                    if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4' || tipoArquivo == 'mov' || tipoArquivo == 'MOV') {
                       //Processamento do arquivo capturado - Gerar thumbnail.
                       List _listaArquivos = new List();
                       _listaArquivos.add(destinoLocal);
                       spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value) => null);
-                      //print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+                      print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
                     }
                   } else {
                     if(statusDownload == '404'){

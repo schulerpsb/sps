@@ -288,7 +288,7 @@ class SpsDaoQuestionarioMidia {
         codigo_programacao.toString() +
         ' and item_checklist = ' +
         item_checklist.toString() +
-        ' and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF")';
+        ' and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF", "mov", "MOV")';
     final List<Map<String, dynamic>> resultAnexos = await db.rawQuery(_query);
     return resultAnexos;
   }
