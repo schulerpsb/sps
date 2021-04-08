@@ -84,6 +84,7 @@ class SpsHttpQuestionario {
           'codigo_checklist': element['codigo_checklist'],
           'descr_programacao': element['descr_programacao'],
           'dtfim_aplicacao': element['dtfim_aplicacao'],
+          'percentual_evolucao_fornecedor': element['percentual_evolucao_fornecedor'],
           'percentual_evolucao': element['percentual_evolucao'],
           'status': element['status'],
           'referencia_parceiro': element['referencia_parceiro'],

@@ -320,7 +320,7 @@ class _sps_questionario_cq_lista_screen
               text: snapshot.data[index]["qtde_pedido"].toString() + "\n\n"),
 
           new TextSpan(
-            text: "DT.FIM CHECKLIST: ",
+            text: "DT.FIM CHECKLIST:             ",
             style: TextStyle(color: Colors.grey),
           ),
           new TextSpan(
@@ -333,15 +333,27 @@ class _sps_questionario_cq_lista_screen
 
           new TextSpan(
             text:
-                snapshot.data[index]["status"] == "PARCIAL" ? "EVOLUÇÃO: " : "",
+                snapshot.data[index]["status"] == "PARCIAL" || snapshot.data[index]["status"] == "PENDENTE" ? "EVOLUÇÃO FORNECEDOR: " : "",
+            style: TextStyle(color: Colors.grey),
+          ),
+          new TextSpan(
+              text: snapshot.data[index]["status"] == "PARCIAL" || snapshot.data[index]["status"] == "PENDENTE"
+                  ? formato
+                          .format(snapshot.data[index]["percentual_evolucao_fornecedor"])
+                          .toString() +
+                      " %\n"
+                  : ""),
+          new TextSpan(
+            text:
+            snapshot.data[index]["status"] == "PARCIAL" ? "APROVAÇÃO FUP:                " : "",
             style: TextStyle(color: Colors.grey),
           ),
           new TextSpan(
               text: snapshot.data[index]["status"] == "PARCIAL"
                   ? formato
-                          .format(snapshot.data[index]["percentual_evolucao"])
-                          .toString() +
-                      " %\n"
+                  .format(snapshot.data[index]["percentual_evolucao"])
+                  .toString() +
+                  " %\n"
                   : ""),
         ],
       ),

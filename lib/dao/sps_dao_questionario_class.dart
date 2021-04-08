@@ -12,6 +12,7 @@ class SpsDaoQuestionario {
       'codigo_checklist INTEGER, '
       'descr_programacao TEXT, '
       'dtfim_aplicacao DATE, '
+      'percentual_evolucao_fornecedor FLOAT, '
       'percentual_evolucao FLOAT, '
       'status TEXT, '
       'referencia_parceiro TEXT, '
@@ -69,6 +70,9 @@ class SpsDaoQuestionario {
       if (questionario['descr_programacao'] == null || questionario['descr_programacao'] == "") {
         questionario['descr_programacao'] = "";
       }
+      if (questionario['percentual_evolucao_fornecedor'] == null || questionario['percentual_evolucao_fornecedor'] == "") {
+        questionario['percentual_evolucao_fornecedor'] = 0;
+      }
       if (questionario['percentual_evolucao'] == null || questionario['percentual_evolucao'] == "") {
         questionario['percentual_evolucao'] = 0;
       }
@@ -110,6 +114,8 @@ class SpsDaoQuestionario {
             '","' +
             questionario['dtfim_aplicacao'] +
             '",' +
+            questionario['percentual_evolucao_fornecedor'].toString() +
+            ',' +
             questionario['percentual_evolucao'].toString() +
             ',"' +
             questionario['status'] +

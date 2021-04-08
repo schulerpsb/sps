@@ -89,8 +89,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
 
 class _sps_questionario_cq_comentarios_screen
     extends State<sps_questionario_cq_comentarios_screen> {
-  final SpsQuestionarioItem spsQuestionarioItem =
-      SpsQuestionarioItem();
+  final SpsQuestionarioItem spsQuestionarioItem = SpsQuestionarioItem();
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -167,7 +166,9 @@ class _sps_questionario_cq_comentarios_screen
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            this.widget._origemUsuario == "EXTERNO" || this.widget._tipoChecklist != "CONTROLE DE QUALIDADE"
+                            this.widget._origemUsuario == "EXTERNO" ||
+                                    this.widget._tipoChecklist !=
+                                        "CONTROLE DE QUALIDADE"
                                 ? sps_questionario_cq_ext_item_screen(
                                     this.widget._codigo_empresa,
                                     this.widget._codigo_programacao,
@@ -252,12 +253,12 @@ class _sps_questionario_cq_comentarios_screen
                           child: new Container(
                             width: 400,
                             padding: new EdgeInsets.all(10),
-                            child: Text(
-                              ajustar_comentarios(
-                                  this.widget._descr_comentarios),
-                              style: new TextStyle(
-                                fontSize: 13.0,
-                                color: Colors.black87,
+                            child: RichText(
+                              text: new TextSpan(
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                                children: preparar_comentarios(),
                               ),
                             ),
                           ),
@@ -307,7 +308,9 @@ class _sps_questionario_cq_comentarios_screen
                       child: this.widget._status_aprovacao == "PENDENTE"
                           ? FloatingActionButton(
                               onPressed: () => this.widget._origemUsuario ==
-                                      "EXTERNO" || this.widget._tipoChecklist != "CONTROLE DE QUALIDADE"
+                                          "EXTERNO" ||
+                                      this.widget._tipoChecklist !=
+                                          "CONTROLE DE QUALIDADE"
                                   ? _gravar_comentario(
                                       "EXTERNO",
                                       this.widget._codigo_empresa,
@@ -348,41 +351,72 @@ class _sps_questionario_cq_comentarios_screen
     );
   }
 
-  _gravar_comentario(
-      _worigemUsuario,
-      _wcodigoEmpresa,
-      _wcodigoProgramacao,
-      _witemChecklist,
-      _wdescrComentarios) async {
+  List<TextSpan> preparar_comentarios() {
+    List<TextSpan> ListaTextos = new List<TextSpan>();
 
-    var _wsincronizado = "";
+    String wcomentarios = this.widget._descr_comentarios;
+    Color wcor;
+    String wresponsavel;
+    String wtexto;
 
-    //Verificar se existe conexão
-//    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
-//    final bool result = await ObjVerificarConexao.verificar_conexao();
-//    if (result == true) {
-//      //Gravar PostgreSQL (API REST)
-//      final SpsHttpQuestionarioItem objQuestionarioItemHttp =
-//          SpsHttpQuestionarioItem();
-//      final retorno = await objQuestionarioItemHttp.QuestionarioSaveComentario(
-//          _worigemUsuario,
-//          _wcodigoEmpresa,
-//          _wcodigoProgramacao.toString(),
-//          null,
-//          null,
-//          _witemChecklist.toString(),
-//          _wdescrComentarios,
-//          usuarioAtual.tipo == "INTERNO" || usuarioAtual.tipo == "COLIGADA" ?usuarioAtual.registro_usuario :usuarioAtual.codigo_usuario);
-//      if (retorno == true) {
-//        _wsincronizado = "";
-//        debugPrint("registro gravado PostgreSQL");
-//      } else {
-//        _wsincronizado = "N";
-//        debugPrint("ERRO => registro não gravado PostgreSQL");
-//      }
-//    } else {
-      _wsincronizado = "N";
-//    }
+    int wpos = 0;
+    int wposResp;
+    int wposTexto;
+    int wtamanho;
+    while (wpos + 15 <= wcomentarios.length) {
+      if (wcomentarios.substring(wpos, wpos + 15) == "<b><font color=") {
+        if (wcomentarios.substring(wpos + 15, wpos + 15 + 4) == "blue") {
+          wcor = Colors.indigo;
+          wposResp = wpos + 15 + 4;
+        } else {
+          wcor = Colors.green[800];
+          wposResp = wpos + 15 + 5;
+        }
+        wpos = wposResp;
+        while (wcomentarios.substring(wpos, wpos + 13) != "</font></b>||") {
+          wpos = wpos + 1;
+        }
+        wtamanho = wpos - wposResp;
+        wresponsavel = wcomentarios.substring(wposResp + 1, wposResp + wtamanho);
+
+        ListaTextos.add(
+          new TextSpan(
+            text: wresponsavel + "\n",
+            style: new TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.bold,
+              color: wcor,
+            ),
+          ),
+        );
+
+        wposTexto =  wpos + 13;
+        while (wpos <= wcomentarios.length && wcomentarios.substring(wpos, wpos + 6) != "<br>||") {
+          wpos = wpos + 1;
+        }
+        wtamanho = wpos - wposTexto;
+        wtexto = wcomentarios.substring(wposTexto, wposTexto + wtamanho);
+        wtexto = wtexto.replaceAll("<br>||", "\n");
+        wtexto = wtexto.replaceAll("|", "");
+        ListaTextos.add(
+          new TextSpan(
+            text: wtexto + "\n\n",
+            style: new TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.normal,
+              color: Colors.black,
+            ),
+          ),
+        );
+      }
+      wpos = wpos + 1;
+    }
+    return ListaTextos;
+  }
+
+  _gravar_comentario(_worigemUsuario, _wcodigoEmpresa, _wcodigoProgramacao,
+      _witemChecklist, _wdescrComentarios) async {
+    var _wsincronizado = "N";
 
     //Gravar SQlite
     final SpsDaoQuestionarioItem objQuestionarioDaoItem =
@@ -396,14 +430,6 @@ class _sps_questionario_cq_comentarios_screen
         _wdescrComentarios);
     this.widget._descr_comentarios = _wdescrComentarios;
     setState(() {});
-  }
-
-  String ajustar_comentarios(wcomentarios) {
-    return wcomentarios
-        .replaceAll("</font></b>||", "\n")
-        .replaceAll("<br>||", "\n\n")
-        .replaceAll("<b><font color=blue>", "")
-        .replaceAll("<b><font color=green>", "");
   }
 
   String obter_datahora() {

@@ -203,25 +203,46 @@ class _sps_questionario_cq_int_item_screen
                           child: Container(
                             padding: EdgeInsets.only(
                                 top: 5, left: 5, right: 5, bottom: 5),
-                            color: Color(0xFF494d4a), // Cinza
-                            child: Text(
-                                "(" +
-                                    this.widget._codigo_programacao.toString() +
-                                    ") " +
-                                    this.widget._descr_programacao +
-                                    "\n\n" +
-                                    "PEDIDO: " +
-                                    this.widget._codigo_pedido +
-                                    " / " +
-                                    this.widget._item_pedido +
-                                    " (" +
-                                    this.widget._codigo_material +
-                                    ")\n" +
-                                    "PROJETO: " +
-                                    this.widget._codigo_projeto,
+                            color: Colors.grey, // Cinza
+                            child: RichText(
+                              text: new TextSpan(
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                children: <TextSpan>[
+                                  new TextSpan(
+                                    text: "(" +
+                                        this
+                                            .widget
+                                            ._codigo_programacao
+                                            .toString() +
+                                        ") " +
+                                        this.widget._descr_programacao +
+                                        "\n\n",
+                                  ),
+                                  new TextSpan(
+                                    text: "PEDIDO:    ",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  new TextSpan(
+                                      text: this.widget._codigo_pedido +
+                                          " / " +
+                                          this.widget._item_pedido),
+                                  new TextSpan(
+                                    text: "   (" +
+                                        this.widget._codigo_material +
+                                        ")\n",
+                                    style: TextStyle(color: Colors.indigo),
+                                  ),
+                                  new TextSpan(
+                                    text: "PROJETO: ",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  new TextSpan(
+                                      text: this.widget._codigo_projeto),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -234,15 +255,24 @@ class _sps_questionario_cq_int_item_screen
                           child: Container(
                             padding: EdgeInsets.only(
                                 top: 0, left: 5, right: 5, bottom: 0),
-                            color: Color(0xFF494d4a), // Cinza
+                            color: Colors.grey, // Cinza
                             child: Row(
                               children: <Widget>[
-                                Text(
-                                  "REFERÊNCIA: " +
-                                      this.widget._referencia_parceiro,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                RichText(
+                                  text: new TextSpan(
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                    children: <TextSpan>[
+                                      new TextSpan(
+                                        text: "REFERÊNCIA (PARCEIRO): ",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      TextSpan(
+                                        text: this.widget._referencia_parceiro + "\n",
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -675,7 +705,7 @@ class _sps_questionario_cq_int_item_screen
     _wsincronizado = "N";
     //Gravar SQlite (Resp_cq)
     final SpsDaoQuestionarioItem objQuestionarioItemDao =
-    SpsDaoQuestionarioItem();
+        SpsDaoQuestionarioItem();
     final int resultupdate = await objQuestionarioItemDao.update_opcao(
         _wcodigoEmpresa,
         _wcodigoProgramacao,
