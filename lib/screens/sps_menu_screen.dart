@@ -116,7 +116,7 @@ class sps_menu_screen extends StatelessWidget {
                       borderRadius:
                       BorderRadius.all(Radius.circular(10.0))),
                   label: Text(
-                    'PESQUISA,'+alturaTela.toString()+','+larguraTela.toString(),
+                    'PESQUISA',
                     style: TextStyle(color: Colors.white),
                   ),
                   icon: Icon(
