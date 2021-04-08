@@ -429,7 +429,7 @@ class spsSincronizacao {
     debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE ITENS (Tabela: checklist_item)  =============================================");
 
     debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
-//    jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosRespMultiplaServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
+    jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosRespMultiplaServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
     debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla)  =============================================");
 
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CONTROLE DE QUALIDADE',flip, jaNotificado);
@@ -869,7 +869,7 @@ class spsSincronizacao {
       //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
       final SpsHttpQuestionarioRespMultipla objSpsHttpQuestionarioRespMultipla = SpsHttpQuestionarioRespMultipla();
       final List<Map<String, dynamic>> dadosRespMultipla = await objSpsHttpQuestionarioRespMultipla.listarQuestionarioRespMultiplaAll(codigo_empresa, registro_colaborador,identificacao_utilizador);
-      if (dadosRespMultipla != null) {
+      if (dadosRespMultipla[0]['codigo_programacao'] != null) {
         if(jaNotificado == 0 && flip != null){
           await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS - Schuler Production System','Sincronização de Dados', flip);
           jaNotificado = 1;
