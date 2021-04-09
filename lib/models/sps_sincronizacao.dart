@@ -261,50 +261,50 @@ class spsSincronizacao {
 //      }
       debugPrint("=== UPLOAD - FIM INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
 
-      debugPrint("=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
-      //Ler dados não sincronizados do SQlite
-      final List<Map<String, dynamic>> resultListaRespMultipla = await objQuestionarioRespMultiplaDao.selectSincronizacaoRespMultipla();
-      if(resultListaRespMultipla.length > 0){
-        if(jaNotificado == 0){
-          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS-Schuler Production System','Sincronização de Dados', flip);
-          jaNotificado = 1;
-        }
-      }
-      //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +resultLista.toString() +")");
-      await Future.forEach(resultListaRespMultipla, (RespMultipla) async {
-        var _wsincronizado = "";
-        var sincListaRespMultipla = 0;
-        //Atualizar registro no PostgreSQL (via API REST)
-        final SpsHttpQuestionarioRespMultipla objSpsHttpQuestionarioRespMultipla = SpsHttpQuestionarioRespMultipla();
-        final atualizacaoListaRespMultipla = await objSpsHttpQuestionarioRespMultipla.QuestionarioSaveRespMultipla(
-            RespMultipla["codigo_empresa"],
-            RespMultipla["codigo_programacao"],
-            RespMultipla["registro_colaborador"],
-            RespMultipla["identificacao_utilizador"],
-            RespMultipla["item_checklist"],
-            RespMultipla["subcodigo_resposta"],
-            RespMultipla["texto_adicional"],
-            usuarioAtual.codigo_usuario,
-            RespMultipla["sincronizado"],);
-        if (atualizacaoListaRespMultipla != true) {
-          sincListaRespMultipla = 1;
-          //debugPrint("ERRO => registro sincronizado: " +resultLista[windexLista].toString());
-        }
-        if (sincListaRespMultipla == 0) {
-          //print('Iniciando a limpeza dos itens a serem sincronizados');
-          objQuestionarioRespMultiplaDao.updateQuestionarioRespMultiplaSincronizacao(
-                RespMultipla["codigo_empresa"],
-                RespMultipla["codigo_programacao"],
-                RespMultipla["registro_colaborador"],
-                RespMultipla["identificacao_utilizador"],
-                RespMultipla["item_checklist"],
-                RespMultipla["subcodigo_resposta"]
-              );
-          print('=== === UPLOAD - Update dados de Multplas reespostas. Código programação: '+RespMultipla["codigo_programacao"].toString() + 'item_checklist: '+RespMultipla["item_checklist"].toString() + 'subcodigo_resposta: '+RespMultipla["subcodigo_resposta"].toString());
-        }
-      });
-
-      debugPrint("=== UPLOAD - FIM SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+//      debugPrint("=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+//      //Ler dados não sincronizados do SQlite
+//      final List<Map<String, dynamic>> resultListaRespMultipla = await objQuestionarioRespMultiplaDao.selectSincronizacaoRespMultipla();
+//      if(resultListaRespMultipla.length > 0){
+//        if(jaNotificado == 0){
+//          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS-Schuler Production System','Sincronização de Dados', flip);
+//          jaNotificado = 1;
+//        }
+//      }
+//      //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +resultLista.toString() +")");
+//      await Future.forEach(resultListaRespMultipla, (RespMultipla) async {
+//        var _wsincronizado = "";
+//        var sincListaRespMultipla = 0;
+//        //Atualizar registro no PostgreSQL (via API REST)
+//        final SpsHttpQuestionarioRespMultipla objSpsHttpQuestionarioRespMultipla = SpsHttpQuestionarioRespMultipla();
+//        final atualizacaoListaRespMultipla = await objSpsHttpQuestionarioRespMultipla.QuestionarioSaveRespMultipla(
+//            RespMultipla["codigo_empresa"],
+//            RespMultipla["codigo_programacao"],
+//            RespMultipla["registro_colaborador"],
+//            RespMultipla["identificacao_utilizador"],
+//            RespMultipla["item_checklist"],
+//            RespMultipla["subcodigo_resposta"],
+//            RespMultipla["texto_adicional"],
+//            usuarioAtual.codigo_usuario,
+//            RespMultipla["sincronizado"],);
+//        if (atualizacaoListaRespMultipla != true) {
+//          sincListaRespMultipla = 1;
+//          //debugPrint("ERRO => registro sincronizado: " +resultLista[windexLista].toString());
+//        }
+//        if (sincListaRespMultipla == 0) {
+//          //print('Iniciando a limpeza dos itens a serem sincronizados');
+//          objQuestionarioRespMultiplaDao.updateQuestionarioRespMultiplaSincronizacao(
+//                RespMultipla["codigo_empresa"],
+//                RespMultipla["codigo_programacao"],
+//                RespMultipla["registro_colaborador"],
+//                RespMultipla["identificacao_utilizador"],
+//                RespMultipla["item_checklist"],
+//                RespMultipla["subcodigo_resposta"]
+//              );
+//          print('=== === UPLOAD - Update dados de Multplas reespostas. Código programação: '+RespMultipla["codigo_programacao"].toString() + 'item_checklist: '+RespMultipla["item_checklist"].toString() + 'subcodigo_resposta: '+RespMultipla["subcodigo_resposta"].toString());
+//        }
+//      });
+//
+//      debugPrint("=== UPLOAD - FIM SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
 
       debugPrint("=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
 
