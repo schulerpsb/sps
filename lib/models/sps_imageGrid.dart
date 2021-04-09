@@ -116,7 +116,7 @@ class ImageGrid extends StatelessWidget {
                       .substring(
                           snapshot.data[i]['nome_arquivo'].toString().length -
                               4);
-                  if ((_extensao == '.mp4' || _extensao == '.MP4') && tipo == 'video') {
+                  if ((_extensao == '.mp4' || _extensao == '.MP4' || _extensao == '.mov' || _extensao == '.MOV') && tipo == 'video') {
                     String _nomeArquivoSemExtensao = snapshot.data[i]['nome_arquivo'].toString().substring(0, snapshot.data[i]['nome_arquivo'].toString().length - 4);
                     if (File(usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString()).existsSync() == true) {
                       Map<String, dynamic> _registroArquivo =

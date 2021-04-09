@@ -99,6 +99,7 @@ class SpsHttpQuestionarioRespMultipla {
         seconds: 5,
       ),
     );
+    print('resposta: '+response.body.toString());
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
 
     final List<Map<String, dynamic>> transactionJsonRespMultiplaOcorrencias = [];

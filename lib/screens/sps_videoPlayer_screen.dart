@@ -38,6 +38,10 @@ class _sps_mediaPlayer_screen extends State<sps_videoPlayer_screen> {
     String videoPath;
     videoPath = this.widget._filePath.replaceAll('.jpg', '.mp4');
     videoPath = videoPath.replaceAll('/thumbs/', '/');
+    if(File(videoPath).existsSync() == false){
+      videoPath = this.widget._filePath.replaceAll('.jpg', '.MOV');
+      videoPath = videoPath.replaceAll('/thumbs/', '/');
+    }
     // debugPrint(videoPath);
     var file = new File(videoPath);
     _videoPlayerController1 = VideoPlayerController.file(file);

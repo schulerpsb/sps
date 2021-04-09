@@ -23,7 +23,8 @@ class sps_menu_screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    int larguraTela = MediaQuery.of(context).size.width.toInt();
+    int alturaTela = MediaQuery.of(context).size.height.toInt();
     //Debug de sincronização
     //spsSincronizacao.sincronizarQuestionarios();
 
@@ -145,7 +146,10 @@ class sps_menu_screen extends StatelessWidget {
                       BorderRadius.all(Radius.circular(10.0))),
                   label: Text(
                     'GESTÃO DE FORNECEDORES (FEEDBACK)',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: larguraTela > 320 ? 14.0 : 12.0,
+                    ),
                   ),
                   icon: Icon(
                     Icons.equalizer,
@@ -174,7 +178,10 @@ class sps_menu_screen extends StatelessWidget {
                       BorderRadius.all(Radius.circular(10.0))),
                   label: Text(
                     'GESTÃO DE FORNECEDORES (COTAÇÃO)',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: larguraTela > 320 ? 14.0 : 12.0,
+                    ),
                   ),
                   icon: Icon(
                     Icons.monetization_on,

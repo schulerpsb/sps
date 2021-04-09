@@ -261,50 +261,50 @@ class spsSincronizacao {
 //      }
       debugPrint("=== UPLOAD - FIM INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
 
-      // debugPrint("=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
-      // //Ler dados não sincronizados do SQlite
-      // final List<Map<String, dynamic>> resultListaRespMultipla = await objQuestionarioRespMultiplaDao.selectSincronizacaoRespMultipla();
-      // if(resultListaRespMultipla.length > 0){
-      //   if(jaNotificado == 0){
-      //     await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS-Schuler Production System','Sincronização de Dados', flip);
-      //     jaNotificado = 1;
-      //   }
-      // }
-      // //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +resultLista.toString() +")");
-      // await Future.forEach(resultListaRespMultipla, (RespMultipla) async {
-      //   var _wsincronizado = "";
-      //   var sincListaRespMultipla = 0;
-      //   //Atualizar registro no PostgreSQL (via API REST)
-      //   final SpsHttpQuestionarioRespMultipla objSpsHttpQuestionarioRespMultipla = SpsHttpQuestionarioRespMultipla();
-      //   final atualizacaoListaRespMultipla = await objSpsHttpQuestionarioRespMultipla.QuestionarioSaveRespMultipla(
-      //       RespMultipla["codigo_empresa"],
-      //       RespMultipla["codigo_programacao"],
-      //       RespMultipla["registro_colaborador"],
-      //       RespMultipla["identificacao_utilizador"],
-      //       RespMultipla["item_checklist"],
-      //       RespMultipla["subcodigo_resposta"],
-      //       RespMultipla["texto_adicional"],
-      //       usuarioAtual.codigo_usuario,
-      //       RespMultipla["sincronizado"],);
-      //   if (atualizacaoListaRespMultipla != true) {
-      //     sincListaRespMultipla = 1;
-      //     //debugPrint("ERRO => registro sincronizado: " +resultLista[windexLista].toString());
-      //   }
-      //   if (sincListaRespMultipla == 0) {
-      //     //print('Iniciando a limpeza dos itens a serem sincronizados');
-      //     objQuestionarioRespMultiplaDao.updateQuestionarioRespMultiplaSincronizacao(
-      //           RespMultipla["codigo_empresa"],
-      //           RespMultipla["codigo_programacao"],
-      //           RespMultipla["registro_colaborador"],
-      //           RespMultipla["identificacao_utilizador"],
-      //           RespMultipla["item_checklist"],
-      //           RespMultipla["subcodigo_resposta"]
-      //         );
-      //     print('=== === UPLOAD - Update dados de Multplas reespostas. Código programação: '+RespMultipla["codigo_programacao"].toString() + 'item_checklist: '+RespMultipla["item_checklist"].toString() + 'subcodigo_resposta: '+RespMultipla["subcodigo_resposta"].toString());
-      //   }
-      // });
-      //
-      // debugPrint("=== UPLOAD - FIM SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+//      debugPrint("=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+//      //Ler dados não sincronizados do SQlite
+//      final List<Map<String, dynamic>> resultListaRespMultipla = await objQuestionarioRespMultiplaDao.selectSincronizacaoRespMultipla();
+//      if(resultListaRespMultipla.length > 0){
+//        if(jaNotificado == 0){
+//          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS-Schuler Production System','Sincronização de Dados', flip);
+//          jaNotificado = 1;
+//        }
+//      }
+//      //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +resultLista.toString() +")");
+//      await Future.forEach(resultListaRespMultipla, (RespMultipla) async {
+//        var _wsincronizado = "";
+//        var sincListaRespMultipla = 0;
+//        //Atualizar registro no PostgreSQL (via API REST)
+//        final SpsHttpQuestionarioRespMultipla objSpsHttpQuestionarioRespMultipla = SpsHttpQuestionarioRespMultipla();
+//        final atualizacaoListaRespMultipla = await objSpsHttpQuestionarioRespMultipla.QuestionarioSaveRespMultipla(
+//            RespMultipla["codigo_empresa"],
+//            RespMultipla["codigo_programacao"],
+//            RespMultipla["registro_colaborador"],
+//            RespMultipla["identificacao_utilizador"],
+//            RespMultipla["item_checklist"],
+//            RespMultipla["subcodigo_resposta"],
+//            RespMultipla["texto_adicional"],
+//            usuarioAtual.codigo_usuario,
+//            RespMultipla["sincronizado"],);
+//        if (atualizacaoListaRespMultipla != true) {
+//          sincListaRespMultipla = 1;
+//          //debugPrint("ERRO => registro sincronizado: " +resultLista[windexLista].toString());
+//        }
+//        if (sincListaRespMultipla == 0) {
+//          //print('Iniciando a limpeza dos itens a serem sincronizados');
+//          objQuestionarioRespMultiplaDao.updateQuestionarioRespMultiplaSincronizacao(
+//                RespMultipla["codigo_empresa"],
+//                RespMultipla["codigo_programacao"],
+//                RespMultipla["registro_colaborador"],
+//                RespMultipla["identificacao_utilizador"],
+//                RespMultipla["item_checklist"],
+//                RespMultipla["subcodigo_resposta"]
+//              );
+//          print('=== === UPLOAD - Update dados de Multplas reespostas. Código programação: '+RespMultipla["codigo_programacao"].toString() + 'item_checklist: '+RespMultipla["item_checklist"].toString() + 'subcodigo_resposta: '+RespMultipla["subcodigo_resposta"].toString());
+//        }
+//      });
+//
+//      debugPrint("=== UPLOAD - FIM SINCRONIZAÇÃO DE DADOS DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
 
       debugPrint("=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS (Tabela: sps_checklist_tb_resp_anexo) =============================================");
 
@@ -428,9 +428,9 @@ class spsSincronizacao {
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosItensServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
     debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE ITENS (Tabela: checklist_item)  =============================================");
 
-    //debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
-    //jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosRespMultiplaServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
-    //debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla)  =============================================");
+//    debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+//    jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosRespMultiplaServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
+//    debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla)  =============================================");
 
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CONTROLE DE QUALIDADE',flip, jaNotificado);
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CHECKLIST',flip, jaNotificado);
@@ -561,7 +561,7 @@ class spsSincronizacao {
                 String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' + '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
                 String destinoLocal = usuarioAtual.document_root_folder.toString() + '/' + AnexoServidor["nome_arquivo"].toString();
                 print('baixar ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
-                await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal).then((String statusDownload) async{
+                await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal).then((String statusDownload) {
                   if (statusDownload == '1') {
                     print('Download efetuado ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
                     //print('Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
@@ -569,12 +569,14 @@ class spsSincronizacao {
                     String tipoArquivo = arquivoLocal.path
                         .split('.')
                         .last;
-                    if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4') {
+                    if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4' || tipoArquivo == 'mov' || tipoArquivo == 'MOV') {
                       //Processamento do arquivo capturado - Gerar thumbnail.
                       List _listaArquivos = new List();
                       _listaArquivos.add(destinoLocal);
-                      spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value) => null);
-                      //print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+                      print('Converter Vídeo: '+_listaArquivos.toString());
+                      spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value){
+                        print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+                      });
                     }
                   } else {
                     if(statusDownload == '404'){
@@ -593,7 +595,7 @@ class spsSincronizacao {
                         'dthranexo': AnexoServidor['dthranexo'].toString(),
                         'sincronizado': 'D',
                       };
-                      var retorno1Midia = await objSpsHttpQuestionarioMidia.atualizarQuestionarioMidia(dadosArquivo: dadosApagarArquivoComErro);
+                      var retorno1Midia = objSpsHttpQuestionarioMidia.atualizarQuestionarioMidia(dadosArquivo: dadosApagarArquivoComErro);
                       print('ERRO ao processar download de Anexos de midia - Server to Local! ' +ArquivoParaDownload.toString());
                     }
                   }
