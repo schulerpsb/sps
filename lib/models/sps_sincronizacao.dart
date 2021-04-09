@@ -428,9 +428,9 @@ class spsSincronizacao {
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosItensServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
     debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE ITENS (Tabela: checklist_item)  =============================================");
 
-    debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
-    jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosRespMultiplaServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
-    debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla)  =============================================");
+//    debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
+//    jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosRespMultiplaServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
+//    debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla)  =============================================");
 
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CONTROLE DE QUALIDADE',flip, jaNotificado);
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'CHECKLIST',flip, jaNotificado);
@@ -561,7 +561,7 @@ class spsSincronizacao {
                 String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' + '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
                 String destinoLocal = usuarioAtual.document_root_folder.toString() + '/' + AnexoServidor["nome_arquivo"].toString();
                 print('baixar ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
-                await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal).then((String statusDownload) async{
+                await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal).then((String statusDownload) {
                   if (statusDownload == '1') {
                     print('Download efetuado ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
                     //print('Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
@@ -573,8 +573,10 @@ class spsSincronizacao {
                       //Processamento do arquivo capturado - Gerar thumbnail.
                       List _listaArquivos = new List();
                       _listaArquivos.add(destinoLocal);
-                      spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value) => null);
-                      print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+                      print('Converter Vídeo: '+_listaArquivos.toString());
+                      spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value){
+                        print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+                      });
                     }
                   } else {
                     if(statusDownload == '404'){
@@ -593,7 +595,7 @@ class spsSincronizacao {
                         'dthranexo': AnexoServidor['dthranexo'].toString(),
                         'sincronizado': 'D',
                       };
-                      var retorno1Midia = await objSpsHttpQuestionarioMidia.atualizarQuestionarioMidia(dadosArquivo: dadosApagarArquivoComErro);
+                      var retorno1Midia = objSpsHttpQuestionarioMidia.atualizarQuestionarioMidia(dadosArquivo: dadosApagarArquivoComErro);
                       print('ERRO ao processar download de Anexos de midia - Server to Local! ' +ArquivoParaDownload.toString());
                     }
                   }

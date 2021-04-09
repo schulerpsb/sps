@@ -25,13 +25,24 @@ class spsMidiaUtils {
     if(!checkPathExistence){
       new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs').create();
     }
-    fileList.forEach( (item) async {
-        final thumb = await VideoThumbnail.thumbnailFile(
-          video: item,
-          thumbnailPath: usuarioAtual.document_root_folder.toString() + '/thumbs',
-          imageFormat: ImageFormat.JPEG,
-          quality: 30,
-        );
+    fileList.forEach((item) async {
+        File file = File(item);
+        bool statusVideoFile;
+        while(statusVideoFile != true){
+          statusVideoFile = await file.exists();
+        }
+        if(statusVideoFile == true){
+          try {
+            final thumb = await VideoThumbnail.thumbnailFile(
+              video: item,
+              thumbnailPath: usuarioAtual.document_root_folder.toString() + '/thumbs',
+              imageFormat: ImageFormat.JPEG,
+              quality: 30,
+            );
+          } catch (e) {
+            print('erro de conversão: '+item.toString()+' - '+e.toString());
+          }
+        }
     });
   }
 
