@@ -116,12 +116,17 @@ class _sps_questionario_cq_lista_screen
                         String _wdtfim_aplicacao = snapshot.data[index]
                                 ["dtfim_aplicacao"]
                             .replaceAll("-", "");
+                        String _wdtvalidade_checklist = snapshot.data[index]
+                                ["dtvalidade_checklist"]
+                            .replaceAll("-", "");
                         return Card(
                           color: Colors.white,
                           child: ListTile(
                             title: Text(
                               int.parse(_wdtfim_aplicacao) >
-                                      int.parse(_dataAtual)
+                                          int.parse(_dataAtual) &&
+                                      int.parse(_wdtvalidade_checklist) >
+                                          int.parse(_dataAtual)
                                   ? '${snapshot.data[index]["codigo_programacao"]}'
                                   : '${snapshot.data[index]["codigo_programacao"]}' +
                                       " (PRAZO VENCIDO)",
@@ -129,7 +134,9 @@ class _sps_questionario_cq_lista_screen
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                   color: int.parse(_wdtfim_aplicacao) >
-                                          int.parse(_dataAtual)
+                                              int.parse(_dataAtual) &&
+                                          int.parse(_wdtvalidade_checklist) >
+                                              int.parse(_dataAtual)
                                       ? Colors.black
                                       : Colors.red),
                             ),
@@ -153,7 +160,9 @@ class _sps_questionario_cq_lista_screen
                                       ),
                             onTap: () {
                               int.parse(_wdtfim_aplicacao) >
-                                      int.parse(_dataAtual)
+                                          int.parse(_dataAtual) &&
+                                      int.parse(_wdtvalidade_checklist) >
+                                          int.parse(_dataAtual)
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -277,16 +286,16 @@ class _sps_questionario_cq_lista_screen
         children: <TextSpan>[
           new TextSpan(
               text: snapshot.data[index]["descr_programacao"] + "\n\n"),
-
           new TextSpan(
-            text: this.widget._origemUsuario == "INTERNO" ? "PARCEIRO:       " : "",
+            text: this.widget._origemUsuario == "INTERNO"
+                ? "PARCEIRO:       "
+                : "",
             style: TextStyle(color: Colors.grey),
           ),
           new TextSpan(
               text: this.widget._origemUsuario == "INTERNO"
                   ? snapshot.data[index]["nome_fornecedor"] + "\n"
                   : "\n"),
-
           new TextSpan(
             text: "PEDIDO:            ",
             style: TextStyle(color: Colors.grey),
@@ -298,19 +307,20 @@ class _sps_questionario_cq_lista_screen
           new TextSpan(
               text: " (" + snapshot.data[index]["codigo_material"] + ")\n",
               style: TextStyle(color: Colors.blue)),
-
-            new TextSpan(
-              text: snapshot.data[index]["referencia_parceiro"] != "" ?"REFERÊNCIA:  " :"",
-              style: TextStyle(color: Colors.grey),
-            ),
-            new TextSpan(
-                text: snapshot.data[index]["referencia_parceiro"] != "" ?snapshot.data[index]["referencia_parceiro"] + "\n" :""),
-
+          new TextSpan(
+            text: snapshot.data[index]["referencia_parceiro"] != ""
+                ? "REFERÊNCIA:  "
+                : "",
+            style: TextStyle(color: Colors.grey),
+          ),
+          new TextSpan(
+              text: snapshot.data[index]["referencia_parceiro"] != ""
+                  ? snapshot.data[index]["referencia_parceiro"] + "\n"
+                  : ""),
           new TextSpan(
             text: "PROJETO:        ",
             style: TextStyle(color: Colors.grey),
           ),
-
           new TextSpan(text: snapshot.data[index]["codigo_projeto"] + "\n"),
           new TextSpan(
             text: "QUANTIDADE: ",
@@ -318,7 +328,6 @@ class _sps_questionario_cq_lista_screen
           ),
           new TextSpan(
               text: snapshot.data[index]["qtde_pedido"].toString() + "\n\n"),
-
           new TextSpan(
             text: "DT.FIM CHECKLIST:             ",
             style: TextStyle(color: Colors.grey),
@@ -330,30 +339,34 @@ class _sps_questionario_cq_lista_screen
                   "/" +
                   snapshot.data[index]["dtfim_aplicacao"].substring(0, 4) +
                   "\n"),
-
           new TextSpan(
-            text:
-                snapshot.data[index]["status"] == "PARCIAL" || snapshot.data[index]["status"] == "PENDENTE" ? "EVOLUÇÃO FORNECEDOR: " : "",
+            text: snapshot.data[index]["status"] == "PARCIAL" ||
+                    snapshot.data[index]["status"] == "PENDENTE"
+                ? "EVOLUÇÃO FORNECEDOR: "
+                : "",
             style: TextStyle(color: Colors.grey),
           ),
           new TextSpan(
-              text: snapshot.data[index]["status"] == "PARCIAL" || snapshot.data[index]["status"] == "PENDENTE"
+              text: snapshot.data[index]["status"] == "PARCIAL" ||
+                      snapshot.data[index]["status"] == "PENDENTE"
                   ? formato
-                          .format(snapshot.data[index]["percentual_evolucao_fornecedor"])
+                          .format(snapshot.data[index]
+                              ["percentual_evolucao_fornecedor"])
                           .toString() +
                       " %\n"
                   : ""),
           new TextSpan(
-            text:
-            snapshot.data[index]["status"] == "PARCIAL" ? "APROVAÇÃO FUP:                " : "",
+            text: snapshot.data[index]["status"] == "PARCIAL"
+                ? "APROVAÇÃO FUP:                "
+                : "",
             style: TextStyle(color: Colors.grey),
           ),
           new TextSpan(
               text: snapshot.data[index]["status"] == "PARCIAL"
                   ? formato
-                  .format(snapshot.data[index]["percentual_evolucao"])
-                  .toString() +
-                  " %\n"
+                          .format(snapshot.data[index]["percentual_evolucao"])
+                          .toString() +
+                      " %\n"
                   : ""),
         ],
       ),

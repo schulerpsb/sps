@@ -11,6 +11,7 @@ class SpsDaoQuestionario {
       'codigo_grupo TEXT, '
       'codigo_checklist INTEGER, '
       'descr_programacao TEXT, '
+      'dtvalidade_checklist DATE, '
       'dtfim_aplicacao DATE, '
       'percentual_evolucao_fornecedor FLOAT, '
       'percentual_evolucao FLOAT, '
@@ -111,6 +112,8 @@ class SpsDaoQuestionario {
             questionario['codigo_checklist'].toString() +
             ',"' +
             questionario['descr_programacao'] +
+            '","' +
+            questionario['dtvalidade_checklist'] +
             '","' +
             questionario['dtfim_aplicacao'] +
             '",' +

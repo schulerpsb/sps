@@ -111,12 +111,17 @@ class _sps_questionario_ch_lista_screen
                         String _wdtfim_aplicacao = snapshot.data[index]
                                 ["dtfim_aplicacao"]
                             .replaceAll("-", "");
+                        String _wdtvalidade_checklist = snapshot.data[index]
+                        ["dtvalidade_checklist"]
+                            .replaceAll("-", "");
                         return Card(
                           color: Colors.white,
                           child: ListTile(
                             title: Text(
                               int.parse(_wdtfim_aplicacao) >
-                                      int.parse(_dataAtual)
+                                          int.parse(_dataAtual) &&
+                                      int.parse(_wdtvalidade_checklist) >
+                                          int.parse(_dataAtual)
                                   ? '${snapshot.data[index]["codigo_programacao"]}'
                                   : '${snapshot.data[index]["codigo_programacao"]}' +
                                       " (PRAZO VENCIDO)",
@@ -124,7 +129,9 @@ class _sps_questionario_ch_lista_screen
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                   color: int.parse(_wdtfim_aplicacao) >
-                                          int.parse(_dataAtual)
+                                              int.parse(_dataAtual) &&
+                                          int.parse(_wdtvalidade_checklist) >
+                                              int.parse(_dataAtual)
                                       ? Colors.black
                                       : Colors.red),
                             ),
@@ -148,7 +155,9 @@ class _sps_questionario_ch_lista_screen
                                       ),
                             onTap: () {
                               int.parse(_wdtfim_aplicacao) >
-                                      int.parse(_dataAtual)
+                                          int.parse(_dataAtual) &&
+                                      int.parse(_wdtvalidade_checklist) >
+                                          int.parse(_dataAtual)
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(

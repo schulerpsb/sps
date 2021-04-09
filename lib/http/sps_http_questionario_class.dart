@@ -83,6 +83,7 @@ class SpsHttpQuestionario {
           'codigo_grupo': element['codigo_grupo'],
           'codigo_checklist': element['codigo_checklist'],
           'descr_programacao': element['descr_programacao'],
+          'dtvalidade_checklist': element['dtvalidade_checklist'],
           'dtfim_aplicacao': element['dtfim_aplicacao'],
           'percentual_evolucao_fornecedor': element['percentual_evolucao_fornecedor'],
           'percentual_evolucao': element['percentual_evolucao'],

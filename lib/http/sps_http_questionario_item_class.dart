@@ -68,6 +68,7 @@ class SpsHttpQuestionarioItem {
     };
     final String dadosQuestionarioItemJson = jsonEncode(dadosParaLogon);
 //    FIM implementação de JWT comum
+    //print ("token:"+dadosQuestionarioItemJson.toString()); // Utilizar site https://jwt.io/ para abrir variaveis
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
@@ -125,6 +126,12 @@ class SpsHttpQuestionarioItem {
         'status_resposta': element['status_resposta'],
         'status_aprovacao': element['status_aprovacao'],
         'sugestao_resposta': element['sugestao_resposta'],
+        'subcodigo_tpresposta': element['subcodigo_tpresposta'],
+        'descr_sub_tpresposta': element['descr_sub_tpresposta'],
+        'tamanho_texto_adicional': element['tamanho_texto_adicional'],
+        'obrigatorio_texto_adicional': element['obrigatorio_texto_adicional'],
+        'subcodigo_resposta': element['subcodigo_resposta'],
+        'texto_adicional': element['texto_adicional'],
       };
       transactionJsonItemOcorrencias.add(transactionJsonMap);
     }
@@ -160,6 +167,7 @@ class SpsHttpQuestionarioItem {
       'jwt': token,
     };
     final String dadosQuestionarioItemJson = jsonEncode(dadosParaLogon);
+    //print ("token:"+dadosQuestionarioItemJson.toString()); // Utilizar site https://jwt.io/ para abrir variaveis
 //    FIM implementação de JWT comum
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
@@ -218,6 +226,12 @@ class SpsHttpQuestionarioItem {
         'status_resposta': element['status_resposta'],
         'status_aprovacao': element['status_aprovacao'],
         'sugestao_resposta': element['sugestao_resposta'],
+        'subcodigo_tpresposta': element['subcodigo_tpresposta'],
+        'descr_sub_tpresposta': element['descr_sub_tpresposta'],
+        'tamanho_texto_adicional': element['tamanho_texto_adicional'],
+        'obrigatorio_texto_adicional': element['obrigatorio_texto_adicional'],
+        'subcodigo_resposta': element['subcodigo_resposta'],
+        'texto_adicional': element['texto_adicional'],
       };
       transactionJsonItemOcorrencias.add(transactionJsonMap);
     }

@@ -40,8 +40,7 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
 
   final sps_usuario usuarioAtual;
 
-  sps_questionario_ch_item_screen(
-      this._codigo_empresa,
+  sps_questionario_ch_item_screen(this._codigo_empresa,
       this._codigo_programacao,
       this._registro_colaborador,
       this._identificacao_utilizador,
@@ -81,17 +80,17 @@ class sps_questionario_ch_item_screen extends StatefulWidget {
 
 class _sps_questionario_ch_item_screen
     extends State<sps_questionario_ch_item_screen> {
-
   //Carregar Itens
-  final SpsQuestionarioItem_ch spsQuestionarioItem_ch = SpsQuestionarioItem_ch();
+  final SpsQuestionarioItem_ch spsQuestionarioItem_ch =
+  SpsQuestionarioItem_ch();
 
   //Carregar respostas multiplas
-  final SpsQuestionarioRespMultipla_ch spsQuestionarioRespMultipla_ch = SpsQuestionarioRespMultipla_ch();
+  // final SpsQuestionarioRespMultipla_ch spsQuestionarioRespMultipla_ch =
+  //     SpsQuestionarioRespMultipla_ch();
 
   final SpsLogin spslogin = SpsLogin();
 
-  _sps_questionario_ch_item_screen(
-      _codigo_empresa,
+  _sps_questionario_ch_item_screen(_codigo_empresa,
       _codigo_programacao,
       _registro_colaborador,
       _identificacao_utilizador,
@@ -111,7 +110,7 @@ class _sps_questionario_ch_item_screen
 
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
-      ItemPositionsListener.create();
+  ItemPositionsListener.create();
 
   posicionaLista(indexLista) {
     itemScrollController.scrollTo(
@@ -119,32 +118,19 @@ class _sps_questionario_ch_item_screen
   }
 
   var tabConteudo = new List.generate(100, (_) => new List(4));
+  var tabMultipla = new List.generate(100, (_) => new List(2));
 
   String _exibirSalvar = "SIM";
   var _wrespEscala;
   var _wrespSimNao;
   var _wrespNaoSeAplica;
-
-
-//  Future<List<Map<String, dynamic>>> _futureListarQuestionarioItem;
-//
-//  @override
-//  void initState() {
-//    _futureListarQuestionarioItem = spsQuestionarioItem_ch.listarQuestionarioItem_ch(
-//        this.widget._codigo_empresa,
-//        this.widget._codigo_programacao,
-//        this.widget._registro_colaborador,
-//        this.widget._identificacao_utilizador,
-//        this.widget._codigo_grupo,
-//        this.widget._codigo_checklist,
-//        this.widget._acao,
-//        this.widget._sessao_checklist);
-//    super.initState();
-//  }
+  var _wrespMultipla = new List.generate(100, (_) => new List(1));
 
   @override
   Widget build(BuildContext context) {
     debugPrint("TELA => SPS_QUESTIONARIO_CH_ITEM_SCREEN");
+
+    usuarioAtual.index_perguntas = 0;
 
     if (this.widget._tipo_questionario == "PESQUISA") {
       if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
@@ -177,7 +163,7 @@ class _sps_questionario_ch_item_screen
                 onPressed: () {
                   var _salvar_pendente = false;
                   tabConteudo.forEach(
-                    (element) async {
+                        (element) async {
                       if (element[1] != null) {
                         _salvar_pendente = true;
                       }
@@ -318,18 +304,18 @@ class _sps_questionario_ch_item_screen
                                     child: IconButton(
                                       icon: Icon(Icons.arrow_back, size: 20),
                                       color: snapshot.data[0]
-                                                  ["sessao_anterior"] !=
-                                              0
+                                      ["sessao_anterior"] !=
+                                          0
                                           ? Colors.indigo
                                           : Colors.black12,
                                       onPressed: () {
                                         snapshot.data[0]["sessao_anterior"] != 0
                                             ? setState(
-                                                () {
-                                                  this.widget._acao =
-                                                      "ANTERIOR";
-                                                },
-                                              )
+                                              () {
+                                            this.widget._acao =
+                                            "ANTERIOR";
+                                          },
+                                        )
                                             : null;
                                       },
                                     ),
@@ -371,18 +357,18 @@ class _sps_questionario_ch_item_screen
                                     child: IconButton(
                                       icon: Icon(Icons.arrow_forward, size: 20),
                                       color: snapshot.data[0]
-                                                  ["sessao_posterior"] !=
-                                              0
+                                      ["sessao_posterior"] !=
+                                          0
                                           ? Colors.indigo
                                           : Colors.black12,
                                       onPressed: () {
                                         snapshot.data[0]["sessao_posterior"] !=
-                                                0
+                                            0
                                             ? setState(
-                                                () {
-                                                  this.widget._acao = "PROXIMO";
-                                                },
-                                              )
+                                              () {
+                                            this.widget._acao = "PROXIMO";
+                                          },
+                                        )
                                             : null;
                                       },
                                     ),
@@ -403,52 +389,63 @@ class _sps_questionario_ch_item_screen
                               itemPositionsListener: itemPositionsListener,
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  this.widget._sessao_checklist = snapshot.data[0]["sessao_checklist"];
-                                }
-                                if (snapshot.data[index]["sessao_checklist"] == this.widget._sessao_checklist) {
-                                  return Container(
-                                    child: Card(
-                                      color: Colors.white60,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 0,
-                                            left: 5,
-                                            right: 5,
-                                            bottom: 0),
-                                        child: Column(
-                                          children: [
-                                            //Tratar descrição da pergunta
-                                            descricao_pergunta(
-                                                snapshot, index, 1),
+                                if (usuarioAtual.index_perguntas == 0 || usuarioAtual.index_perguntas <= snapshot.data.length - 1) {
+                                  if (usuarioAtual.index_perguntas != 0) {
+                                    print("adriano =>index_perguntas=>" + usuarioAtual.index_perguntas.toString());
+                                    print("adriano =>index=>" + index.toString());
+                                    index = usuarioAtual.index_perguntas;
+                                    print("adriano =>index novo=>" + index.toString());
+                                    usuarioAtual.index_perguntas = 0;
+                                  }
+                                  if (index == 0) {
+                                    this.widget._sessao_checklist =
+                                    snapshot.data[0]["sessao_checklist"];
+                                  }
+                                  if (snapshot
+                                      .data[index]["sessao_checklist"] ==
+                                      this.widget._sessao_checklist) {
+                                    return Container(
+                                      child: Card(
+                                        color: Colors.white60,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 0,
+                                              left: 5,
+                                              right: 5,
+                                              bottom: 0),
+                                          child: Column(
+                                            children: [
+                                              //Tratar descrição da pergunta
+                                              descricao_pergunta(
+                                                  snapshot, index, 1),
 
-                                            //Tratar montagem do questionario
-                                            montar_questionario(
-                                                context, snapshot, index),
+                                              //Tratar montagem do questionario
+                                              montar_questionario(
+                                                  context, snapshot, index),
 
-                                            //Tratar não se aplica
-                                            tratar_nao_se_aplica(
-                                                context, snapshot, index),
+                                              //Tratar não se aplica
+                                              tratar_nao_se_aplica(
+                                                  context, snapshot, index),
 
-                                            Row(
-                                              children: [
-                                                //Tratar mídias
-                                                tratar_midias(
-                                                    context, snapshot, index),
+                                              Row(
+                                                children: [
+                                                  //Tratar mídias
+                                                  tratar_midias(
+                                                      context, snapshot, index),
 
-                                                //Tratar comentarios
-                                                tratar_comentarios(
-                                                    context, snapshot, index),
-                                              ],
-                                            ),
+                                                  //Tratar comentarios
+                                                  tratar_comentarios(
+                                                      context, snapshot, index),
+                                                ],
+                                              ),
 //                                            tratar_posicionar_lista(index),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
                                 }
-
                               },
                             ),
                           ),
@@ -465,16 +462,16 @@ class _sps_questionario_ch_item_screen
                             onPressed: () {
                               _exibirSalvar == "SIM"
                                   ? _gravar_resposta(
-                                      this.widget._codigo_empresa,
-                                      this.widget._codigo_programacao,
-                                      this.widget._registro_colaborador,
-                                      this.widget._identificacao_utilizador,
-                                    )
+                                this.widget._codigo_empresa,
+                                this.widget._codigo_programacao,
+                                this.widget._registro_colaborador,
+                                this.widget._identificacao_utilizador,
+                              )
                                   : "";
                             },
                             shape: RoundedRectangleBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
+                                BorderRadius.all(Radius.circular(10.0))),
                             label: Text(
                               'SALVAR',
                               style: TextStyle(color: Colors.white),
@@ -485,9 +482,9 @@ class _sps_questionario_ch_item_screen
                             ),
                             textColor: Colors.white,
                             splashColor:
-                                _exibirSalvar == "" ? null : Colors.red,
+                            _exibirSalvar == "" ? null : Colors.red,
                             color:
-                                _exibirSalvar == "" ? Colors.grey : Colors.blue,
+                            _exibirSalvar == "" ? Colors.grey : Colors.blue,
                           ),
                         ),
                       ],
@@ -533,13 +530,13 @@ class _sps_questionario_ch_item_screen
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
     //Identificar item_checklist na tabela de memoria
     tabConteudo[snapshot.data[index]["item_checklist"]][0] =
-        snapshot.data[index]["item_checklist"];
+    snapshot.data[index]["item_checklist"];
 
     //Verificar se conteudo esta como "não se aplica"
     if (tabConteudo[snapshot.data[index]["item_checklist"]][1] == null) {
       if (snapshot.data[index]["resp_nao_se_aplica"].toString() == "SIM") {
         tabConteudo[snapshot.data[index]["item_checklist"]][3] =
-            "NÃO SE APLICA";
+        "NÃO SE APLICA";
       } else {
         tabConteudo[snapshot.data[index]["item_checklist"]][3] = "";
       }
@@ -558,7 +555,7 @@ class _sps_questionario_ch_item_screen
             _resposta.text = snapshot.data[index]["resp_texto"];
           } else {
             _resposta.text =
-                tabConteudo[snapshot.data[index]["item_checklist"]][2];
+            tabConteudo[snapshot.data[index]["item_checklist"]][2];
           }
         }
         if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "NUMERO") {
@@ -568,7 +565,7 @@ class _sps_questionario_ch_item_screen
                 .replaceAll("null", "");
           } else {
             _resposta.text =
-                tabConteudo[snapshot.data[index]["item_checklist"]][2];
+            tabConteudo[snapshot.data[index]["item_checklist"]][2];
           }
         }
         if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "DATA") {
@@ -601,7 +598,8 @@ class _sps_questionario_ch_item_screen
             keyboardType: snapshot.data[index]["tipo_resposta_fixa"] == "TEXTO"
                 ? TextInputType.text
                 : TextInputType.number,
-            onChanged: (novoTexto) => {
+            onChanged: (novoTexto) =>
+            {
               tabConteudo[snapshot.data[index]["item_checklist"]][1] =
                   snapshot.data[index]["tipo_resposta_fixa"].toString(),
               tabConteudo[snapshot.data[index]["item_checklist"]][2] =
@@ -633,17 +631,17 @@ class _sps_questionario_ch_item_screen
                       locale: Locale("pt"),
                       firstDate: DateTime(1900),
                       initialDate: currentValue ??
-                              snapshot.data[index]["resp_data"].toString() != ""
+                          snapshot.data[index]["resp_data"].toString() != ""
                           ? DateTime(
-                              int.parse(snapshot.data[index]["resp_data"]
-                                  .toString()
-                                  .substring(0, 4)),
-                              int.parse(snapshot.data[index]["resp_data"]
-                                  .toString()
-                                  .substring(5, 7)),
-                              int.parse(snapshot.data[index]["resp_data"]
-                                  .toString()
-                                  .substring(8, 10)))
+                          int.parse(snapshot.data[index]["resp_data"]
+                              .toString()
+                              .substring(0, 4)),
+                          int.parse(snapshot.data[index]["resp_data"]
+                              .toString()
+                              .substring(5, 7)),
+                          int.parse(snapshot.data[index]["resp_data"]
+                              .toString()
+                              .substring(8, 10)))
                           : DateTime.now(),
                       lastDate: DateTime(2100),
                       cancelText: "",
@@ -659,14 +657,14 @@ class _sps_questionario_ch_item_screen
                   onChanged: (dt) {
                     try {
                       tabConteudo[snapshot.data[index]["item_checklist"]][1] =
-                          snapshot.data[index]["tipo_resposta_fixa"];
+                      snapshot.data[index]["tipo_resposta_fixa"];
                       tabConteudo[snapshot.data[index]["item_checklist"]][2] =
                           dt.toString().substring(0, 10);
                     } catch (e) {
                       tabConteudo[snapshot.data[index]["item_checklist"]][1] =
-                          snapshot.data[index]["tipo_resposta_fixa"];
+                      snapshot.data[index]["tipo_resposta_fixa"];
                       tabConteudo[snapshot.data[index]["item_checklist"]][2] =
-                          "";
+                      "";
                     }
                   },
                 ),
@@ -704,14 +702,14 @@ class _sps_questionario_ch_item_screen
                     onChanged: (hr) {
                       try {
                         tabConteudo[snapshot.data[index]["item_checklist"]][1] =
-                            snapshot.data[index]["tipo_resposta_fixa"];
+                        snapshot.data[index]["tipo_resposta_fixa"];
                         tabConteudo[snapshot.data[index]["item_checklist"]][2] =
                             hr.toString().substring(11, 19);
                       } catch (e) {
                         tabConteudo[snapshot.data[index]["item_checklist"]][1] =
-                            snapshot.data[index]["tipo_resposta_fixa"];
+                        snapshot.data[index]["tipo_resposta_fixa"];
                         tabConteudo[snapshot.data[index]["item_checklist"]][2] =
-                            "";
+                        "";
                       }
                     },
                   ),
@@ -742,13 +740,14 @@ class _sps_questionario_ch_item_screen
                         groupValue: _wrespSimNao == null
                             ? snapshot.data[index]["resp_simnao"]
                             : _wrespSimNao,
-                        onChanged: (val) => {
+                        onChanged: (val) =>
+                        {
                           tabConteudo[snapshot.data[index]["item_checklist"]]
-                              [1] = "RESPOSTA SIM/NÃO",
+                          [1] = "RESPOSTA SIM/NÃO",
                           tabConteudo[snapshot.data[index]["item_checklist"]]
-                              [2] = "SIM",
+                          [2] = "SIM",
                           setState(
-                            () {
+                                () {
                               _wrespSimNao = val;
                             },
                           )
@@ -766,13 +765,14 @@ class _sps_questionario_ch_item_screen
                         groupValue: _wrespSimNao == null
                             ? snapshot.data[index]["resp_simnao"]
                             : _wrespSimNao,
-                        onChanged: (val) => {
+                        onChanged: (val) =>
+                        {
                           tabConteudo[snapshot.data[index]["item_checklist"]]
-                              [1] = "RESPOSTA SIM/NÃO",
+                          [1] = "RESPOSTA SIM/NÃO",
                           tabConteudo[snapshot.data[index]["item_checklist"]]
-                              [2] = "NÃO",
+                          [2] = "NÃO",
                           setState(
-                            () {
+                                () {
                               _wrespSimNao = val;
                             },
                           )
@@ -792,7 +792,7 @@ class _sps_questionario_ch_item_screen
         //Tratar resposta por escala (resposta livre)
         if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA POR ESCALA" &&
             int.parse(snapshot.data[index]["intervalo_escala"].toString(),
-                    onError: (e) => 0) ==
+                onError: (e) => 0) ==
                 0) {
           double _currentSliderValue;
           if (snapshot.data[index]["resp_escala"] == null) {
@@ -829,23 +829,23 @@ class _sps_questionario_ch_item_screen
                             child: Slider(
                               value: _currentSliderValue,
                               min:
-                                  (snapshot.data[index]["inicio_escala"] as num)
-                                      .toDouble(),
+                              (snapshot.data[index]["inicio_escala"] as num)
+                                  .toDouble(),
                               max: (snapshot.data[index]["fim_escala"] as num)
                                   .toDouble(),
                               divisions:
-                                  snapshot.data[index]["fim_escala"].round(),
+                              snapshot.data[index]["fim_escala"].round(),
                               label: _currentSliderValue.toString(),
                               onChanged: (val) {
                                 _currentSliderValue = val;
                                 tabConteudo[snapshot.data[index]
-                                        ["item_checklist"]][1] =
-                                    "RESPOSTA POR ESCALA";
+                                ["item_checklist"]][1] =
+                                "RESPOSTA POR ESCALA";
                                 tabConteudo[snapshot.data[index]
-                                        ["item_checklist"]][2] =
+                                ["item_checklist"]][2] =
                                     val.round().toString();
                                 setState(
-                                  () {
+                                      () {
                                     _currentSliderValue = val;
                                   },
                                 );
@@ -877,7 +877,7 @@ class _sps_questionario_ch_item_screen
           //Tratar resposta por escala (com intervalo)
           if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA POR ESCALA" &&
               int.parse(snapshot.data[index]["intervalo_escala"].toString(),
-                      onError: (e) => 0) !=
+                  onError: (e) => 0) !=
                   0) {
             return StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
@@ -899,14 +899,15 @@ class _sps_questionario_ch_item_screen
                                 groupValue: _wrespEscala == null
                                     ? snapshot.data[index]["resp_escala"]
                                     : _wrespEscala,
-                                onChanged: (val) => {
+                                onChanged: (val) =>
+                                {
                                   tabConteudo[snapshot.data[index]
-                                          ["item_checklist"]][1] =
-                                      "RESPOSTA POR ESCALA",
+                                  ["item_checklist"]][1] =
+                                  "RESPOSTA POR ESCALA",
                                   tabConteudo[snapshot.data[index]
-                                      ["item_checklist"]][2] = val.toString(),
+                                  ["item_checklist"]][2] = val.toString(),
                                   setState(
-                                    () {
+                                        () {
                                       _wrespEscala = val;
                                     },
                                   )
@@ -941,14 +942,15 @@ class _sps_questionario_ch_item_screen
                                 groupValue: _wrespEscala == null
                                     ? snapshot.data[index]["resp_escala"]
                                     : _wrespEscala,
-                                onChanged: (val) => {
+                                onChanged: (val) =>
+                                {
                                   tabConteudo[snapshot.data[index]
-                                          ["item_checklist"]][1] =
-                                      "RESPOSTA POR ESCALA",
+                                  ["item_checklist"]][1] =
+                                  "RESPOSTA POR ESCALA",
                                   tabConteudo[snapshot.data[index]
-                                      ["item_checklist"]][2] = val.toString(),
+                                  ["item_checklist"]][2] = val.toString(),
                                   setState(
-                                    () {
+                                        () {
                                       _wrespEscala = val;
                                     },
                                   )
@@ -986,107 +988,73 @@ class _sps_questionario_ch_item_screen
           } else {
             //Tratar resposta Multipla
             if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA MULTIPLA") {
-              FutureBuilder<List<Map<String, dynamic>>>(
-                future: spsQuestionarioRespMultipla_ch.listarQuestionarioRespMultipla_ch(
-                        snapshot.data[0]["codigo_empresa"],
-                        snapshot.data[0]["codigo_programacao"],
-                        snapshot.data[0]["registro_colaborador"],
-                        snapshot.data[0]["identificacao_utilizador"],
-                        snapshot.data[0]["codigo_grupo"],
-                        snapshot.data[0]["codigo_checklist"],
-                        snapshot.data[0]["item_checklist"]),
-                builder: (context, snapshot2) {
-                  print("adriano =>X ->"+snapshot2.toString());
-                  _singleValue.clear();
-                  switch (snapshot2.connectionState) {
-                    case ConnectionState.none:
-                      break;
-                    case ConnectionState.waiting:
-                      return Progress();
-                      break;
-                    case ConnectionState.active:
-                      break;
-                    case ConnectionState.done:
-                      if (snapshot2.hasError) {
-                        var werror;
-                        werror = snapshot2.error.toString();
-                        return CenteredMessage(
-                          'Falha de conexão! \n\n(' + werror + ')',
-                          icon: Icons.error,
-                        );
-                      }
-
-                      if (erroConexao.msg_erro_conexao.toString() == "") {
-                        if (snapshot2.data.isNotEmpty) {
-                            print("adriano =>X" +
-                                snapshot2.data[0]["codigo_programacao"]
-                                    .toString());
-                            return Container();
-                        }
-                      }
+              return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  List<Widget> _listaRespMultipla = [];
+                  var witem_checklist_ant =
+                  snapshot.data[index]["item_checklist"];
+                  var wparar = false;
+                  while (snapshot.data[index]["item_checklist"] ==
+                      witem_checklist_ant && wparar == false) {
+                    _listaRespMultipla.add(
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: CheckboxListTile(
+                          controlAffinity: ListTileControlAffinity.leading,
+                          title: Text(
+                              snapshot.data[index]["descr_sub_tpresposta"],
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal)),
+                          value: _wrespMultipla[snapshot.data[index]
+                          ["subcodigo_tpresposta"]][0] ==
+                              null
+                              ? snapshot.data[index]["subcodigo_tpresposta"] ==
+                              snapshot.data[index]["subcodigo_resposta"]
+                              ? true
+                              : false
+                              : _wrespMultipla[snapshot.data[index]
+                          ["subcodigo_tpresposta"][0]],
+                          onChanged: (val) {
+                            if (val == true) {
+                              tabMultipla[snapshot.data[index]
+                              ["item_checklist"]][
+                              snapshot.data[index]
+                              ["subcodigo_tpresposta"]] = "MARCADO";
+                            } else {
+                              tabMultipla[snapshot.data[index]
+                              ["item_checklist"]][
+                              snapshot.data[index]
+                              ["subcodigo_tpresposta"]] = "DESMARCADO";
+                            }
+                            setState(
+                                  () {
+                                _wrespMultipla[snapshot.data[index]
+                                ["subcodigo_tpresposta"]][0] = val;
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                    if (snapshot.data.length - 1 == index) {
+                      wparar = true;
+                    } else {
+                      index = index + 1;
+                    }
                   }
+                  usuarioAtual.index_perguntas = index;
+                  print("adriano =>index_perguntas pós montagem=>" + index.toString());
+
+                  //Exibir opções
+                  return Column(
+                    children: <Widget>[
+                      Column(children: _listaRespMultipla),
+                    ],
+                  );
                 },
               );
-
-              // return StatefulBuilder(
-              //   builder: (BuildContext context, StateSetter setState) {
-              //     //Preparar opções
-              //     List<Widget> _listaOpcoes = [];
-              //     var _ocorrencia = snapshot.data[index]["inicio_escala"];
-              //     while (_ocorrencia <= snapshot.data[index]["fim_escala"]) {
-              //       _listaOpcoes.add(
-              //         Column(
-              //           children: [
-              //             Row(
-              //               children: [
-              //                 CustomRadioWidget(
-              //                   height: 20,
-              //                   value: _ocorrencia,
-              //                   groupValue: _wrespEscala == null
-              //                       ? snapshot.data[index]["resp_escala"]
-              //                       : _wrespEscala,
-              //                   onChanged: (val) => {
-              //                     tabConteudo[snapshot.data[index]
-              //                             ["item_checklist"]][1] =
-              //                         "RESPOSTA POR ESCALA",
-              //                     tabConteudo[snapshot.data[index]
-              //                         ["item_checklist"]][2] = val.toString(),
-              //                     setState(
-              //                       () {
-              //                         _wrespEscala = val;
-              //                       },
-              //                     )
-              //                   },
-              //                 ),
-              //                 Text(_ocorrencia.toString(),
-              //                     style: TextStyle(
-              //                         fontSize: 20,
-              //                         fontWeight: FontWeight.bold)),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //       );
-              //       _ocorrencia =
-              //           _ocorrencia + snapshot.data[index]["intervalo_escala"];
-              //     }
-              //
-              //     //Exibir opções
-              //     return Column(
-              //       children: <Widget>[
-              //         Column(
-              //           children: [
-              //             Text(
-              //               snapshot.data[index]["descr_escala"],
-              //             ),
-              //           ],
-              //         ),
-              //         Column(children: _listaOpcoes),
-              //       ],
-              //     );
-              //   },
-              // );
-              return TextField();
             } else {
               return TextField();
             }
@@ -1111,29 +1079,29 @@ class _sps_questionario_ch_item_screen
                     fontWeight: FontWeight.bold)),
             value: _wrespNaoSeAplica == null
                 ? snapshot.data[index]["resp_nao_se_aplica"].toString() == "" ||
-                        snapshot.data[index]["resp_nao_se_aplica"] == null
-                    ? false
-                    : true
+                snapshot.data[index]["resp_nao_se_aplica"] == null
+                ? false
+                : true
                 : _wrespNaoSeAplica,
             onChanged: (val) {
               if (val == true) {
                 if (tabConteudo[snapshot.data[index]["item_checklist"]][1] ==
                     null) {
                   tabConteudo[snapshot.data[index]["item_checklist"]][1] =
-                      "NÃO SE APLICA";
+                  "NÃO SE APLICA";
                 }
                 tabConteudo[snapshot.data[index]["item_checklist"]][3] =
-                    "NÃO SE APLICA";
+                "NÃO SE APLICA";
               } else {
                 if (tabConteudo[snapshot.data[index]["item_checklist"]][1] ==
                     null) {
                   tabConteudo[snapshot.data[index]["item_checklist"]][1] =
-                      "NÃO SE APLICA";
+                  "NÃO SE APLICA";
                 }
                 tabConteudo[snapshot.data[index]["item_checklist"]][3] = "";
               }
               setState(
-                () {
+                    () {
                   _wrespNaoSeAplica = val;
                 },
               );
@@ -1147,7 +1115,7 @@ class _sps_questionario_ch_item_screen
   tratar_posicionar_lista(index) {
     if (index == this.widget._indexLista) {
       SchedulerBinding.instance.addPostFrameCallback(
-        (_) {
+            (_) {
           itemScrollController.jumpTo(index: index);
           this.widget._indexLista = -1;
         },
@@ -1156,12 +1124,10 @@ class _sps_questionario_ch_item_screen
     return Container();
   }
 
-  _gravar_resposta(
-    _wcodigoEmpresa,
-    _wcodigoProgramacao,
-    _wregistroColaborador,
-    _widentificacaoUtilizador,
-  ) async {
+  _gravar_resposta(_wcodigoEmpresa,
+      _wcodigoProgramacao,
+      _wregistroColaborador,
+      _widentificacaoUtilizador,) async {
     var _wsincronizado = "N";
     var _witemChecklist;
     var _wrespTexto;
@@ -1173,7 +1139,7 @@ class _sps_questionario_ch_item_screen
 
     await Future.forEach(
       tabConteudo,
-      (element) async {
+          (element) async {
         if (element[1] != null) {
           _witemChecklist = element[0];
 
@@ -1208,41 +1174,41 @@ class _sps_questionario_ch_item_screen
 
             //Gravar SQlite (Respostas)
             final SpsDaoQuestionarioItem objQuestionarioItemDao =
-                SpsDaoQuestionarioItem();
+            SpsDaoQuestionarioItem();
             final int resultupdate =
-                await objQuestionarioItemDao.update_resposta(
-                    _wcodigoEmpresa,
-                    _wcodigoProgramacao,
-                    _wregistroColaborador,
-                    _widentificacaoUtilizador,
-                    _witemChecklist,
-                    _wrespTexto,
-                    _wrespNumero,
-                    _wrespData,
-                    _wrespHora,
-                    _wrespSimnao,
-                    _wrespEscala,
-                    _wsincronizado);
+            await objQuestionarioItemDao.update_resposta(
+                _wcodigoEmpresa,
+                _wcodigoProgramacao,
+                _wregistroColaborador,
+                _widentificacaoUtilizador,
+                _witemChecklist,
+                _wrespTexto,
+                _wrespNumero,
+                _wrespData,
+                _wrespHora,
+                _wrespSimnao,
+                _wrespEscala,
+                _wsincronizado);
           }
 
           if (element[1] == "NÃO SE APLICA" || element[3] == "NÃO SE APLICA") {
             //Gravar SQlite (Respostas)
             final SpsDaoQuestionarioItem objQuestionarioItemDao =
-                SpsDaoQuestionarioItem();
+            SpsDaoQuestionarioItem();
             final int resultupdate =
-                await objQuestionarioItemDao.update_resposta_nao_se_aplica(
-                    _wcodigoEmpresa,
-                    _wcodigoProgramacao,
-                    _wregistroColaborador,
-                    _widentificacaoUtilizador,
-                    _witemChecklist,
-                    element[3] == "NÃO SE APLICA" ? "SIM" : "",
-                    _wsincronizado);
+            await objQuestionarioItemDao.update_resposta_nao_se_aplica(
+                _wcodigoEmpresa,
+                _wcodigoProgramacao,
+                _wregistroColaborador,
+                _widentificacaoUtilizador,
+                _witemChecklist,
+                element[3] == "NÃO SE APLICA" ? "SIM" : "",
+                _wsincronizado);
           }
 
           //Atualizar status da resposta
           spsQuestionarioUtils objspsQuestionarioUtils =
-              new spsQuestionarioUtils();
+          new spsQuestionarioUtils();
           await objspsQuestionarioUtils.atualizar_status_resposta(
               _wcodigoEmpresa,
               _wcodigoProgramacao,
@@ -1256,11 +1222,11 @@ class _sps_questionario_ch_item_screen
     //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
     final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
     final int resultupdateLista =
-        await objQuestionarioDao.update_lista_status_resposta(
-            _wcodigoEmpresa,
-            _wcodigoProgramacao,
-            _wregistroColaborador,
-            _widentificacaoUtilizador);
+    await objQuestionarioDao.update_lista_status_resposta(
+        _wcodigoEmpresa,
+        _wcodigoProgramacao,
+        _wregistroColaborador,
+        _widentificacaoUtilizador);
 
     //Limpar matriz
     tabConteudo.clear();
@@ -1271,22 +1237,23 @@ class _sps_questionario_ch_item_screen
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => sps_questionario_ch_item_screen(
-            this.widget._codigo_empresa,
-            this.widget._codigo_programacao,
-            this.widget._registro_colaborador,
-            this.widget._identificacao_utilizador,
-            this.widget._codigo_grupo,
-            this.widget._codigo_checklist,
-            this.widget._descr_programacao,
-            this.widget._sincronizado,
-            this.widget._status_aprovacao,
-            this.widget._filtro,
-            this.widget._filtroDescrProgramacao,
-            "RECARREGAR",
-            this.widget._sessao_checklist,
-            this.widget._indexLista,
-            this.widget._tipo_questionario),
+        builder: (context) =>
+            sps_questionario_ch_item_screen(
+                this.widget._codigo_empresa,
+                this.widget._codigo_programacao,
+                this.widget._registro_colaborador,
+                this.widget._identificacao_utilizador,
+                this.widget._codigo_grupo,
+                this.widget._codigo_checklist,
+                this.widget._descr_programacao,
+                this.widget._sincronizado,
+                this.widget._status_aprovacao,
+                this.widget._filtro,
+                this.widget._filtroDescrProgramacao,
+                "RECARREGAR",
+                this.widget._sessao_checklist,
+                this.widget._indexLista,
+                this.widget._tipo_questionario),
       ),
     );
   }
@@ -1308,7 +1275,8 @@ class _sps_questionario_ch_item_screen
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => sps_questionario_midia_screen(
+                builder: (context) =>
+                    sps_questionario_midia_screen(
                       snapshot.data[index]["codigo_empresa"],
                       snapshot.data[index]["codigo_programacao"],
                       snapshot.data[index]["item_checklist"],
@@ -1349,41 +1317,42 @@ class _sps_questionario_ch_item_screen
     if (snapshot.data[index]["comentarios"] == "SIM" ||
         snapshot.data[index]["comentarios"] == "OBRIGATORIO" ||
         ((snapshot.data[index]["comentario_resposta_nao"] == "SIM" ||
-                snapshot.data[index]["comentario_resposta_nao"] ==
-                    "OBRIGATORIO") &&
+            snapshot.data[index]["comentario_resposta_nao"] ==
+                "OBRIGATORIO") &&
             snapshot.data[index]["resp_simnao"] == "NÃO") ||
         (snapshot.data[index]["comentario_escala"] != null &&
             int.parse(snapshot.data[index]["resp_escala"].toString(),
-                    onError: (e) => 0) <
+                onError: (e) => 0) <
                 snapshot.data[index]["comentario_escala"])) {
       return IconButton(
         icon: Icon(Icons.comment, size: 30),
         color: snapshot.data[index]["descr_comentarios"] == "" ||
-                snapshot.data[index]["descr_comentarios"] == null
+            snapshot.data[index]["descr_comentarios"] == null
             ? Colors.black
             : Colors.blue,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => sps_questionario_comentarios_screen(
-                  snapshot.data[index]["codigo_empresa"],
-                  snapshot.data[index]["codigo_programacao"],
-                  snapshot.data[index]["item_checklist"],
-                  snapshot.data[index]["descr_comentarios"],
-                  this.widget._registro_colaborador,
-                  this.widget._identificacao_utilizador,
-                  this.widget._codigo_grupo,
-                  this.widget._codigo_checklist,
-                  this.widget._descr_programacao,
-                  this.widget._sincronizado,
-                  snapshot.data[index]["status_aprovacao"],
-                  null,
-                  this.widget._filtro,
-                  this.widget._filtroDescrProgramacao,
-                  this.widget._sessao_checklist,
-                  index,
-                  this.widget._tipo_questionario),
+              builder: (context) =>
+                  sps_questionario_comentarios_screen(
+                      snapshot.data[index]["codigo_empresa"],
+                      snapshot.data[index]["codigo_programacao"],
+                      snapshot.data[index]["item_checklist"],
+                      snapshot.data[index]["descr_comentarios"],
+                      this.widget._registro_colaborador,
+                      this.widget._identificacao_utilizador,
+                      this.widget._codigo_grupo,
+                      this.widget._codigo_checklist,
+                      this.widget._descr_programacao,
+                      this.widget._sincronizado,
+                      snapshot.data[index]["status_aprovacao"],
+                      null,
+                      this.widget._filtro,
+                      this.widget._filtroDescrProgramacao,
+                      this.widget._sessao_checklist,
+                      index,
+                      this.widget._tipo_questionario),
             ),
           );
         },

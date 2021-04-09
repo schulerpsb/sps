@@ -40,9 +40,15 @@ class SpsDaoQuestionarioItem {
       'status_resposta TEXT, '
       'status_aprovacao TEXT, '
       'sugestao_resposta TEXT, '
+      'subcodigo_tpresposta INTEGER, '
+      'descr_sub_tpresposta TEXT, '
+      'tamanho_texto_adicional INTEGER, '
+      'obrigatorio_texto_adicional TEXT, '
+      'subcodigo_resposta INTEGER, '
+      'texto_adicional TEXT, '
       'sincronizado TEXT, '
       'PRIMARY KEY (codigo_empresa, codigo_programacao, '
-      '             registro_colaborador, identificacao_utilizador, item_checklist))';
+      '             registro_colaborador, identificacao_utilizador, item_checklist, subcodigo_tpresposta))';
 
   Future<Database> getDatabase() async {
     final String dbPath = await getDatabasesPath();
@@ -92,6 +98,15 @@ class SpsDaoQuestionarioItem {
       if (item['resp_escala'].toString() == "") {
         item['resp_escala'] = null;
       }
+      if (item['subcodigo_tpresposta'].toString() == "") {
+        item['subcodigo_tpresposta'] = null;
+      }
+      if (item['tamanho_texto_adicional'].toString() == "") {
+        item['tamanho_texto_adicional'] = null;
+      }
+      if (item['subcodigo_resposta'].toString() == "") {
+        item['subcodigo_resposta'] = null;
+      }
       var _query2 = 'SELECT * FROM checklist_item where codigo_empresa = "' +
           item['codigo_empresa'] +
           '" and codigo_programacao = ' +
@@ -101,7 +116,9 @@ class SpsDaoQuestionarioItem {
           '" and identificacao_utilizador = "' +
           item['identificacao_utilizador'] +
           '" and item_checklist = ' +
-          item['item_checklist'].toString();
+          item['item_checklist'].toString() +
+          ' and subcodigo_tpresposta = ' +
+          item['subcodigo_tpresposta'].toString();
       List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
       if (result2.length <= 0) {
         var _query = 'insert into checklist_item values ("' +
@@ -176,7 +193,20 @@ class SpsDaoQuestionarioItem {
             item['status_aprovacao'] +
             '","' +
             item['sugestao_resposta'] +
+            '",' +
+            item['subcodigo_tpresposta'].toString() +
+            ',"' +
+            item['descr_sub_tpresposta'].toString() +
+            '",' +
+            item['tamanho_texto_adicional'].toString() +
+            ',"' +
+            item['obrigatorio_texto_adicional'].toString() +
+            '",' +
+            item['subcodigo_resposta'].toString() +
+            ',"' +
+            item['texto_adicional'].toString() +
             '","")';
+        //print ("adriano => query =>"+_query);
         await db.rawInsert(_query);
       }
     });
