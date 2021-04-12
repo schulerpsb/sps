@@ -231,13 +231,29 @@ class ImageGrid extends StatelessWidget {
                   }
                 }
               }
+              int larguraTela = MediaQuery.of(context).size.width.toInt();
+              int alturaTela = MediaQuery.of(context).size.height.toInt();
+              double alturaCard;
+              if(larguraTela > 320){
+                if(tipo == 'image'){
+                  alturaCard = 5.0;
+                }else{
+                  alturaCard = 5.1;
+                }
+              }else{
+                if(tipo == 'image'){
+                  alturaCard = 6.0;
+                }else{
+                  alturaCard = 6.1;
+                }
+              }
 //              print('LISTA DE ARQUVIOS ' + _listaArquivos.toString());
               if (_listaArquivos.length >= 1) {
                 return GridView.builder(
                     itemCount: _listaArquivos.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        childAspectRatio: 3.0 / (tipo == 'image' ? 5.0 : 5.1)),
+                        childAspectRatio: 3.0 / alturaCard),
                     itemBuilder: (context, index) {
                       indicemedia = index;
                       var thumbnaodisponivel;
