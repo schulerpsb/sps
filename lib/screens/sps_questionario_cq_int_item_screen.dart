@@ -321,326 +321,7 @@ class _sps_questionario_cq_int_item_screen
 
                             return Card(
                               color: Colors.white,
-                              child: Column(
-                                children: <Widget>[
-                                  //Tratar descrição da pergunta
-                                  ListTile(
-                                    trailing: snapshot.data[index]
-                                                ["status_resposta"] ==
-                                            "PREENCHIDA"
-                                        ? Icon(Icons.check,
-                                            color: Colors.green, size: 40)
-                                        : null,
-                                    title: Text(
-                                        '${snapshot.data[index]["seq_pergunta"]}' +
-                                            " - " +
-                                            '${snapshot.data[index]["descr_pergunta"]}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 15)),
-                                    subtitle: Text(""),
-                                  ),
-
-                                  // Tratar estatus da resposa do parceiro (resp_cq)
-                                  Text("Resposta do parceiro: ",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
-                                  Text(snapshot.data[index]["resp_cq"] + "\n",
-                                      style: TextStyle(
-                                          color: _resp_cq_cor,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
-                                  Row(
-                                    children: <Widget>[
-                                      // Tratar Opções
-                                      Text("     "),
-                                      (snapshot.data[index]["resp_cq"] ==
-                                                      "NÃO SE APLICA" ||
-                                                  snapshot.data[index]
-                                                          ["resp_cq"] ==
-                                                      "APROVADO") &&
-                                              snapshot.data[index]
-                                                      ["status_resposta"] ==
-                                                  "PREENCHIDA"
-                                          ? Container(
-                                              color: Colors.orange,
-                                              child: CustomRadioWidget(
-                                                value: "PENDENTE",
-                                                groupValue: _singleValue[index],
-                                                onChanged: (value) => _gravar_aprovacao(
-                                                    '${snapshot.data[index]["codigo_empresa"]}',
-                                                    '${snapshot.data[index]["codigo_programacao"]}',
-                                                    '${snapshot.data[index]["item_checklist"]}',
-                                                    '${snapshot.data[index]["registro_aprovador"]}',
-                                                    value,
-                                                    index),
-                                              ),
-                                            )
-                                          : Text(""),
-                                      (snapshot.data[index]["resp_cq"] ==
-                                                      "NÃO SE APLICA" ||
-                                                  snapshot.data[index]
-                                                          ["resp_cq"] ==
-                                                      "APROVADO") &&
-                                              snapshot.data[index]
-                                                      ["status_resposta"] ==
-                                                  "PREENCHIDA"
-                                          ? Text(" PENDENTE",
-                                              style: TextStyle(
-                                                  color: Colors.orange,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold))
-                                          : Text(""),
-                                      Text("     "),
-                                      (snapshot.data[index]["resp_cq"] ==
-                                                      "NÃO SE APLICA" ||
-                                                  snapshot.data[index]
-                                                          ["resp_cq"] ==
-                                                      "APROVADO") &&
-                                              snapshot.data[index]
-                                                      ["status_resposta"] ==
-                                                  "PREENCHIDA"
-                                          ? Container(
-                                              color: Colors.green,
-                                              child: CustomRadioWidget(
-                                                value: "APROVADO",
-                                                groupValue: _singleValue[index],
-                                                onChanged: (value) => _gravar_aprovacao(
-                                                    '${snapshot.data[index]["codigo_empresa"]}',
-                                                    '${snapshot.data[index]["codigo_programacao"]}',
-                                                    '${snapshot.data[index]["item_checklist"]}',
-                                                    '${snapshot.data[index]["registro_aprovador"]}',
-                                                    value,
-                                                    index),
-                                              ),
-                                            )
-                                          : Text(""),
-                                      (snapshot.data[index]["resp_cq"] ==
-                                                      "NÃO SE APLICA" ||
-                                                  snapshot.data[index]
-                                                          ["resp_cq"] ==
-                                                      "APROVADO") &&
-                                              snapshot.data[index]
-                                                      ["status_resposta"] ==
-                                                  "PREENCHIDA"
-                                          ? Text(" APROVADO",
-                                              style: TextStyle(
-                                                  color: Colors.green,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold))
-                                          : Text(""),
-                                      Text("    "),
-
-                                      (snapshot.data[index]["resp_cq"] ==
-                                                      "NÃO SE APLICA" ||
-                                                  snapshot.data[index]
-                                                          ["resp_cq"] ==
-                                                      "APROVADO") &&
-                                              snapshot.data[index]
-                                                      ["status_resposta"] ==
-                                                  "PREENCHIDA"
-                                          ? Container(
-                                              color: Colors.red,
-                                              child: CustomRadioWidget(
-                                                value: "REJEITADO",
-                                                groupValue: _singleValue[index],
-                                                onChanged: (value) => _gravar_rejeicao(
-                                                    '${snapshot.data[index]["codigo_empresa"]}',
-                                                    '${snapshot.data[index]["codigo_programacao"]}',
-                                                    '${snapshot.data[index]["item_checklist"]}',
-                                                    '${snapshot.data[index]["registro_aprovador"]}',
-                                                    value,
-                                                    index),
-                                              ),
-                                            )
-                                          : Text(""),
-                                      (snapshot.data[index]["resp_cq"] ==
-                                                      "NÃO SE APLICA" ||
-                                                  snapshot.data[index]
-                                                          ["resp_cq"] ==
-                                                      "APROVADO") &&
-                                              snapshot.data[index]
-                                                      ["status_resposta"] ==
-                                                  "PREENCHIDA"
-                                          ? Text(" REJEITADO",
-                                              style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold))
-                                          : Text(""),
-                                      Text("    "),
-                                    ],
-                                  ),
-
-                                  Row(
-                                    children: <Widget>[
-                                      //Tratar Mídias
-                                      IconButton(
-                                        icon: Badge(
-                                          badgeContent: Text(
-                                              snapshot.data[index]["anexos"]
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 8)),
-                                          showBadge:
-                                              snapshot.data[index]["anexos"] > 0
-                                                  ? true
-                                                  : false,
-                                          badgeColor: Color(0xFF004077),
-                                          child:
-                                              Icon(Icons.collections, size: 30),
-                                        ),
-                                        color:
-                                            snapshot.data[index]["anexos"] > 0
-                                                ? Colors.blue
-                                                : Colors.black,
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    sps_questionario_midia_screen(
-                                                      snapshot.data[index]
-                                                          ["codigo_empresa"],
-                                                      snapshot.data[index][
-                                                          "codigo_programacao"],
-                                                      snapshot.data[index]
-                                                          ["item_checklist"],
-                                                      snapshot.data[index]
-                                                          ["descr_comentarios"],
-                                                      this
-                                                          .widget
-                                                          ._registro_colaborador,
-                                                      this
-                                                          .widget
-                                                          ._identificacao_utilizador,
-                                                      this.widget._codigo_grupo,
-                                                      this
-                                                          .widget
-                                                          ._codigo_checklist,
-                                                      this
-                                                          .widget
-                                                          ._descr_programacao,
-                                                      this
-                                                          .widget
-                                                          ._codigo_pedido,
-                                                      this.widget._item_pedido,
-                                                      this
-                                                          .widget
-                                                          ._codigo_material,
-                                                      this
-                                                          .widget
-                                                          ._referencia_parceiro,
-                                                      this
-                                                          .widget
-                                                          ._nome_fornecedor,
-                                                      this.widget._qtde_pedido,
-                                                      this
-                                                          .widget
-                                                          ._codigo_projeto,
-                                                      this.widget._sincronizado,
-                                                      snapshot.data[index]
-                                                          ["status_aprovacao"],
-                                                      this
-                                                          .widget
-                                                          ._origemUsuario,
-                                                      this.widget._filtro,
-                                                      index,
-                                                      this
-                                                          .widget
-                                                          ._filtroReferenciaProjeto,
-                                                      snapshot.data[index]
-                                                              ["imagens"]
-                                                          .toString(),
-                                                      snapshot.data[index]
-                                                              ["videos"]
-                                                          .toString(),
-                                                      snapshot.data[index]
-                                                              ["outros"]
-                                                          .toString(),
-                                                      "",
-                                                      funCallback: (
-                                                          {int
-                                                              index_posicao_retorno,
-                                                          String acao}) {
-                                                        setState(() {
-                                                          this
-                                                                  .widget
-                                                                  ._indexLista =
-                                                              index_posicao_retorno;
-                                                        });
-                                                      },
-                                                    )),
-                                          );
-                                        },
-                                      ),
-
-                                      //Tratar Comentários
-                                      IconButton(
-                                        icon: Icon(Icons.comment, size: 30),
-                                        color: snapshot.data[index]
-                                                        ["descr_comentarios"] ==
-                                                    "" ||
-                                                snapshot.data[index]
-                                                        ["descr_comentarios"] ==
-                                                    null
-                                            ? Colors.black
-                                            : Colors.blue,
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  sps_questionario_cq_comentarios_screen(
-                                                snapshot.data[index]
-                                                    ["codigo_empresa"],
-                                                snapshot.data[index]
-                                                    ["codigo_programacao"],
-                                                snapshot.data[index]
-                                                    ["item_checklist"],
-                                                snapshot.data[index]
-                                                    ["descr_comentarios"],
-                                                this
-                                                    .widget
-                                                    ._registro_colaborador,
-                                                this
-                                                    .widget
-                                                    ._identificacao_utilizador,
-                                                this.widget._codigo_grupo,
-                                                this.widget._codigo_checklist,
-                                                this.widget._descr_programacao,
-                                                this.widget._codigo_pedido,
-                                                this.widget._item_pedido,
-                                                this.widget._codigo_material,
-                                                this
-                                                    .widget
-                                                    ._referencia_parceiro,
-                                                this.widget._nome_fornecedor,
-                                                this.widget._qtde_pedido,
-                                                this.widget._codigo_projeto,
-                                                this.widget._sincronizado,
-                                                snapshot.data[index]
-                                                    ["status_aprovacao"],
-                                                this.widget._origemUsuario,
-                                                "CONTROLE DE QUALIDADE",
-                                                this.widget._filtro,
-                                                index,
-                                                this
-                                                    .widget
-                                                    ._filtroReferenciaProjeto,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  tratar_posicionar_lista(index),
-                                ],
-                              ),
+                              child: montaOpcoesItem(snapshot, index, context),
                             );
                           },
                         ),
@@ -665,6 +346,666 @@ class _sps_questionario_cq_int_item_screen
         ),
       ),
     );
+  }
+
+  Column montaOpcoesItem(AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index, BuildContext context) {
+    int larguraTela = MediaQuery.of(context).size.width.toInt();
+    int alturaTela = MediaQuery.of(context).size.height.toInt();
+    if(larguraTela > 320){
+      return Column(
+        children: <Widget>[
+          //Tratar descrição da pergunta
+          ListTile(
+            trailing: snapshot.data[index]
+            ["status_resposta"] ==
+                "PREENCHIDA"
+                ? Icon(Icons.check,
+                color: Colors.green, size: 40)
+                : null,
+            title: Text(
+                '${snapshot.data[index]["seq_pergunta"]}' +
+                    " - " +
+                    '${snapshot.data[index]["descr_pergunta"]}',
+                style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 15)),
+            subtitle: Text(""),
+          ),
+
+          // Tratar estatus da resposa do parceiro (resp_cq)
+          Text("Resposta do parceiro: ",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold)),
+          Text(snapshot.data[index]["resp_cq"] + "\n",
+              style: TextStyle(
+                  color: _resp_cq_cor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold)),
+          Row(
+            children: <Widget>[
+              // Tratar Opções
+              Text("     "),
+              (snapshot.data[index]["resp_cq"] ==
+                  "NÃO SE APLICA" ||
+                  snapshot.data[index]
+                  ["resp_cq"] ==
+                      "APROVADO") &&
+                  snapshot.data[index]
+                  ["status_resposta"] ==
+                      "PREENCHIDA"
+                  ? Container(
+                color: Colors.orange,
+                child: CustomRadioWidget(
+                  value: "PENDENTE",
+                  groupValue: _singleValue[index],
+                  onChanged: (value) => _gravar_aprovacao(
+                      '${snapshot.data[index]["codigo_empresa"]}',
+                      '${snapshot.data[index]["codigo_programacao"]}',
+                      '${snapshot.data[index]["item_checklist"]}',
+                      '${snapshot.data[index]["registro_aprovador"]}',
+                      value,
+                      index),
+                ),
+              )
+                  : Text(""),
+              (snapshot.data[index]["resp_cq"] ==
+                  "NÃO SE APLICA" ||
+                  snapshot.data[index]
+                  ["resp_cq"] ==
+                      "APROVADO") &&
+                  snapshot.data[index]
+                  ["status_resposta"] ==
+                      "PREENCHIDA"
+                  ? Text(" PENDENTE",
+                  style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold))
+                  : Text(""),
+              Text("     "),
+              (snapshot.data[index]["resp_cq"] ==
+                  "NÃO SE APLICA" ||
+                  snapshot.data[index]
+                  ["resp_cq"] ==
+                      "APROVADO") &&
+                  snapshot.data[index]
+                  ["status_resposta"] ==
+                      "PREENCHIDA"
+                  ? Container(
+                color: Colors.green,
+                child: CustomRadioWidget(
+                  value: "APROVADO",
+                  groupValue: _singleValue[index],
+                  onChanged: (value) => _gravar_aprovacao(
+                      '${snapshot.data[index]["codigo_empresa"]}',
+                      '${snapshot.data[index]["codigo_programacao"]}',
+                      '${snapshot.data[index]["item_checklist"]}',
+                      '${snapshot.data[index]["registro_aprovador"]}',
+                      value,
+                      index),
+                ),
+              )
+                  : Text(""),
+              (snapshot.data[index]["resp_cq"] ==
+                  "NÃO SE APLICA" ||
+                  snapshot.data[index]
+                  ["resp_cq"] ==
+                      "APROVADO") &&
+                  snapshot.data[index]
+                  ["status_resposta"] ==
+                      "PREENCHIDA"
+                  ? Text(" APROVADO",
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold))
+                  : Text(""),
+              Text("    "),
+
+              (snapshot.data[index]["resp_cq"] ==
+                  "NÃO SE APLICA" ||
+                  snapshot.data[index]
+                  ["resp_cq"] ==
+                      "APROVADO") &&
+                  snapshot.data[index]
+                  ["status_resposta"] ==
+                      "PREENCHIDA"
+                  ? Container(
+                color: Colors.red,
+                child: CustomRadioWidget(
+                  value: "REJEITADO",
+                  groupValue: _singleValue[index],
+                  onChanged: (value) => _gravar_rejeicao(
+                      '${snapshot.data[index]["codigo_empresa"]}',
+                      '${snapshot.data[index]["codigo_programacao"]}',
+                      '${snapshot.data[index]["item_checklist"]}',
+                      '${snapshot.data[index]["registro_aprovador"]}',
+                      value,
+                      index),
+                ),
+              )
+                  : Text(""),
+              (snapshot.data[index]["resp_cq"] ==
+                  "NÃO SE APLICA" ||
+                  snapshot.data[index]
+                  ["resp_cq"] ==
+                      "APROVADO") &&
+                  snapshot.data[index]
+                  ["status_resposta"] ==
+                      "PREENCHIDA"
+                  ? Text(" REJEITADO",
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold))
+                  : Text(""),
+              Text("    "),
+            ],
+          ),
+
+          Row(
+            children: <Widget>[
+              //Tratar Mídias
+              IconButton(
+                icon: Badge(
+                  badgeContent: Text(
+                      snapshot.data[index]["anexos"]
+                          .toString(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8)),
+                  showBadge:
+                  snapshot.data[index]["anexos"] > 0
+                      ? true
+                      : false,
+                  badgeColor: Color(0xFF004077),
+                  child:
+                  Icon(Icons.collections, size: 30),
+                ),
+                color:
+                snapshot.data[index]["anexos"] > 0
+                    ? Colors.blue
+                    : Colors.black,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            sps_questionario_midia_screen(
+                              snapshot.data[index]
+                              ["codigo_empresa"],
+                              snapshot.data[index][
+                              "codigo_programacao"],
+                              snapshot.data[index]
+                              ["item_checklist"],
+                              snapshot.data[index]
+                              ["descr_comentarios"],
+                              this
+                                  .widget
+                                  ._registro_colaborador,
+                              this
+                                  .widget
+                                  ._identificacao_utilizador,
+                              this.widget._codigo_grupo,
+                              this
+                                  .widget
+                                  ._codigo_checklist,
+                              this
+                                  .widget
+                                  ._descr_programacao,
+                              this
+                                  .widget
+                                  ._codigo_pedido,
+                              this.widget._item_pedido,
+                              this
+                                  .widget
+                                  ._codigo_material,
+                              this
+                                  .widget
+                                  ._referencia_parceiro,
+                              this
+                                  .widget
+                                  ._nome_fornecedor,
+                              this.widget._qtde_pedido,
+                              this
+                                  .widget
+                                  ._codigo_projeto,
+                              this.widget._sincronizado,
+                              snapshot.data[index]
+                              ["status_aprovacao"],
+                              this
+                                  .widget
+                                  ._origemUsuario,
+                              this.widget._filtro,
+                              index,
+                              this
+                                  .widget
+                                  ._filtroReferenciaProjeto,
+                              snapshot.data[index]
+                              ["imagens"]
+                                  .toString(),
+                              snapshot.data[index]
+                              ["videos"]
+                                  .toString(),
+                              snapshot.data[index]
+                              ["outros"]
+                                  .toString(),
+                              "",
+                              funCallback: (
+                                  {int
+                                  index_posicao_retorno,
+                                    String acao}) {
+                                setState(() {
+                                  this
+                                      .widget
+                                      ._indexLista =
+                                      index_posicao_retorno;
+                                });
+                              },
+                            )),
+                  );
+                },
+              ),
+
+              //Tratar Comentários
+              IconButton(
+                icon: Icon(Icons.comment, size: 30),
+                color: snapshot.data[index]
+                ["descr_comentarios"] ==
+                    "" ||
+                    snapshot.data[index]
+                    ["descr_comentarios"] ==
+                        null
+                    ? Colors.black
+                    : Colors.blue,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          sps_questionario_cq_comentarios_screen(
+                            snapshot.data[index]
+                            ["codigo_empresa"],
+                            snapshot.data[index]
+                            ["codigo_programacao"],
+                            snapshot.data[index]
+                            ["item_checklist"],
+                            snapshot.data[index]
+                            ["descr_comentarios"],
+                            this
+                                .widget
+                                ._registro_colaborador,
+                            this
+                                .widget
+                                ._identificacao_utilizador,
+                            this.widget._codigo_grupo,
+                            this.widget._codigo_checklist,
+                            this.widget._descr_programacao,
+                            this.widget._codigo_pedido,
+                            this.widget._item_pedido,
+                            this.widget._codigo_material,
+                            this
+                                .widget
+                                ._referencia_parceiro,
+                            this.widget._nome_fornecedor,
+                            this.widget._qtde_pedido,
+                            this.widget._codigo_projeto,
+                            this.widget._sincronizado,
+                            snapshot.data[index]
+                            ["status_aprovacao"],
+                            this.widget._origemUsuario,
+                            "CONTROLE DE QUALIDADE",
+                            this.widget._filtro,
+                            index,
+                            this
+                                .widget
+                                ._filtroReferenciaProjeto,
+                          ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          tratar_posicionar_lista(index),
+        ],
+      );
+    }else{
+      return Column(
+        children: <Widget>[
+          //Tratar descrição da pergunta
+          ListTile(
+            trailing: snapshot.data[index]
+            ["status_resposta"] ==
+                "PREENCHIDA"
+                ? Icon(Icons.check,
+                color: Colors.green, size: 40)
+                : null,
+            title: Text(
+                '${snapshot.data[index]["seq_pergunta"]}' +
+                    " - " +
+                    '${snapshot.data[index]["descr_pergunta"]}',
+                style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 15)),
+            subtitle: Text(""),
+          ),
+
+          // Tratar estatus da resposa do parceiro (resp_cq)
+          Text("Resposta do parceiro: ",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold)),
+          Text(snapshot.data[index]["resp_cq"] + "\n",
+              style: TextStyle(
+                  color: _resp_cq_cor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold)),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              children: <Widget>[
+                // Tratar Opções
+                Text("     "),
+                (snapshot.data[index]["resp_cq"] ==
+                    "NÃO SE APLICA" ||
+                    snapshot.data[index]
+                    ["resp_cq"] ==
+                        "APROVADO") &&
+                    snapshot.data[index]
+                    ["status_resposta"] ==
+                        "PREENCHIDA"
+                    ? Container(
+                  color: Colors.orange,
+                  child: CustomRadioWidget(
+                    value: "PENDENTE",
+                    groupValue: _singleValue[index],
+                    onChanged: (value) => _gravar_aprovacao(
+                        '${snapshot.data[index]["codigo_empresa"]}',
+                        '${snapshot.data[index]["codigo_programacao"]}',
+                        '${snapshot.data[index]["item_checklist"]}',
+                        '${snapshot.data[index]["registro_aprovador"]}',
+                        value,
+                        index),
+                  ),
+                )
+                    : Text(""),
+                (snapshot.data[index]["resp_cq"] ==
+                    "NÃO SE APLICA" ||
+                    snapshot.data[index]
+                    ["resp_cq"] ==
+                        "APROVADO") &&
+                    snapshot.data[index]
+                    ["status_resposta"] ==
+                        "PREENCHIDA"
+                    ? Text(" PENDENTE",
+                    style: TextStyle(
+                        color: Colors.orange,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold))
+                    : Text(""),
+                Text("     "),
+                (snapshot.data[index]["resp_cq"] ==
+                    "NÃO SE APLICA" ||
+                    snapshot.data[index]
+                    ["resp_cq"] ==
+                        "APROVADO") &&
+                    snapshot.data[index]
+                    ["status_resposta"] ==
+                        "PREENCHIDA"
+                    ? Container(
+                  color: Colors.green,
+                  child: CustomRadioWidget(
+                    value: "APROVADO",
+                    groupValue: _singleValue[index],
+                    onChanged: (value) => _gravar_aprovacao(
+                        '${snapshot.data[index]["codigo_empresa"]}',
+                        '${snapshot.data[index]["codigo_programacao"]}',
+                        '${snapshot.data[index]["item_checklist"]}',
+                        '${snapshot.data[index]["registro_aprovador"]}',
+                        value,
+                        index),
+                  ),
+                )
+                    : Text(""),
+                (snapshot.data[index]["resp_cq"] ==
+                    "NÃO SE APLICA" ||
+                    snapshot.data[index]
+                    ["resp_cq"] ==
+                        "APROVADO") &&
+                    snapshot.data[index]
+                    ["status_resposta"] ==
+                        "PREENCHIDA"
+                    ? Text(" APROVADO",
+                    style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold))
+                    : Text(""),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              children: <Widget>[
+                // Tratar Opções
+                Text("     "),
+                (snapshot.data[index]["resp_cq"] ==
+                    "NÃO SE APLICA" ||
+                    snapshot.data[index]
+                    ["resp_cq"] ==
+                        "APROVADO") &&
+                    snapshot.data[index]
+                    ["status_resposta"] ==
+                        "PREENCHIDA"
+                    ? Container(
+                  color: Colors.red,
+                  child: CustomRadioWidget(
+                    value: "REJEITADO",
+                    groupValue: _singleValue[index],
+                    onChanged: (value) => _gravar_rejeicao(
+                        '${snapshot.data[index]["codigo_empresa"]}',
+                        '${snapshot.data[index]["codigo_programacao"]}',
+                        '${snapshot.data[index]["item_checklist"]}',
+                        '${snapshot.data[index]["registro_aprovador"]}',
+                        value,
+                        index),
+                  ),
+                )
+                    : Text(""),
+                (snapshot.data[index]["resp_cq"] ==
+                    "NÃO SE APLICA" ||
+                    snapshot.data[index]
+                    ["resp_cq"] ==
+                        "APROVADO") &&
+                    snapshot.data[index]
+                    ["status_resposta"] ==
+                        "PREENCHIDA"
+                    ? Text(" REJEITADO",
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold))
+                    : Text(""),
+                Text("    "),
+              ],
+            ),
+          ),
+
+          Row(
+            children: <Widget>[
+              //Tratar Mídias
+              IconButton(
+                icon: Badge(
+                  badgeContent: Text(
+                      snapshot.data[index]["anexos"]
+                          .toString(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8)),
+                  showBadge:
+                  snapshot.data[index]["anexos"] > 0
+                      ? true
+                      : false,
+                  badgeColor: Color(0xFF004077),
+                  child:
+                  Icon(Icons.collections, size: 30),
+                ),
+                color:
+                snapshot.data[index]["anexos"] > 0
+                    ? Colors.blue
+                    : Colors.black,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            sps_questionario_midia_screen(
+                              snapshot.data[index]
+                              ["codigo_empresa"],
+                              snapshot.data[index][
+                              "codigo_programacao"],
+                              snapshot.data[index]
+                              ["item_checklist"],
+                              snapshot.data[index]
+                              ["descr_comentarios"],
+                              this
+                                  .widget
+                                  ._registro_colaborador,
+                              this
+                                  .widget
+                                  ._identificacao_utilizador,
+                              this.widget._codigo_grupo,
+                              this
+                                  .widget
+                                  ._codigo_checklist,
+                              this
+                                  .widget
+                                  ._descr_programacao,
+                              this
+                                  .widget
+                                  ._codigo_pedido,
+                              this.widget._item_pedido,
+                              this
+                                  .widget
+                                  ._codigo_material,
+                              this
+                                  .widget
+                                  ._referencia_parceiro,
+                              this
+                                  .widget
+                                  ._nome_fornecedor,
+                              this.widget._qtde_pedido,
+                              this
+                                  .widget
+                                  ._codigo_projeto,
+                              this.widget._sincronizado,
+                              snapshot.data[index]
+                              ["status_aprovacao"],
+                              this
+                                  .widget
+                                  ._origemUsuario,
+                              this.widget._filtro,
+                              index,
+                              this
+                                  .widget
+                                  ._filtroReferenciaProjeto,
+                              snapshot.data[index]
+                              ["imagens"]
+                                  .toString(),
+                              snapshot.data[index]
+                              ["videos"]
+                                  .toString(),
+                              snapshot.data[index]
+                              ["outros"]
+                                  .toString(),
+                              "",
+                              funCallback: (
+                                  {int
+                                  index_posicao_retorno,
+                                    String acao}) {
+                                setState(() {
+                                  this
+                                      .widget
+                                      ._indexLista =
+                                      index_posicao_retorno;
+                                });
+                              },
+                            )),
+                  );
+                },
+              ),
+
+              //Tratar Comentários
+              IconButton(
+                icon: Icon(Icons.comment, size: 30),
+                color: snapshot.data[index]
+                ["descr_comentarios"] ==
+                    "" ||
+                    snapshot.data[index]
+                    ["descr_comentarios"] ==
+                        null
+                    ? Colors.black
+                    : Colors.blue,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          sps_questionario_cq_comentarios_screen(
+                            snapshot.data[index]
+                            ["codigo_empresa"],
+                            snapshot.data[index]
+                            ["codigo_programacao"],
+                            snapshot.data[index]
+                            ["item_checklist"],
+                            snapshot.data[index]
+                            ["descr_comentarios"],
+                            this
+                                .widget
+                                ._registro_colaborador,
+                            this
+                                .widget
+                                ._identificacao_utilizador,
+                            this.widget._codigo_grupo,
+                            this.widget._codigo_checklist,
+                            this.widget._descr_programacao,
+                            this.widget._codigo_pedido,
+                            this.widget._item_pedido,
+                            this.widget._codigo_material,
+                            this
+                                .widget
+                                ._referencia_parceiro,
+                            this.widget._nome_fornecedor,
+                            this.widget._qtde_pedido,
+                            this.widget._codigo_projeto,
+                            this.widget._sincronizado,
+                            snapshot.data[index]
+                            ["status_aprovacao"],
+                            this.widget._origemUsuario,
+                            "CONTROLE DE QUALIDADE",
+                            this.widget._filtro,
+                            index,
+                            this
+                                .widget
+                                ._filtroReferenciaProjeto,
+                          ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          tratar_posicionar_lista(index),
+        ],
+      );
+    }
+
   }
 
   _gravar_aprovacao(_wcodigoEmpresa, _wcodigoProgramacao, _witemChecklist,
