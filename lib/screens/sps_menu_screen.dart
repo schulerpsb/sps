@@ -214,7 +214,7 @@ class sps_menu_screen extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-              'Version 1.0.0 (22/03/2021)\n',
+              'Version 1.0.0 (12/04/2021)\n',
               style: TextStyle(
                 color: Color(0xFF004077),
                 fontSize: 12.0,

@@ -351,7 +351,11 @@ class _sps_questionario_cq_lista_screen
                       snapshot.data[index]["status"] == "PENDENTE"
                   ? formato
                           .format(snapshot.data[index]
-                              ["percentual_evolucao_fornecedor"])
+                                      ["percentual_evolucao_fornecedor"] >=
+                                  99.9
+                              ? 100
+                              : snapshot.data[index]
+                                  ["percentual_evolucao_fornecedor"])
                           .toString() +
                       " %\n"
                   : ""),
@@ -364,7 +368,10 @@ class _sps_questionario_cq_lista_screen
           new TextSpan(
               text: snapshot.data[index]["status"] == "PARCIAL"
                   ? formato
-                          .format(snapshot.data[index]["percentual_evolucao"])
+                          .format(snapshot.data[index]["percentual_evolucao"] >=
+                                  99.9
+                              ? 100
+                              : snapshot.data[index]["percentual_evolucao"])
                           .toString() +
                       " %\n"
                   : ""),
