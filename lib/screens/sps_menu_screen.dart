@@ -41,7 +41,7 @@ class sps_menu_screen extends StatelessWidget {
             children: <Widget>[
               Container(height: 30),
               Container(
-                width: 360,
+                width: larguraTela > 320 ? 360 : 300,
                 height: 80,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
@@ -72,7 +72,7 @@ class sps_menu_screen extends StatelessWidget {
               ),
               Container(height: 10),
               Container(
-                width: 360,
+                width: larguraTela > 320 ? 360 : 300,
                 height: 80,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
@@ -101,7 +101,7 @@ class sps_menu_screen extends StatelessWidget {
               ),
               Container(height: 10),
               Container(
-                width: 360,
+                width: larguraTela > 320 ? 360 : 300,
                 height: 80,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
@@ -130,7 +130,7 @@ class sps_menu_screen extends StatelessWidget {
               ),
               Container(height: 40),
               Container(
-                width: 360,
+                width: larguraTela > 320 ? 360 : 300,
                 height: 80,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
@@ -148,7 +148,7 @@ class sps_menu_screen extends StatelessWidget {
                     'GESTÃO DE FORNECEDORES (FEEDBACK)',
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: larguraTela > 320 ? 14.0 : 12.0,
+                        fontSize: larguraTela > 320 ? 14.0 : 10.0,
                     ),
                   ),
                   icon: Icon(
@@ -162,7 +162,7 @@ class sps_menu_screen extends StatelessWidget {
               ),
               Container(height: 30),
               Container(
-                width: 360,
+                width: larguraTela > 320 ? 360 : 300,
                 height: 80,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
@@ -180,7 +180,7 @@ class sps_menu_screen extends StatelessWidget {
                     'GESTÃO DE FORNECEDORES (COTAÇÃO)',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: larguraTela > 320 ? 14.0 : 12.0,
+                      fontSize: larguraTela > 320 ? 14.0 : 10.0,
                     ),
                   ),
                   icon: Icon(
