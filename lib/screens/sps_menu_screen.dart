@@ -42,7 +42,7 @@ class sps_menu_screen extends StatelessWidget {
               Container(height: 30),
               Container(
                 width: larguraTela > 320 ? 360 : 300,
-                height: 80,
+                height: larguraTela > 320 ? 80 : 65,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
@@ -73,7 +73,7 @@ class sps_menu_screen extends StatelessWidget {
               Container(height: 10),
               Container(
                 width: larguraTela > 320 ? 360 : 300,
-                height: 80,
+                height: larguraTela > 320 ? 80 : 65,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
@@ -102,7 +102,7 @@ class sps_menu_screen extends StatelessWidget {
               Container(height: 10),
               Container(
                 width: larguraTela > 320 ? 360 : 300,
-                height: 80,
+                height: larguraTela > 320 ? 80 : 65,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
@@ -131,7 +131,7 @@ class sps_menu_screen extends StatelessWidget {
               Container(height: 40),
               Container(
                 width: larguraTela > 320 ? 360 : 300,
-                height: 80,
+                height: larguraTela > 320 ? 80 : 65,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
@@ -163,7 +163,7 @@ class sps_menu_screen extends StatelessWidget {
               Container(height: 30),
               Container(
                 width: larguraTela > 320 ? 360 : 300,
-                height: 80,
+                height: larguraTela > 320 ? 80 : 65,
                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                 child: RaisedButton.icon(
                   onPressed: () {
@@ -196,7 +196,7 @@ class sps_menu_screen extends StatelessWidget {
           ),
         ),
         Container(
-          height: 50,
+          height: larguraTela > 320 ? 50 : 30,
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(

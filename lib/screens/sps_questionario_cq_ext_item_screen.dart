@@ -206,7 +206,7 @@ class _sps_questionario_cq_ext_item_screen
                             top: 5, left: 3, right: 3, bottom: 0),
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(
-                              minWidth: double.infinity, maxHeight: 100),
+                              minWidth: double.infinity, maxHeight: 110),
                           child: Container(
                             padding: EdgeInsets.only(
                                 top: 5, left: 5, right: 5, bottom: 5),
@@ -258,7 +258,7 @@ class _sps_questionario_cq_ext_item_screen
                             top: 0, left: 3, right: 3, bottom: 0),
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(
-                              minWidth: double.infinity, maxHeight: 100),
+                              minWidth: double.infinity, maxHeight: 110),
                           child: Container(
                             padding: EdgeInsets.only(
                                 top: 0, left: 5, right: 5, bottom: 0),
