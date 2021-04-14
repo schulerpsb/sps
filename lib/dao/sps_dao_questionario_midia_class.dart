@@ -43,22 +43,24 @@ class SpsDaoQuestionarioMidia {
   Future<int> save(List<Map<String, dynamic>> dadosQuestionario) async {
     final Database db = await getDatabase();
     await Future.forEach(dadosQuestionario, (anexo) async {
-      var _query2 =
-          'SELECT * FROM sps_checklist_tb_resp_anexo where codigo_empresa = "' +
-              anexo['codigo_empresa'].toString() +
-              '" and codigo_programacao = ' +
-              anexo['codigo_programacao'].toString() +
-              ' and registro_colaborador = "' +
-              anexo['registro_colaborador'].toString() +
-              '" and identificacao_utilizador = "' +
-              anexo['identificacao_utilizador'].toString() +
-              '" and item_checklist = ' +
-              anexo['item_checklist'].toString() +
-              " and item_anexo = " +
-              anexo['item_anexo'].toString();
-      List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
-      if (result2.length <= 0) {
-        db.insert('sps_checklist_tb_resp_anexo', anexo);
+      if(anexo['codigo_empresa'] != null || anexo['codigo_empresa'] != 'null' || anexo['codigo_empresa'] != ''){
+        var _query2 =
+            'SELECT * FROM sps_checklist_tb_resp_anexo where codigo_empresa = "' +
+                anexo['codigo_empresa'].toString() +
+                '" and codigo_programacao = ' +
+                anexo['codigo_programacao'].toString() +
+                ' and registro_colaborador = "' +
+                anexo['registro_colaborador'].toString() +
+                '" and identificacao_utilizador = "' +
+                anexo['identificacao_utilizador'].toString() +
+                '" and item_checklist = ' +
+                anexo['item_checklist'].toString() +
+                " and item_anexo = " +
+                anexo['item_anexo'].toString();
+        List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
+        if (result2.length <= 0) {
+          db.insert('sps_checklist_tb_resp_anexo', anexo);
+        }
       }
     });
     return 1;
@@ -69,6 +71,14 @@ class SpsDaoQuestionarioMidia {
     return db.rawDelete(
         'delete from sps_checklist_tb_resp_anexo where (sincronizado is null or sincronizado == "") and codigo_programacao = ' +
             codigo_programacao.toString());
+  }
+
+  Future<int> emptyTableSincronizacao(codigo_empresa) async {
+    final Database db = await getDatabase();
+    return db.rawDelete(
+        'delete from sps_checklist_tb_resp_anexo where codigo_empresa = "' +
+            codigo_empresa +
+            '" and (sincronizado is null or sincronizado = "")');
   }
 
   Future<List<Map<String, dynamic>>> listarQuestionarioMidia(

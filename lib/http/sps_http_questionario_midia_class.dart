@@ -12,11 +12,88 @@ class SpsHttpQuestionarioMidia {
 
   //Servidor DEV
   static const UrlReadMidiaAll = 'http://10.17.20.45/webapi/api/midia/read_all.php';
+  static const UrlReadMidiaAllSinc = 'http://10.17.20.45/webapi/api/midia/read_all_sincronizacao.php';
   static const UrlReadMidia = 'http://10.17.20.45/webapi/api/midia/read.php';
   static const UrlIsertMidia = 'http://10.17.20.45/webapi/api/midia/create.php';
   static const UrlUpdateMidia = 'http://10.17.20.45/webapi/api/midia/update.php';
 
   SpsHttpQuestionarioMidia();
+
+  Future<List<Map<String, dynamic>>> listarMidiaAllSinc(String codigo_empresa,
+      String registro_colaborador,
+      String identificacao_utilizador) async {
+
+//    implementação de JWT comum
+    String token;
+    final jwt = JWT(
+      {
+        //Parte Fixa - Não alterar
+        'iis': 'ChecklistApp',
+        'sub': usuarioAtual.codigo_usuario,
+        //A Partir daqui coloque seus dados que deseja passar para a REST API
+        'codigo_empresa': codigo_empresa,
+        'registro_colaborador': registro_colaborador,
+        'identificacao_utilizador': identificacao_utilizador,
+
+      },
+    );
+
+    final storage = new FlutterSecureStorage();
+    String jwtKey;
+    jwtKey = await storage.read(key: 'jwtKey');
+    token = jwt.sign(SecretKey(jwtKey));
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'codigo_usuario': usuarioAtual.codigo_usuario,
+      'jwt': token,
+    };
+    final String dadosMidiaJson = jsonEncode(dadosParaLogon);
+
+//    FIM implementação de JWT comum
+
+//    final Map<String, dynamic> keyMidia = {
+//      'codigo_empresa': dadosArquivo['codigo_empresa'],
+//      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
+//    };
+//    final String dadosMidiaJson = jsonEncode(keyMidia);
+
+    Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      UrlReadMidiaAllSinc,
+      headers: {'Content-type': 'application/json'},
+      body: dadosMidiaJson,
+    )
+        .timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+
+    final List<dynamic> transactionJsonList = jsonDecode(response.body);
+    final List<Map<String, dynamic>> transactionJsonOcorrencias = [];
+    Map<String, dynamic> transactionJsonMap = null;
+    for (Map<String, dynamic> element in transactionJsonList) {
+      transactionJsonMap = {
+        'codigo_empresa': element['codigo_empresa'],
+        'codigo_programacao': element['codigo_programacao'],
+        'registro_colaborador': element['registro_colaborador'],
+        'identificacao_utilizador': element['identificacao_utilizador'],
+        'item_checklist': element['item_checklist'],
+        'item_anexo': element['item_anexo'],
+        'nome_arquivo': element['nome_arquivo'],
+        'titulo_arquivo': element['titulo_arquivo'],
+        'usuresponsavel': element['usuresponsavel'],
+        'dthratualizacao': element['dthratualizacao'],
+        'dthranexo': element['dthranexo'],
+      };
+      transactionJsonOcorrencias.add(transactionJsonMap);
+    }
+    return transactionJsonOcorrencias;
+  }
 
   Future<List<Map<String, dynamic>>> listarMidiaAll({Map<String, dynamic> dadosArquivo}) async {
 
@@ -45,12 +122,6 @@ class SpsHttpQuestionarioMidia {
     };
     final String dadosMidiaJson = jsonEncode(dadosParaLogon);
 //    FIM implementação de JWT comum
-
-//    final Map<String, dynamic> keyMidia = {
-//      'codigo_empresa': dadosArquivo['codigo_empresa'],
-//      'codigo_programacao': dadosArquivo['codigo_programacao'].toString(),
-//    };
-//    final String dadosMidiaJson = jsonEncode(keyMidia);
 
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),

@@ -428,6 +428,10 @@ class spsSincronizacao {
       jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosItensServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
     debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE ITENS (Tabela: checklist_item)  =============================================");
 
+//      debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE DADOS DE ANEXOS(DB) (Tabela: sps_checklist_tb_resp_anexo) =============================================");
+//      jaNotificado = await objspsSincronizacao.sincronizarTodosAnexosServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
+//      debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE DADOS DE ANEXOS(DB) (Tabela: sps_checklist_tb_resp_anexo)  =============================================");
+
 //    debugPrint("=== DOWNLOAD - SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla) =============================================");
 //    jaNotificado = await objspsSincronizacao.sincronizarQuestionariosTodosRespMultiplaServerToLocal(usuarioAtual.codigo_planta,registro_colaborador ,identificacao_utilizador ,flip, jaNotificado);
 //    debugPrint("=== DOWNLOAD - FIM SINCRONIZAÇÃO DE RESPOSTAS MULTIPLAS (Tabela: checklist_resp_multipla)  =============================================");
@@ -549,7 +553,7 @@ class spsSincronizacao {
           var registrosMidia = dadosDeAnexosServidor.length;
           await Future.forEach(dadosDeAnexosServidor, (AnexoServidor) async {
             String path = usuarioAtual.document_root_folder + '/' +AnexoServidor["nome_arquivo"].toString();
-            //print('Verificar==> ' +AnexoServidor["nome_arquivo"].toString());
+//            print('Verificar==> ' +AnexoServidor["nome_arquivo"].toString());
             bool status = await File(path).exists();
             if (status == false) {
                 if(jaNotificado == 0){
@@ -558,7 +562,7 @@ class spsSincronizacao {
                 }
 //              print('Arquivo da web ===>'+AnexoServidor["nome_arquivo"].toString());
               if(AnexoServidor["nome_arquivo"].toString() != null && AnexoServidor["nome_arquivo"].toString() != "null"){
-                String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' + '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
+                String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' +AnexoServidor["registro_colaborador"].toString()+ '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
                 String destinoLocal = usuarioAtual.document_root_folder.toString() + '/' + AnexoServidor["nome_arquivo"].toString();
                 print('baixar ==> ' + ArquivoParaDownload.toString() + ' Para ' +destinoLocal.toString());
                 await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal).then((String statusDownload) {
@@ -593,7 +597,7 @@ class spsSincronizacao {
                         'usuresponsavel': AnexoServidor['usuresponsavel'].toString(),
                         'dthratualizacao': AnexoServidor['dthratualizacao'].toString(),
                         'dthranexo': AnexoServidor['dthranexo'].toString(),
-                        'sincronizado': 'D',
+                        'sincronizado': 'T',
                       };
                       var retorno1Midia = objSpsHttpQuestionarioMidia.atualizarQuestionarioMidia(dadosArquivo: dadosApagarArquivoComErro);
                       print('ERRO ao processar download de Anexos de midia - Server to Local! ' +ArquivoParaDownload.toString());
@@ -627,6 +631,35 @@ class spsSincronizacao {
       return 1;
     }
 
+  }
+
+  //Função que atualiza Todos os dados de itens de questionario do Server(Rest API) para o Local(Sqlite) - via sincronização
+  Future<int> sincronizarTodosAnexosServerToLocal(String codigo_empresa, String registro_colaborador, String identificacao_utilizador,flip, jaNotificado) async {
+
+    //Verificar se existe conexão
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool result = await ObjVerificarConexao.verificar_conexao();
+    if (result == true) {
+      //Ler registros do PostgreSQL (via API REST) / Deletar dados do SQlite / Gravar dados no SQlite
+      //debugPrint("Ler registros do PostgreSQL (via API REST) - Itens / Deletar dados do SQlite / Gravar dados no SQlite");
+      final SpsHttpQuestionarioMidia objSpsHttpQuestionarioMidia = SpsHttpQuestionarioMidia();
+      final List<Map<String, dynamic>> dadosQuestionarioMidia = await objSpsHttpQuestionarioMidia.listarMidiaAllSinc(codigo_empresa, registro_colaborador,identificacao_utilizador);
+      if (dadosQuestionarioMidia != null) {
+        if(jaNotificado == 0 && flip != null){
+          await spsNotificacao.notificarInicioProgressoIndeterminado(0, 'SPS - Schuler Production System','Sincronização de Dados', flip);
+          jaNotificado = 1;
+        }
+        final SpsDaoQuestionarioMidia objSpsDaoQuestionarioMidia = SpsDaoQuestionarioMidia();
+        final int resullimpar = await objSpsDaoQuestionarioMidia.emptyTableSincronizacao(codigo_empresa);
+        final int resultsave = await objSpsDaoQuestionarioMidia.save(dadosQuestionarioMidia);
+      }
+
+    }
+    if(jaNotificado == 0){
+      return 0;
+    }else{
+      return 1;
+    }
   }
 
 
@@ -761,9 +794,8 @@ class spsSincronizacao {
         dadosArquivo = {
           'codigo_empresa': codigo_empresa,
           'codigo_programacao': codigo_programacao.toString(),
-          'registro_colaborador': registro_colaborador,
-          'identificacao_utilizador': identificacao_utilizador.toString(),
         };
+
         final List<Map<String,
             dynamic>> dadosDeAnexosServidor = await objSpsHttpQuestionarioMidia
             .listarMidiaAll(dadosArquivo: dadosArquivo);
