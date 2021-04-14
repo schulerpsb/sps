@@ -76,7 +76,7 @@ class _sps_questionario_cq_int_filtro_screen
                   var werror;
                   werror = snapshot.error.toString();
                   return CenteredMessage(
-                    'Falha de conexão! \n\n(' + werror + ')',
+                    '(Ponto 10) Falha de conexão! \n\n(' + werror + ')',
                     icon: Icons.error,
                   );
                 }

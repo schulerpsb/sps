@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:sps/components/centered_message.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 
 class SpsVerificarConexao {

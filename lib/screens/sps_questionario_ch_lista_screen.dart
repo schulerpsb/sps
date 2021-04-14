@@ -94,7 +94,7 @@ class _sps_questionario_ch_lista_screen
                   var werror;
                   werror = snapshot.error.toString();
                   return CenteredMessage(
-                    'Falha de conexão! \n\n(' + werror + ')',
+                    '(Ponto 1) Falha de conexão! \n\n(' + werror + ')',
                     icon: Icons.error,
                   );
                 }
@@ -256,7 +256,9 @@ RichText prepararTextoPrincipal(
       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       children: <TextSpan>[
         new TextSpan(
-          text: "\nDT.FIM CHECKLIST: ",
+            text: snapshot.data[index]["descr_programacao"] + "\n\n"),
+        new TextSpan(
+          text: "DT.FIM CHECKLIST: ",
           style: TextStyle(color: Colors.grey),
         ),
         new TextSpan(

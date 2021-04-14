@@ -50,6 +50,7 @@ class SpsHttpLogin {
           ),
         );
 
+    print ("Fernando=>"+response.body.toString());
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
     Map<String, dynamic> transactionJsonMap = null;
     for (Map<String, dynamic> element in transactionJsonList) {

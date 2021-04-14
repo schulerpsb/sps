@@ -103,7 +103,7 @@ class ImageGrid extends StatelessWidget {
           case ConnectionState.done:
             if (snapshot.hasError) {
               return CenteredMessage(
-                'Falha de conexão!',
+                '(Ponto 2) Falha de conexão!',
                 icon: Icons.error,
               );
             } else {

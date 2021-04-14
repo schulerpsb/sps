@@ -119,7 +119,7 @@ class _sps_questionario_ch_item_screen
         index: indexLista, duration: Duration(seconds: 1));
   }
 
-  var tabConteudo = new List.generate(100, (_) => new List(5));
+  var tabConteudo = new List.generate(100, (_) => new List(6));
 
   String _exibirSalvar = "SIM";
   var _wrespEscala;
@@ -251,7 +251,7 @@ class _sps_questionario_ch_item_screen
                   var werror;
                   werror = snapshot.error.toString();
                   return CenteredMessage(
-                    'Falha de conexão! \n\n(' + werror + ')',
+                    '(Ponto 7) Falha de conexão! \n\n(' + werror + ')',
                     icon: Icons.error,
                   );
                 }
@@ -981,11 +981,9 @@ class _sps_questionario_ch_item_screen
             //Tratar resposta Multipla
             if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA MULTIPLA") {
               var windex_inicial = index;
-              print("adriano =>1=>");
               return StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
                   List<Widget> _listaRespMultipla = [];
-                  print("adriano =>2=>");
                   var witem_checklist_ant =
                       snapshot.data[index]["item_checklist"];
                   var wparar = false;
@@ -1047,6 +1045,11 @@ class _sps_questionario_ch_item_screen
                                         "RESPOSTA MULTIPLA",
                                     tabConteudo[snapshot.data[indexList]
                                         ["item_checklist"]][2] = val.toString(),
+                                    tabConteudo[snapshot.data[indexList]
+                                            ["item_checklist"]][5] =
+                                        snapshot.data[indexList]
+                                                ["subcodigo_tpresposta"]
+                                            .toString(),
                                     setState(
                                       () {
                                         _wrespMultipla[snapshot.data[indexList]
@@ -1111,7 +1114,6 @@ class _sps_questionario_ch_item_screen
               //                   [2] = val.toString(),
               //               setState(
               //                 () {
-              //                   print("adriano =>" + index.toString());
               //                   _wrespMultipla[snapshot.data[index]
               //                       ["subcodigo_tpresposta"]][0] = val;
               //                   index = windex_inicial;
@@ -1224,10 +1226,13 @@ class _sps_questionario_ch_item_screen
     var _wrespHora;
     var _wrespSimnao;
     var _wrespEscala;
+    var _wrespSubcodigoResposta;
+    var _wrespTextoAdicional;
 
     await Future.forEach(
       tabConteudo,
       (element) async {
+        print("adriano =>element=>" + element.toString());
         if (element[1] != null) {
           _witemChecklist = element[0];
 
@@ -1238,6 +1243,8 @@ class _sps_questionario_ch_item_screen
           _wrespHora = "";
           _wrespSimnao = "";
           _wrespEscala = null;
+          _wrespSubcodigoResposta = null;
+          _wrespTextoAdicional = null;
 
           if (element[3] != "NÃO SE APLICA") {
             //Carregar variaveis
@@ -1259,6 +1266,10 @@ class _sps_questionario_ch_item_screen
             if (element[1] == "RESPOSTA POR ESCALA") {
               _wrespEscala = element[2];
             }
+            if (element[1] == "RESPOSTA MULTIPLA") {
+              _wrespSubcodigoResposta = element[2];
+              _wrespTextoAdicional = element[4];
+            }
 
             //Gravar SQlite (Respostas)
             final SpsDaoQuestionarioItem objQuestionarioItemDao =
@@ -1276,6 +1287,8 @@ class _sps_questionario_ch_item_screen
                     _wrespHora,
                     _wrespSimnao,
                     _wrespEscala,
+                    _wrespSubcodigoResposta,
+                    _wrespTextoAdicional,
                     _wsincronizado);
           }
 

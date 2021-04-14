@@ -41,7 +41,7 @@ class _sps_drawerState extends State<sps_drawer> {
           case ConnectionState.done:
             if (snapshot.hasError) {
               return CenteredMessage(
-                'Falha de conexão!',
+                '(Ponto 3) Falha de conexão!',
                 icon: Icons.error,
               );
             }

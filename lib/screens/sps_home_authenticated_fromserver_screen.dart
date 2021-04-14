@@ -100,7 +100,7 @@ class _HomeSpsAuthenticatedFromServerState
                   },
                 ));
                 return CenteredMessage(
-                  'Falha de conexão!',
+                  '(Ponto 5) Falha de conexão!',
                   icon: Icons.error,
                 );
               }

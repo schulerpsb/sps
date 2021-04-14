@@ -31,6 +31,7 @@ class _HomeSpsAuthenticatedFromLocalState
 
   @override
   Widget build(BuildContext context) {
+    print ("adriano=>ponto 4=>");
     return WillPopScope(
         onWillPop: () {
           return new Future(() => false);
@@ -74,7 +75,7 @@ class _HomeSpsAuthenticatedFromLocalState
                 case ConnectionState.done:
                   if (snapshot.hasError) {
                     return CenteredMessage(
-                      'Falha de conexão!',
+                      '(Ponto 4) Falha de conexão!',
                       icon: Icons.error,
                     );
                   }
