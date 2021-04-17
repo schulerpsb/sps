@@ -372,6 +372,9 @@ class SpsHttpQuestionarioItem {
       String resp_escala,
       String descr_comentarios,
       String resp_nao_se_aplica,
+      String subcodigo_tpresposta,
+      String subcodigo_resposta,
+      String texto_adicional,
       String usuresponsavel) async {
 
 //    implementação de JWT comum
@@ -395,6 +398,9 @@ class SpsHttpQuestionarioItem {
         'resp_escala': resp_escala,
         'descr_comentarios': descr_comentarios,
         'resp_nao_se_aplica': resp_nao_se_aplica,
+        'subcodigo_tpresposta': subcodigo_tpresposta,
+        'subcodigo_resposta': subcodigo_resposta,
+        'texto_adicional': texto_adicional,
         'usuresponsavel': usuresponsavel,
 
       },
@@ -415,6 +421,8 @@ class SpsHttpQuestionarioItem {
     Client client = HttpClientWithInterceptor.build(interceptors: [
       JsonInterceptor(),
     ]);
+
+    print ("adriano =>dadosQuestionarioJson=>"+dadosQuestionarioJson.toString());
 
     final Response response = await client
         .post(

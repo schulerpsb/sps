@@ -9,7 +9,6 @@ import 'package:sps/dao/sps_dao_questionario_item_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_ch.dart';
-import 'package:sps/models/sps_questionario_resp_multipla_ch.dart';
 import 'package:sps/models/sps_questionario_utils.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
@@ -119,7 +118,11 @@ class _sps_questionario_ch_item_screen
         index: indexLista, duration: Duration(seconds: 1));
   }
 
-  var tabConteudo = new List.generate(100, (_) => new List(6));
+  var tabConteudo = new List.generate(100, (_) => new List(4));
+  var tabRespMultipla = List();
+
+  //var tabConteudo =
+  //    new List.generate(100, (_) => new List.generate(4, (_) => new List(99)));
 
   String _exibirSalvar = "SIM";
   var _wrespEscala;
@@ -1043,13 +1046,14 @@ class _sps_questionario_ch_item_screen
                                     tabConteudo[snapshot.data[indexList]
                                             ["item_checklist"]][1] =
                                         "RESPOSTA MULTIPLA",
-                                    tabConteudo[snapshot.data[indexList]
-                                        ["item_checklist"]][2] = val.toString(),
-                                    tabConteudo[snapshot.data[indexList]
-                                            ["item_checklist"]][5] =
-                                        snapshot.data[indexList]
-                                                ["subcodigo_tpresposta"]
-                                            .toString(),
+                                    tabRespMultipla.add([
+                                      snapshot.data[indexList]
+                                          ["item_checklist"],
+                                      snapshot.data[indexList]
+                                          ["subcodigo_tpresposta"],
+                                      val.toString(),
+                                      null
+                                    ]),
                                     setState(
                                       () {
                                         _wrespMultipla[snapshot.data[indexList]
@@ -1074,75 +1078,6 @@ class _sps_questionario_ch_item_screen
                   );
                 },
               );
-
-              // var windex_inicial = index;
-              // return StatefulBuilder(
-              //   builder: (BuildContext context, StateSetter setState) {
-              //     List<Widget> _listaRespMultipla = [];
-              //     var witem_checklist_ant =
-              //         snapshot.data[index]["item_checklist"];
-              //     var wparar = false;
-              //     while (snapshot.data[index]["item_checklist"] ==
-              //             witem_checklist_ant &&
-              //         wparar == false) {
-              //       _listaRespMultipla.add(
-              //         Align(
-              //           alignment: Alignment.centerLeft,
-              //           child: CheckboxListTile(
-              //             controlAffinity: ListTileControlAffinity.leading,
-              //             title: Text(
-              //                 snapshot.data[index]["descr_sub_tpresposta"]+"=>"+snapshot.data[index]["subcodigo_tpresposta"].toString(),
-              //                 style: TextStyle(
-              //                     fontSize: 15,
-              //                     color: Colors.black,
-              //                     fontWeight: FontWeight.normal)),
-              //             value: [
-              //                       snapshot.data[index]
-              //                           ["subcodigo_tpresposta_wrespMultipla"]
-              //                     ][0] ==
-              //                     null
-              //                 ? snapshot.data[index]["subcodigo_tpresposta"] ==
-              //                         snapshot.data[index]["subcodigo_resposta"]
-              //                     ? true
-              //                     : false
-              //                 : _wrespMultipla[snapshot.data[index]
-              //                     ["subcodigo_tpresposta"]][0],
-              //             onChanged: (val) => {
-              //               tabConteudo[snapshot.data[index]["item_checklist"]]
-              //                   [1] = "RESPOSTA MULTIPLA",
-              //               tabConteudo[snapshot.data[index]["item_checklist"]]
-              //                   [2] = val.toString(),
-              //               setState(
-              //                 () {
-              //                   _wrespMultipla[snapshot.data[index]
-              //                       ["subcodigo_tpresposta"]][0] = val;
-              //                   index = windex_inicial;
-              //                 },
-              //               )
-              //             },
-              //           ),
-              //         ),
-              //       );
-              //       if (snapshot.data.length - 1 == index) {
-              //         wparar = true;
-              //       } else {
-              //         index = index + 1;
-              //       }
-              //       usuarioAtual.index_perguntas =
-              //           usuarioAtual.index_perguntas + 1;
-              //     }
-              //     usuarioAtual.index_perguntas =
-              //         usuarioAtual.index_perguntas - 1;
-              //
-              //     //Exibir opções
-              //     return Column(
-              //       children: <Widget>[
-              //         Column(children: _listaRespMultipla),
-              //       ],
-              //     );
-              //   },
-              // );
-
             } else {
               return TextField();
             }
@@ -1190,6 +1125,7 @@ class _sps_questionario_ch_item_screen
               }
               setState(
                 () {
+                  print ("adriano=>nao se aplica=>"+tabConteudo.toString());
                   _wrespNaoSeAplica = val;
                 },
               );
@@ -1226,15 +1162,17 @@ class _sps_questionario_ch_item_screen
     var _wrespHora;
     var _wrespSimnao;
     var _wrespEscala;
-    var _wrespSubcodigoResposta;
-    var _wrespTextoAdicional;
+    var _wsubcodigoTpresposta;
+    var _wsubcodigoResposta;
+    var _wtextoAdicional;
 
     await Future.forEach(
       tabConteudo,
       (element) async {
-        print("adriano =>element=>" + element.toString());
         if (element[1] != null) {
+          print("adriano=>element=>" + element.toString());
           _witemChecklist = element[0];
+          _wsubcodigoTpresposta = 0;
 
           //Limpar variaveis
           _wrespTexto = "";
@@ -1243,8 +1181,8 @@ class _sps_questionario_ch_item_screen
           _wrespHora = "";
           _wrespSimnao = "";
           _wrespEscala = null;
-          _wrespSubcodigoResposta = null;
-          _wrespTextoAdicional = null;
+          _wsubcodigoResposta = null;
+          _wtextoAdicional = "";
 
           if (element[3] != "NÃO SE APLICA") {
             //Carregar variaveis
@@ -1266,12 +1204,55 @@ class _sps_questionario_ch_item_screen
             if (element[1] == "RESPOSTA POR ESCALA") {
               _wrespEscala = element[2];
             }
-            if (element[1] == "RESPOSTA MULTIPLA") {
-              _wrespSubcodigoResposta = element[2];
-              _wrespTextoAdicional = element[4];
-            }
+          }
 
-            //Gravar SQlite (Respostas)
+          if (element[1] == "RESPOSTA MULTIPLA") {
+            await Future.forEach(
+              tabRespMultipla,
+              (elementRespMultipla) async {
+                if (elementRespMultipla[0] == element[0]) {
+                  _wsubcodigoTpresposta = elementRespMultipla[1];
+
+                  if (element[3] != "NÃO SE APLICA") {
+                    if (elementRespMultipla[2] == "true") {
+                      _wsubcodigoResposta = elementRespMultipla[1];
+                    } else {
+                      _wsubcodigoResposta = null;
+                    }
+                    if (elementRespMultipla[3] == null) {
+                      _wtextoAdicional = "";
+                    } else {
+                      _wtextoAdicional = elementRespMultipla[3];
+                    }
+                  }else{
+                    _wsubcodigoResposta = null;
+                    _wtextoAdicional = "";
+                  }
+
+                  //Gravar SQlite (Respostas)
+                  final SpsDaoQuestionarioItem objQuestionarioItemDao =
+                      SpsDaoQuestionarioItem();
+                  final int resultupdate =
+                      await objQuestionarioItemDao.update_resposta(
+                          _wcodigoEmpresa,
+                          _wcodigoProgramacao,
+                          _wregistroColaborador,
+                          _widentificacaoUtilizador,
+                          _witemChecklist,
+                          _wrespTexto,
+                          _wrespNumero,
+                          _wrespData,
+                          _wrespHora,
+                          _wrespSimnao,
+                          _wrespEscala,
+                          _wsubcodigoTpresposta,
+                          _wsubcodigoResposta,
+                          _wtextoAdicional,
+                          _wsincronizado);
+                }
+              },
+            );
+          } else {
             final SpsDaoQuestionarioItem objQuestionarioItemDao =
                 SpsDaoQuestionarioItem();
             final int resultupdate =
@@ -1287,24 +1268,47 @@ class _sps_questionario_ch_item_screen
                     _wrespHora,
                     _wrespSimnao,
                     _wrespEscala,
-                    _wrespSubcodigoResposta,
-                    _wrespTextoAdicional,
+                    _wsubcodigoTpresposta,
+                    _wsubcodigoResposta,
+                    _wtextoAdicional,
                     _wsincronizado);
           }
 
-          if (element[1] == "NÃO SE APLICA" || element[3] == "NÃO SE APLICA") {
-            //Gravar SQlite (Respostas)
-            final SpsDaoQuestionarioItem objQuestionarioItemDao =
-                SpsDaoQuestionarioItem();
-            final int resultupdate =
-                await objQuestionarioItemDao.update_resposta_nao_se_aplica(
-                    _wcodigoEmpresa,
-                    _wcodigoProgramacao,
-                    _wregistroColaborador,
-                    _widentificacaoUtilizador,
-                    _witemChecklist,
-                    element[3] == "NÃO SE APLICA" ? "SIM" : "",
-                    _wsincronizado);
+          if (element[1] == "RESPOSTA MULTIPLA") {
+            if (element[3] != "NÃO SE APLICA") {
+              print("adriano=> atualizar nao se aplica=>" +
+                  element[3].toString());
+              //Gravar SQlite (Respostas)
+              final SpsDaoQuestionarioItem objQuestionarioItemDao =
+              SpsDaoQuestionarioItem();
+              final int resultupdate =
+              await objQuestionarioItemDao.update_resposta_nao_se_aplica_2(
+                  _wcodigoEmpresa,
+                  _wcodigoProgramacao,
+                  _wregistroColaborador,
+                  _widentificacaoUtilizador,
+                  _witemChecklist,
+                  "",
+                  _wsincronizado);
+            }
+          } else {
+            if (element[1] == "NÃO SE APLICA" ||
+                element[3] == "NÃO SE APLICA") {
+              print("adriano=> atualizar nao se aplica=>" +
+                  element[3].toString());
+              //Gravar SQlite (Respostas)
+              final SpsDaoQuestionarioItem objQuestionarioItemDao =
+              SpsDaoQuestionarioItem();
+              final int resultupdate =
+              await objQuestionarioItemDao.update_resposta_nao_se_aplica(
+                  _wcodigoEmpresa,
+                  _wcodigoProgramacao,
+                  _wregistroColaborador,
+                  _widentificacaoUtilizador,
+                  _witemChecklist,
+                  element[3] == "NÃO SE APLICA" ? "SIM" : "",
+                  _wsincronizado);
+            }
           }
 
           //Atualizar status da resposta
@@ -1332,6 +1336,8 @@ class _sps_questionario_ch_item_screen
     //Limpar matriz
     tabConteudo.clear();
     tabConteudo = new List.generate(100, (_) => new List(4));
+    tabRespMultipla.clear();
+    tabRespMultipla = List();
 
     //Recarregar tela
     Navigator.pop;

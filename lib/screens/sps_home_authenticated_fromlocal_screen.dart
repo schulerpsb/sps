@@ -31,7 +31,6 @@ class _HomeSpsAuthenticatedFromLocalState
 
   @override
   Widget build(BuildContext context) {
-    print ("adriano=>ponto 4=>");
     return WillPopScope(
         onWillPop: () {
           return new Future(() => false);

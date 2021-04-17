@@ -14,19 +14,19 @@ class spsQuestionarioUtils {
       String wregistroColaborador,
       String widentificacaoUtilizador,
       int witemChecklist) async {
-
     var _wsincronizado = "";
 
-    final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
+    final SpsDaoQuestionarioItem objQuestionarioItemDao =
+        SpsDaoQuestionarioItem();
 
-    //Ler dados do SQlite (Checklis Item - chave primaria)
-    final List<Map<String, dynamic>> result = await objQuestionarioItemDao.select_chave_primaria(
+    //Ler dados do SQlite (Checklist Item - chave parcial 1)
+    final List<Map<String, dynamic>> result =
+        await objQuestionarioItemDao.select_chave_parcial_1(
             wcodigoEmpresa,
             wcodigoProgramacao,
             wregistroColaborador,
             widentificacaoUtilizador,
             witemChecklist);
-
 
     //Analisar status da resposta
     String _wstatusResposta;
@@ -88,22 +88,47 @@ class spsQuestionarioUtils {
       }
     }
 
+    //Analisar resposta multipla
+    if (result[0]["tipo_resposta"] == "RESPOSTA MULTIPLA") {
+      //Ler dados do SQlite (Checklist Item - chave parcial 2)
+      final List<Map<String, dynamic>> result_resp_multipla =
+      await objQuestionarioItemDao.select_chave_parcial_2(
+          wcodigoEmpresa,
+          wcodigoProgramacao,
+          wregistroColaborador,
+          widentificacaoUtilizador,
+          witemChecklist);
+      if (result_resp_multipla[0]["subcodigo_resposta"] == "" || result[0]["subcodigo_resposta"] == null) {
+        _wstatusResposta = "PENDENTE";
+      } else {
+        _wstatusResposta = "PREENCHIDA";
+        //continuar aqui....
+        //montar foreach com "result_resp_multipla"
+        //caso adicional obrigatorio e não preenchido
+          //_wstatusResposta = "PENDENTE";
+      }
+    }
+
     //Analisar comentário
     if (result[0]["comentarios"] == "OBRIGATORIO") {
-      if (result[0]["descr_comentarios"] == "" || result[0]["descr_comentarios"] == null) {
+      if (result[0]["descr_comentarios"] == "" ||
+          result[0]["descr_comentarios"] == null) {
         _wstatusResposta = "PENDENTE";
       }
     }
     if (result[0]["comentario_resposta_nao"] == "OBRIGATORIO") {
       if (result[0]["resp_simnao"] == "NÃO") {
-        if (result[0]["descr_comentarios"] == "" || result[0]["descr_comentarios"] == null) {
+        if (result[0]["descr_comentarios"] == "" ||
+            result[0]["descr_comentarios"] == null) {
           _wstatusResposta = "PENDENTE";
         }
       }
     }
-    if (result[0]["comentario_escala"] != null && result[0]["resp_escala"] != null) {
+    if (result[0]["comentario_escala"] != null &&
+        result[0]["resp_escala"] != null) {
       if (result[0]["resp_escala"] < result[0]["comentario_escala"]) {
-        if (result[0]["descr_comentarios"] == "" || result[0]["descr_comentarios"] == null) {
+        if (result[0]["descr_comentarios"] == "" ||
+            result[0]["descr_comentarios"] == null) {
           _wstatusResposta = "PENDENTE";
         }
       }
@@ -122,11 +147,13 @@ class spsQuestionarioUtils {
     }
 
     if (_wstatusResposta != result[0]["status_resposta"]) {
-        _wsincronizado = "N";
+      _wsincronizado = "N";
 
       //Gravar SQlite
-      final SpsDaoQuestionarioItem objQuestionarioItemDao =  SpsDaoQuestionarioItem();
-      final int resultupdate = await objQuestionarioItemDao.update_status_resposta(
+      final SpsDaoQuestionarioItem objQuestionarioItemDao =
+          SpsDaoQuestionarioItem();
+      final int resultupdate =
+          await objQuestionarioItemDao.update_status_resposta(
               wcodigoEmpresa,
               wcodigoProgramacao,
               wregistroColaborador,
@@ -134,7 +161,6 @@ class spsQuestionarioUtils {
               witemChecklist,
               _wstatusResposta,
               _wsincronizado);
-
     }
   }
 }
@@ -180,7 +206,11 @@ class CustomRadioWidget<T> extends StatelessWidget {
               decoration: ShapeDecoration(
                 shape: CircleBorder(),
                 gradient: LinearGradient(
-                  colors: value == groupValue ? [Colors.black, Colors.blue,]
+                  colors: value == groupValue
+                      ? [
+                          Colors.black,
+                          Colors.blue,
+                        ]
                       : [
                           Theme.of(context).scaffoldBackgroundColor,
                           Theme.of(context).scaffoldBackgroundColor,

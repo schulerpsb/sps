@@ -99,7 +99,7 @@ class SpsDaoQuestionarioItem {
         item['resp_escala'] = null;
       }
       if (item['subcodigo_tpresposta'].toString() == "") {
-        item['subcodigo_tpresposta'] = null;
+        item['subcodigo_tpresposta'] = 0;
       }
       if (item['tamanho_texto_adicional'].toString() == "") {
         item['tamanho_texto_adicional'] = null;
@@ -254,8 +254,9 @@ class SpsDaoQuestionarioItem {
       _hrespHora,
       _hrespSimnao,
       _hrespEscala,
-      _hrespSubcodigoResposta,
-      _hrespTextoAdicional,
+      _hsubcodigoTpresposta,
+      _hsubcodigoResposta,
+      _htextoAdicional,
       _hsincronizado) async {
     final Database db = await getDatabase();
 
@@ -273,10 +274,10 @@ class SpsDaoQuestionarioItem {
         int.parse(_hrespEscala.toString(), onError: (e) => null).toString() +
         ', resp_nao_se_aplica = null' +
         ', subcodigo_resposta = ' +
-        int.parse(_hrespSubcodigoResposta.toString(), onError: (e) => null)
+        int.parse(_hsubcodigoResposta.toString(), onError: (e) => null)
             .toString() +
         ', texto_adicional = "' +
-        _hrespTextoAdicional.toString() +
+        _htextoAdicional.toString() +
         '", sincronizado = "' +
         _hsincronizado +
         '" where codigo_empresa = "' +
@@ -288,8 +289,10 @@ class SpsDaoQuestionarioItem {
         '" and identificacao_utilizador = "' +
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
-        _hitemChecklist.toString();
-    print("adriano query=>" + _query.toString());
+        _hitemChecklist.toString() +
+        ' and subcodigo_tpresposta = ' +
+        _hsubcodigoTpresposta.toString();
+    print("adriano query1=>" + _query.toString());
     db.rawUpdate(_query);
 
     return 1;
@@ -309,7 +312,7 @@ class SpsDaoQuestionarioItem {
             'resp_numero = null, resp_data = null, resp_hora = null, resp_simnao = null,'
             'resp_escala = null, resp_nao_se_aplica = "' +
         _hnaoSeAplica +
-        '", descr_comentarios = null, '
+        '", descr_comentarios = null, subcodigo_resposta = null, texto_adicional = null,'
             'sincronizado = "N" where codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
@@ -337,6 +340,34 @@ class SpsDaoQuestionarioItem {
         _hitemChecklist.toString();
     //debugPrint("query => " + _query);
     db.rawUpdate(_query2);
+    return 1;
+  }
+
+  Future<int> update_resposta_nao_se_aplica_2(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao,
+      _hregistroColaborador,
+      _hidentificacaoUtilizador,
+      _hitemChecklist,
+      _hnaoSeAplica,
+      _hsincronizado) async {
+    final Database db = await getDatabase();
+
+    var _query = 'update checklist_item set resp_nao_se_aplica = "' +
+        _hnaoSeAplica +
+        '" where codigo_empresa = "' +
+        _hcodigoEmpresa +
+        '" and codigo_programacao = ' +
+        _hcodigoProgramacao.toString() +
+        ' and registro_colaborador = "' +
+        _hregistroColaborador +
+        '" and identificacao_utilizador = "' +
+        _hidentificacaoUtilizador +
+        '" and item_checklist = ' +
+        _hitemChecklist.toString();
+    print("adriano query3=>" + _query.toString());
+    db.rawUpdate(_query);
+
     return 1;
   }
 
@@ -439,7 +470,7 @@ class SpsDaoQuestionarioItem {
     return result;
   }
 
-  Future<List<Map<String, dynamic>>> select_chave_primaria(
+  Future<List<Map<String, dynamic>>> select_chave_parcial_1(
       _hcodigoEmpresa,
       _hcodigoProgramacao,
       _hregistroColaborador,
@@ -457,6 +488,29 @@ class SpsDaoQuestionarioItem {
             _hidentificacaoUtilizador.toString() +
             '" and a.item_checklist = ' +
             _hitemChecklist.toString();
+    //print("query => " + _query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> select_chave_parcial_2(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao,
+      _hregistroColaborador,
+      _hidentificacaoUtilizador,
+      _hitemChecklist) async {
+    final Database db = await getDatabase();
+    var _query =
+        'SELECT obrigatorio_texto_adicional, subcodigo_resposta, texto_adicional FROM checklist_item a where codigo_empresa = "' +
+            _hcodigoEmpresa +
+            '" and a.codigo_programacao = ' +
+            _hcodigoProgramacao.toString() +
+            ' and a.registro_colaborador = "' +
+            _hregistroColaborador.toString() +
+            '" and a.identificacao_utilizador = "' +
+            _hidentificacaoUtilizador.toString() +
+            '" and a.item_checklist = ' +
+            _hitemChecklist.toString() + ' and subcodigo_resposta is not null';
     //print("query => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
