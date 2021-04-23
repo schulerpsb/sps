@@ -92,20 +92,26 @@ class spsQuestionarioUtils {
     if (result[0]["tipo_resposta"] == "RESPOSTA MULTIPLA") {
       //Ler dados do SQlite (Checklist Item - chave parcial 2)
       final List<Map<String, dynamic>> result_resp_multipla =
-      await objQuestionarioItemDao.select_chave_parcial_2(
-          wcodigoEmpresa,
-          wcodigoProgramacao,
-          wregistroColaborador,
-          widentificacaoUtilizador,
-          witemChecklist);
-      if (result_resp_multipla[0]["subcodigo_resposta"] == "" || result[0]["subcodigo_resposta"] == null || result[0]["subcodigo_resposta"] == "null") {
+          await objQuestionarioItemDao.select_chave_parcial_2(
+              wcodigoEmpresa,
+              wcodigoProgramacao,
+              wregistroColaborador,
+              widentificacaoUtilizador,
+              witemChecklist);
+      if (result_resp_multipla.length == 0) {
         _wstatusResposta = "PENDENTE";
       } else {
         _wstatusResposta = "PREENCHIDA";
-        //continuar aqui....
-        //montar foreach com "result_resp_multipla"
-        //caso adicional obrigatorio e não preenchido
-          //_wstatusResposta = "PENDENTE";
+        result_resp_multipla.forEach(
+          (element) {
+            if (element['obrigatorio_texto_adicional'] == "SIM" &&
+                (element['texto_adicional'].toString() == "" ||
+                    element['texto_adicional'].toString() == "null" ||
+                    element['texto_adicional'].toString() == null)) {
+              _wstatusResposta = "PENDENTE";
+            }
+          },
+        );
       }
     }
 

@@ -323,7 +323,7 @@ class SpsDaoQuestionarioItem {
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
         _hitemChecklist.toString();
-    print("adriano query2=>" + _query.toString());
+    //print("adriano query2=>" + _query.toString());
     db.rawUpdate(_query);
 
     //Limpar arquivos anexados
@@ -511,7 +511,7 @@ class SpsDaoQuestionarioItem {
             _hidentificacaoUtilizador.toString() +
             '" and a.item_checklist = ' +
             _hitemChecklist.toString() + ' and subcodigo_resposta is not null';
-    //print("query => " + _query);
+    print("query ===> " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }

@@ -185,7 +185,6 @@ class SpsHttpQuestionarioItem {
         seconds: 5,
       ),
     );
-    print('erro: '+response.body.toString());
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
     final List<Map<String, dynamic>> transactionJsonItemOcorrencias = [];
     Map<String, dynamic> transactionJsonMap = null;
