@@ -98,7 +98,7 @@ class spsQuestionarioUtils {
           wregistroColaborador,
           widentificacaoUtilizador,
           witemChecklist);
-      if (result_resp_multipla[0]["subcodigo_resposta"] == "" || result[0]["subcodigo_resposta"] == null) {
+      if (result_resp_multipla[0]["subcodigo_resposta"] == "" || result[0]["subcodigo_resposta"] == null || result[0]["subcodigo_resposta"] == "null") {
         _wstatusResposta = "PENDENTE";
       } else {
         _wstatusResposta = "PREENCHIDA";

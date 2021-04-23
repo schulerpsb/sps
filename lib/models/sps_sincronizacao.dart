@@ -148,7 +148,6 @@ class spsSincronizacao {
         }
       }
       //debugPrint("Ler dados não sincronizados do SQlite (quantidade de registro: " +_wregistros.toString() +")");
-      print ("adriano =>Ler dados não sincronizados");
       var windex = 0;
       await Future.forEach(result, (item) async {
         var _wsincronizado = "";
