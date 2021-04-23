@@ -16,34 +16,60 @@ class SpsLogin {
     final usuario = controladorusuario.text;
     final senha = controladorsenha.text;
 
-    final SpsHttpLogin objLoginHttp = SpsHttpLogin(usuario, senha);
-    //debugPrint("Usuario"+usuario.toString()+" Senha: "+senha.toString());
-    final Map<String, dynamic> dadosUsuario = await objLoginHttp.efetuaLogin(
-        usuario, senha);
-    if (dadosUsuario['mensagem'] == "") {
-      dadosUsuario.remove('mensagem');
-      // Create a secure storage
-      final storage = new FlutterSecureStorage();
-      await storage.write(key: 'jwtKey', value: dadosUsuario['chave'].toString());
-      dadosUsuario['chave'] = "";
-      final SpsDaoLogin objLoginDao = SpsDaoLogin();
-      final int resulcreate = await objLoginDao.create_table();
-      final int resullimpar = await objLoginDao.emptyTable(dadosUsuario);
-      final int resultsave = await objLoginDao.save(dadosUsuario);
-      final List<Map<String, dynamic>> DadosSessao = await objLoginDao
-          .listaUsuarioLocal();
-      if (DadosSessao != null) {
+    final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+    final bool conectado = await ObjVerificarConexao.verificar_conexao();
+    if (conectado == true) {
+      final SpsHttpLogin objLoginHttp = SpsHttpLogin(usuario, senha);
+      //debugPrint("Usuario"+usuario.toString()+" Senha: "+senha.toString());
+      final Map<String, dynamic> dadosUsuario = await objLoginHttp.efetuaLogin(
+          usuario, senha);
+      if (dadosUsuario['mensagem'] == "") {
+        dadosUsuario.remove('mensagem');
+        // Create a secure storage
+
+//      final int codigoVerificacao = await objLoginHttp.enviaCodigoVerificacao(dadosUsuario['telefone_usuario'].toString());
+        int codigoVerificacao = 999999;
+        usuarioAtual.codigoValidacao = codigoVerificacao;
+        if (codigoVerificacao != 0) {
+          final storage = new FlutterSecureStorage();
+          await storage.write(key: 'jwtKey', value: dadosUsuario['chave'].toString());
+          dadosUsuario['chave'] = "";
+//          final SpsDaoLogin objLoginDao = SpsDaoLogin();
+//          final int resulcreate = await objLoginDao.create_table();
+//          final int resullimpar = await objLoginDao.emptyTable(dadosUsuario);
+//          final int resultsave = await objLoginDao.save(dadosUsuario);
+//          final List<Map<String, dynamic>> DadosSessao = await objLoginDao.listaUsuarioLocal();
+          final List<Map<String, dynamic>> DadosSessao = [];
+          DadosSessao.add(dadosUsuario);
+
+          if (DadosSessao != null) {
+//          List<Map<String, dynamic>> DadosSessao;
+//          DadosSessao.add(dadosUsuario);
+//          debugPrint('dados da sessao: '+dadosUsuario.toString());
+            return DadosSessao;
+          } else {
+//          List<Map<String, dynamic>> DadosSessao;
+//          DadosSessao.add(dadosUsuario);
+            return DadosSessao;
+          }
+        }else{
+          print('erro_codigo');
+          final List<Map<String, dynamic>> DadosSessao = [{'mensagem': 'erro_codigo'}];
+          //debugPrint(DadosSessao.toString());
+          return DadosSessao;
+        }
+      }else{
+        print('erro login');
+        final List<Map<String, dynamic>> DadosSessao = [{'mensagem': dadosUsuario['mensagem'].trim()}];
         //debugPrint(DadosSessao.toString());
         return DadosSessao;
-      } else {
-        return DadosSessao;
-      }
+      };
     }else{
-      final List<Map<String, dynamic>> DadosSessao = [{'mensagem': dadosUsuario['mensagem'].trim()}];
+      print('erro conexao');
+      final List<Map<String, dynamic>> DadosSessao = [{'mensagem': 'erro_conexao'}];
       //debugPrint(DadosSessao.toString());
       return DadosSessao;
-    };
-
+    }
   }
 
   Future<List<Map<String, dynamic>>> verificaUsuarioAutenticado() async {
@@ -122,5 +148,14 @@ class SpsLogin {
     return dadosUsuario;
   }
 
+  Future<int> reenviarCodigo(
+      String usuario,
+      ) async {
+
+    final SpsHttpLogin objLoginHttp = SpsHttpLogin(usuario,'');
+    final int codigoVerificacao = await objLoginHttp.enviaCodigoVerificacao(usuarioAtual.telefone_usuario.toString());
+    usuarioAtual.codigoValidacao = codigoVerificacao;
+    return 1;
+  }
 
 }

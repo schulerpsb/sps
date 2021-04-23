@@ -26,6 +26,7 @@ class sps_usuario {
   String data_ultima_sincronizacao;
   int status_sincronizacao;
   int index_perguntas;
+  int codigoValidacao;
 
   factory sps_usuario() {
     return _sps_usuario;

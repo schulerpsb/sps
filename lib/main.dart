@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ void isolateSincronizacao(int arg) async  {
       usuarioAtual.email_usuario = dadosSessaoInicial[0]['email_usuario'];
       usuarioAtual.lingua_usuario = dadosSessaoInicial[0]['lingua_usuario'];
       usuarioAtual.status_usuario = dadosSessaoInicial[0]['status_usuario'];
+      usuarioAtual.telefone_usuario = dadosSessaoInicial[0]['telefone_usuario'];
       usuarioAtual.tipo = dadosSessaoInicial[0]['tipo'];
       usuarioAtual.registro_usuario = dadosSessaoInicial[0]['registro_usuario'];
       usuarioAtual.codigo_planta = dadosSessaoInicial[0]['codigo_planta'].toString();
@@ -71,6 +73,7 @@ void isolateSincronizacao(int arg) async  {
         usuarioAtual.email_usuario = dadosSessao[0]['email_usuario'];
         usuarioAtual.lingua_usuario = dadosSessao[0]['lingua_usuario'];
         usuarioAtual.status_usuario = dadosSessao[0]['status_usuario'];
+        usuarioAtual.telefone_usuario = dadosSessao[0]['telefone_usuario'];
         usuarioAtual.tipo = dadosSessao[0]['tipo'];
         usuarioAtual.registro_usuario = dadosSessao[0]['registro_usuario'];
         usuarioAtual.codigo_planta = dadosSessao[0]['codigo_planta'].toString();
