@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sps/models/sps_sincronizacao.dart';
 import 'package:sps/models/sps_usuario_class.dart';
+import 'package:sps/screens/sps_log_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_filtro_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_ext_filtro_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_int_filtro_screen.dart';
@@ -214,7 +215,7 @@ class sps_menu_screen extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-              'Version 1.0.0 (12/04/2021)\n',
+              'Version 1.0.0 (20/04/2021)\n',
               style: TextStyle(
                 color: Color(0xFF004077),
                 fontSize: 12.0,

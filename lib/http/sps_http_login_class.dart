@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
@@ -15,7 +16,7 @@ class SpsHttpLogin {
   static const baseUrlAutentica = 'http://10.17.20.45/webapi/api/login/read.php';//ok jwt
   static const baseUrlListaUsuario = 'http://10.17.20.45/webapi/api/login/read_usuario.php';//ok jwt
   static const baseUrlLEsqueciMinhaSenha = 'http://10.17.20.45/webapi/api/login/read_esqueci.php';//ok jwt
-
+  static const baseUrlLZenviaSMS = 'https://api-rest.zenvia.com/services/send-sms';//ok jwt
   SpsHttpLogin(this.usuario, this.senha);
 
   Future<Map<String, dynamic>> efetuaLogin(String usuario, String senha) async {
@@ -50,7 +51,7 @@ class SpsHttpLogin {
           ),
         );
 
-    print ("Fernando=>"+response.body.toString());
+//    print ("Fernando=>"+response.body.toString());
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
     Map<String, dynamic> transactionJsonMap = null;
     for (Map<String, dynamic> element in transactionJsonList) {
@@ -214,6 +215,55 @@ class SpsHttpLogin {
         };
       }
     return transactionJsonMap;
+  }
+
+  Future<int> enviaCodigoVerificacao(String telefoneUsuario) async {
+
+    Random rnd = new Random();
+    int min = 100000, max = 999999;
+    int codigoUsuario = min + rnd.nextInt(max - min);
+
+    final Map<String, dynamic> dadosParaLogon = {
+      'sendSmsRequest': {
+        'from': 'Schuler SPS',
+        'to': telefoneUsuario.replaceAll("+", "").replaceAll(" ", "").replaceAll("-", ""),
+        'msg': 'Use o código '+codigoUsuario.toString()+' para autenticação no Supplier Portal',
+        'callbackOption': 'NONE',
+        'aggregateId': '1111',
+        'flashSms': 'false',
+        'dataCoding': '8',
+      }
+    };
+
+    final Map<String, String> custonHeader = {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization": "Basic c2NodWxlci53ZWI6eGUwQlZMYlBBZg==",
+    };
+
+    final String dadosParaLogonJson = jsonEncode(dadosParaLogon);
+
+      Client client = HttpClientWithInterceptor.build(interceptors: [
+      JsonInterceptor(),
+    ]);
+
+    final Response response = await client
+        .post(
+      baseUrlLZenviaSMS,
+      headers: custonHeader,
+      body: dadosParaLogonJson,
+    ).timeout(
+      Duration(
+        seconds: 5,
+      ),
+    );
+//    final List<dynamic> transactionJsonList = jsonDecode(response.body);
+    Map<String, dynamic> transactionJsonMap = jsonDecode(response.body);
+    if(transactionJsonMap['sendSmsResponse']['statusCode'].toString() == "00" || transactionJsonMap['sendSmsResponse']['statusCode'].toString() == "01" || transactionJsonMap['sendSmsResponse']['statusCode'].toString() == "02" || transactionJsonMap['sendSmsResponse']['statusCode'].toString() == "03"){
+      return codigoUsuario;
+    }else{
+      return 0;
+    }
   }
 
 }

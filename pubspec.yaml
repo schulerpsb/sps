@@ -103,6 +103,8 @@ flutter:
     - images/negativo.png
     - images/positivo.png
     - images/noimage.jpg
+    - images/press.jpg
+    - images/Logo_Schuler_alta.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
