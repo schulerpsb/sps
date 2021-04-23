@@ -200,7 +200,6 @@ class spsSincronizacao {
         }
 
         //Atualizar registro no PostgreSQL (via API REST) SAVE_RESPOSTA tipo checklist
-        print ("adriano=>item=>"+item.toString());
         final atualizacaoSaveResposta = await objQuestionarioItemHttp.QuestionarioSaveResposta(
             item["codigo_empresa"],
             item["codigo_programacao"].toString(),

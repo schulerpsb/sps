@@ -323,7 +323,7 @@ class SpsDaoQuestionarioItem {
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
         _hitemChecklist.toString();
-    //print("adriano query2=>" + _query.toString());
+    print("adriano query2=>" + _query.toString());
     db.rawUpdate(_query);
 
     //Limpar arquivos anexados
@@ -365,7 +365,7 @@ class SpsDaoQuestionarioItem {
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
         _hitemChecklist.toString();
-    print("adriano query3=>" + _query.toString());
+    //print("adriano query3=>" + _query.toString());
     db.rawUpdate(_query);
 
     return 1;

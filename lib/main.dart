@@ -153,7 +153,7 @@ class Sps extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [const Locale('pt', 'BR')],
+      supportedLocales: [const Locale('pt')],
       home: MyHomePage(title: 'Schuler Production System'),
       //home: SpsLoginScreen(),
     );
