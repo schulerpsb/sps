@@ -27,8 +27,8 @@ class SpsLogin {
         dadosUsuario.remove('mensagem');
         // Create a secure storage
 
-      final int codigoVerificacao = await objLoginHttp.enviaCodigoVerificacao(dadosUsuario['telefone_usuario'].toString());
-//        int codigoVerificacao = 999999;
+//      final int codigoVerificacao = await objLoginHttp.enviaCodigoVerificacao(dadosUsuario['telefone_usuario'].toString());
+        int codigoVerificacao = 999999;
         usuarioAtual.codigoValidacao = codigoVerificacao;
         if (codigoVerificacao != 0) {
           final storage = new FlutterSecureStorage();
