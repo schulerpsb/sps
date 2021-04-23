@@ -101,143 +101,147 @@ class _HomeSpsAuthenticatedFromLocalState
                           snapshot.data[0]['registro_usuario'];
                       return sps_menu_screen();
                     } else {
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("images/press.jpg"),
-                            fit: BoxFit.cover,
-                            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset('images/Logo_Schuler_alta.png'),
-                                ),
-                                Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      controller: _controladorusuario,
-                                      style: TextStyle(
-                                        fontSize: 17.0,
-                                      ),
-                                      decoration: InputDecoration(
-                                        icon: Icon(Icons.person),
-                                        labelText: 'Usuário',
-                                        hintText: 'Digite o Usuário',
-                                      ),
-                                      keyboardType: TextInputType.text,
-                                    ),
-                                  ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: _controladorsenha,
-                                    style: TextStyle(
-                                      fontSize: 17.0,
-                                    ),
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      icon: Icon(Icons.lock),
-                                      labelText: 'Senha',
-                                      hintText: 'Digite a senha',
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                  ),
-                                ),
-                                Builder(builder: (context) {
-                                  return RaisedButton(
-                                    child: Text(
-                                      'Entrar',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(18.0),
-                                        side: BorderSide(color: Colors.black26)),
-                                    onPressed: () {
-                                      if (_controladorusuario != null &&
-                                          _controladorsenha != null &&
-                                          _controladorusuario.text != "" &&
-                                          _controladorsenha.text != "") {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return HomeSpsAuthenticatedFromServer(
-                                                  _controladorusuario,
-                                                  _controladorsenha);
-                                            },
-                                          ),
-                                        );
-                                      } else {
-                                        mensagemNaBarra(context,
-                                            'Favor Preencher usuário e senha!');
-                                      }
-                                    },
-                                  );
-                                }),
-                              ],
+                      return SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("images/press.jpg"),
+                              fit: BoxFit.cover,
+                              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
                             ),
-                            Align(
-                              alignment: FractionalOffset.bottomCenter,
-                              child: MaterialButton(
-                                    onPressed: () => {
-                                      if (_controladorusuario != null &&
-                                          _controladorusuario.text != "")
-                                        {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                    title: Text("SPS App"),
-                                                    content: Text(
-                                                        "As intruções para redefinição da senha serão enviadas para seu e-mail cadastrado. Deseja continuar?"),
-                                                    actions: [
-                                                      FlatButton(
-                                                        child: Text("Cancelar"),
-                                                        onPressed: () {
-                                                          Navigator.of(context,
-                                                              rootNavigator:
-                                                              true)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                      FlatButton(
-                                                          child: Text("Sim"),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset('images/Logo_Schuler_alta.png'),
+                                      ),
+                                      Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextField(
+                                            controller: _controladorusuario,
+                                            style: TextStyle(
+                                              fontSize: 17.0,
+                                            ),
+                                            decoration: InputDecoration(
+                                              icon: Icon(Icons.person),
+                                              labelText: 'Usuário',
+                                              hintText: 'Digite o Usuário',
+                                            ),
+                                            keyboardType: TextInputType.text,
+                                          ),
+                                        ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          controller: _controladorsenha,
+                                          style: TextStyle(
+                                            fontSize: 17.0,
+                                          ),
+                                          obscureText: true,
+                                          decoration: InputDecoration(
+                                            icon: Icon(Icons.lock),
+                                            labelText: 'Senha',
+                                            hintText: 'Digite a senha',
+                                          ),
+                                          keyboardType: TextInputType.text,
+                                        ),
+                                      ),
+                                      Builder(builder: (context) {
+                                        return RaisedButton(
+                                          child: Text(
+                                            'Entrar',
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                            ),
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(18.0),
+                                              side: BorderSide(color: Colors.black26)),
+                                          onPressed: () {
+                                            if (_controladorusuario != null &&
+                                                _controladorsenha != null &&
+                                                _controladorusuario.text != "" &&
+                                                _controladorsenha.text != "") {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return HomeSpsAuthenticatedFromServer(
+                                                        _controladorusuario,
+                                                        _controladorsenha);
+                                                  },
+                                                ),
+                                              );
+                                            } else {
+                                              mensagemNaBarra(context,
+                                                  'Favor Preencher usuário e senha!');
+                                            }
+                                          },
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                              Align(
+                                alignment: FractionalOffset.bottomCenter,
+                                child: MaterialButton(
+                                      onPressed: () => {
+                                        if (_controladorusuario != null &&
+                                            _controladorusuario.text != "")
+                                          {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                      title: Text("SPS App"),
+                                                      content: Text(
+                                                          "As intruções para redefinição da senha serão enviadas para seu e-mail cadastrado. Deseja continuar?"),
+                                                      actions: [
+                                                        FlatButton(
+                                                          child: Text("Cancelar"),
                                                           onPressed: () {
-                                                            print('enviar senha');
                                                             Navigator.of(context,
                                                                 rootNavigator:
                                                                 true)
                                                                 .pop();
-                                                            _showAlert(context,
-                                                                "As intruções para redefinição da form enviadas para seu e-mail cadastrado.");
-                                                            spslogin
-                                                                .esqueciMinhaSenha(
-                                                                _controladorusuario
-                                                                    .text)
-                                                                .then((retorno) =>
-                                                            null);
-                                                          }),
-                                                    ]);
-                                              })
-                                        }
-                                      else
-                                        {
-                                          mensagemNaBarra(context,
-                                              'Favor Preencher o usuário!'),
-                                        }
-                                    },
-                                    child: Text('Esqueci minha senha'),
+                                                          },
+                                                        ),
+                                                        FlatButton(
+                                                            child: Text("Sim"),
+                                                            onPressed: () {
+                                                              print('enviar senha');
+                                                              Navigator.of(context,
+                                                                  rootNavigator:
+                                                                  true)
+                                                                  .pop();
+                                                              _showAlert(context,
+                                                                  "As intruções para redefinição da form enviadas para seu e-mail cadastrado.");
+                                                              spslogin
+                                                                  .esqueciMinhaSenha(
+                                                                  _controladorusuario
+                                                                      .text)
+                                                                  .then((retorno) =>
+                                                              null);
+                                                            }),
+                                                      ]);
+                                                })
+                                          }
+                                        else
+                                          {
+                                            mensagemNaBarra(context,
+                                                'Favor Preencher o usuário!'),
+                                          }
+                                      },
+                                      child: Text('Esqueci minha senha'),
+                                    ),
                                   ),
-                                ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     }
