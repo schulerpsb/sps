@@ -112,27 +112,28 @@ class _HomeSpsAuthenticatedFromLocalState
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Column(
+                            SingleChildScrollView(
+                            child: Column(
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Image.asset('images/Logo_Schuler_alta.png'),
                                 ),
                                 Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      controller: _controladorusuario,
-                                      style: TextStyle(
-                                        fontSize: 17.0,
-                                      ),
-                                      decoration: InputDecoration(
-                                        icon: Icon(Icons.person),
-                                        labelText: 'Usuário',
-                                        hintText: 'Digite o Usuário',
-                                      ),
-                                      keyboardType: TextInputType.text,
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    controller: _controladorusuario,
+                                    style: TextStyle(
+                                      fontSize: 17.0,
                                     ),
+                                    decoration: InputDecoration(
+                                      icon: Icon(Icons.person),
+                                      labelText: 'Usuário',
+                                      hintText: 'Digite o Usuário',
+                                    ),
+                                    keyboardType: TextInputType.text,
                                   ),
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: TextField(
@@ -183,6 +184,7 @@ class _HomeSpsAuthenticatedFromLocalState
                                   );
                                 }),
                               ],
+                            ),
                             ),
                             Align(
                               alignment: FractionalOffset.bottomCenter,
