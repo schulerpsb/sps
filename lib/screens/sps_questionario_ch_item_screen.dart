@@ -820,7 +820,7 @@ class _sps_questionario_ch_item_screen
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                           ),
                           Container(
-                            width: 350,
+                            width: 300,
                             child: Slider(
                               value: _currentSliderValue,
                               min:
@@ -1006,7 +1006,10 @@ class _sps_questionario_ch_item_screen
                             "null" &&
                         snapshot.data[index]["tamanho_texto_adicional"]
                                 .toString() !=
-                            "") {
+                            "" &&
+                        snapshot.data[index]["tamanho_texto_adicional"]
+                             !=
+                            0) {
                       wqtde_texto_adicional = wqtde_texto_adicional + 1;
                     }
                     usuarioAtual.index_perguntas =
@@ -1015,12 +1018,14 @@ class _sps_questionario_ch_item_screen
                   usuarioAtual.index_perguntas =
                       usuarioAtual.index_perguntas - 1;
 
+                  print ("ADRIANO =>wqtde_texto_adicional=>"+wqtde_texto_adicional.toString());
+
                   int witens = index - windex_inicio;
                   if (wparar == true) {
                     witens = index - windex_inicio + 1;
                   }
                   double wtamanho = witens * 65.toDouble();
-                  wtamanho = wtamanho + (wqtde_texto_adicional * 60.toDouble());
+                  //wtamanho = wtamanho + (wqtde_texto_adicional * 85.toDouble());
 
                   _listaRespMultipla.add(
                     Container(
@@ -1029,58 +1034,67 @@ class _sps_questionario_ch_item_screen
                         itemCount: witens,
                         itemBuilder: (BuildContext context, int indexList) {
                           indexList = indexList + windex_inicio;
-                          return new Card(
-                            child: new Column(
-                              children: <Widget>[
-                                new CheckboxListTile(
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: Text(
-                                      snapshot.data[indexList]
-                                          ["descr_sub_tpresposta"],
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal)),
-                                  value: _wrespMultipla[snapshot.data[indexList]
-                                              ["subcodigo_tpresposta"]][0] ==
+                          return Transform.scale(
+                            scale: .85,
+                            child: new Card(
+                              child: new Column(
+                                children: <Widget>[
+                                  new CheckboxListTile(
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    title: Text(
+                                        snapshot.data[indexList]
+                                            ["descr_sub_tpresposta"],
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.normal)),
+                                    value: _wrespMultipla[snapshot
+                                                    .data[indexList]
+                                                ["subcodigo_tpresposta"]][0] ==
+                                            null
+                                        ? snapshot.data[indexList]
+                                                    ["subcodigo_tpresposta"] ==
+                                                snapshot.data[indexList]
+                                                    ["subcodigo_resposta"]
+                                            ? true
+                                            : false
+                                        : _wrespMultipla[
+                                            snapshot.data[indexList]
+                                                ["subcodigo_tpresposta"]][0],
+                                    onChanged: (val) => {
+                                      tabConteudo[snapshot.data[indexList]
+                                              ["item_checklist"]][1] =
+                                          "RESPOSTA MULTIPLA",
+                                      tabRespMultipla.add(
+                                        [
+                                          snapshot.data[indexList]
+                                              ["item_checklist"],
+                                          snapshot.data[indexList]
+                                              ["subcodigo_tpresposta"],
+                                          val.toString(),
                                           null
-                                      ? snapshot.data[indexList]
-                                                  ["subcodigo_tpresposta"] ==
-                                              snapshot.data[indexList]
-                                                  ["subcodigo_resposta"]
-                                          ? true
-                                          : false
-                                      : _wrespMultipla[snapshot.data[indexList]
-                                          ["subcodigo_tpresposta"]][0],
-                                  onChanged: (val) => {
-                                    tabConteudo[snapshot.data[indexList]
-                                            ["item_checklist"]][1] =
-                                        "RESPOSTA MULTIPLA",
-                                    tabRespMultipla.add(
-                                      [
-                                        snapshot.data[indexList]
-                                            ["item_checklist"],
-                                        snapshot.data[indexList]
-                                            ["subcodigo_tpresposta"],
-                                        val.toString(),
-                                        null
-                                      ],
-                                    ),
-                                    setState(
-                                      () {
-                                        _wrespMultipla[snapshot.data[indexList]
-                                            ["subcodigo_tpresposta"]][0] = val;
-                                        index = windex_inicial;
-                                      },
-                                    )
-                                  },
-                                ),
+                                        ],
+                                      ),
+                                      setState(
+                                        () {
+                                          _wrespMultipla[
+                                                  snapshot.data[indexList]
+                                                      ["subcodigo_tpresposta"]]
+                                              [0] = val;
+                                          index = windex_inicial;
+                                        },
+                                      )
+                                    },
+                                  ),
 
-                                //Tratar texto adiconal da resposta multipla
-                                textoAdicionalRespostaMultipla(
-                                    snapshot, indexList)
-                              ],
+                                  //Tratar texto adiconal da resposta multipla
+                                  // textoAdicionalRespostaMultiplaAlerta(
+                                  //     snapshot, indexList),
+                                  // textoAdicionalRespostaMultipla(
+                                  //     snapshot, indexList),
+                                ],
+                              ),
                             ),
                           );
                         },
@@ -1133,7 +1147,7 @@ class _sps_questionario_ch_item_screen
             LengthLimitingTextInputFormatter(
                 snapshot.data[indexList]["tamanho_texto_adicional"]),
           ],
-          textInputAction: TextInputAction.go,
+          textInputAction: TextInputAction.done,
           keyboardType: TextInputType.text,
           onSubmitted: (novoTexto) => {
             tabConteudo[snapshot.data[indexList]["item_checklist"]][1] =
@@ -1157,6 +1171,23 @@ class _sps_questionario_ch_item_screen
                 borderSide: new BorderSide(color: Colors.teal)),
             contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
           ),
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(0.0),
+      );
+    }
+  }
+
+  Padding textoAdicionalRespostaMultiplaAlerta(
+      AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int indexList) {
+    if (snapshot.data[indexList]["tamanho_texto_adicional"] != null) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(10, 0, 0, 2),
+        child: Text(
+          "Clique em OK após digitar",
+          style: TextStyle(fontSize: 10, color: Colors.blue),
         ),
       );
     } else {
