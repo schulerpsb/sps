@@ -119,14 +119,14 @@ class _sps_questionario_ch_item_screen
   }
 
   var tabConteudo = new List.generate(100, (_) => new List(4));
-  var tabRespMultipla = List();
-  var wtexto_adicional = new List.generate(100, (_) => new List(25));
+  var tabRespMultipla = new List.generate(100, (_) => new List(99));
+  var tabTextoAdicional = new List.generate(100, (_) => new List(99));
 
   String _exibirSalvar = "SIM";
   var _wrespEscala;
   var _wrespSimNao;
   var _wrespNaoSeAplica;
-  var _wrespMultipla = new List.generate(100, (_) => new List(1));
+  var _wrespMultipla = new List.generate(100, (_) => new List(25));
 
   @override
   Widget build(BuildContext context) {
@@ -385,6 +385,7 @@ class _sps_questionario_ch_item_screen
                             padding: const EdgeInsets.only(
                                 top: 5, left: 0, right: 0, bottom: 0),
                             child: ScrollablePositionedList.builder(
+                              //addAutomaticKeepAlives: true,
                               //controller: _controller,
                               padding: EdgeInsets.only(top: 5),
                               itemScrollController: itemScrollController,
@@ -841,7 +842,7 @@ class _sps_questionario_ch_item_screen
                                     val.round().toString();
                                 setState(
                                   () {
-                                    _currentSliderValue = val;
+                                    _currentSliderValue = val.round().toDouble();
                                   },
                                 );
                               },
@@ -993,11 +994,6 @@ class _sps_questionario_ch_item_screen
                   while (snapshot.data[index]["item_checklist"] ==
                           witem_checklist_ant &&
                       wparar == false) {
-                    if (snapshot.data.length - 1 == index) {
-                      wparar = true;
-                    } else {
-                      index = index + 1;
-                    }
                     if (snapshot.data[index]["tamanho_texto_adicional"]
                                 .toString() !=
                             null &&
@@ -1007,10 +1003,13 @@ class _sps_questionario_ch_item_screen
                         snapshot.data[index]["tamanho_texto_adicional"]
                                 .toString() !=
                             "" &&
-                        snapshot.data[index]["tamanho_texto_adicional"]
-                             !=
-                            0) {
+                        snapshot.data[index]["tamanho_texto_adicional"] != 0) {
                       wqtde_texto_adicional = wqtde_texto_adicional + 1;
+                    }
+                    if (snapshot.data.length - 1 == index) {
+                      wparar = true;
+                    } else {
+                      index = index + 1;
                     }
                     usuarioAtual.index_perguntas =
                         usuarioAtual.index_perguntas + 1;
@@ -1018,22 +1017,22 @@ class _sps_questionario_ch_item_screen
                   usuarioAtual.index_perguntas =
                       usuarioAtual.index_perguntas - 1;
 
-                  print ("ADRIANO =>wqtde_texto_adicional=>"+wqtde_texto_adicional.toString());
-
                   int witens = index - windex_inicio;
                   if (wparar == true) {
                     witens = index - windex_inicio + 1;
                   }
                   double wtamanho = witens * 65.toDouble();
-                  //wtamanho = wtamanho + (wqtde_texto_adicional * 85.toDouble());
+                  wtamanho = wtamanho + (wqtde_texto_adicional * 60.toDouble());
 
                   _listaRespMultipla.add(
                     Container(
                       height: wtamanho,
                       child: ListView.builder(
+                        //cacheExtent: 100000000,
                         itemCount: witens,
                         itemBuilder: (BuildContext context, int indexList) {
                           indexList = indexList + windex_inicio;
+                          //print ("adriano =>1=>"+_wrespMultipla[snapshot.data[indexList]["item_checklist"]] [snapshot.data[indexList]["subcodigo_tpresposta"]].toString());
                           return Transform.scale(
                             scale: .85,
                             child: new Card(
@@ -1049,39 +1048,40 @@ class _sps_questionario_ch_item_screen
                                             fontSize: 15,
                                             color: Colors.black,
                                             fontWeight: FontWeight.normal)),
-                                    value: _wrespMultipla[snapshot
-                                                    .data[indexList]
-                                                ["subcodigo_tpresposta"]][0] ==
+                                    value: tabRespMultipla[
+                                                    snapshot.data[indexList]
+                                                        ["item_checklist"]][
+                                                snapshot.data[indexList]
+                                                    ["subcodigo_tpresposta"]] ==
                                             null
                                         ? snapshot.data[indexList]
-                                                    ["subcodigo_tpresposta"] ==
+                                                        ["subcodigo_tpresposta"] ==
                                                 snapshot.data[indexList]
-                                                    ["subcodigo_resposta"]
+                                                        ["subcodigo_resposta"]
                                             ? true
                                             : false
-                                        : _wrespMultipla[
-                                            snapshot.data[indexList]
-                                                ["subcodigo_tpresposta"]][0],
+                                        : tabRespMultipla[snapshot.data[indexList]["item_checklist"]]
+                                            [snapshot.data[indexList]["subcodigo_tpresposta"]].toString() == "true" ? true : false ,
                                     onChanged: (val) => {
                                       tabConteudo[snapshot.data[indexList]
                                               ["item_checklist"]][1] =
                                           "RESPOSTA MULTIPLA",
-                                      tabRespMultipla.add(
-                                        [
+                                      tabRespMultipla[snapshot.data[indexList]
+                                              ["item_checklist"]][
                                           snapshot.data[indexList]
-                                              ["item_checklist"],
-                                          snapshot.data[indexList]
-                                              ["subcodigo_tpresposta"],
-                                          val.toString(),
-                                          null
-                                        ],
-                                      ),
+                                              ["subcodigo_tpresposta"]] = val,
+                                      print("adriano =>tabConteudo=>" +
+                                          tabConteudo[snapshot.data[indexList]
+                                                  ["item_checklist"]]
+                                              .toString()),
+                                      print("adriano =>tabRespMultipla=>" +
+                                          tabRespMultipla[
+                                                  snapshot.data[indexList]
+                                                      ["item_checklist"]]
+                                              .toString()),
                                       setState(
                                         () {
-                                          _wrespMultipla[
-                                                  snapshot.data[indexList]
-                                                      ["subcodigo_tpresposta"]]
-                                              [0] = val;
+                                          //_wrespMultipla[snapshot.data[indexList]["item_checklist"]] [snapshot.data[indexList]["subcodigo_tpresposta"]] = val;
                                           index = windex_inicial;
                                         },
                                       )
@@ -1089,10 +1089,10 @@ class _sps_questionario_ch_item_screen
                                   ),
 
                                   //Tratar texto adiconal da resposta multipla
-                                  // textoAdicionalRespostaMultiplaAlerta(
-                                  //     snapshot, indexList),
-                                  // textoAdicionalRespostaMultipla(
-                                  //     snapshot, indexList),
+                                  //textoAdicionalRespostaMultiplaAlerta(
+                                  //    snapshot, indexList),
+                                  textoAdicionalRespostaMultipla(
+                                      snapshot, indexList),
                                 ],
                               ),
                             ),
@@ -1122,21 +1122,21 @@ class _sps_questionario_ch_item_screen
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int indexList) {
     if (snapshot.data[indexList]["tamanho_texto_adicional"] != null) {
       TextEditingController _textoAdicional = TextEditingController();
-      if (wtexto_adicional[snapshot.data[indexList]["item_checklist"]]
+      if (tabTextoAdicional[snapshot.data[indexList]["item_checklist"]]
                       [snapshot.data[indexList]["subcodigo_tpresposta"]]
                   .toString() ==
               "null" ||
-          wtexto_adicional[snapshot.data[indexList]["item_checklist"]]
+          tabTextoAdicional[snapshot.data[indexList]["item_checklist"]]
                       [snapshot.data[indexList]["subcodigo_tpresposta"]]
                   .toString() ==
               null) {
-        wtexto_adicional[snapshot.data[indexList]["item_checklist"]]
+        tabTextoAdicional[snapshot.data[indexList]["item_checklist"]]
                 [snapshot.data[indexList]["subcodigo_tpresposta"]] =
             snapshot.data[indexList]["texto_adicional"];
       }
 
       _textoAdicional.text =
-          wtexto_adicional[snapshot.data[indexList]["item_checklist"]]
+          tabTextoAdicional[snapshot.data[indexList]["item_checklist"]]
               [snapshot.data[indexList]["subcodigo_tpresposta"]];
       return Padding(
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -1147,22 +1147,19 @@ class _sps_questionario_ch_item_screen
             LengthLimitingTextInputFormatter(
                 snapshot.data[indexList]["tamanho_texto_adicional"]),
           ],
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.go,
           keyboardType: TextInputType.text,
-          onSubmitted: (novoTexto) => {
+          onChanged: (novoTexto) => {
             tabConteudo[snapshot.data[indexList]["item_checklist"]][1] =
                 "RESPOSTA MULTIPLA",
-            tabRespMultipla.add(
-              [
-                snapshot.data[indexList]["item_checklist"],
-                snapshot.data[indexList]["subcodigo_tpresposta"],
-                "true",
-                novoTexto
-              ],
-            ),
-            _textoAdicional.text = novoTexto,
-            wtexto_adicional[snapshot.data[indexList]["item_checklist"]]
+            tabRespMultipla[snapshot.data[indexList]
+            ["item_checklist"]][
+            snapshot.data[indexList]
+            ["subcodigo_tpresposta"]] = true,
+            //_textoAdicional.text = novoTexto,
+            tabTextoAdicional[snapshot.data[indexList]["item_checklist"]]
                 [snapshot.data[indexList]["subcodigo_tpresposta"]] = novoTexto,
+            print ("adriano=>tabTextoAdicional[snapshot.data[indexList][item_checklist]]=>"+tabTextoAdicional[snapshot.data[indexList]["item_checklist"]].toString()),
           },
           decoration: InputDecoration(
             filled: true,
@@ -1315,53 +1312,56 @@ class _sps_questionario_ch_item_screen
           }
 
           if (element[1] == "RESPOSTA MULTIPLA") {
-            await Future.forEach(
-              tabRespMultipla,
-              (elementRespMultipla) async {
-                print("adriano=>elementRespMultipla=>" +
-                    elementRespMultipla.toString());
-                if (elementRespMultipla[0] == element[0]) {
-                  _wsubcodigoTpresposta = elementRespMultipla[1];
+            int windex = 0;
+            while (windex < 99) {
+              if (tabRespMultipla[_witemChecklist][windex] != null) {
+                print("adriano =>tabRespMultipla[windex]=>" +
+                    tabRespMultipla[windex].toString());
+                print("adriano =>tabTextoAdicional[windex]=>" +
+                    tabTextoAdicional[windex].toString());
 
-                  if (element[3] != "NÃO SE APLICA") {
-                    if (elementRespMultipla[2] == "true") {
-                      _wsubcodigoResposta = elementRespMultipla[1];
-                    } else {
-                      _wsubcodigoResposta = null;
-                    }
-                    if (elementRespMultipla[3] == null) {
-                      _wtextoAdicional = "";
-                    } else {
-                      _wtextoAdicional = elementRespMultipla[3];
-                    }
+                _wsubcodigoTpresposta = windex;
+
+                if (element[3] != "NÃO SE APLICA") {
+                  if (tabRespMultipla[_witemChecklist][windex] == true) {
+                    _wsubcodigoResposta = windex;
                   } else {
                     _wsubcodigoResposta = null;
-                    _wtextoAdicional = "";
                   }
-
-                  //Gravar SQlite (Respostas)
-                  final SpsDaoQuestionarioItem objQuestionarioItemDao =
-                      SpsDaoQuestionarioItem();
-                  final int resultupdate =
-                      await objQuestionarioItemDao.update_resposta(
-                          _wcodigoEmpresa,
-                          _wcodigoProgramacao,
-                          _wregistroColaborador,
-                          _widentificacaoUtilizador,
-                          _witemChecklist,
-                          _wrespTexto,
-                          _wrespNumero,
-                          _wrespData,
-                          _wrespHora,
-                          _wrespSimnao,
-                          _wrespEscala,
-                          _wsubcodigoTpresposta,
-                          _wsubcodigoResposta,
-                          _wtextoAdicional,
-                          _wsincronizado);
+                  if (tabTextoAdicional[_witemChecklist][windex] == null || tabRespMultipla[_witemChecklist][windex] == false) {
+                    _wtextoAdicional = "";
+                  } else {
+                    _wtextoAdicional = tabTextoAdicional[_witemChecklist][windex];
+                  }
+                } else {
+                  _wsubcodigoResposta = null;
+                  _wtextoAdicional = "";
                 }
-              },
-            );
+
+                //Gravar SQlite (Respostas)
+                final SpsDaoQuestionarioItem objQuestionarioItemDao =
+                    SpsDaoQuestionarioItem();
+                final int resultupdate =
+                    await objQuestionarioItemDao.update_resposta(
+                        _wcodigoEmpresa,
+                        _wcodigoProgramacao,
+                        _wregistroColaborador,
+                        _widentificacaoUtilizador,
+                        _witemChecklist,
+                        _wrespTexto,
+                        _wrespNumero,
+                        _wrespData,
+                        _wrespHora,
+                        _wrespSimnao,
+                        _wrespEscala,
+                        _wsubcodigoTpresposta,
+                        _wsubcodigoResposta,
+                        _wtextoAdicional,
+                        _wsincronizado);
+              }
+              windex = windex + 1;
+            }
+            ;
           } else {
             final SpsDaoQuestionarioItem objQuestionarioItemDao =
                 SpsDaoQuestionarioItem();
@@ -1443,7 +1443,9 @@ class _sps_questionario_ch_item_screen
     tabConteudo.clear();
     tabConteudo = new List.generate(100, (_) => new List(4));
     tabRespMultipla.clear();
-    tabRespMultipla = List();
+    tabRespMultipla = new List.generate(100, (_) => new List(99));
+    tabTextoAdicional.clear();
+    tabTextoAdicional = new List.generate(100, (_) => new List(99));
 
     //Recarregar tela
     Navigator.pop;
