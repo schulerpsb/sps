@@ -52,6 +52,7 @@ dependencies:
   video_thumbnail: ^0.2.5
   path_provider: ^1.6.27
   dart_jsonwebtoken: ^1.6.2
+  percent_indicator: 2.1.9+1
 
   # Dependências para o DB
   sqflite:

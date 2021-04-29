@@ -20,8 +20,8 @@ class spsNotificacao {
 
   static Future<int> notificarProgresso(int id, int maxProgress, int progresso, String title1, String title2, FlutterLocalNotificationsPlugin flip) async {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails('progress channel', 'progress channel',
-        'progress channel description',
+    AndroidNotificationDetails('grouped channel id', 'grouped channel name',
+        'grouped channel description',
         channelShowBadge: false,
         importance: Importance.max,
         priority: Priority.high,

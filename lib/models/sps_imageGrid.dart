@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/media.dart';
@@ -21,17 +22,21 @@ class ImageGrid extends StatelessWidget {
   final String codigo_empresa;
   final int codigo_programacao;
   final int item_checklist;
+  final double progress;
   final Function() funCallback;
+  final Function({String uri, String filename}) funcDownload;
 
 
   const ImageGrid(
       {this.funCallback,
+      this.funcDownload,
       Key key,
       this.directory,
       this.extensao,
       this.tipo,
       this.codigo_empresa,
       this.codigo_programacao,
+      this.progress,
       this.item_checklist})
       : super(key: key);
 
@@ -117,6 +122,7 @@ class ImageGrid extends StatelessWidget {
                           snapshot.data[i]['nome_arquivo'].toString().length -
                               4);
                   if ((_extensao == '.mp4' || _extensao == '.MP4' || _extensao == '.mov' || _extensao == '.MOV') && tipo == 'video') {
+//                    print(snapshot.data[i]['nome_arquivo'].toString());
                     String _nomeArquivoSemExtensao = snapshot.data[i]['nome_arquivo'].toString().substring(0, snapshot.data[i]['nome_arquivo'].toString().length - 4);
                     if (File(usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[i]['nome_arquivo'].toString()).existsSync() == true) {
                       Map<String, dynamic> _registroArquivo =
@@ -133,10 +139,9 @@ class ImageGrid extends StatelessWidget {
                           snapshot.data[i]['nome_arquivo'].toString();
                       _registroArquivo['titulo_arquivo'] =
                           snapshot.data[i]['titulo_arquivo'].toString();
-                      _registroArquivo['caminho'] =
-                          usuarioAtual.document_root_folder.toString()+ '/thumbs/' +
-                              _nomeArquivoSemExtensao +
-                              '.jpg';
+                      _registroArquivo['caminho'] = usuarioAtual.document_root_folder.toString()+ '/thumbs/' + _nomeArquivoSemExtensao + '.jpg';
+                      _registroArquivo['registro_colaborador'] = snapshot.data[i]['registro_colaborador'].toString();
+                      _registroArquivo['identificacao_utilizador'] = snapshot.data[i]['identificacao_utilizador'].toString();
                       _listaArquivos.add(_registroArquivo);
                     }else {
                       Map<String, dynamic> _registroArquivo =
@@ -154,6 +159,8 @@ class ImageGrid extends StatelessWidget {
                       _registroArquivo['titulo_arquivo'] =
                           snapshot.data[i]['titulo_arquivo'].toString();
                       _registroArquivo['caminho'] = 'images/noimage.jpg';
+                      _registroArquivo['registro_colaborador'] = snapshot.data[i]['registro_colaborador'].toString();
+                      _registroArquivo['identificacao_utilizador'] = snapshot.data[i]['identificacao_utilizador'].toString();
                       _listaArquivos.add(_registroArquivo);
 //                      final SpsDaoQuestionarioMidia
 //                          objQuestionarioCqMidiaDao =
@@ -196,6 +203,8 @@ class ImageGrid extends StatelessWidget {
                       _registroArquivo['caminho'] =
                           usuarioAtual.document_root_folder.toString() + '/' +
                               snapshot.data[i]['nome_arquivo'].toString();
+                      _registroArquivo['registro_colaborador'] = snapshot.data[i]['registro_colaborador'].toString();
+                      _registroArquivo['identificacao_utilizador'] = snapshot.data[i]['identificacao_utilizador'].toString();
                       _listaArquivos.add(_registroArquivo);
                     } else {
                       Map<String, dynamic> _registroArquivo =
@@ -213,6 +222,8 @@ class ImageGrid extends StatelessWidget {
                       _registroArquivo['titulo_arquivo'] =
                           snapshot.data[i]['titulo_arquivo'].toString();
                       _registroArquivo['caminho'] = 'images/noimage.jpg';
+                      _registroArquivo['registro_colaborador'] = snapshot.data[i]['registro_colaborador'].toString();
+                      _registroArquivo['identificacao_utilizador'] = snapshot.data[i]['identificacao_utilizador'].toString();
                       _listaArquivos.add(_registroArquivo);
 //                      final SpsDaoQuestionarioMidia
 //                          objQuestionarioCqMidiaDao =
@@ -450,6 +461,42 @@ class ImageGrid extends StatelessWidget {
       );
     }else{
       return Row(
+        mainAxisAlignment:
+        MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            children: [
+//              Align(
+//                alignment: Alignment.bottomCenter,
+//                child: CircularPercentIndicator(
+//                  radius: 45.0,
+//                  lineWidth: 4.0,
+//                  percent: progress,
+//                  center: new Text((progress * 100).toStringAsFixed(0)+'%'),
+//                  progressColor: Color(0xFF004077),
+//                ),
+//              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CircleAvatar(
+                  radius: 15,
+                  backgroundColor: Colors.white,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.download_sharp,
+                      color: Color(0xFF004077),
+                      size: 15,
+                    ),
+                    onPressed: () {
+                      String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + _listaArquivos[index]['codigo_programacao'].toString() + '_' + _listaArquivos[index]['registro_colaborador'].toString()+ '_' + _listaArquivos[index]['identificacao_utilizador'].toString() + '_' + _listaArquivos[index]['item_checklist'].toString() +'/' + _listaArquivos[index]['nome_arquivo'].toString();
+                      funcDownload(uri: ArquivoParaDownload, filename: _listaArquivos[index]['nome_arquivo'].toString());
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       );
     }
   }

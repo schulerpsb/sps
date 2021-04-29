@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
+import 'package:dio/adapter.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
@@ -24,6 +27,8 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:sps/http/sps_http_questionario_midia_class.dart';
 import 'package:badges/badges.dart';
 import 'package:sps/screens/sps_pdf_viewer_screen.dart';
+import 'package:sps/models/sps_notificacao.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class sps_questionario_midia_screen extends StatefulWidget {
   final Function({int index_posicao_retorno, String acao}) funCallback;
@@ -176,6 +181,12 @@ class _sps_questionario_midia_screen
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
+
+  bool downloading = false;
+  double progress = 0;
+  bool isDownloaded = false;
+
+  FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
 
   //FIM - Declaração de variáveis da classe _sps_questionario_midia_screen
 
@@ -486,6 +497,65 @@ class _sps_questionario_midia_screen
     }
   }
 
+  Future<void> downloadFile(uri, fileName) async {
+
+    Random random = new Random();
+    int id_notificacao = random.nextInt(1000);
+
+    await spsNotificacao.notificarProgresso(id_notificacao, 100, 0, 'SPS - Supplier Portal','Baixando arquivo 0%', flip);
+
+    String savePath = usuarioAtual.document_root_folder.toString() + '/' + fileName;
+
+    Dio dio = Dio();
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+    dio.download(
+      uri,
+      savePath,
+      onReceiveProgress: (rcv, total) {
+//        setState(() {
+          progress = (rcv / total);
+//        });
+//        print('received: ${rcv.toStringAsFixed(0)} out of total: ${total.toStringAsFixed(0)} %'+(progress * 100).round().toString());
+        print('id not: '+id_notificacao.toString());
+        spsNotificacao.notificarProgresso(id_notificacao, 100, (progress * 100).round(), 'SPS - Supplier Portal','Baixando arquivo '+(progress * 100).round().toString()+'%', flip);
+//        if (progress == 1) {
+//          setState(() {
+//            isDownloaded = true;
+//          });
+//        } else if (progress < 1) {}
+      },
+      deleteOnError: true,
+    ).then((_) {
+      print('Download efetuado ==> ' + uri.toString() + ' Para ' +savePath.toString());
+      //print('Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
+      File arquivoLocal = new File(savePath);
+      String tipoArquivo = arquivoLocal.path
+          .split('.')
+          .last;
+      if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4' || tipoArquivo == 'mov' || tipoArquivo == 'MOV') {
+        //Processamento do arquivo capturado - Gerar thumbnail.
+        List _listaArquivos = new List();
+        _listaArquivos.add(savePath);
+        print('Converter Vídeo: '+_listaArquivos.toString());
+        spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value){
+          print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +savePath.toString());
+        });
+      }
+      spsNotificacao.cancelarNotificacao(0, flip);
+      setState(() {
+//        if (progress == 1) {
+//          isDownloaded = true;
+//        }
+//        downloading = false;
+      });
+    });
+  }
+
   //FIM - Métodos da classe _sps_questionario_midia_screen
 
   //Widget Build da classe  _sps_questionario_midia_screen
@@ -560,12 +630,16 @@ class _sps_questionario_midia_screen
                           imageCache.clear();
                         });
                       },
+                      funcDownload: ({String uri, String filename}) {
+                        downloadFile(uri, filename);
+                      },
                       directory: _photoDir,
                       extensao: ".jpg",
                       tipo: "image",
                       codigo_empresa: this.widget._codigo_empresa,
                       codigo_programacao: this.widget._codigo_programacao,
-                      item_checklist: this.widget._item_checklist),
+                      item_checklist: this.widget._item_checklist,
+                      progress: progress),
                 ),
               ),
               //Container com a galeria de vídeos
@@ -578,12 +652,16 @@ class _sps_questionario_midia_screen
                           imageCache.clear();
                         });
                       },
+                      funcDownload: ({String uri, String filename}) {
+                        downloadFile(uri, filename);
+                      },
                       directory: _videoDir,
                       extensao: ".jpg",
                       tipo: "video",
                       codigo_empresa: this.widget._codigo_empresa,
                       codigo_programacao: this.widget._codigo_programacao,
-                      item_checklist: this.widget._item_checklist),
+                      item_checklist: this.widget._item_checklist,
+                      progress: progress),
                 ),
               ),
               new Container(
