@@ -280,6 +280,8 @@ class _sps_questionario_cq_lista_screen
 
   RichText prepararTextoPrincipal(
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
+    if (this.widget._origemUsuario.toString() == "EXTERNO") {}
+
     return RichText(
       text: new TextSpan(
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
@@ -347,8 +349,9 @@ class _sps_questionario_cq_lista_screen
             style: TextStyle(color: Colors.grey),
           ),
           new TextSpan(
-              text: snapshot.data[index]["status"] == "PARCIAL" ||
-                      snapshot.data[index]["status"] == "PENDENTE"
+              text: (snapshot.data[index]["status"] == "PARCIAL" ||
+                          snapshot.data[index]["status"] == "PENDENTE") &&
+                      this.widget._origemUsuario == "INTERNO"
                   ? formato
                           .format(snapshot.data[index]
                                       ["percentual_evolucao_fornecedor"] >=
@@ -360,13 +363,27 @@ class _sps_questionario_cq_lista_screen
                       " %\n"
                   : ""),
           new TextSpan(
-            text: snapshot.data[index]["status"] == "PARCIAL"
+              text: (snapshot.data[index]["status"] == "PARCIAL" ||
+                          snapshot.data[index]["status"] == "PENDENTE") &&
+                      this.widget._origemUsuario == "EXTERNO"
+                  ? formato
+                          .format(snapshot.data[index]["percentual_evolucao"] >=
+                                  99.9
+                              ? 100
+                              : snapshot.data[index]["percentual_evolucao"])
+                          .toString() +
+                      " %\n"
+                  : ""),
+          new TextSpan(
+            text: snapshot.data[index]["status"] == "PARCIAL" &&
+                    this.widget._origemUsuario == "INTERNO"
                 ? "APROVAÇÃO FUP:                "
                 : "",
             style: TextStyle(color: Colors.grey),
           ),
           new TextSpan(
-              text: snapshot.data[index]["status"] == "PARCIAL"
+              text: snapshot.data[index]["status"] == "PARCIAL" &&
+                      this.widget._origemUsuario == "INTERNO"
                   ? formato
                           .format(snapshot.data[index]["percentual_evolucao"] >=
                                   99.9
