@@ -119,14 +119,13 @@ class _sps_questionario_ch_item_screen
   }
 
   var tabConteudo = new List.generate(100, (_) => new List(4));
-  var tabRespMultipla = new List.generate(100, (_) => new List(99));
-  var tabTextoAdicional = new List.generate(100, (_) => new List(99));
+  var tabRespMultipla = new List.generate(100, (_) => new List(100));
+  var tabTextoAdicional = new List.generate(100, (_) => new List(100));
 
   String _exibirSalvar = "SIM";
   var _wrespEscala;
   var _wrespSimNao;
   var _wrespNaoSeAplica;
-  var _wrespMultipla = new List.generate(100, (_) => new List(25));
 
   @override
   Widget build(BuildContext context) {
@@ -1028,11 +1027,11 @@ class _sps_questionario_ch_item_screen
                     Container(
                       height: wtamanho,
                       child: ListView.builder(
-                        //cacheExtent: 100000000,
+                        //cacheExtent: 999999999999999,
                         itemCount: witens,
                         itemBuilder: (BuildContext context, int indexList) {
                           indexList = indexList + windex_inicio;
-                          //print ("adriano =>1=>"+_wrespMultipla[snapshot.data[indexList]["item_checklist"]] [snapshot.data[indexList]["subcodigo_tpresposta"]].toString());
+                          print ("adriano =>item_checklist=>"+snapshot.data[indexList]["item_checklist"].toString()+"=>subcodigo_tpresposta=>"+ snapshot.data[indexList]["subcodigo_tpresposta"].toString());
                           return Transform.scale(
                             scale: .85,
                             child: new Card(
@@ -1177,22 +1176,22 @@ class _sps_questionario_ch_item_screen
     }
   }
 
-  Padding textoAdicionalRespostaMultiplaAlerta(
-      AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int indexList) {
-    if (snapshot.data[indexList]["tamanho_texto_adicional"] != null) {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 0, 2),
-        child: Text(
-          "Clique em OK após digitar",
-          style: TextStyle(fontSize: 10, color: Colors.blue),
-        ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.all(0.0),
-      );
-    }
-  }
+  // Padding textoAdicionalRespostaMultiplaAlerta(
+  //     AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int indexList) {
+  //   if (snapshot.data[indexList]["tamanho_texto_adicional"] != null) {
+  //     return Padding(
+  //       padding: const EdgeInsets.fromLTRB(10, 0, 0, 2),
+  //       child: Text(
+  //         "Clique em OK após digitar",
+  //         style: TextStyle(fontSize: 10, color: Colors.blue),
+  //       ),
+  //     );
+  //   } else {
+  //     return Padding(
+  //       padding: const EdgeInsets.all(0.0),
+  //     );
+  //   }
+  // }
 
   tratar_nao_se_aplica(BuildContext context,
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index) {
@@ -1313,7 +1312,7 @@ class _sps_questionario_ch_item_screen
 
           if (element[1] == "RESPOSTA MULTIPLA") {
             int windex = 0;
-            while (windex < 99) {
+            while (windex < 100) {
               if (tabRespMultipla[_witemChecklist][windex] != null) {
                 print("adriano =>tabRespMultipla[windex]=>" +
                     tabRespMultipla[windex].toString());
