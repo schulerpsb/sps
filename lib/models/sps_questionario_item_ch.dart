@@ -45,3 +45,25 @@ class SpsQuestionarioItem_ch {
     return DadosSessao;
   }
 }
+
+class SpsQuestionarioItem_ch_item {
+  @override
+  Future<List<Map<String, dynamic>>> listarQuestionarioItem_ch_item(
+      h_codigo_empresa,
+      h_codigo_programacao,
+      h_registro_colaborador,
+      h_identificacao_utilizador,
+      h_codigo_grupo,
+      h_codigo_checklist,
+      h_acao,
+      h_sessao_checklist,
+      h_item_checklist) async {
+
+    //Ler dados do SQlite
+    debugPrint("Ler dados do SQlite (Tabela: checklist_item) -> item especifico");
+    final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
+    final List<Map<String, dynamic>> DadosSessao = await objQuestionarioItemDao.listarQuestionarioItemLocal_item(
+        h_codigo_empresa, h_codigo_programacao, h_acao, h_sessao_checklist, h_item_checklist);
+    return DadosSessao;
+  }
+}

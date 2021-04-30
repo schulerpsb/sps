@@ -74,8 +74,8 @@ class SpsDaoQuestionarioItem {
   Future<int> save(List<Map<String, dynamic>> dadosQuestionarioItem) async {
     final Database db = await getDatabase();
     await Future.forEach(dadosQuestionarioItem, (item) async {
-      item['registro_colaborador'] = "";
-      item['identificacao_utilizador'] = "";
+      //item['registro_colaborador'] = "";
+      //item['identificacao_utilizador'] = "";
 
       if (item['inicio_escala'].toString() == "") {
         item['inicio_escala'] = null;
@@ -323,7 +323,7 @@ class SpsDaoQuestionarioItem {
         _hidentificacaoUtilizador +
         '" and item_checklist = ' +
         _hitemChecklist.toString();
-    print("adriano query2=>" + _query.toString());
+    //print("adriano query2=>" + _query.toString());
     db.rawUpdate(_query);
 
     //Limpar arquivos anexados
@@ -574,6 +574,27 @@ class SpsDaoQuestionarioItem {
       }
     }
     //debugPrint("query => " + _query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> listarQuestionarioItemLocal_item(
+      _hcodigoEmpresa, _hcodigoProgramacao, _hacao, _hsessaoChecklist, _hitem_checklist) async {
+    final Database db = await getDatabase();
+    var _query = 'SELECT *, '
+        '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist > item.sessao_checklist) as sessao_posterior, '
+        '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist < item.sessao_checklist) as sessao_anterior,  '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos,  '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4","mov","MOV")) as videos, '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF","mov","MOV")) as outros '
+        'FROM checklist_item item where item.codigo_empresa = "' + _hcodigoEmpresa + '" '
+        ' and item.codigo_programacao = ' + _hcodigoProgramacao.toString() +
+        ' and item.sessao_checklist = "' + _hsessaoChecklist.toString() + '" '
+        ' and item.item_checklist = ' + _hitem_checklist.toString() +
+        ' order by item.seq_pergunta, item.subcodigo_tpresposta';
+
+    //print("query item especifico => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
