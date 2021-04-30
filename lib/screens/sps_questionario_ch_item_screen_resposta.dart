@@ -391,8 +391,8 @@ class _sps_questionario_ch_item_screen_resposta
                                       : "";
                                 },
                                 shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10.0))),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
                                 label: Text(
                                   'SALVAR',
                                   style: TextStyle(color: Colors.white),
@@ -404,8 +404,9 @@ class _sps_questionario_ch_item_screen_resposta
                                 textColor: Colors.white,
                                 splashColor:
                                     _exibirSalvar == "" ? null : Colors.red,
-                                color:
-                                    _exibirSalvar == "" ? Colors.grey : Colors.blue,
+                                color: _exibirSalvar == ""
+                                    ? Colors.grey
+                                    : Colors.blue,
                               ),
                             ],
                           ),
@@ -946,15 +947,33 @@ class _sps_questionario_ch_item_screen_resposta
                   wtamanho = wtamanho + (wqtde_texto_adicional * 60.toDouble());
 
                   _listaRespMultipla.add(
-                    Container(
-                      height: wtamanho,
-                      child: ListView.builder(
-                        itemCount: witens,
-                        itemBuilder: (BuildContext context, int indexList) {
-                          indexList = indexList + windex_inicio;
-                          return Transform.scale(
-                            scale: .85,
-                            child: new Card(
+                    Transform.scale(
+                      scale: .85,
+                      child: Container(
+                        //color: Colors.green, // Cinza
+                        height: wtamanho,
+                        decoration: BoxDecoration(
+                          color: Colors.white10,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: ListView.builder(
+                          itemCount: witens,
+                          itemBuilder: (BuildContext context, int indexList) {
+                            indexList = indexList + windex_inicio;
+                            return new Card(
                               child: new Column(
                                 children: <Widget>[
                                   new CheckboxListTile(
@@ -1005,9 +1024,9 @@ class _sps_questionario_ch_item_screen_resposta
                                       snapshot, indexList),
                                 ],
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   );

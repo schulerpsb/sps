@@ -140,6 +140,7 @@ class _sps_questionario_ch_item_screen
               return IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
+                  usuarioAtual.index_perguntas = 0;
                   Navigator.pop;
                   Navigator.push(
                     context,
@@ -243,6 +244,7 @@ class _sps_questionario_ch_item_screen
                                         snapshot.data[0]["sessao_anterior"] != 0
                                             ? setState(
                                                 () {
+                                                  usuarioAtual.index_perguntas = 0;
                                                   this.widget._acao =
                                                       "ANTERIOR";
                                                 },
@@ -297,6 +299,7 @@ class _sps_questionario_ch_item_screen
                                                 0
                                             ? setState(
                                                 () {
+                                                  usuarioAtual.index_perguntas = 0;
                                                   this.widget._acao = "PROXIMO";
                                                 },
                                               )
