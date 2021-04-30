@@ -32,6 +32,7 @@ class SpsHttpLogin {
     );
     token = jwt.sign(SecretKey('schulerchecklistApp2021'));
     final String dadosParaLogonJson = jsonEncode(token);
+
 //    FIM implementação de JWT somente para o Login
 
 
@@ -51,7 +52,8 @@ class SpsHttpLogin {
           ),
         );
 
-//    print ("Fernando=>"+response.body.toString());
+    //print ("Fernando=>"+response.body.toString());
+
     final List<dynamic> transactionJsonList = jsonDecode(response.body);
     Map<String, dynamic> transactionJsonMap = null;
     for (Map<String, dynamic> element in transactionJsonList) {

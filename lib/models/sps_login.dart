@@ -23,6 +23,7 @@ class SpsLogin {
       //debugPrint("Usuario"+usuario.toString()+" Senha: "+senha.toString());
       final Map<String, dynamic> dadosUsuario = await objLoginHttp.efetuaLogin(
           usuario, senha);
+
       if (dadosUsuario['mensagem'] == "") {
         dadosUsuario.remove('mensagem');
         // Create a secure storage
