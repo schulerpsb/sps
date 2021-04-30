@@ -5,6 +5,7 @@ import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_item_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_filtro_screen.dart';
