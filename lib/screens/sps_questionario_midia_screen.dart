@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
@@ -198,7 +199,7 @@ class _sps_questionario_midia_screen
     }
     if (isVideo) {
       _picker
-          .getVideo(source: source, maxDuration: const Duration(seconds: 60))
+          .getVideo(source: source, maxDuration: const Duration(seconds: 30))
           .then((final PickedFile file) async {
         setState(() {
           _isLoading = true;
@@ -462,33 +463,33 @@ class _sps_questionario_midia_screen
     switch (index) {
       case 0: // Fotos
         return FloatingActionButton(
-          onPressed: () {
-            isVideo = false;
-            _onImageButtonPressed(ImageSource.camera, context: context);
-          },
-          heroTag: 'image1',
-          tooltip: 'Tirar uma foto',
-          child: const Icon(Icons.camera_alt),
-        );
+                onPressed: () {
+                  isVideo = false;
+                  _onImageButtonPressed(ImageSource.camera, context: context);
+                },
+                heroTag: 'image',
+                tooltip: 'Tirar uma foto',
+                child: const Icon(Icons.camera_alt),
+              );
         break;
       case 1: // Vídeos
         return FloatingActionButton(
-          backgroundColor: Colors.red,
           onPressed: () {
             isVideo = true;
             _onImageButtonPressed(ImageSource.camera);
           },
-          heroTag: 'video1',
+          heroTag: 'video',
           tooltip: 'Gravar um víceo',
           child: const Icon(Icons.videocam),
         );
         break;
-      case 2: // audios
+      case 2: // anexos
         return FloatingActionButton(
-          onPressed: null,
-          heroTag: 'audio1',
-          tooltip: 'Gravar um audio',
-          child: const Icon(Icons.mic),
+          onPressed: () {
+          },
+          heroTag: 'video',
+          tooltip: 'Anexar um arquivo',
+          child: const Icon(Icons.attach_file),
         );
         break;
       case 3: // anexos
@@ -546,13 +547,88 @@ class _sps_questionario_midia_screen
           print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +savePath.toString());
         });
       }
-      spsNotificacao.cancelarNotificacao(0, flip);
+      spsNotificacao.cancelarNotificacao(id_notificacao, flip);
       setState(() {
 //        if (progress == 1) {
 //          isDownloaded = true;
 //        }
 //        downloading = false;
       });
+    });
+  }
+
+  Future<void> downloadList(List<Map<String, dynamic>> listaArquivos) async {
+    setState(() {
+      downloading = true;
+    });
+    double progress = 0;
+
+    Random random = new Random();
+    int id_notificacao = random.nextInt(1000);
+
+    await spsNotificacao.notificarProgresso(id_notificacao, 100, 0, 'SPS - Supplier Portal','Baixando todos os arquivos 0%', flip);
+
+    double passo = 1 / listaArquivos.length / 2;
+    print('passo: '+passo.toString());
+
+    await Future.forEach(listaArquivos, (arquivo) async {
+      double progress_individual = 0;
+      double limit = 0.5;
+      String uri = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + arquivo['codigo_programacao'].toString() + '_' + arquivo['registro_colaborador'].toString()+ '_' + arquivo['identificacao_utilizador'].toString() + '_' + arquivo['item_checklist'].toString() +'/' + arquivo['nome_arquivo'].toString();
+      String savePath = usuarioAtual.document_root_folder.toString() + '/' + arquivo['nome_arquivo'].toString();
+      Dio dio = Dio();
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (HttpClient client) {
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+        return client;
+      };
+      await dio.download(
+        uri,
+        savePath,
+        onReceiveProgress: (rcv, total) {
+          progress_individual = (rcv / total);
+          progress_individual = double.parse(progress_individual.toStringAsFixed(1));
+          print('Progresso individual: '+progress_individual.toString());
+          //        print('received: ${rcv.toStringAsFixed(0)} out of total: ${total.toStringAsFixed(0)} %'+(progress_individual * 100).round().toString());
+          if (progress_individual >= limit && progress < 1.0) {
+            limit = limit + 0.5;
+            print('aumentei o limite: ' + limit.toString());
+              if(progress < 1.0){
+                progress = progress + double.parse(passo.toStringAsFixed(1));
+                spsNotificacao.notificarProgresso(id_notificacao, 100, (progress * 100).round(), 'SPS - Supplier Portal','Baixando todos os arquivos '+(progress * 100).round().toString()+'%', flip);
+                print('aumentei o progress: ' + progress.toString());
+              }else{
+                progress = 1.0;
+              }
+          }
+//          print('Progresso: '+progress.toString());
+        },
+        deleteOnError: true,
+      );
+      print('Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +arquivo['nome_arquivo'].toString());
+      File arquivoLocal = new File(savePath);
+      String tipoArquivo = arquivoLocal.path
+          .split('.')
+          .last;
+      if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4' || tipoArquivo == 'mov' || tipoArquivo == 'MOV') {
+        //Processamento do arquivo capturado - Gerar thumbnail.
+        List _listaArquivos = new List();
+        _listaArquivos.add(savePath);
+        print('Converter Vídeo: '+_listaArquivos.toString());
+        spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value){
+          print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +savePath.toString());
+        });
+      }
+      if (progress >= 0.9) {
+        spsNotificacao.cancelarNotificacao(id_notificacao, flip);
+        setState(() {
+          downloading = false;
+        });
+      }else{
+        setState(() {
+        });
+      }
     });
   }
 
@@ -566,6 +642,7 @@ class _sps_questionario_midia_screen
     imageCache.clear();
     new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs').create();
     SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+    final objSpsQuestionarioCqMidia = SpsQuestionarioMidia();
     return DefaultTabController(
         length: 3,
         child: new Scaffold(
@@ -730,8 +807,8 @@ class _sps_questionario_midia_screen
                               ]);
                             } else {
                               return CenteredMessage(
-                                'NÃO FOI ENCONTRADO NENHUM REGISTRO!',
-                                icon: Icons.warning,
+                                'Nenhum anexo encontrado!',
+                                icon: Icons.error,
                               );
                             }
                           } else {
@@ -742,7 +819,7 @@ class _sps_questionario_midia_screen
                           }
                           break;
                       }
-                      return Text('Unkown error.');
+                      return Text('');
                     },
                   ),
                 ),
@@ -754,7 +831,94 @@ class _sps_questionario_midia_screen
             progressIndicator: CircularProgressIndicator(),
             color: Colors.white,
           ),
-          floatingActionButton: _bottomButtons(controller.index),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(left: 35.0),
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: objSpsQuestionarioCqMidia.listarQuestionarioMidiaFaltante(codigo_empresa: this.widget._codigo_empresa,codigo_programacao: this.widget._codigo_programacao,item_checklist: this.widget._item_checklist),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    break;
+                  case ConnectionState.waiting:
+                    return Progress();
+                    break;
+                  case ConnectionState.active:
+                    break;
+                  case ConnectionState.done:
+                    if (snapshot.hasError) {
+
+                    }
+                    if (erroConexao.msg_erro_conexao.toString() == "") {
+                      if (snapshot.data.isNotEmpty) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            downloading == false
+                                ? CircleAvatar(
+                              radius: 15,
+                              backgroundColor: Color(0xFF004077),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.download_sharp,
+                                  color: Colors.white,
+                                  size: 15,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                            title: Text("SPS App"),
+                                            content: Text(
+                                                "Deseja fazer o download de todas as mídas desse item?"),
+                                            actions: [
+                                              FlatButton(
+                                                child: Text("Cancelar"),
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                      rootNavigator:
+                                                      true)
+                                                      .pop();
+                                                },
+                                              ),
+                                              FlatButton(
+                                                  child: Text("Sim"),
+                                                  onPressed: () {
+                                                    downloadList(snapshot.data);
+                                                    Navigator.of(context,
+                                                        rootNavigator:
+                                                        true)
+                                                        .pop();
+                                                  }),
+                                            ]);
+                                      });
+                                },
+                              ),
+                            ) : Text(''),
+                            _bottomButtons(controller.index),
+                          ],
+                        );
+                      }else{
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(''),
+                            _bottomButtons(controller.index),
+                          ],
+                        );
+                      }
+                    } else {
+                      return CenteredMessage(
+                        erroConexao.msg_erro_conexao.toString(),
+                        icon: Icons.warning,
+                      );
+                    }
+                    break;
+                }
+                return Text('');
+              },
+            ),
+          ),
         )
     );
   }
