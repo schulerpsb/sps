@@ -566,7 +566,7 @@ class _sps_questionario_midia_screen
     Random random = new Random();
     int id_notificacao = random.nextInt(1000);
 
-    await spsNotificacao.notificarProgresso(id_notificacao, 100, 0, 'SPS - Supplier Portal','Baixando todos os arquivos 0%', flip);
+    await spsNotificacao.notificarProgresso(id_notificacao, 100, 0, 'SPS - Supplier Portal','Baixando arquivos 0%', flip);
 
     double passo = 1 / listaArquivos.length / 2;
     print('passo: '+passo.toString());
@@ -596,7 +596,7 @@ class _sps_questionario_midia_screen
             print('aumentei o limite: ' + limit.toString());
               if(progress < 1.0){
                 progress = progress + double.parse(passo.toStringAsFixed(1));
-                spsNotificacao.notificarProgresso(id_notificacao, 100, (progress * 100).round(), 'SPS - Supplier Portal','Baixando todos os arquivos '+(progress * 100).round().toString()+'%', flip);
+                spsNotificacao.notificarProgresso(id_notificacao, 100, (progress * 100).round(), 'SPS - Supplier Portal','Baixando arquivos '+(progress * 100).round().toString()+'%', flip);
                 print('aumentei o progress: ' + progress.toString());
               }else{
                 progress = 1.0;
