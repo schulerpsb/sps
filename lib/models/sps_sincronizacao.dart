@@ -454,15 +454,23 @@ class spsSincronizacao {
       doc_action = 'PREENCHER_PESQUISA';
       tipo_checklist = 'PESQUISA';
       tipo_frequencia = 'ESPORADICA';
-      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
-        registro_colaborador = sps_usuario().registro_usuario;
-        identificacao_utilizador = '';
-      } else {
-        registro_colaborador = '';
-        identificacao_utilizador = sps_usuario().codigo_usuario;
-      }
+      registro_colaborador = sps_usuario().registro_usuario;
+      identificacao_utilizador = '';
       registro_aprovador = '';
     }
+    // if (_tipoChecklist == "PESQUISA") {
+    //   doc_action = 'PREENCHER_PESQUISA';
+    //   tipo_checklist = 'PESQUISA';
+    //   tipo_frequencia = 'ESPORADICA';
+    //   if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+    //     registro_colaborador = sps_usuario().registro_usuario;
+    //     identificacao_utilizador = '';
+    //   } else {
+    //     registro_colaborador = '';
+    //     identificacao_utilizador = sps_usuario().codigo_usuario;
+    //   }
+    //   registro_aprovador = '';
+    // }
 
     final SpsHttpQuestionario objQuestionarioHttp = SpsHttpQuestionario();
     final List<Map<String, dynamic>> dadosQuestionario = await objQuestionarioHttp
@@ -647,15 +655,23 @@ class spsSincronizacao {
         doc_action = 'PREENCHER_PESQUISA';
         _tipo_checklist = 'PESQUISA';
         tipo_frequencia = 'ESPORADICA';
-        if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
-          registro_colaborador = sps_usuario().registro_usuario;
-          identificacao_utilizador = '';
-        } else {
-          registro_colaborador = '';
-          identificacao_utilizador = sps_usuario().codigo_usuario;
-        }
+        registro_colaborador = sps_usuario().registro_usuario;
+        identificacao_utilizador = '';
         registro_aprovador = '';
       }
+      // if (tipo_checklist == "PESQUISA") {
+      //   doc_action = 'PREENCHER_PESQUISA';
+      //   _tipo_checklist = 'PESQUISA';
+      //   tipo_frequencia = 'ESPORADICA';
+      //   if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+      //     registro_colaborador = sps_usuario().registro_usuario;
+      //     identificacao_utilizador = '';
+      //   } else {
+      //     registro_colaborador = '';
+      //     identificacao_utilizador = sps_usuario().codigo_usuario;
+      //   }
+      //   registro_aprovador = '';
+      // }
       tipo_checklist = _tipo_checklist;
     }
 

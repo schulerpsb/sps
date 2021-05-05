@@ -47,15 +47,23 @@ class SpsQuestionario {
       doc_action = 'PREENCHER_PESQUISA';
       tipo_checklist = 'PESQUISA';
       tipo_frequencia = 'ESPORADICA';
-      if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
-        registro_colaborador = sps_usuario().registro_usuario;
-        identificacao_utilizador = '';
-      }else{
-        registro_colaborador = '';
-        identificacao_utilizador = sps_usuario().codigo_usuario;
-      }
+      registro_colaborador = sps_usuario().registro_usuario;
+      identificacao_utilizador = '';
       registro_aprovador = '';
     }
+    // if (_tipoChecklist == "PESQUISA") {
+    //   doc_action = 'PREENCHER_PESQUISA';
+    //   tipo_checklist = 'PESQUISA';
+    //   tipo_frequencia = 'ESPORADICA';
+    //   if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
+    //     registro_colaborador = sps_usuario().registro_usuario;
+    //     identificacao_utilizador = '';
+    //   }else{
+    //     registro_colaborador = '';
+    //     identificacao_utilizador = sps_usuario().codigo_usuario;
+    //   }
+    //   registro_aprovador = '';
+    // }
 
     //Sincronização de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();

@@ -327,6 +327,18 @@ class _sps_questionario_ch_item_screen
                                       snapshot.data[0]["sessao_checklist"];
                                   _item_checklist_ant = 0;
                                 }
+
+                                //Analisar pergunta dependente
+                                var _ignorar_pergunta_dependente = false;
+                                if (snapshot
+                                    .data[index]["codigo_pergunta_dependente"] !=
+                                    "") {
+                                  if (snapshot
+                                      .data[index]["resposta_pergunta_dependente"] != snapshot.data[index]["resposta_pergunta_original"]) {
+                                    _ignorar_pergunta_dependente = true;
+                                  }
+                                }
+
                                 if (snapshot.data[index]["sessao_checklist"] ==
                                         this.widget._sessao_checklist &&
                                     snapshot.data[index]["item_checklist"] !=
@@ -334,29 +346,31 @@ class _sps_questionario_ch_item_screen
                                   _item_checklist_ant =
                                       snapshot.data[index]["item_checklist"];
                                   tratar_posicionar_lista(usuarioAtual.index_perguntas);
-                                  return Container(
-                                    child: Card(
-                                      color: snapshot.data[index]
-                                                  ["status_resposta"] ==
-                                              "PREENCHIDA"
-                                          ? Color(0xffdcedc8)
-                                          : Colors.white60,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 0,
-                                            left: 5,
-                                            right: 5,
-                                            bottom: 0),
-                                        child: Column(
-                                          children: [
-                                            //Tratar descrição da pergunta
-                                            descricao_pergunta(
-                                                snapshot, index, 1),
-                                          ],
+                                  if (_ignorar_pergunta_dependente == false) {
+                                    return Container(
+                                      child: Card(
+                                        color: snapshot.data[index]
+                                        ["status_resposta"] ==
+                                            "PREENCHIDA"
+                                            ? Color(0xffdcedc8)
+                                            : Colors.white60,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 0,
+                                              left: 5,
+                                              right: 5,
+                                              bottom: 0),
+                                          child: Column(
+                                            children: [
+                                              //Tratar descrição da pergunta
+                                              descricao_pergunta(
+                                                  snapshot, index, 1),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
                                 } else {
                                   return Container();
                                 }
