@@ -319,6 +319,19 @@ class SpsDaoQuestionarioItem {
     print("query => update_resposta_pergunta_dependente=> " + _query.toString());
     db.rawUpdate(_query);
 
+    var _query2 = 'update checklist_item set status_resposta = "PENDENTE", sincronizado = "N" '
+        'where checklist_item.codigo_empresa = "' + _hcodigoEmpresa + '" and checklist_item.codigo_programacao = ' + _hcodigoProgramacao.toString() +
+        ' and checklist_item.codigo_pergunta_dependente <> "" '
+            ' and checklist_item.resposta_pergunta_dependente in (select max(x.resp_simnao) from checklist_item x where x.codigo_empresa = checklist_item.codigo_empresa and x.codigo_programacao = checklist_item.codigo_programacao and x.codigo_pergunta = checklist_item.codigo_pergunta_dependente) '
+            ' and (checklist_item.resp_texto = "" or checklist_item.resp_texto is null) '
+            ' and checklist_item.resp_numero is null and checklist_item.resp_data = "" and checklist_item.resp_hora = "" '
+            ' and (checklist_item.resp_simnao = "" or checklist_item.resp_simnao is null) '
+            ' and checklist_item.resp_escala is null '
+            ' and (checklist_item.resp_nao_se_aplica = "" or checklist_item.resp_nao_se_aplica is null) '
+            ' and (select max(y.subcodigo_resposta) from checklist_item y where y.codigo_empresa = checklist_item.codigo_empresa and y.codigo_programacao = checklist_item.codigo_programacao and y.registro_colaborador = checklist_item.registro_colaborador and y.identificacao_utilizador = checklist_item.identificacao_utilizador and y.item_checklist = checklist_item.item_checklist and y.subcodigo_resposta = y.subcodigo_tpresposta) is null ';
+    print("query2 => update_resposta_pergunta_dependente=> " + _query2.toString());
+    db.rawUpdate(_query2);
+
     return 1;
   }
 
@@ -583,8 +596,15 @@ class SpsDaoQuestionarioItem {
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4","mov","MOV")) as videos, '
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF","mov","MOV")) as outros, '
-            'case when item.codigo_pergunta_dependente <> "" then (select x.resp_simnao from checklist_item x where x.codigo_empresa = item.codigo_empresa and x.codigo_programacao = item.codigo_programacao and x.codigo_pergunta = item.codigo_pergunta_dependente) else "" end as resposta_pergunta_original '
-          'FROM checklist_item item where item.codigo_empresa = "' +
+            'case when item.codigo_pergunta_dependente <> "" then (select x.resp_simnao from checklist_item x where x.codigo_empresa = item.codigo_empresa and x.codigo_programacao = item.codigo_programacao and x.codigo_pergunta = item.codigo_pergunta_dependente) else "" end as resposta_pergunta_original, '
+            'case when item.codigo_pergunta_dependente <> "" '
+            '      and (item.resp_texto = "" or item.resp_texto is null) '
+            '      and item.resp_numero is null and item.resp_data = "" and item.resp_hora = "" '
+            '      and (item.resp_simnao = "" or item.resp_simnao is null) '
+            '      and item.resp_escala is null '
+            '      and (item.resp_nao_se_aplica = "" or item.resp_nao_se_aplica is null) '
+            '      and (select max(y.subcodigo_resposta) from checklist_item y where y.codigo_empresa = item.codigo_empresa and y.codigo_programacao = item.codigo_programacao and y.registro_colaborador = item.registro_colaborador and y.identificacao_utilizador = item.identificacao_utilizador and y.item_checklist = item.item_checklist and item.subcodigo_resposta = item.subcodigo_tpresposta) = "" then "PENDENTE" else "" end as pendente_com_resposta_dependente '
+        'FROM checklist_item item where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and item.codigo_programacao = ' +
         _hcodigoProgramacao.toString();
@@ -608,7 +628,7 @@ class SpsDaoQuestionarioItem {
         }
       }
     }
-    //print ("query => listarQuestionarioItemLocal=> " + _query);
+    print ("query => listarQuestionarioItemLocal=> " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }

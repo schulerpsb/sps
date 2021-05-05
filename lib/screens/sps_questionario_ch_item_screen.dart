@@ -351,7 +351,9 @@ class _sps_questionario_ch_item_screen
                                       child: Card(
                                         color: snapshot.data[index]
                                         ["status_resposta"] ==
-                                            "PREENCHIDA"
+                                            "PREENCHIDA" && snapshot.data[index]
+                                        ["pendente_com_resposta_dependente"] !=
+                                            "PENDENTE"
                                             ? Color(0xffdcedc8)
                                             : Colors.white60,
                                         child: Padding(
@@ -408,7 +410,7 @@ class _sps_questionario_ch_item_screen
   ListTile descricao_pergunta(
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index, tamanho) {
     return ListTile(
-      trailing: snapshot.data[index]["status_resposta"] == "PREENCHIDA"
+      trailing: snapshot.data[index]["status_resposta"] == "PREENCHIDA" && snapshot.data[index]["pendente_com_resposta_dependente"] != "PENDENTE"
           ? Icon(Icons.check, color: Colors.green, size: 40)
           : null,
       title: Text(
