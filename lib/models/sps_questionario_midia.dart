@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sps/http/sps_http_questionario_midia_class.dart';
 import 'package:sps/models/sps_midia_utils.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 
 class SpsQuestionarioMidia {
   @override
@@ -14,6 +16,24 @@ class SpsQuestionarioMidia {
       } else {
         return DadosSessao;
       }
+  }
+
+  Future<List<Map<String, dynamic>>> listarQuestionarioMidiaFaltante({String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0}) async {
+    final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+    final int resulcreate = await objQuestionarioCqMidiaDao.create_table();
+    final List<Map<String, dynamic>> DadosSessao = await objQuestionarioCqMidiaDao
+        .listarQuestionarioMidia(codigo_empresa: codigo_empresa,codigo_programacao: codigo_programacao,item_checklist: item_checklist);
+    if (DadosSessao != null) {
+      final List<Map<String, dynamic>> _listaArquivos = [];
+      for (var i = 0; i < DadosSessao.length; i++) {
+        if (File(usuarioAtual.document_root_folder.toString() + '/' + DadosSessao[i]['nome_arquivo'].toString()).existsSync() == false) {
+          _listaArquivos.add(DadosSessao[i]);
+        }
+      }
+      return _listaArquivos;
+    } else {
+      return DadosSessao;
+    }
   }
 
   Future<int> deletarQuestionarioMidia({String arquivo = "", String codigo_empresa = "", int codigo_programacao = 0, int item_checklist = 0, int item_anexo = 0}) async {
