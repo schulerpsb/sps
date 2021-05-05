@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/media.dart';

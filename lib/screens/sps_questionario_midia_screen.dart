@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
