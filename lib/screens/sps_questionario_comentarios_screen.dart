@@ -28,6 +28,7 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
   final String _sessao_checklist;
   final int _indexLista;
   final String _tipo_questionario;
+  final Function({String w_call_comentarios}) funCallback;
 
   sps_questionario_comentarios_screen(
       this._codigo_empresa,
@@ -46,7 +47,8 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
       this._filtroDescrProgramacao,
       this._sessao_checklist,
       this._indexLista,
-      this._tipo_questionario);
+      this._tipo_questionario,
+      {this.funCallback});
 
   @override
   _sps_questionario_comentarios_screen createState() =>
@@ -67,7 +69,9 @@ class sps_questionario_comentarios_screen extends StatefulWidget {
           this._filtroDescrProgramacao,
           this._sessao_checklist,
           this._indexLista,
-          this._tipo_questionario);
+          this._tipo_questionario,
+          {this.funCallback}
+      );
 }
 
 class _sps_questionario_comentarios_screen
@@ -94,7 +98,8 @@ class _sps_questionario_comentarios_screen
       _filtroDescrProgramacao,
       _sessao_checklist,
       _indexLista,
-      _tipo_questionario);
+      _tipo_questionario,
+      funCallback);
 
   @override
   Widget build(BuildContext context) {
@@ -122,26 +127,7 @@ class _sps_questionario_comentarios_screen
               return IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                        builder: (context) => sps_questionario_ch_item_screen(
-//                            this.widget._codigo_empresa,
-//                            this.widget._codigo_programacao,
-//                            this.widget._registro_colaborador,
-//                            this.widget._identificacao_utilizador,
-//                            this.widget._codigo_grupo,
-//                            this.widget._codigo_checklist,
-//                            this.widget._descr_programacao,
-//                            this.widget._sincronizado,
-//                            this.widget._status_aprovacao,
-//                            this.widget._filtro,
-//                            this.widget._filtroDescrProgramacao,
-//                            "RECARREGAR",
-//                            this.widget._sessao_checklist,
-//                            this.widget._indexLista,
-//                            this.widget._tipo_questionario)),
-//                  );
+                  widget.funCallback(w_call_comentarios: _novoComentario.text);
                 Navigator.pop(context);
                 },
               );

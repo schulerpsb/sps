@@ -12,9 +12,10 @@ class SpsDaoQuestionarioItem {
       'sessao_checklist TEXT, '
       'codigo_grupo TEXT, '
       'codigo_checklist INTEGER, '
+      'codigo_pergunta INT, '
       'seq_pergunta INTEGER, '
       'descr_pergunta TEXT, '
-      'codigo_pergunta_dependente TEXT, '
+      'codigo_pergunta_dependente INT, '
       'resposta_pergunta_dependente TEXT, '
       'tipo_resposta TEXT, '
       'comentario_resposta_nao TEXT, '
@@ -77,6 +78,9 @@ class SpsDaoQuestionarioItem {
       //item['registro_colaborador'] = "";
       //item['identificacao_utilizador'] = "";
 
+      if (item['codigo_pergunta_dependente'].toString() == "") {
+        item['codigo_pergunta_dependente'] = null;
+      }
       if (item['inicio_escala'].toString() == "") {
         item['inicio_escala'] = null;
       }
@@ -138,12 +142,14 @@ class SpsDaoQuestionarioItem {
             '",' +
             item['codigo_checklist'].toString() +
             ',' +
+            item['codigo_pergunta'].toString() +
+            ',' +
             item['seq_pergunta'].toString() +
             ',"' +
             item['descr_pergunta'] +
-            '","' +
-            item['codigo_pergunta_dependente'] +
-            '","' +
+            '",' +
+            item['codigo_pergunta_dependente'].toString() +
+            ',"' +
             item['resposta_pergunta_dependente'] +
             '","' +
             item['tipo_resposta'] +
@@ -260,6 +266,9 @@ class SpsDaoQuestionarioItem {
       _hsincronizado) async {
     final Database db = await getDatabase();
 
+    //_hregistroColaborador = "";
+    //_hidentificacaoUtilizador = "";
+
     var _query = 'update checklist_item set resp_texto = "' +
         _hrespTexto.toString() +
         '", resp_numero = ' +
@@ -284,15 +293,30 @@ class SpsDaoQuestionarioItem {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString() +
-        ' and registro_colaborador = "' +
-        _hregistroColaborador +
-        '" and identificacao_utilizador = "' +
-        _hidentificacaoUtilizador +
-        '" and item_checklist = ' +
+        //' and registro_colaborador = "' +
+        //_hregistroColaborador +
+        //'" and identificacao_utilizador = "' +
+        //_hidentificacaoUtilizador +
+        ' and item_checklist = ' +
         _hitemChecklist.toString() +
         ' and subcodigo_tpresposta = ' +
         _hsubcodigoTpresposta.toString();
-    print("adriano query1=>" + _query.toString());
+    //print("adriano query1=>" + _query.toString());
+    db.rawUpdate(_query);
+
+    return 1;
+  }
+
+  Future<int> update_resposta_pergunta_dependente(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao) async {
+    final Database db = await getDatabase();
+
+    var _query = 'update checklist_item set resp_texto = "", resp_numero = null, resp_data = "", resp_hora = "", resp_simnao = "", resp_escala = null, resp_nao_se_aplica = null, subcodigo_resposta = null, texto_adicional = "", descr_comentarios = "", resp_nao_se_aplica = "", status_resposta = "PREENCHIDA", sincronizado = "N" '
+                 'where codigo_empresa = "' + _hcodigoEmpresa + '" and codigo_programacao = ' + _hcodigoProgramacao.toString() +
+                  ' and codigo_pergunta_dependente is not null '
+                  ' and resposta_pergunta_dependente not in (select max(x.resp_simnao) from checklist_item x where x.codigo_empresa = checklist_item.codigo_empresa and x.codigo_programacao = checklist_item.codigo_programacao and x.codigo_pergunta = checklist_item.codigo_pergunta_dependente) ';
+    print("query => update_resposta_pergunta_dependente=> " + _query.toString());
     db.rawUpdate(_query);
 
     return 1;
@@ -308,6 +332,9 @@ class SpsDaoQuestionarioItem {
       _hsincronizado) async {
     final Database db = await getDatabase();
 
+    //_hregistroColaborador = "";
+    //_hidentificacaoUtilizador = "";
+
     var _query = 'update checklist_item set resp_texto = null,'
             'resp_numero = null, resp_data = null, resp_hora = null, resp_simnao = null,'
             'resp_escala = null, resp_nao_se_aplica = "' +
@@ -317,11 +344,11 @@ class SpsDaoQuestionarioItem {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString() +
-        ' and registro_colaborador = "' +
-        _hregistroColaborador +
-        '" and identificacao_utilizador = "' +
-        _hidentificacaoUtilizador +
-        '" and item_checklist = ' +
+        //' and registro_colaborador = "' +
+        //_hregistroColaborador +
+        //'" and identificacao_utilizador = "' +
+        //_hidentificacaoUtilizador +
+        ' and item_checklist = ' +
         _hitemChecklist.toString();
     //print("adriano query2=>" + _query.toString());
     db.rawUpdate(_query);
@@ -332,11 +359,11 @@ class SpsDaoQuestionarioItem {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString() +
-        ' and registro_colaborador = "' +
-        _hregistroColaborador +
-        '" and identificacao_utilizador = "' +
-        _hidentificacaoUtilizador +
-        '" and item_checklist = ' +
+        //' and registro_colaborador = "' +
+        //_hregistroColaborador +
+        //'" and identificacao_utilizador = "' +
+        //_hidentificacaoUtilizador +
+        ' and item_checklist = ' +
         _hitemChecklist.toString();
     //debugPrint("query => " + _query);
     db.rawUpdate(_query2);
@@ -353,17 +380,20 @@ class SpsDaoQuestionarioItem {
       _hsincronizado) async {
     final Database db = await getDatabase();
 
+    //_hregistroColaborador = "";
+    //_hidentificacaoUtilizador = "";
+
     var _query = 'update checklist_item set resp_nao_se_aplica = "' +
         _hnaoSeAplica +
         '" where codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString() +
-        ' and registro_colaborador = "' +
-        _hregistroColaborador +
-        '" and identificacao_utilizador = "' +
-        _hidentificacaoUtilizador +
-        '" and item_checklist = ' +
+      //  ' and registro_colaborador = "' +
+      //  _hregistroColaborador +
+      //  '" and identificacao_utilizador = "' +
+      //  _hidentificacaoUtilizador +
+        ' and item_checklist = ' +
         _hitemChecklist.toString();
     //print("adriano query3=>" + _query.toString());
     db.rawUpdate(_query);
@@ -380,6 +410,10 @@ class SpsDaoQuestionarioItem {
       _hstatusResposta,
       _hsincronizado) async {
     final Database db = await getDatabase();
+
+    //_hregistroColaborador = "";
+    //_hidentificacaoUtilizador = "";
+
     var _query = 'update checklist_item set status_resposta = "' +
         _hstatusResposta.toString() +
         '", sincronizado = "' +
@@ -388,13 +422,13 @@ class SpsDaoQuestionarioItem {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString() +
-        ' and registro_colaborador = "' +
-        _hregistroColaborador +
-        '" and identificacao_utilizador = "' +
-        _hidentificacaoUtilizador +
-        '" and item_checklist = ' +
+      //  ' and registro_colaborador = "' +
+      //  _hregistroColaborador +
+      //  '" and identificacao_utilizador = "' +
+      //  _hidentificacaoUtilizador +
+        ' and item_checklist = ' +
         _hitemChecklist.toString();
-    print("query update status resposta ====> " + _query.toString());
+    //print("query update status resposta item => " + _query.toString());
     db.rawUpdate(_query);
     return 1;
   }
@@ -548,8 +582,9 @@ class SpsDaoQuestionarioItem {
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos,  '
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
             '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4","mov","MOV")) as videos, '
-            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF","mov","MOV")) as outros '
-            'FROM checklist_item item where item.codigo_empresa = "' +
+            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF","mov","MOV")) as outros, '
+            'case when item.codigo_pergunta_dependente <> "" then (select x.resp_simnao from checklist_item x where x.codigo_empresa = item.codigo_empresa and x.codigo_programacao = item.codigo_programacao and x.codigo_pergunta = item.codigo_pergunta_dependente) else "" end as resposta_pergunta_original '
+          'FROM checklist_item item where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and item.codigo_programacao = ' +
         _hcodigoProgramacao.toString();
@@ -573,7 +608,7 @@ class SpsDaoQuestionarioItem {
         }
       }
     }
-    //debugPrint("query => " + _query);
+    //print ("query => listarQuestionarioItemLocal=> " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }
@@ -606,6 +641,7 @@ class SpsDaoQuestionarioItem {
       _identificacaoUtilizador,
       _itemChecklist) async {
     final Database db = await getDatabase();
+
     var _query = 'update checklist_item set sincronizado = "'
             '" where codigo_empresa = "' +
         _codigoEmpresa +

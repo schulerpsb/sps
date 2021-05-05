@@ -16,6 +16,9 @@ class spsQuestionarioUtils {
       int witemChecklist) async {
     var _wsincronizado = "";
 
+    //wregistroColaborador = "";
+    //widentificacaoUtilizador = "";
+
     final SpsDaoQuestionarioItem objQuestionarioItemDao =
         SpsDaoQuestionarioItem();
 

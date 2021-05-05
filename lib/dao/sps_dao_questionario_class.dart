@@ -53,6 +53,9 @@ class SpsDaoQuestionario {
   Future<int> save(List<Map<String, dynamic>> dadosQuestionario,doc_action) async {
     final Database db = await getDatabase();
     await Future.forEach(dadosQuestionario, (questionario) async {
+      //questionario['registro_colaborador'] = "";
+      //questionario['identificacao_utilizador']  = "";
+
       if (questionario['registro_colaborador'] == null || questionario['registro_colaborador'] == "") {
         questionario['registro_colaborador'] = "";
       }
@@ -96,8 +99,6 @@ class SpsDaoQuestionario {
 //      print('Fernando==>'+_query2.toString());
       List<Map<String, dynamic>> result2 = await db.rawQuery(_query2);
       if (result2.length <= 0) {
-//          print('aqui '+windex.toString());
-//        print('Fernando==>Inserir '+result2.length.toString());
         var _query = 'insert into checklist_lista values ("' +
             questionario['codigo_empresa'] +
             '",' +
@@ -192,20 +193,24 @@ class SpsDaoQuestionario {
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
         _hcodigoProgramacao.toString();
-//    debugPrint("query => " + _query);
+    //debugPrint("query => " + _query);
     db.rawUpdate(_query);
     return 1;
   }
 
   Future<int> update_lista_status_resposta(_hcodigoEmpresa, _hcodigoProgramacao, _hregistroColaborador, _hidentificacaoUtilizador) async {
     final Database db = await getDatabase();
+
+    //_hregistroColaborador = "";
+    //_hidentificacaoUtilizador = "";
+
     var _query = 'update checklist_lista '
         'set status = case when (SELECT count(*) '
         '                         FROM checklist_item '
         '                         where codigo_empresa = "'+ _hcodigoEmpresa + '" '
         '                           AND codigo_programacao = ' + _hcodigoProgramacao.toString() +
-        '                           AND registro_colaborador = "' + _hregistroColaborador + '" '
-        '                           AND identificacao_utilizador = "' + _hidentificacaoUtilizador + '" '
+      //  '                           AND registro_colaborador = "' + _hregistroColaborador + '" '
+      //  '                           AND identificacao_utilizador = "' + _hidentificacaoUtilizador + '" '
         '                           AND status_resposta <> "PREENCHIDA") = 0 then '
             '                 "OK" '
             '             else '
@@ -213,8 +218,8 @@ class SpsDaoQuestionario {
             '                           FROM checklist_item '
             '                           where codigo_empresa = "'+ _hcodigoEmpresa + '" '
         '                           AND CODIGO_PROGRAMACAO = ' + _hcodigoProgramacao.toString() +
-        '                           AND registro_colaborador = "' + _hregistroColaborador + '" '
-        '                           AND identificacao_utilizador = "' + _hidentificacaoUtilizador + '" '
+      //  '                           AND registro_colaborador = "' + _hregistroColaborador + '" '
+      //  '                           AND identificacao_utilizador = "' + _hidentificacaoUtilizador + '" '
         '                           AND status_resposta <> "PENDENTE") <> 0 then '
             '                     "PARCIAL" '
             '                 else '
@@ -225,12 +230,12 @@ class SpsDaoQuestionario {
             ' where codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and codigo_programacao = ' +
-        _hcodigoProgramacao.toString() +
-        ' and registro_colaborador = "' +
-        _hregistroColaborador +
-        '" and identificacao_utilizador = "' +
-        _hidentificacaoUtilizador + '"';
-    //debugPrint("query => " + _query);
+        _hcodigoProgramacao.toString();
+        //+ ' and registro_colaborador = "' +
+        //_hregistroColaborador +
+        //'" and identificacao_utilizador = "' +
+        //_hidentificacaoUtilizador + '"';
+    //debugPrint("query update status resposta lista => " + _query);
     db.rawUpdate(_query);
     return 1;
   }
@@ -279,7 +284,7 @@ class SpsDaoQuestionario {
     _query = _query + ' and doc_action = "'+doc_action+'" ' +
         'order by dtfim_aplicacao';
 
-    //debugPrint("query => " + _query);
+    debugPrint("query listar item geral=> " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }

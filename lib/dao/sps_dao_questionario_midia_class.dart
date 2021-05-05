@@ -203,6 +203,22 @@ class SpsDaoQuestionarioMidia {
     return result;
   }
 
+  Future<int> updateRespostaPerguntaDependenteAnexo(
+      _hcodigoEmpresa,
+      _hcodigoProgramacao) async {
+    final Database db = await getDatabase();
+    var _query =
+        'update sps_checklist_tb_resp_anexo set sincronizado = "D" where codigo_empresa = "' +
+            _hcodigoEmpresa +
+            '" and codigo_programacao = ' +
+            _hcodigoProgramacao.toString() +
+        ' and item_checklist in (select a.item_checklist from checklist_item a where a.codigo_empresa = "' + _hcodigoEmpresa + '" and a.codigo_programacao = ' + _hcodigoProgramacao.toString() + ' and a.codigo_pergunta_dependente is not null '
+        '                                                                  and a.resposta_pergunta_dependente not in (select x.resp_simnao from checklist_item x where x.codigo_empresa = a.codigo_empresa and x.codigo_programacao = a.codigo_programacao and x.codigo_pergunta = a.codigo_pergunta_dependente)) ';
+    //print("query => updateRespostaPerguntaDependenteAnexo=> "+_query);
+    final int result = await db.rawUpdate(_query);
+    return result;
+  }
+
   Future<int> updateTituloQuestionarioMidia(
       {String titulo_arquivo = "",
       String codigo_empresa = "",

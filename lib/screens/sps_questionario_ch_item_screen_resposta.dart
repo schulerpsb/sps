@@ -6,6 +6,7 @@ import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
 import 'package:sps/dao/sps_dao_questionario_item_class.dart';
+import 'package:sps/dao/sps_dao_questionario_midia_class.dart';
 import 'package:sps/models/sps_erro_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario_item_ch.dart';
@@ -118,6 +119,7 @@ class _sps_questionario_ch_item_screen_resposta
   var tabConteudo = new List.generate(100, (_) => new List(4));
   var tabRespMultipla = new List.generate(100, (_) => new List(100));
   var tabTextoAdicional = new List.generate(100, (_) => new List(100));
+  var tabDescricao = new List.generate(100, (_) => new List(1));
 
   String _exibirSalvar = "SIM";
   var _wrespEscala;
@@ -1298,6 +1300,20 @@ class _sps_questionario_ch_item_screen_resposta
                     _wsubcodigoResposta,
                     _wtextoAdicional,
                     _wsincronizado);
+
+            //Tratar atualização de pergunta dependente (checklist_item)
+            final int resultupdate_dependente =
+            await objQuestionarioItemDao.update_resposta_pergunta_dependente(
+                _wcodigoEmpresa,
+                _wcodigoProgramacao);
+
+            //Tratar atualização de pergunta dependente (sps_checklist_tb_resp_anexo)
+            final SpsDaoQuestionarioMidia objQuestionarioMidiaDao =
+            SpsDaoQuestionarioMidia();
+            final int resultupdate_dependente_anexo =
+            await objQuestionarioMidiaDao.updateRespostaPerguntaDependenteAnexo(
+                _wcodigoEmpresa,
+                _wcodigoProgramacao);
           }
 
           if (element[1] == "RESPOSTA MULTIPLA") {
@@ -1362,6 +1378,8 @@ class _sps_questionario_ch_item_screen_resposta
     tabRespMultipla = new List.generate(100, (_) => new List(99));
     tabTextoAdicional.clear();
     tabTextoAdicional = new List.generate(100, (_) => new List(99));
+    tabDescricao.clear();
+    tabDescricao = new List.generate(100, (_) => new List(1));
 
     //Recarregar tela
     Navigator.pop;
@@ -1459,6 +1477,9 @@ class _sps_questionario_ch_item_screen_resposta
             ? Colors.black
             : Colors.blue,
         onPressed: () {
+          if (tabDescricao[snapshot.data[0]["item_checklist"]][0] == null) {
+            tabDescricao[snapshot.data[0]["item_checklist"]][0] = snapshot.data[0]["descr_comentarios"];
+          }
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -1466,7 +1487,7 @@ class _sps_questionario_ch_item_screen_resposta
                   snapshot.data[0]["codigo_empresa"],
                   snapshot.data[0]["codigo_programacao"],
                   snapshot.data[0]["item_checklist"],
-                  snapshot.data[0]["descr_comentarios"],
+                  tabDescricao[snapshot.data[0]["item_checklist"]][0],
                   this.widget._registro_colaborador,
                   this.widget._identificacao_utilizador,
                   this.widget._codigo_grupo,
@@ -1479,7 +1500,10 @@ class _sps_questionario_ch_item_screen_resposta
                   this.widget._filtroDescrProgramacao,
                   this.widget._sessao_checklist,
                   0,
-                  this.widget._tipo_questionario),
+                  this.widget._tipo_questionario,
+                funCallback: ({String w_call_comentarios}) {
+                  tabDescricao[snapshot.data[0]["item_checklist"]][0] = w_call_comentarios;
+                },)
             ),
           );
         },
