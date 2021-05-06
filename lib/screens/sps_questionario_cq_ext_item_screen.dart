@@ -170,7 +170,8 @@ class _sps_questionario_cq_ext_item_screen
                             this.widget._filtro,
                             this.widget._filtroProjeto,
                             this.widget._filtroReferencia,
-                            this.widget._filtroPedido)),
+                            this.widget._filtroPedido,
+                            this.widget._nome_fornecedor)),
                   );
                 },
               );

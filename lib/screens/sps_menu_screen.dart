@@ -10,6 +10,7 @@ import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_log_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_filtro_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_ext_filtro_screen.dart';
+import 'package:sps/screens/sps_questionario_cq_filtro_fornecedor_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_int_filtro_screen.dart';
 import 'sps_cotacao_screen.dart';
 import 'sps_feedback_screen.dart';
@@ -52,7 +53,7 @@ class sps_menu_screen extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => _origemUsuario == "EXTERNO"
                               ? sps_questionario_cq_ext_filtro_screen()
-                              : sps_questionario_cq_int_filtro_screen()),
+                              : sps_questionario_cq_filtro_fornecedor_screen()),
                     );
                   },
                   shape: RoundedRectangleBorder(

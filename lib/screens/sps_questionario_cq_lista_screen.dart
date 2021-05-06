@@ -19,14 +19,25 @@ class sps_questionario_cq_lista_screen extends StatefulWidget {
   final String _filtroProjeto;
   final String _filtroReferencia;
   final String _filtroPedido;
+  final String _nomeFornecedor;
 
-  sps_questionario_cq_lista_screen(this._origemUsuario, this._filtro,
-      this._filtroProjeto, this._filtroReferencia, this._filtroPedido);
+  sps_questionario_cq_lista_screen(
+      this._origemUsuario,
+      this._filtro,
+      this._filtroProjeto,
+      this._filtroReferencia,
+      this._filtroPedido,
+      this._nomeFornecedor);
 
   @override
   _sps_questionario_cq_lista_screen createState() =>
-      _sps_questionario_cq_lista_screen(this._origemUsuario, this._filtro,
-          this._filtroProjeto, this._filtroReferencia, this._filtroPedido);
+      _sps_questionario_cq_lista_screen(
+          this._origemUsuario,
+          this._filtro,
+          this._filtroProjeto,
+          this._filtroReferencia,
+          this._filtroPedido,
+          this._nomeFornecedor);
 }
 
 class _sps_questionario_cq_lista_screen
@@ -37,7 +48,7 @@ class _sps_questionario_cq_lista_screen
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
   _sps_questionario_cq_lista_screen(_origemUsuario, _filtro, _filtroProjeto,
-      _filtroReferencia, _filtroPedido);
+      _filtroReferencia, _filtroPedido, _nomeFornecedor);
 
   var formato = new NumberFormat("##0.00", "en_US");
 
@@ -70,7 +81,8 @@ class _sps_questionario_cq_lista_screen
                         builder: (context) =>
                             this.widget._origemUsuario == "EXTERNO"
                                 ? sps_questionario_cq_ext_filtro_screen()
-                                : sps_questionario_cq_int_filtro_screen()),
+                                : sps_questionario_cq_int_filtro_screen(
+                                    this.widget._nomeFornecedor)),
                   );
                 },
               );
@@ -87,7 +99,8 @@ class _sps_questionario_cq_lista_screen
               this.widget._filtroProjeto,
               this.widget._filtroReferencia,
               this.widget._filtroPedido,
-              null),
+              null,
+              this.widget._nomeFornecedor),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {

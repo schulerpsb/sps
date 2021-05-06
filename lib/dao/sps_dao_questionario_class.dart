@@ -287,11 +287,20 @@ class SpsDaoQuestionario {
       _filtroPedido,
       _filtroDescrProgramacao,
       _origemUsuario,
-      String doc_action) async {
+      String doc_action,
+      _nomeFornecedor) async {
     final Database db = await getDatabase();
     var _query = 'SELECT * FROM checklist_lista where 1 = 1 ';
     if (_filtro.toString() != "" && _filtro.toString() != "null") {
       _query = _query + " and status = '" + _filtro.toString() + "'";
+    }
+    if (_nomeFornecedor.toString() != "" &&
+        _nomeFornecedor.toString() != "null" &&
+        _nomeFornecedor != null) {
+      _query = _query +
+          " and nome_fornecedor = '" +
+          _nomeFornecedor.toString() +
+          "' ";
     }
     if (_filtroProjeto.toString() != "" &&
         _filtroProjeto.toString() != "null") {
@@ -331,14 +340,30 @@ class SpsDaoQuestionario {
     return result;
   }
 
-  Future<List<Map<String, dynamic>>> contarQuestionarioGeral(
-      String doc_action) async {
+  Future<List<Map<String, dynamic>>> listarQuestionarioFornecedor() async {
     final Database db = await getDatabase();
+    var _query =
+        'SELECT 1, "TODOS OS FORNECEDORES" as nome_fornecedor UNION ALL SELECT distinct 2, nome_fornecedor FROM checklist_lista where nome_fornecedor <> "" order by 1, 2';
+
+    debugPrint("query listar fornecedor => " + _query);
+    final List<Map<String, dynamic>> result = await db.rawQuery(_query);
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> contarQuestionarioGeral(
+      String doc_action, String _nomeFornecedor) async {
+    final Database db = await getDatabase();
+    print ("adriano ======>"+_nomeFornecedor.toString());
     var _query =
         'SELECT status, count(*) as contador FROM checklist_lista where doc_action = "' +
             doc_action +
-            '" group by status';
-    //debugPrint("query => " + _query);
+            '" ';
+    if (_nomeFornecedor != "" && _nomeFornecedor != null) {
+      _query = _query + ' and nome_fornecedor = "' + _nomeFornecedor + '" ';
+    }
+    print ("adriano ======>1=>"+_query);
+    _query = _query + ' group by status';
+    print("query => contarQuestionarioGeral=> " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;
   }

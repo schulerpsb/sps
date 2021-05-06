@@ -587,23 +587,23 @@ class SpsDaoQuestionarioItem {
       _hcodigoEmpresa, _hcodigoProgramacao, _hacao, _hsessaoChecklist) async {
     final Database db = await getDatabase();
     final SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao =
-        SpsDaoQuestionarioMidia();
+    SpsDaoQuestionarioMidia();
     await objQuestionarioCqMidiaDao.create_table();
     var _query = 'SELECT *, '
-            '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist > item.sessao_checklist) as sessao_posterior, '
-            '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist < item.sessao_checklist) as sessao_anterior,  '
-            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos,  '
-            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
-            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4","mov","MOV")) as videos, '
-            '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF","mov","MOV")) as outros, '
-            'case when item.codigo_pergunta_dependente <> "" then (select x.resp_simnao from checklist_item x where x.codigo_empresa = item.codigo_empresa and x.codigo_programacao = item.codigo_programacao and x.codigo_pergunta = item.codigo_pergunta_dependente) else "" end as resposta_pergunta_original, '
-            'case when item.codigo_pergunta_dependente <> "" '
-            '      and (item.resp_texto = "" or item.resp_texto is null) '
-            '      and item.resp_numero is null and item.resp_data = "" and item.resp_hora = "" '
-            '      and (item.resp_simnao = "" or item.resp_simnao is null) '
-            '      and item.resp_escala is null '
-            '      and (item.resp_nao_se_aplica = "" or item.resp_nao_se_aplica is null) '
-            '      and (select max(y.subcodigo_resposta) from checklist_item y where y.codigo_empresa = item.codigo_empresa and y.codigo_programacao = item.codigo_programacao and y.registro_colaborador = item.registro_colaborador and y.identificacao_utilizador = item.identificacao_utilizador and y.item_checklist = item.item_checklist and item.subcodigo_resposta = item.subcodigo_tpresposta) = "" then "PENDENTE" else "" end as pendente_com_resposta_dependente '
+        '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist > item.sessao_checklist) as sessao_posterior, '
+        '(select count(*) from checklist_item item2 where item2.codigo_empresa = item.codigo_empresa and item2.codigo_programacao = item.codigo_programacao and item2.sessao_checklist < item.sessao_checklist) as sessao_anterior,  '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D")) as anexos,  '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("jpg","JPG", "png", "PNG", "gif", "GIF")) as imagens,  '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) in ("mp4","MP4","mov","MOV")) as videos, '
+        '(select count(codigo_empresa) from sps_checklist_tb_resp_anexo where codigo_empresa = item.codigo_empresa and codigo_programacao = item.codigo_programacao and item_checklist = item.item_checklist and (sincronizado is null or sincronizado <> "D" or sincronizado = "null") and substr(nome_arquivo, -3,3) not in ("mp4","MP4","jpg","JPG", "png", "PNG", "gif", "GIF","mov","MOV")) as outros, '
+        'case when item.codigo_pergunta_dependente <> "" then (select x.resp_simnao from checklist_item x where x.codigo_empresa = item.codigo_empresa and x.codigo_programacao = item.codigo_programacao and x.codigo_pergunta = item.codigo_pergunta_dependente) else "" end as resposta_pergunta_original, '
+        'case when item.codigo_pergunta_dependente <> "" '
+        '      and (item.resp_texto = "" or item.resp_texto is null) '
+        '      and item.resp_numero is null and item.resp_data = "" and item.resp_hora = "" '
+        '      and (item.resp_simnao = "" or item.resp_simnao is null) '
+        '      and item.resp_escala is null '
+        '      and (item.resp_nao_se_aplica = "" or item.resp_nao_se_aplica is null) '
+        '      and (select max(y.subcodigo_resposta) from checklist_item y where y.codigo_empresa = item.codigo_empresa and y.codigo_programacao = item.codigo_programacao and y.registro_colaborador = item.registro_colaborador and y.identificacao_utilizador = item.identificacao_utilizador and y.item_checklist = item.item_checklist and item.subcodigo_resposta = item.subcodigo_tpresposta) = "" then "PENDENTE" else "" end as pendente_com_resposta_dependente '
         'FROM checklist_item item where item.codigo_empresa = "' +
         _hcodigoEmpresa +
         '" and item.codigo_programacao = ' +

@@ -6,12 +6,17 @@ import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_questionario.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
+import 'package:sps/screens/sps_questionario_cq_filtro_fornecedor_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
 
 class sps_questionario_cq_int_filtro_screen extends StatefulWidget {
+  final String _nome_fornecedor;
+
+  sps_questionario_cq_int_filtro_screen(this._nome_fornecedor);
+
   @override
   _sps_questionario_cq_int_filtro_screen createState() =>
-      _sps_questionario_cq_int_filtro_screen();
+      _sps_questionario_cq_int_filtro_screen(this._nome_fornecedor);
 }
 
 class _sps_questionario_cq_int_filtro_screen
@@ -20,6 +25,8 @@ class _sps_questionario_cq_int_filtro_screen
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
+
+  _sps_questionario_cq_int_filtro_screen(_nome_fornecedor);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +59,8 @@ class _sps_questionario_cq_int_filtro_screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomeSpsAuthenticatedFromLocal()),
+                        builder: (context) =>
+                            sps_questionario_cq_filtro_fornecedor_screen()),
                   );
                 },
               );
@@ -61,8 +69,16 @@ class _sps_questionario_cq_int_filtro_screen
         ),
         endDrawer: sps_drawer(spslogin: spslogin),
         body: FutureBuilder<List<Map<String, dynamic>>>(
-          future: spsquestionario_cq.listarQuestionario('INTERNO',
-              'CONTROLE DE QUALIDADE', 'CONTAR', null, null, null, null, null),
+          future: spsquestionario_cq.listarQuestionario(
+              'INTERNO',
+              'CONTROLE DE QUALIDADE',
+              'CONTAR',
+              null,
+              null,
+              null,
+              null,
+              null,
+              this.widget._nome_fornecedor),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
@@ -127,13 +143,16 @@ class _sps_questionario_cq_int_filtro_screen
                                               decoration: InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText:
-                                                      'Informe o código do projeto (WBS)'),
+                                                      ' Informe o código do projeto (WBS)'),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
                                   ],
+                                ),
+                                SizedBox(
+                                  height: 5.0,
                                 ),
                                 Column(
                                   children: [
@@ -153,13 +172,16 @@ class _sps_questionario_cq_int_filtro_screen
                                               decoration: InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText:
-                                                  'Informe o código de referência do parceiro'),
+                                                      ' Informe o código de referência do parceiro'),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
                                   ],
+                                ),
+                                SizedBox(
+                                  height: 5.0,
                                 ),
                                 Column(
                                   children: [
@@ -179,7 +201,7 @@ class _sps_questionario_cq_int_filtro_screen
                                               decoration: InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText:
-                                                  'Informe o código do pedido'),
+                                                      ' Informe o código do pedido'),
                                             ),
                                           ],
                                         ),
@@ -193,7 +215,10 @@ class _sps_questionario_cq_int_filtro_screen
                                 Align(
                                   alignment: Alignment.bottomCenter,
                                   child: FloatingActionButton(
-                                    onPressed: () => _filtroProjeto.text == "" && _filtroReferencia.text == "" && _filtroPedido.text == ""
+                                    onPressed: () => _filtroProjeto.text ==
+                                                "" &&
+                                            _filtroReferencia.text == "" &&
+                                            _filtroPedido.text == ""
                                         ? {}
                                         : {
                                             Navigator.push(
@@ -204,8 +229,12 @@ class _sps_questionario_cq_int_filtro_screen
                                                           "INTERNO",
                                                           null,
                                                           _filtroProjeto.text,
-                                                          _filtroReferencia.text,
-                                                          _filtroPedido.text)),
+                                                          _filtroReferencia
+                                                              .text,
+                                                          _filtroPedido.text,
+                                                          this
+                                                              .widget
+                                                              ._nome_fornecedor)),
                                             )
                                           },
                                     child: const Icon(Icons.search),
@@ -257,7 +286,12 @@ class _sps_questionario_cq_int_filtro_screen
                           MaterialPageRoute(
                               builder: (context) =>
                                   sps_questionario_cq_lista_screen(
-                                      "INTERNO", "PENDENTE", null, null, null)),
+                                      "INTERNO",
+                                      "PENDENTE",
+                                      null,
+                                      null,
+                                      null,
+                                      this.widget._nome_fornecedor)),
                         )
                       },
                 color: Colors.purple,
@@ -293,7 +327,12 @@ class _sps_questionario_cq_int_filtro_screen
                           MaterialPageRoute(
                               builder: (context) =>
                                   sps_questionario_cq_lista_screen(
-                                      "INTERNO", "PARCIAL", null, null, null)),
+                                      "INTERNO",
+                                      "PARCIAL",
+                                      null,
+                                      null,
+                                      null,
+                                      this.widget._nome_fornecedor)),
                         )
                       },
                 color: Colors.orange,
@@ -325,7 +364,12 @@ class _sps_questionario_cq_int_filtro_screen
                           MaterialPageRoute(
                               builder: (context) =>
                                   sps_questionario_cq_lista_screen(
-                                      "INTERNO", "OK", null, null, null)),
+                                      "INTERNO",
+                                      "OK",
+                                      null,
+                                      null,
+                                      null,
+                                      this.widget._nome_fornecedor)),
                         )
                       },
                 color: Colors.green,
@@ -365,7 +409,12 @@ class _sps_questionario_cq_int_filtro_screen
                             MaterialPageRoute(
                                 builder: (context) =>
                                     sps_questionario_cq_lista_screen(
-                                        "INTERNO", "PENDENTE", null, null, null)),
+                                        "INTERNO",
+                                        "PENDENTE",
+                                        null,
+                                        null,
+                                        null,
+                                        this.widget._nome_fornecedor)),
                           )
                         },
                   color: Colors.purple,
@@ -401,7 +450,12 @@ class _sps_questionario_cq_int_filtro_screen
                             MaterialPageRoute(
                                 builder: (context) =>
                                     sps_questionario_cq_lista_screen(
-                                        "INTERNO", "PARCIAL", null, null, null)),
+                                        "INTERNO",
+                                        "PARCIAL",
+                                        null,
+                                        null,
+                                        null,
+                                        this.widget._nome_fornecedor)),
                           )
                         },
                   color: Colors.orange,
@@ -438,7 +492,12 @@ class _sps_questionario_cq_int_filtro_screen
                             MaterialPageRoute(
                                 builder: (context) =>
                                     sps_questionario_cq_lista_screen(
-                                        "INTERNO", "OK", null, null, null)),
+                                        "INTERNO",
+                                        "OK",
+                                        null,
+                                        null,
+                                        null,
+                                        this.widget._nome_fornecedor)),
                           )
                         },
                   color: Colors.green,

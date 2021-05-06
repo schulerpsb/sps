@@ -62,8 +62,16 @@ class _sps_questionario_cq_ext_filtro_screen
         endDrawer: sps_drawer(spslogin: spslogin),
 
         body: FutureBuilder<List<Map<String, dynamic>>>(
-          future: spsquestionario.listarQuestionario('EXTERNO',
-              'CONTROLE DE QUALIDADE', 'CONTAR', null, null, null, null, null),
+          future: spsquestionario.listarQuestionario(
+              'EXTERNO',
+              'CONTROLE DE QUALIDADE',
+              'CONTAR',
+              null,
+              null,
+              null,
+              null,
+              null,
+              null),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
@@ -128,7 +136,7 @@ class _sps_questionario_cq_ext_filtro_screen
                                               decoration: InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText:
-                                                      'Informe o código do projeto (WBS)'),
+                                                      ' Informe o código do projeto (WBS)'),
                                             ),
                                           ],
                                         ),
@@ -157,7 +165,7 @@ class _sps_questionario_cq_ext_filtro_screen
                                               decoration: InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText:
-                                                  'Informar o código de referência do parceiro'),
+                                                      ' Informe o código de referência do parceiro'),
                                             ),
                                           ],
                                         ),
@@ -186,7 +194,7 @@ class _sps_questionario_cq_ext_filtro_screen
                                               decoration: InputDecoration(
                                                   border: InputBorder.none,
                                                   hintText:
-                                                  'Informe o código do pedido'),
+                                                      ' Informe o código do pedido'),
                                             ),
                                           ],
                                         ),
@@ -200,22 +208,26 @@ class _sps_questionario_cq_ext_filtro_screen
                                 Align(
                                   alignment: Alignment.bottomCenter,
                                   child: FloatingActionButton(
-                                    onPressed: () =>
-                                        _filtroProjeto.text == "" && _filtroReferencia.text == "" && _filtroPedido.text == ""
-                                            ? {}
-                                            : {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          sps_questionario_cq_lista_screen(
-                                                              "EXTERNO",
-                                                              null,
-                                                              _filtroProjeto.text,
-                                                              _filtroReferencia.text,
-                                                              _filtroPedido.text)),
-                                                )
-                                              },
+                                    onPressed: () => _filtroProjeto.text ==
+                                                "" &&
+                                            _filtroReferencia.text == "" &&
+                                            _filtroPedido.text == ""
+                                        ? {}
+                                        : {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      sps_questionario_cq_lista_screen(
+                                                          "EXTERNO",
+                                                          null,
+                                                          _filtroProjeto.text,
+                                                          _filtroReferencia
+                                                              .text,
+                                                          _filtroPedido.text,
+                                                          null)),
+                                            )
+                                          },
                                     child: const Icon(Icons.search),
                                   ),
                                 ),
@@ -264,8 +276,8 @@ class _sps_questionario_cq_ext_filtro_screen
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  sps_questionario_cq_lista_screen(
-                                      "EXTERNO", "PENDENTE", null, null, null)),
+                                  sps_questionario_cq_lista_screen("EXTERNO",
+                                      "PENDENTE", null, null, null, null)),
                         )
                       },
                 color: Colors.purple,
@@ -300,8 +312,8 @@ class _sps_questionario_cq_ext_filtro_screen
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  sps_questionario_cq_lista_screen(
-                                      "EXTERNO", "PARCIAL", null, null, null)),
+                                  sps_questionario_cq_lista_screen("EXTERNO",
+                                      "PARCIAL", null, null, null, null)),
                         )
                       },
                 color: Colors.orange,
@@ -333,7 +345,7 @@ class _sps_questionario_cq_ext_filtro_screen
                           MaterialPageRoute(
                               builder: (context) =>
                                   sps_questionario_cq_lista_screen(
-                                      "EXTERNO", "OK", null, null, null)),
+                                      "EXTERNO", "OK", null, null, null, null)),
                         )
                       },
                 color: Colors.green,
@@ -372,8 +384,8 @@ class _sps_questionario_cq_ext_filtro_screen
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    sps_questionario_cq_lista_screen(
-                                        "EXTERNO", "PENDENTE", null, null, null)),
+                                    sps_questionario_cq_lista_screen("EXTERNO",
+                                        "PENDENTE", null, null, null, null)),
                           )
                         },
                   color: Colors.purple,
@@ -408,8 +420,8 @@ class _sps_questionario_cq_ext_filtro_screen
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    sps_questionario_cq_lista_screen(
-                                        "EXTERNO", "PARCIAL", null, null, null)),
+                                    sps_questionario_cq_lista_screen("EXTERNO",
+                                        "PARCIAL", null, null, null, null)),
                           )
                         },
                   color: Colors.orange,
@@ -445,8 +457,8 @@ class _sps_questionario_cq_ext_filtro_screen
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    sps_questionario_cq_lista_screen(
-                                        "EXTERNO", "OK", null, null, null)),
+                                    sps_questionario_cq_lista_screen("EXTERNO",
+                                        "OK", null, null, null, null)),
                           )
                         },
                   color: Colors.green,

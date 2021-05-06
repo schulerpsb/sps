@@ -81,7 +81,8 @@ class _sps_questionario_ch_lista_screen
               null,
               null,
               null,
-              this.widget._filtroDescrProgramacao),
+              this.widget._filtroDescrProgramacao,
+              null),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
@@ -115,7 +116,7 @@ class _sps_questionario_ch_lista_screen
                                 ["dtfim_aplicacao"]
                             .replaceAll("-", "");
                         String _wdtvalidade_checklist = snapshot.data[index]
-                        ["dtvalidade_checklist"]
+                                ["dtvalidade_checklist"]
                             .replaceAll("-", "");
                         return Card(
                           color: Colors.white,
@@ -258,8 +259,7 @@ RichText prepararTextoPrincipal(
     text: new TextSpan(
       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       children: <TextSpan>[
-        new TextSpan(
-            text: snapshot.data[index]["descr_programacao"] + "\n\n"),
+        new TextSpan(text: snapshot.data[index]["descr_programacao"] + "\n\n"),
         new TextSpan(
           text: "DT.FIM CHECKLIST: ",
           style: TextStyle(color: Colors.grey),

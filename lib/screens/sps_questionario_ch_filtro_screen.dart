@@ -74,7 +74,8 @@ class _sps_questionario_ch_filtro_screen
               null,
               null,
               null,
-              _filtroDescrProgramacao),
+              _filtroDescrProgramacao,
+              null),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {

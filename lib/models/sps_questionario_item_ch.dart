@@ -41,7 +41,7 @@ class SpsQuestionarioItem_ch {
     debugPrint("Ler dados do SQlite (Tabela: checklist_item)");
     final SpsDaoQuestionarioItem objQuestionarioItemDao = SpsDaoQuestionarioItem();
     final List<Map<String, dynamic>> DadosSessao = await objQuestionarioItemDao.listarQuestionarioItemLocal(
-            h_codigo_empresa, h_codigo_programacao, h_acao, h_sessao_checklist);
+        h_codigo_empresa, h_codigo_programacao, h_acao, h_sessao_checklist);
     return DadosSessao;
   }
 }
