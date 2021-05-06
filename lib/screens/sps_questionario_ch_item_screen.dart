@@ -98,7 +98,7 @@ class _sps_questionario_ch_item_screen
       _sincronizado,
       _status_aprovacao,
       _filtro,
-      _filtroReferenciaProjeto,
+      _filtroDescrProgramacao,
       _acao,
       _sessao_checklist,
       _indexLista,

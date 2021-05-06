@@ -316,7 +316,7 @@ class SpsDaoQuestionarioItem {
                  'where codigo_empresa = "' + _hcodigoEmpresa + '" and codigo_programacao = ' + _hcodigoProgramacao.toString() +
                   ' and codigo_pergunta_dependente is not null '
                   ' and resposta_pergunta_dependente not in (select max(x.resp_simnao) from checklist_item x where x.codigo_empresa = checklist_item.codigo_empresa and x.codigo_programacao = checklist_item.codigo_programacao and x.codigo_pergunta = checklist_item.codigo_pergunta_dependente) ';
-    print("query => update_resposta_pergunta_dependente=> " + _query.toString());
+    //print("query => update_resposta_pergunta_dependente=> " + _query.toString());
     db.rawUpdate(_query);
 
     var _query2 = 'update checklist_item set status_resposta = "PENDENTE", sincronizado = "N" '
@@ -329,7 +329,7 @@ class SpsDaoQuestionarioItem {
             ' and checklist_item.resp_escala is null '
             ' and (checklist_item.resp_nao_se_aplica = "" or checklist_item.resp_nao_se_aplica is null) '
             ' and (select max(y.subcodigo_resposta) from checklist_item y where y.codigo_empresa = checklist_item.codigo_empresa and y.codigo_programacao = checklist_item.codigo_programacao and y.registro_colaborador = checklist_item.registro_colaborador and y.identificacao_utilizador = checklist_item.identificacao_utilizador and y.item_checklist = checklist_item.item_checklist and y.subcodigo_resposta = y.subcodigo_tpresposta) is null ';
-    print("query2 => update_resposta_pergunta_dependente=> " + _query2.toString());
+    //print("query2 => update_resposta_pergunta_dependente=> " + _query2.toString());
     db.rawUpdate(_query2);
 
     return 1;

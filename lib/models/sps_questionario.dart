@@ -7,7 +7,7 @@ import 'package:sps/models/sps_sincronizacao.dart';
 class SpsQuestionario {
   @override
   Future<List<Map<String, dynamic>>> listarQuestionario(
-      _origemUsuario, _tipoChecklist, _parametro, _filtro, _filtroReferenciaProjeto, _filtroDescrProgramacao) async {
+      _origemUsuario, _tipoChecklist, _parametro, _filtro, _filtroProjeto, _filtroReferencia, _filtroPedido, _filtroDescrProgramacao) async {
 
     print ("SpsQuestionario -> listarQuestionario");
 
@@ -84,7 +84,7 @@ class SpsQuestionario {
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> DadosSessao =
           await objQuestionarioDao.listarQuestionarioGeral(
-              _filtro, _filtroReferenciaProjeto, _filtroDescrProgramacao, _origemUsuario, doc_action);
+              _filtro, _filtroProjeto, _filtroReferencia, _filtroPedido, _filtroDescrProgramacao, _origemUsuario, doc_action);
       return DadosSessao;
     }
   }

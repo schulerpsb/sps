@@ -32,7 +32,9 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
   final String _tipoChecklist;
   final String _filtro;
   final int _indexLista;
-  final String _filtroReferenciaProjeto;
+  final String _filtroProjeto;
+  final String _filtroReferencia;
+  final String _filtroPedido;
 
   sps_questionario_cq_comentarios_screen(
       this._codigo_empresa,
@@ -57,7 +59,9 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
       this._tipoChecklist,
       this._filtro,
       this._indexLista,
-      this._filtroReferenciaProjeto);
+      this._filtroProjeto,
+      this._filtroReferencia,
+      this._filtroPedido);
 
   @override
   _sps_questionario_cq_comentarios_screen createState() =>
@@ -84,7 +88,9 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
           this._tipoChecklist,
           this._filtro,
           this._indexLista,
-          this._filtroReferenciaProjeto);
+          this._filtroProjeto,
+          this._filtroReferencia,
+          this._filtroPedido);
 }
 
 class _sps_questionario_cq_comentarios_screen
@@ -117,7 +123,9 @@ class _sps_questionario_cq_comentarios_screen
       _tipoChecklist,
       _filtro,
       _indexLista,
-      _filtroReferenciaProjeto);
+      _filtroProjeto,
+      _filtroReferencia,
+      _filtroPedido);
 
   //Executar Scrolling automático
   ScrollController _controller;
@@ -189,7 +197,9 @@ class _sps_questionario_cq_comentarios_screen
                                     this.widget._origemUsuario,
                                     this.widget._filtro,
                                     this.widget._indexLista,
-                                    this.widget._filtroReferenciaProjeto)
+                                    this.widget._filtroProjeto,
+                                this.widget._filtroReferencia,
+                                this.widget._filtroPedido)
                                 : sps_questionario_cq_int_item_screen(
                                     this.widget._codigo_empresa,
                                     this.widget._codigo_programacao,
@@ -210,7 +220,9 @@ class _sps_questionario_cq_comentarios_screen
                                     this.widget._origemUsuario,
                                     this.widget._filtro,
                                     this.widget._indexLista,
-                                    this.widget._filtroReferenciaProjeto)),
+                                    this.widget._filtroProjeto,
+                                this.widget._filtroReferencia,
+                                this.widget._filtroPedido)),
                   );
                 },
               );

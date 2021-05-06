@@ -16,15 +16,17 @@ import 'package:intl/intl.dart';
 class sps_questionario_cq_lista_screen extends StatefulWidget {
   final String _origemUsuario;
   final String _filtro;
-  final String _filtroReferenciaProjeto;
+  final String _filtroProjeto;
+  final String _filtroReferencia;
+  final String _filtroPedido;
 
-  sps_questionario_cq_lista_screen(
-      this._origemUsuario, this._filtro, this._filtroReferenciaProjeto);
+  sps_questionario_cq_lista_screen(this._origemUsuario, this._filtro,
+      this._filtroProjeto, this._filtroReferencia, this._filtroPedido);
 
   @override
   _sps_questionario_cq_lista_screen createState() =>
-      _sps_questionario_cq_lista_screen(
-          this._origemUsuario, this._filtro, this._filtroReferenciaProjeto);
+      _sps_questionario_cq_lista_screen(this._origemUsuario, this._filtro,
+          this._filtroProjeto, this._filtroReferencia, this._filtroPedido);
 }
 
 class _sps_questionario_cq_lista_screen
@@ -34,8 +36,8 @@ class _sps_questionario_cq_lista_screen
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
-  _sps_questionario_cq_lista_screen(
-      _origemUsuario, _filtro, _filtroReferenciaProjeto);
+  _sps_questionario_cq_lista_screen(_origemUsuario, _filtro, _filtroProjeto,
+      _filtroReferencia, _filtroPedido);
 
   var formato = new NumberFormat("##0.00", "en_US");
 
@@ -82,7 +84,9 @@ class _sps_questionario_cq_lista_screen
               'CONTROLE DE QUALIDADE',
               'LISTAR',
               this.widget._filtro,
-              this.widget._filtroReferenciaProjeto,
+              this.widget._filtroProjeto,
+              this.widget._filtroReferencia,
+              this.widget._filtroPedido,
               null),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
@@ -206,9 +210,9 @@ class _sps_questionario_cq_lista_screen
                                                   this.widget._origemUsuario,
                                                   this.widget._filtro,
                                                   0,
-                                                  this
-                                                      .widget
-                                                      ._filtroReferenciaProjeto,
+                                                  this.widget._filtroProjeto,
+                                                  this.widget._filtroReferencia,
+                                                  this.widget._filtroPedido,
                                                 )
                                               : sps_questionario_cq_int_item_screen(
                                                   snapshot.data[index]
@@ -246,9 +250,9 @@ class _sps_questionario_cq_lista_screen
                                                   this.widget._origemUsuario,
                                                   this.widget._filtro,
                                                   0,
-                                                  this
-                                                      .widget
-                                                      ._filtroReferenciaProjeto,
+                                                  this.widget._filtroProjeto,
+                                                  this.widget._filtroReferencia,
+                                                  this.widget._filtroPedido,
                                                 )),
                                     )
                                   : _popup_vencido(context);

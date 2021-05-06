@@ -54,7 +54,9 @@ class sps_questionario_midia_screen extends StatefulWidget {
   final String _origemUsuario;
   final String _filtro;
   final int    _indexLista;
-  final String _filtroReferenciaProjeto;
+  final String _filtroProjeto;
+  final String _filtroReferencia;
+  final String _filtroPedido;
   final String _qtImagens;
   final String _qtVideos;
   final String _qtOutros;
@@ -82,7 +84,9 @@ class sps_questionario_midia_screen extends StatefulWidget {
       this._origemUsuario,
       this._filtro,
       this._indexLista,
-      this._filtroReferenciaProjeto,
+      this._filtroProjeto,
+      this._filtroReferencia,
+      this._filtroPedido,
       this._qtImagens,
       this._qtVideos,
       this._qtOutros,
@@ -113,7 +117,9 @@ class sps_questionario_midia_screen extends StatefulWidget {
           this._origemUsuario,
           this._filtro,
           this._indexLista,
-          this._filtroReferenciaProjeto,
+          this._filtroProjeto,
+          this._filtroReferencia,
+          this._filtroPedido,
           this._qtImagens,
           this._qtVideos,
           this._qtOutros,
@@ -152,7 +158,9 @@ class _sps_questionario_midia_screen
       _origemUsuario,
       _filtro,
       _indexLista,
-      _filtroReferenciaProjeto,
+      _filtroProjeto,
+      _filtroReferencia,
+      _filtroPedido,
       _qtImagens,
       _qtVideos,
       _qtOutros,

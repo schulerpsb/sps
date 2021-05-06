@@ -79,6 +79,8 @@ class _sps_questionario_ch_lista_screen
               'LISTAR',
               this.widget._filtro,
               null,
+              null,
+              null,
               this.widget._filtroDescrProgramacao),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());

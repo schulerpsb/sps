@@ -25,7 +25,9 @@ class _sps_questionario_cq_ext_filtro_screen
   Widget build(BuildContext context) {
     debugPrint("TELA => SPS_QUESTIONARIO_CQ_EXT_FILTRO_SCREEN ");
 
-    TextEditingController _filtroReferenciaProjeto = TextEditingController();
+    TextEditingController _filtroProjeto = TextEditingController();
+    TextEditingController _filtroReferencia = TextEditingController();
+    TextEditingController _filtroPedido = TextEditingController();
 
     return WillPopScope(
       onWillPop: () {
@@ -60,8 +62,8 @@ class _sps_questionario_cq_ext_filtro_screen
         endDrawer: sps_drawer(spslogin: spslogin),
 
         body: FutureBuilder<List<Map<String, dynamic>>>(
-          future: spsquestionario.listarQuestionario(
-              'EXTERNO', 'CONTROLE DE QUALIDADE', 'CONTAR', null, null, null),
+          future: spsquestionario.listarQuestionario('EXTERNO',
+              'CONTROLE DE QUALIDADE', 'CONTAR', null, null, null, null, null),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
@@ -108,27 +110,89 @@ class _sps_questionario_cq_ext_filtro_screen
                                 top: 5, left: 10, right: 10, bottom: 10),
                             child: Column(
                               children: <Widget>[
-                                Text("Referência do parceiro",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15)),
-                                Card(
-                                  color: Colors.white,
-                                  child: Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Column(
-                                      children: <Widget>[
-                                        TextField(
-                                          controller: _filtroReferenciaProjeto,
-                                          maxLines: 1,
-                                          decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText:
-                                                  'Informar a referência do parceiro'),
+                                Column(
+                                  children: [
+                                    Text("Código do projeto",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15)),
+                                    Card(
+                                      color: Colors.white,
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Column(
+                                          children: <Widget>[
+                                            TextField(
+                                              controller: _filtroProjeto,
+                                              maxLines: 1,
+                                              decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText:
+                                                      'Informe o código do projeto (WBS)'),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Column(
+                                  children: [
+                                    Text("Referência do parceiro",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15)),
+                                    Card(
+                                      color: Colors.white,
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Column(
+                                          children: <Widget>[
+                                            TextField(
+                                              controller: _filtroReferencia,
+                                              maxLines: 1,
+                                              decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText:
+                                                  'Informar o código de referência do parceiro'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Column(
+                                  children: [
+                                    Text("Código do pedido",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15)),
+                                    Card(
+                                      color: Colors.white,
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Column(
+                                          children: <Widget>[
+                                            TextField(
+                                              controller: _filtroPedido,
+                                              maxLines: 1,
+                                              decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText:
+                                                  'Informe o código do pedido'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -137,7 +201,7 @@ class _sps_questionario_cq_ext_filtro_screen
                                   alignment: Alignment.bottomCenter,
                                   child: FloatingActionButton(
                                     onPressed: () =>
-                                        _filtroReferenciaProjeto.text == ""
+                                        _filtroProjeto.text == "" && _filtroReferencia.text == "" && _filtroPedido.text == ""
                                             ? {}
                                             : {
                                                 Navigator.push(
@@ -147,8 +211,9 @@ class _sps_questionario_cq_ext_filtro_screen
                                                           sps_questionario_cq_lista_screen(
                                                               "EXTERNO",
                                                               null,
-                                                              _filtroReferenciaProjeto
-                                                                  .text)),
+                                                              _filtroProjeto.text,
+                                                              _filtroReferencia.text,
+                                                              _filtroPedido.text)),
                                                 )
                                               },
                                     child: const Icon(Icons.search),
@@ -181,30 +246,28 @@ class _sps_questionario_cq_ext_filtro_screen
     );
   }
 
-  Column montaFiltros(AsyncSnapshot<List<Map<String, dynamic>>> snapshot, BuildContext context) {
+  Column montaFiltros(AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
+      BuildContext context) {
     int larguraTela = MediaQuery.of(context).size.width.toInt();
     int alturaTela = MediaQuery.of(context).size.height.toInt();
-    if(larguraTela > 320){
+    if (larguraTela > 320) {
       return Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               RaisedButton(
-                onPressed: () =>
-                _obter_contador(snapshot, "PENDENTE") == 0
+                onPressed: () => _obter_contador(snapshot, "PENDENTE") == 0
                     ? {}
                     : {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            sps_questionario_cq_lista_screen(
-                                "EXTERNO",
-                                "PENDENTE",
-                                null)),
-                  )
-                },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  sps_questionario_cq_lista_screen(
+                                      "EXTERNO", "PENDENTE", null, null, null)),
+                        )
+                      },
                 color: Colors.purple,
                 padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                 shape: RoundedRectangleBorder(
@@ -215,13 +278,10 @@ class _sps_questionario_cq_ext_filtro_screen
                   children: <Widget>[
                     Center(
                         child: Text(" PENDENTE \n",
-                            style: TextStyle(
-                                color: Colors.white))),
+                            style: TextStyle(color: Colors.white))),
                     Center(
                         child: Text(
-                            _obter_contador(
-                                snapshot, "PENDENTE")
-                                .toString(),
+                            _obter_contador(snapshot, "PENDENTE").toString(),
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -233,20 +293,17 @@ class _sps_questionario_cq_ext_filtro_screen
                 width: 10,
               ),
               RaisedButton(
-                onPressed: () =>
-                _obter_contador(snapshot, "PARCIAL") == 0
+                onPressed: () => _obter_contador(snapshot, "PARCIAL") == 0
                     ? {}
                     : {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            sps_questionario_cq_lista_screen(
-                                "EXTERNO",
-                                "PARCIAL",
-                                null)),
-                  )
-                },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  sps_questionario_cq_lista_screen(
+                                      "EXTERNO", "PARCIAL", null, null, null)),
+                        )
+                      },
                 color: Colors.orange,
                 padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                 shape: RoundedRectangleBorder(
@@ -258,12 +315,9 @@ class _sps_questionario_cq_ext_filtro_screen
                     Center(child: Text("   PARCIAL   \n")),
                     Center(
                         child: Text(
-                            _obter_contador(
-                                snapshot, "PARCIAL")
-                                .toString(),
+                            _obter_contador(snapshot, "PARCIAL").toString(),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15)))
+                                fontWeight: FontWeight.bold, fontSize: 15)))
                   ],
                 ),
               ),
@@ -271,20 +325,17 @@ class _sps_questionario_cq_ext_filtro_screen
                 width: 10,
               ),
               RaisedButton(
-                onPressed: () =>
-                _obter_contador(snapshot, "OK") == 0
+                onPressed: () => _obter_contador(snapshot, "OK") == 0
                     ? {}
                     : {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            sps_questionario_cq_lista_screen(
-                                "EXTERNO",
-                                "OK",
-                                null)),
-                  )
-                },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  sps_questionario_cq_lista_screen(
+                                      "EXTERNO", "OK", null, null, null)),
+                        )
+                      },
                 color: Colors.green,
                 padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                 shape: RoundedRectangleBorder(
@@ -295,12 +346,9 @@ class _sps_questionario_cq_ext_filtro_screen
                   children: <Widget>[
                     Center(child: Text("CONCLUÍDO\n")),
                     Center(
-                        child: Text(
-                            _obter_contador(snapshot, "OK")
-                                .toString(),
+                        child: Text(_obter_contador(snapshot, "OK").toString(),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15)))
+                                fontWeight: FontWeight.bold, fontSize: 15)))
                   ],
                 ),
               ),
@@ -308,7 +356,7 @@ class _sps_questionario_cq_ext_filtro_screen
           ),
         ],
       );
-    }else{
+    } else {
       return Column(
         children: [
           Padding(
@@ -317,20 +365,17 @@ class _sps_questionario_cq_ext_filtro_screen
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: () =>
-                  _obter_contador(snapshot, "PENDENTE") == 0
+                  onPressed: () => _obter_contador(snapshot, "PENDENTE") == 0
                       ? {}
                       : {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              sps_questionario_cq_lista_screen(
-                                  "EXTERNO",
-                                  "PENDENTE",
-                                  null)),
-                    )
-                  },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    sps_questionario_cq_lista_screen(
+                                        "EXTERNO", "PENDENTE", null, null, null)),
+                          )
+                        },
                   color: Colors.purple,
                   padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                   shape: RoundedRectangleBorder(
@@ -341,13 +386,10 @@ class _sps_questionario_cq_ext_filtro_screen
                     children: <Widget>[
                       Center(
                           child: Text(" PENDENTE \n",
-                              style: TextStyle(
-                                  color: Colors.white))),
+                              style: TextStyle(color: Colors.white))),
                       Center(
                           child: Text(
-                              _obter_contador(
-                                  snapshot, "PENDENTE")
-                                  .toString(),
+                              _obter_contador(snapshot, "PENDENTE").toString(),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -359,20 +401,17 @@ class _sps_questionario_cq_ext_filtro_screen
                   width: 10,
                 ),
                 RaisedButton(
-                  onPressed: () =>
-                  _obter_contador(snapshot, "PARCIAL") == 0
+                  onPressed: () => _obter_contador(snapshot, "PARCIAL") == 0
                       ? {}
                       : {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              sps_questionario_cq_lista_screen(
-                                  "EXTERNO",
-                                  "PARCIAL",
-                                  null)),
-                    )
-                  },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    sps_questionario_cq_lista_screen(
+                                        "EXTERNO", "PARCIAL", null, null, null)),
+                          )
+                        },
                   color: Colors.orange,
                   padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                   shape: RoundedRectangleBorder(
@@ -384,12 +423,9 @@ class _sps_questionario_cq_ext_filtro_screen
                       Center(child: Text("   PARCIAL   \n")),
                       Center(
                           child: Text(
-                              _obter_contador(
-                                  snapshot, "PARCIAL")
-                                  .toString(),
+                              _obter_contador(snapshot, "PARCIAL").toString(),
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15)))
+                                  fontWeight: FontWeight.bold, fontSize: 15)))
                     ],
                   ),
                 ),
@@ -402,20 +438,17 @@ class _sps_questionario_cq_ext_filtro_screen
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: () =>
-                  _obter_contador(snapshot, "OK") == 0
+                  onPressed: () => _obter_contador(snapshot, "OK") == 0
                       ? {}
                       : {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              sps_questionario_cq_lista_screen(
-                                  "EXTERNO",
-                                  "OK",
-                                  null)),
-                    )
-                  },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    sps_questionario_cq_lista_screen(
+                                        "EXTERNO", "OK", null, null, null)),
+                          )
+                        },
                   color: Colors.green,
                   padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
                   shape: RoundedRectangleBorder(
@@ -427,11 +460,9 @@ class _sps_questionario_cq_ext_filtro_screen
                       Center(child: Text("CONCLUÍDO\n")),
                       Center(
                           child: Text(
-                              _obter_contador(snapshot, "OK")
-                                  .toString(),
+                              _obter_contador(snapshot, "OK").toString(),
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15)))
+                                  fontWeight: FontWeight.bold, fontSize: 15)))
                     ],
                   ),
                 ),

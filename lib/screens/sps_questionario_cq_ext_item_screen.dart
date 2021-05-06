@@ -38,7 +38,9 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
   final String _origemUsuario;
   final String _filtro;
   int _indexLista;
-  final String _filtroReferenciaProjeto;
+  final String _filtroProjeto;
+  final String _filtroReferencia;
+  final String _filtroPedido;
 
   final sps_usuario usuarioAtual;
 
@@ -62,7 +64,9 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
       this._origemUsuario,
       this._filtro,
       this._indexLista,
-      this._filtroReferenciaProjeto,
+      this._filtroProjeto,
+      this._filtroReferencia,
+      this._filtroPedido,
       {this.usuarioAtual = null});
 
   @override
@@ -87,7 +91,9 @@ class sps_questionario_cq_ext_item_screen extends StatefulWidget {
         this._origemUsuario,
         this._filtro,
         this._indexLista,
-        this._filtroReferenciaProjeto,
+        this._filtroProjeto,
+        this._filtroReferencia,
+        this._filtroPedido,
       );
 }
 
@@ -127,7 +133,9 @@ class _sps_questionario_cq_ext_item_screen
       _origemUsuario,
       _filtro,
       _indexLista,
-      _filtroReferenciaProjeto);
+      _filtroProjeto,
+      _filtroReferencia,
+      _filtroPedido);
 
   var _singleValue = List();
 
@@ -160,7 +168,9 @@ class _sps_questionario_cq_ext_item_screen
                         builder: (context) => sps_questionario_cq_lista_screen(
                             this.widget._origemUsuario,
                             this.widget._filtro,
-                            this.widget._filtroReferenciaProjeto)),
+                            this.widget._filtroProjeto,
+                            this.widget._filtroReferencia,
+                            this.widget._filtroPedido)),
                   );
                 },
               );
@@ -320,7 +330,8 @@ class _sps_questionario_cq_ext_item_screen
                               }
                               return Card(
                                 color: Colors.white,
-                                child: montaOpcoesItem(snapshot, index, context),
+                                child:
+                                    montaOpcoesItem(snapshot, index, context),
                               );
                             }),
                       ),
@@ -357,42 +368,34 @@ class _sps_questionario_cq_ext_item_screen
     );
   }
 
-  Column montaOpcoesItem(AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index, BuildContext context) {
+  Column montaOpcoesItem(AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
+      int index, BuildContext context) {
     int larguraTela = MediaQuery.of(context).size.width.toInt();
     int alturaTela = MediaQuery.of(context).size.height.toInt();
-    if(larguraTela > 320){
+    if (larguraTela > 320) {
       return Column(
         children: <Widget>[
           //Tratar descrição da pergunta
           ListTile(
-            trailing: snapshot.data[index]
-            ["status_resposta"] ==
-                "PREENCHIDA"
-                ? Icon(Icons.check,
-                color: Colors.green, size: 40)
+            trailing: snapshot.data[index]["status_resposta"] == "PREENCHIDA"
+                ? Icon(Icons.check, color: Colors.green, size: 40)
                 : null,
             title: Text(
                 '${snapshot.data[index]["seq_pergunta"]}' +
                     " - " +
                     '${snapshot.data[index]["descr_pergunta"]}',
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 15)),
+                style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15)),
             subtitle: Text(""),
           ),
 
           Row(
             children: <Widget>[
               // Tratar Legenda das opções
-              Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      0, 0, 0, 0)),
+              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
               IconButton(
-                  icon: Icon(Icons.info_outline,
-                      size: 15),
+                  icon: Icon(Icons.info_outline, size: 15),
                   color: Colors.red,
-                  onPressed: () =>
-                      _popup_legenda(context)),
+                  onPressed: () => _popup_legenda(context)),
               Text(""),
 
               // Tratar Opções
@@ -401,18 +404,17 @@ class _sps_questionario_cq_ext_item_screen
                 child: CustomRadioWidget(
                   value: "NÃO SE APLICA",
                   groupValue: _singleValue[index],
-                  onChanged: (value) => snapshot
-                      .data[index]
-                  ["status_aprovacao"] ==
-                      "PENDENTE"
+                  onChanged: (value) => snapshot.data[index]
+                              ["status_aprovacao"] ==
+                          "PENDENTE"
                       ? _gravar_opcao(
-                      '${snapshot.data[index]["codigo_empresa"]}',
-                      '${snapshot.data[index]["codigo_programacao"]}',
-                      '${snapshot.data[index]["registro_colaborador"]}',
-                      '${snapshot.data[index]["identificacao_utilizador"]}',
-                      '${snapshot.data[index]["item_checklist"]}',
-                      value,
-                      index)
+                          '${snapshot.data[index]["codigo_empresa"]}',
+                          '${snapshot.data[index]["codigo_programacao"]}',
+                          '${snapshot.data[index]["registro_colaborador"]}',
+                          '${snapshot.data[index]["identificacao_utilizador"]}',
+                          '${snapshot.data[index]["item_checklist"]}',
+                          value,
+                          index)
                       : {},
                 ),
               ),
@@ -422,18 +424,17 @@ class _sps_questionario_cq_ext_item_screen
                 child: CustomRadioWidget(
                   value: "REJEITADO",
                   groupValue: _singleValue[index],
-                  onChanged: (value) => snapshot
-                      .data[index]
-                  ["status_aprovacao"] ==
-                      "PENDENTE"
+                  onChanged: (value) => snapshot.data[index]
+                              ["status_aprovacao"] ==
+                          "PENDENTE"
                       ? _gravar_opcao(
-                      '${snapshot.data[index]["codigo_empresa"]}',
-                      '${snapshot.data[index]["codigo_programacao"]}',
-                      '${snapshot.data[index]["registro_colaborador"]}',
-                      '${snapshot.data[index]["identificacao_utilizador"]}',
-                      '${snapshot.data[index]["item_checklist"]}',
-                      value,
-                      index)
+                          '${snapshot.data[index]["codigo_empresa"]}',
+                          '${snapshot.data[index]["codigo_programacao"]}',
+                          '${snapshot.data[index]["registro_colaborador"]}',
+                          '${snapshot.data[index]["identificacao_utilizador"]}',
+                          '${snapshot.data[index]["item_checklist"]}',
+                          value,
+                          index)
                       : {},
                 ),
               ),
@@ -443,18 +444,17 @@ class _sps_questionario_cq_ext_item_screen
                 child: CustomRadioWidget(
                   value: "APROVADO PARCIAL",
                   groupValue: _singleValue[index],
-                  onChanged: (value) => snapshot
-                      .data[index]
-                  ["status_aprovacao"] ==
-                      "PENDENTE"
+                  onChanged: (value) => snapshot.data[index]
+                              ["status_aprovacao"] ==
+                          "PENDENTE"
                       ? _gravar_opcao(
-                      '${snapshot.data[index]["codigo_empresa"]}',
-                      '${snapshot.data[index]["codigo_programacao"]}',
-                      '${snapshot.data[index]["registro_colaborador"]}',
-                      '${snapshot.data[index]["identificacao_utilizador"]}',
-                      '${snapshot.data[index]["item_checklist"]}',
-                      value,
-                      index)
+                          '${snapshot.data[index]["codigo_empresa"]}',
+                          '${snapshot.data[index]["codigo_programacao"]}',
+                          '${snapshot.data[index]["registro_colaborador"]}',
+                          '${snapshot.data[index]["identificacao_utilizador"]}',
+                          '${snapshot.data[index]["item_checklist"]}',
+                          value,
+                          index)
                       : {},
                 ),
               ),
@@ -464,18 +464,17 @@ class _sps_questionario_cq_ext_item_screen
                 child: CustomRadioWidget(
                   value: "APROVADO",
                   groupValue: _singleValue[index],
-                  onChanged: (value) => snapshot
-                      .data[index]
-                  ["status_aprovacao"] ==
-                      "PENDENTE"
+                  onChanged: (value) => snapshot.data[index]
+                              ["status_aprovacao"] ==
+                          "PENDENTE"
                       ? _gravar_opcao(
-                      '${snapshot.data[index]["codigo_empresa"]}',
-                      '${snapshot.data[index]["codigo_programacao"]}',
-                      '${snapshot.data[index]["registro_colaborador"]}',
-                      '${snapshot.data[index]["identificacao_utilizador"]}',
-                      '${snapshot.data[index]["item_checklist"]}',
-                      value,
-                      index)
+                          '${snapshot.data[index]["codigo_empresa"]}',
+                          '${snapshot.data[index]["codigo_programacao"]}',
+                          '${snapshot.data[index]["registro_colaborador"]}',
+                          '${snapshot.data[index]["identificacao_utilizador"]}',
+                          '${snapshot.data[index]["item_checklist"]}',
+                          value,
+                          index)
                       : {},
                 ),
               ),
@@ -483,106 +482,52 @@ class _sps_questionario_cq_ext_item_screen
               //Tratar Mídias
               IconButton(
                 icon: Badge(
-                  badgeContent: Text(
-                      snapshot.data[index]["anexos"]
-                          .toString(),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8)),
-                  showBadge: snapshot.data[index]
-                  ["anexos"] >
-                      0
-                      ? true
-                      : false,
+                  badgeContent: Text(snapshot.data[index]["anexos"].toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 8)),
+                  showBadge: snapshot.data[index]["anexos"] > 0 ? true : false,
                   badgeColor: Color(0xFF004077),
-                  child: Icon(Icons.collections,
-                      size: 30),
+                  child: Icon(Icons.collections, size: 30),
                 ),
-                color:
-                snapshot.data[index]["anexos"] > 0
+                color: snapshot.data[index]["anexos"] > 0
                     ? Colors.blue
                     : Colors.black,
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            sps_questionario_midia_screen(
-                              snapshot.data[index]
-                              ["codigo_empresa"],
-                              snapshot.data[index][
-                              "codigo_programacao"],
-                              snapshot.data[index]
-                              ["item_checklist"],
-                              snapshot.data[index][
-                              "descr_comentarios"],
-                              this
-                                  .widget
-                                  ._registro_colaborador,
-                              this
-                                  .widget
-                                  ._identificacao_utilizador,
-                              this
-                                  .widget
-                                  ._codigo_grupo,
-                              this
-                                  .widget
-                                  ._codigo_checklist,
-                              this
-                                  .widget
-                                  ._descr_programacao,
-                              this
-                                  .widget
-                                  ._codigo_pedido,
-                              this
-                                  .widget
-                                  ._item_pedido,
-                              this
-                                  .widget
-                                  ._codigo_material,
-                              this
-                                  .widget
-                                  ._referencia_parceiro,
-                              this
-                                  .widget
-                                  ._nome_fornecedor,
-                              this
-                                  .widget
-                                  ._qtde_pedido,
-                              this
-                                  .widget
-                                  ._codigo_projeto,
-                              this
-                                  .widget
-                                  ._sincronizado,
-                              snapshot.data[index][
-                              "status_aprovacao"],
-                              this
-                                  .widget
-                                  ._origemUsuario,
+                        builder: (context) => sps_questionario_midia_screen(
+                              snapshot.data[index]["codigo_empresa"],
+                              snapshot.data[index]["codigo_programacao"],
+                              snapshot.data[index]["item_checklist"],
+                              snapshot.data[index]["descr_comentarios"],
+                              this.widget._registro_colaborador,
+                              this.widget._identificacao_utilizador,
+                              this.widget._codigo_grupo,
+                              this.widget._codigo_checklist,
+                              this.widget._descr_programacao,
+                              this.widget._codigo_pedido,
+                              this.widget._item_pedido,
+                              this.widget._codigo_material,
+                              this.widget._referencia_parceiro,
+                              this.widget._nome_fornecedor,
+                              this.widget._qtde_pedido,
+                              this.widget._codigo_projeto,
+                              this.widget._sincronizado,
+                              snapshot.data[index]["status_aprovacao"],
+                              this.widget._origemUsuario,
                               this.widget._filtro,
                               index,
-                              this
-                                  .widget
-                                  ._filtroReferenciaProjeto,
-                              snapshot.data[index]
-                              ["imagens"]
-                                  .toString(),
-                              snapshot.data[index]
-                              ["videos"]
-                                  .toString(),
-                              snapshot.data[index]
-                              ["outros"]
-                                  .toString(),
+                              this.widget._filtroProjeto,
+                              this.widget._filtroReferencia,
+                              this.widget._filtroPedido,
+                              snapshot.data[index]["imagens"].toString(),
+                              snapshot.data[index]["videos"].toString(),
+                              snapshot.data[index]["outros"].toString(),
                               "",
                               funCallback: (
-                                  {int
-                                  index_posicao_retorno,
-                                    String acao}) {
+                                  {int index_posicao_retorno, String acao}) {
                                 setState(() {
-                                  this
-                                      .widget
-                                      ._indexLista =
+                                  this.widget._indexLista =
                                       index_posicao_retorno;
                                 });
                               },
@@ -591,11 +536,7 @@ class _sps_questionario_cq_ext_item_screen
                 },
               ),
 
-              Text(
-                  snapshot.data[index]["midia"] ==
-                      "OBRIGATORIO"
-                      ? "*"
-                      : "",
+              Text(snapshot.data[index]["midia"] == "OBRIGATORIO" ? "*" : "",
                   style: TextStyle(
                       color: Colors.red,
                       fontSize: 18,
@@ -605,12 +546,8 @@ class _sps_questionario_cq_ext_item_screen
               //Tratar Comentários
               IconButton(
                 icon: Icon(Icons.comment, size: 30),
-                color: snapshot.data[index][
-                "descr_comentarios"] ==
-                    "" ||
-                    snapshot.data[index][
-                    "descr_comentarios"] ==
-                        null
+                color: snapshot.data[index]["descr_comentarios"] == "" ||
+                        snapshot.data[index]["descr_comentarios"] == null
                     ? Colors.black
                     : Colors.blue,
                 onPressed: () {
@@ -619,53 +556,37 @@ class _sps_questionario_cq_ext_item_screen
                     MaterialPageRoute(
                       builder: (context) =>
                           sps_questionario_cq_comentarios_screen(
-                            snapshot.data[index]
-                            ["codigo_empresa"],
-                            snapshot.data[index]
-                            ["codigo_programacao"],
-                            snapshot.data[index]
-                            ["item_checklist"],
-                            snapshot.data[index]
-                            ["descr_comentarios"],
-                            this
-                                .widget
-                                ._registro_colaborador,
-                            this
-                                .widget
-                                ._identificacao_utilizador,
-                            this.widget._codigo_grupo,
-                            this.widget._codigo_checklist,
-                            this
-                                .widget
-                                ._descr_programacao,
-                            this.widget._codigo_pedido,
-                            this.widget._item_pedido,
-                            this.widget._codigo_material,
-                            this
-                                .widget
-                                ._referencia_parceiro,
-                            this.widget._nome_fornecedor,
-                            this.widget._qtde_pedido,
-                            this.widget._codigo_projeto,
-                            this.widget._sincronizado,
-                            snapshot.data[index]
-                            ["status_aprovacao"],
-                            this.widget._origemUsuario,
-                            "CONTROLE DE QUALIDADE",
-                            this.widget._filtro,
-                            index,
-                            this
-                                .widget
-                                ._filtroReferenciaProjeto,
-                          ),
+                              snapshot.data[index]["codigo_empresa"],
+                              snapshot.data[index]["codigo_programacao"],
+                              snapshot.data[index]["item_checklist"],
+                              snapshot.data[index]["descr_comentarios"],
+                              this.widget._registro_colaborador,
+                              this.widget._identificacao_utilizador,
+                              this.widget._codigo_grupo,
+                              this.widget._codigo_checklist,
+                              this.widget._descr_programacao,
+                              this.widget._codigo_pedido,
+                              this.widget._item_pedido,
+                              this.widget._codigo_material,
+                              this.widget._referencia_parceiro,
+                              this.widget._nome_fornecedor,
+                              this.widget._qtde_pedido,
+                              this.widget._codigo_projeto,
+                              this.widget._sincronizado,
+                              snapshot.data[index]["status_aprovacao"],
+                              this.widget._origemUsuario,
+                              "CONTROLE DE QUALIDADE",
+                              this.widget._filtro,
+                              index,
+                              this.widget._filtroProjeto,
+                              this.widget._filtroReferencia,
+                              this.widget._filtroPedido),
                     ),
                   );
                 },
               ),
               Text(
-                  snapshot.data[index]
-                  ["comentarios"] ==
-                      "OBRIGATORIO"
+                  snapshot.data[index]["comentarios"] == "OBRIGATORIO"
                       ? "*"
                       : "",
                   style: TextStyle(
@@ -674,50 +595,40 @@ class _sps_questionario_cq_ext_item_screen
                       fontWeight: FontWeight.bold)),
             ],
           ),
-          snapshot.data[index]["status_aprovacao"] ==
-              "APROVADO"
+          snapshot.data[index]["status_aprovacao"] == "APROVADO"
               ? Text("\nAPROVADO PELO FOLLOW UP\n",
-              style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold))
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold))
               : Text(""),
           tratar_posicionar_lista(index),
         ],
       );
-    }else{
+    } else {
       return Column(
         children: <Widget>[
           //Tratar descrição da pergunta
           ListTile(
-            trailing: snapshot.data[index]
-            ["status_resposta"] ==
-                "PREENCHIDA"
-                ? Icon(Icons.check,
-                color: Colors.green, size: 40)
+            trailing: snapshot.data[index]["status_resposta"] == "PREENCHIDA"
+                ? Icon(Icons.check, color: Colors.green, size: 40)
                 : null,
             title: Text(
                 '${snapshot.data[index]["seq_pergunta"]}' +
                     " - " +
                     '${snapshot.data[index]["descr_pergunta"]}',
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 15)),
+                style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15)),
             subtitle: Text(""),
           ),
 
           Row(
             children: <Widget>[
               // Tratar Legenda das opções
-              Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      0, 0, 0, 0)),
+              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
               IconButton(
-                  icon: Icon(Icons.info_outline,
-                      size: 15),
+                  icon: Icon(Icons.info_outline, size: 15),
                   color: Colors.red,
-                  onPressed: () =>
-                      _popup_legenda(context)),
+                  onPressed: () => _popup_legenda(context)),
               Text(""),
 
               // Tratar Opções
@@ -726,18 +637,17 @@ class _sps_questionario_cq_ext_item_screen
                 child: CustomRadioWidget(
                   value: "NÃO SE APLICA",
                   groupValue: _singleValue[index],
-                  onChanged: (value) => snapshot
-                      .data[index]
-                  ["status_aprovacao"] ==
-                      "PENDENTE"
+                  onChanged: (value) => snapshot.data[index]
+                              ["status_aprovacao"] ==
+                          "PENDENTE"
                       ? _gravar_opcao(
-                      '${snapshot.data[index]["codigo_empresa"]}',
-                      '${snapshot.data[index]["codigo_programacao"]}',
-                      '${snapshot.data[index]["registro_colaborador"]}',
-                      '${snapshot.data[index]["identificacao_utilizador"]}',
-                      '${snapshot.data[index]["item_checklist"]}',
-                      value,
-                      index)
+                          '${snapshot.data[index]["codigo_empresa"]}',
+                          '${snapshot.data[index]["codigo_programacao"]}',
+                          '${snapshot.data[index]["registro_colaborador"]}',
+                          '${snapshot.data[index]["identificacao_utilizador"]}',
+                          '${snapshot.data[index]["item_checklist"]}',
+                          value,
+                          index)
                       : {},
                 ),
               ),
@@ -747,18 +657,17 @@ class _sps_questionario_cq_ext_item_screen
                 child: CustomRadioWidget(
                   value: "REJEITADO",
                   groupValue: _singleValue[index],
-                  onChanged: (value) => snapshot
-                      .data[index]
-                  ["status_aprovacao"] ==
-                      "PENDENTE"
+                  onChanged: (value) => snapshot.data[index]
+                              ["status_aprovacao"] ==
+                          "PENDENTE"
                       ? _gravar_opcao(
-                      '${snapshot.data[index]["codigo_empresa"]}',
-                      '${snapshot.data[index]["codigo_programacao"]}',
-                      '${snapshot.data[index]["registro_colaborador"]}',
-                      '${snapshot.data[index]["identificacao_utilizador"]}',
-                      '${snapshot.data[index]["item_checklist"]}',
-                      value,
-                      index)
+                          '${snapshot.data[index]["codigo_empresa"]}',
+                          '${snapshot.data[index]["codigo_programacao"]}',
+                          '${snapshot.data[index]["registro_colaborador"]}',
+                          '${snapshot.data[index]["identificacao_utilizador"]}',
+                          '${snapshot.data[index]["item_checklist"]}',
+                          value,
+                          index)
                       : {},
                 ),
               ),
@@ -768,18 +677,17 @@ class _sps_questionario_cq_ext_item_screen
                 child: CustomRadioWidget(
                   value: "APROVADO PARCIAL",
                   groupValue: _singleValue[index],
-                  onChanged: (value) => snapshot
-                      .data[index]
-                  ["status_aprovacao"] ==
-                      "PENDENTE"
+                  onChanged: (value) => snapshot.data[index]
+                              ["status_aprovacao"] ==
+                          "PENDENTE"
                       ? _gravar_opcao(
-                      '${snapshot.data[index]["codigo_empresa"]}',
-                      '${snapshot.data[index]["codigo_programacao"]}',
-                      '${snapshot.data[index]["registro_colaborador"]}',
-                      '${snapshot.data[index]["identificacao_utilizador"]}',
-                      '${snapshot.data[index]["item_checklist"]}',
-                      value,
-                      index)
+                          '${snapshot.data[index]["codigo_empresa"]}',
+                          '${snapshot.data[index]["codigo_programacao"]}',
+                          '${snapshot.data[index]["registro_colaborador"]}',
+                          '${snapshot.data[index]["identificacao_utilizador"]}',
+                          '${snapshot.data[index]["item_checklist"]}',
+                          value,
+                          index)
                       : {},
                 ),
               ),
@@ -789,18 +697,17 @@ class _sps_questionario_cq_ext_item_screen
                 child: CustomRadioWidget(
                   value: "APROVADO",
                   groupValue: _singleValue[index],
-                  onChanged: (value) => snapshot
-                      .data[index]
-                  ["status_aprovacao"] ==
-                      "PENDENTE"
+                  onChanged: (value) => snapshot.data[index]
+                              ["status_aprovacao"] ==
+                          "PENDENTE"
                       ? _gravar_opcao(
-                      '${snapshot.data[index]["codigo_empresa"]}',
-                      '${snapshot.data[index]["codigo_programacao"]}',
-                      '${snapshot.data[index]["registro_colaborador"]}',
-                      '${snapshot.data[index]["identificacao_utilizador"]}',
-                      '${snapshot.data[index]["item_checklist"]}',
-                      value,
-                      index)
+                          '${snapshot.data[index]["codigo_empresa"]}',
+                          '${snapshot.data[index]["codigo_programacao"]}',
+                          '${snapshot.data[index]["registro_colaborador"]}',
+                          '${snapshot.data[index]["identificacao_utilizador"]}',
+                          '${snapshot.data[index]["item_checklist"]}',
+                          value,
+                          index)
                       : {},
                 ),
               ),
@@ -809,113 +716,57 @@ class _sps_questionario_cq_ext_item_screen
           Row(
             children: <Widget>[
               // Tratar Legenda das opções
-              Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      0, 0, 0, 0)),
+              Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
               Text(" "),
               //Tratar Mídias
               IconButton(
                 icon: Badge(
-                  badgeContent: Text(
-                      snapshot.data[index]["anexos"]
-                          .toString(),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8)),
-                  showBadge: snapshot.data[index]
-                  ["anexos"] >
-                      0
-                      ? true
-                      : false,
+                  badgeContent: Text(snapshot.data[index]["anexos"].toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 8)),
+                  showBadge: snapshot.data[index]["anexos"] > 0 ? true : false,
                   badgeColor: Color(0xFF004077),
-                  child: Icon(Icons.collections,
-                      size: 30),
+                  child: Icon(Icons.collections, size: 30),
                 ),
-                color:
-                snapshot.data[index]["anexos"] > 0
+                color: snapshot.data[index]["anexos"] > 0
                     ? Colors.blue
                     : Colors.black,
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            sps_questionario_midia_screen(
-                              snapshot.data[index]
-                              ["codigo_empresa"],
-                              snapshot.data[index][
-                              "codigo_programacao"],
-                              snapshot.data[index]
-                              ["item_checklist"],
-                              snapshot.data[index][
-                              "descr_comentarios"],
-                              this
-                                  .widget
-                                  ._registro_colaborador,
-                              this
-                                  .widget
-                                  ._identificacao_utilizador,
-                              this
-                                  .widget
-                                  ._codigo_grupo,
-                              this
-                                  .widget
-                                  ._codigo_checklist,
-                              this
-                                  .widget
-                                  ._descr_programacao,
-                              this
-                                  .widget
-                                  ._codigo_pedido,
-                              this
-                                  .widget
-                                  ._item_pedido,
-                              this
-                                  .widget
-                                  ._codigo_material,
-                              this
-                                  .widget
-                                  ._referencia_parceiro,
-                              this
-                                  .widget
-                                  ._nome_fornecedor,
-                              this
-                                  .widget
-                                  ._qtde_pedido,
-                              this
-                                  .widget
-                                  ._codigo_projeto,
-                              this
-                                  .widget
-                                  ._sincronizado,
-                              snapshot.data[index][
-                              "status_aprovacao"],
-                              this
-                                  .widget
-                                  ._origemUsuario,
+                        builder: (context) => sps_questionario_midia_screen(
+                              snapshot.data[index]["codigo_empresa"],
+                              snapshot.data[index]["codigo_programacao"],
+                              snapshot.data[index]["item_checklist"],
+                              snapshot.data[index]["descr_comentarios"],
+                              this.widget._registro_colaborador,
+                              this.widget._identificacao_utilizador,
+                              this.widget._codigo_grupo,
+                              this.widget._codigo_checklist,
+                              this.widget._descr_programacao,
+                              this.widget._codigo_pedido,
+                              this.widget._item_pedido,
+                              this.widget._codigo_material,
+                              this.widget._referencia_parceiro,
+                              this.widget._nome_fornecedor,
+                              this.widget._qtde_pedido,
+                              this.widget._codigo_projeto,
+                              this.widget._sincronizado,
+                              snapshot.data[index]["status_aprovacao"],
+                              this.widget._origemUsuario,
                               this.widget._filtro,
                               index,
-                              this
-                                  .widget
-                                  ._filtroReferenciaProjeto,
-                              snapshot.data[index]
-                              ["imagens"]
-                                  .toString(),
-                              snapshot.data[index]
-                              ["videos"]
-                                  .toString(),
-                              snapshot.data[index]
-                              ["outros"]
-                                  .toString(),
+                              this.widget._filtroProjeto,
+                              this.widget._filtroReferencia,
+                              this.widget._filtroPedido,
+                              snapshot.data[index]["imagens"].toString(),
+                              snapshot.data[index]["videos"].toString(),
+                              snapshot.data[index]["outros"].toString(),
                               "",
                               funCallback: (
-                                  {int
-                                  index_posicao_retorno,
-                                    String acao}) {
+                                  {int index_posicao_retorno, String acao}) {
                                 setState(() {
-                                  this
-                                      .widget
-                                      ._indexLista =
+                                  this.widget._indexLista =
                                       index_posicao_retorno;
                                 });
                               },
@@ -924,11 +775,7 @@ class _sps_questionario_cq_ext_item_screen
                 },
               ),
 
-              Text(
-                  snapshot.data[index]["midia"] ==
-                      "OBRIGATORIO"
-                      ? "*"
-                      : "",
+              Text(snapshot.data[index]["midia"] == "OBRIGATORIO" ? "*" : "",
                   style: TextStyle(
                       color: Colors.red,
                       fontSize: 18,
@@ -938,12 +785,8 @@ class _sps_questionario_cq_ext_item_screen
               //Tratar Comentários
               IconButton(
                 icon: Icon(Icons.comment, size: 30),
-                color: snapshot.data[index][
-                "descr_comentarios"] ==
-                    "" ||
-                    snapshot.data[index][
-                    "descr_comentarios"] ==
-                        null
+                color: snapshot.data[index]["descr_comentarios"] == "" ||
+                        snapshot.data[index]["descr_comentarios"] == null
                     ? Colors.black
                     : Colors.blue,
                 onPressed: () {
@@ -952,53 +795,37 @@ class _sps_questionario_cq_ext_item_screen
                     MaterialPageRoute(
                       builder: (context) =>
                           sps_questionario_cq_comentarios_screen(
-                            snapshot.data[index]
-                            ["codigo_empresa"],
-                            snapshot.data[index]
-                            ["codigo_programacao"],
-                            snapshot.data[index]
-                            ["item_checklist"],
-                            snapshot.data[index]
-                            ["descr_comentarios"],
-                            this
-                                .widget
-                                ._registro_colaborador,
-                            this
-                                .widget
-                                ._identificacao_utilizador,
-                            this.widget._codigo_grupo,
-                            this.widget._codigo_checklist,
-                            this
-                                .widget
-                                ._descr_programacao,
-                            this.widget._codigo_pedido,
-                            this.widget._item_pedido,
-                            this.widget._codigo_material,
-                            this
-                                .widget
-                                ._referencia_parceiro,
-                            this.widget._nome_fornecedor,
-                            this.widget._qtde_pedido,
-                            this.widget._codigo_projeto,
-                            this.widget._sincronizado,
-                            snapshot.data[index]
-                            ["status_aprovacao"],
-                            this.widget._origemUsuario,
-                            "CONTROLE DE QUALIDADE",
-                            this.widget._filtro,
-                            index,
-                            this
-                                .widget
-                                ._filtroReferenciaProjeto,
-                          ),
+                              snapshot.data[index]["codigo_empresa"],
+                              snapshot.data[index]["codigo_programacao"],
+                              snapshot.data[index]["item_checklist"],
+                              snapshot.data[index]["descr_comentarios"],
+                              this.widget._registro_colaborador,
+                              this.widget._identificacao_utilizador,
+                              this.widget._codigo_grupo,
+                              this.widget._codigo_checklist,
+                              this.widget._descr_programacao,
+                              this.widget._codigo_pedido,
+                              this.widget._item_pedido,
+                              this.widget._codigo_material,
+                              this.widget._referencia_parceiro,
+                              this.widget._nome_fornecedor,
+                              this.widget._qtde_pedido,
+                              this.widget._codigo_projeto,
+                              this.widget._sincronizado,
+                              snapshot.data[index]["status_aprovacao"],
+                              this.widget._origemUsuario,
+                              "CONTROLE DE QUALIDADE",
+                              this.widget._filtro,
+                              index,
+                              this.widget._filtroProjeto,
+                              this.widget._filtroReferencia,
+                              this.widget._filtroPedido),
                     ),
                   );
                 },
               ),
               Text(
-                  snapshot.data[index]
-                  ["comentarios"] ==
-                      "OBRIGATORIO"
+                  snapshot.data[index]["comentarios"] == "OBRIGATORIO"
                       ? "*"
                       : "",
                   style: TextStyle(
@@ -1007,13 +834,12 @@ class _sps_questionario_cq_ext_item_screen
                       fontWeight: FontWeight.bold)),
             ],
           ),
-          snapshot.data[index]["status_aprovacao"] ==
-              "APROVADO"
+          snapshot.data[index]["status_aprovacao"] == "APROVADO"
               ? Text("\nAPROVADO PELO FOLLOW UP\n",
-              style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold))
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold))
               : Text(""),
           tratar_posicionar_lista(index),
         ],

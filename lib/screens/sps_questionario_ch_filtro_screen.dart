@@ -72,6 +72,8 @@ class _sps_questionario_ch_filtro_screen
               'CONTAR',
               null,
               null,
+              null,
+              null,
               _filtroDescrProgramacao),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
