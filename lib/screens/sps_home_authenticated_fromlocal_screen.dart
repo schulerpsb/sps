@@ -3,15 +3,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
-import 'package:sps/dao/sps_dao_login_class.dart';
-import 'package:sps/http/sps_http_login_class.dart';
-import 'package:sps/models/sps_erro_conexao_class.dart';
+import 'package:sps/models/sps_log.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromserver_screen.dart';
 import 'package:sps/screens/sps_menu_screen.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomeSpsAuthenticatedFromLocal extends StatefulWidget {
   @override
@@ -24,10 +21,24 @@ class _HomeSpsAuthenticatedFromLocalState
   final _controladorusuario = TextEditingController();
   final _controladorsenha = TextEditingController();
 
+  // //tratativas para inicialização de logs em arquivos.
+  // var TAG = "SPSsupplierPortal";
+  // var _my_log_file_name = "SPSsupplierPortal_log";
+  // var toggle = false;
+  // static Completer _completer = new Completer<String>();
+
   _HomeSpsAuthenticatedFromLocalState();
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //     setUpLogs();
+  // }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +91,7 @@ class _HomeSpsAuthenticatedFromLocalState
                   }
                   //if (erroConexao.msg_erro_conexao.toString() == "") {
                     if (snapshot.data.isNotEmpty) {
+                      // spsLog.logToFile(msg: "teste de mensagem teste");
                       //Usuário ja tem usuário local autenticado
                       //Ir direto para o menu
                       //final dadossessao = sps_usuario();
@@ -87,6 +99,7 @@ class _HomeSpsAuthenticatedFromLocalState
                       usuarioAtual.codigo_usuario =
                           snapshot.data[0]['codigo_usuario'];
                       usuarioAtual.nome_usuario =
+                          snapshot.data[0]['nome_usuario'];
                           snapshot.data[0]['nome_usuario'];
                       usuarioAtual.email_usuario =
                           snapshot.data[0]['email_usuario'];
