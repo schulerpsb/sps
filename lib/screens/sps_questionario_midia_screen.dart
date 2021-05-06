@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_questionario_class.dart';
@@ -597,15 +596,15 @@ class _sps_questionario_midia_screen
         onReceiveProgress: (rcv, total) {
           progress_individual = (rcv / total);
           progress_individual = double.parse(progress_individual.toStringAsFixed(1));
-          print('Progresso individual: '+progress_individual.toString());
+//          print('Progresso individual: '+progress_individual.toString());
           //        print('received: ${rcv.toStringAsFixed(0)} out of total: ${total.toStringAsFixed(0)} %'+(progress_individual * 100).round().toString());
           if (progress_individual >= limit && progress < 1.0) {
             limit = limit + 0.5;
-            print('aumentei o limite: ' + limit.toString());
+//            print('aumentei o limite: ' + limit.toString());
               if(progress < 1.0){
                 progress = progress + double.parse(passo.toStringAsFixed(1));
                 spsNotificacao.notificarProgresso(id_notificacao, 100, (progress * 100).round(), 'SPS - Supplier Portal','Baixando arquivos '+(progress * 100).round().toString()+'%', flip);
-                print('aumentei o progress: ' + progress.toString());
+//                print('aumentei o progress: ' + progress.toString());
               }else{
                 progress = 1.0;
               }

@@ -7,6 +7,7 @@ import 'package:sps/models/sps_questionario.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_lista_screen.dart';
+import 'package:sps/models/sps_log.dart';
 
 class sps_questionario_cq_ext_filtro_screen extends StatefulWidget {
   @override

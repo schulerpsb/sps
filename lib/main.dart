@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:splashscreen/splashscreen.dart';
@@ -16,6 +14,7 @@ import 'models/sps_sincronizacao.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:sps/models/sps_notificacao.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sps/models/sps_log.dart';
 
 void isolateSincronizacao(int arg) async  {
   final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
@@ -112,6 +111,7 @@ void isolateSincronizacao(int arg) async  {
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
+  spsLog.setUpLog();
   SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
   objSpsDaoSincronizacao.create_table();
   objSpsDaoSincronizacao.emptyTable();
