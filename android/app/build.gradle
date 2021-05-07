@@ -33,7 +33,6 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     compileSdkVersion 29
-    ndkVersion "22.1.7171670"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -52,30 +51,14 @@ android {
         versionName flutterVersionName
     }
 
-//    buildTypes {
-//        release {
-//            // TODO: Add your own signing config for the release build.
-//            // Signing with the debug keys for now, so `flutter run --release` works.
-//            signingConfig signingConfigs.debug
-//        }
-//    }
-    signingConfigs {
+    buildTypes {
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
         }
     }
 
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-            ndk {
-                debugSymbolLevel 'SYMBOL_TABLE'
-            }
-        }
-    }
 
     flutter {
         source '../..'
