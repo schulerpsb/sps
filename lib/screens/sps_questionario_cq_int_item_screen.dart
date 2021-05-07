@@ -38,6 +38,7 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
   final String _filtroProjeto;
   final String _filtroReferencia;
   final String _filtroPedido;
+  final String _filtroNomeFornecedor;
 
   sps_questionario_cq_int_item_screen(
       this._codigo_empresa,
@@ -61,7 +62,8 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
       this._indexLista,
       this._filtroProjeto,
       this._filtroReferencia,
-      this._filtroPedido);
+      this._filtroPedido,
+      this._filtroNomeFornecedor);
 
   @override
   _sps_questionario_cq_int_item_screen createState() =>
@@ -87,7 +89,8 @@ class sps_questionario_cq_int_item_screen extends StatefulWidget {
           this._indexLista,
           this._filtroProjeto,
           this._filtroReferencia,
-          this._filtroPedido);
+          this._filtroPedido,
+          this._filtroNomeFornecedor);
 }
 
 class _sps_questionario_cq_int_item_screen
@@ -119,7 +122,8 @@ class _sps_questionario_cq_int_item_screen
       _indexLista,
       _filtroProjeto,
       _filtroReferencia,
-      _filtroPedido);
+      _filtroPedido,
+      _filtroNomeFornecedor);
 
   var _singleValue = List();
   Color _resp_cq_cor;
@@ -155,6 +159,8 @@ class _sps_questionario_cq_int_item_screen
               return IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () {
+                  print("adriano => this.widget._nome_fornecedor=>" +
+                      this.widget._nome_fornecedor);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -164,7 +170,7 @@ class _sps_questionario_cq_int_item_screen
                             this.widget._filtroProjeto,
                             this.widget._filtroReferencia,
                             this.widget._filtroPedido,
-                            this.widget._nome_fornecedor)),
+                            this.widget._filtroNomeFornecedor)),
                   );
                 },
               );
@@ -526,6 +532,7 @@ class _sps_questionario_cq_int_item_screen
                               this.widget._filtroProjeto,
                               this.widget._filtroReferencia,
                               this.widget._filtroPedido,
+                              this.widget._filtroNomeFornecedor,
                               snapshot.data[index]["imagens"].toString(),
                               snapshot.data[index]["videos"].toString(),
                               snapshot.data[index]["outros"].toString(),
@@ -579,7 +586,8 @@ class _sps_questionario_cq_int_item_screen
                               index,
                               this.widget._filtroProjeto,
                               this.widget._filtroReferencia,
-                              this.widget._filtroPedido),
+                              this.widget._filtroPedido,
+                              this.widget._filtroNomeFornecedor),
                     ),
                   );
                 },
@@ -762,6 +770,7 @@ class _sps_questionario_cq_int_item_screen
                               this.widget._filtroProjeto,
                               this.widget._filtroReferencia,
                               this.widget._filtroPedido,
+                              this.widget._filtroNomeFornecedor,
                               snapshot.data[index]["imagens"].toString(),
                               snapshot.data[index]["videos"].toString(),
                               snapshot.data[index]["outros"].toString(),
@@ -816,6 +825,7 @@ class _sps_questionario_cq_int_item_screen
                         this.widget._filtroProjeto,
                         this.widget._filtroReferencia,
                         this.widget._filtroPedido,
+                        this.widget._filtroNomeFornecedor,
                       ),
                     ),
                   );

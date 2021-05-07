@@ -960,14 +960,14 @@ class _sps_questionario_ch_item_screen_resposta
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
                               bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)
-                          ),
+                              bottomRight: Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset: Offset(0, 3), // changes position of shadow
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -1302,18 +1302,17 @@ class _sps_questionario_ch_item_screen_resposta
                     _wsincronizado);
 
             //Tratar atualização de pergunta dependente (checklist_item)
-            final int resultupdate_dependente =
-            await objQuestionarioItemDao.update_resposta_pergunta_dependente(
-                _wcodigoEmpresa,
-                _wcodigoProgramacao);
+            final int resultupdate_dependente = await objQuestionarioItemDao
+                .update_resposta_pergunta_dependente(
+                    _wcodigoEmpresa, _wcodigoProgramacao);
 
             //Tratar atualização de pergunta dependente (sps_checklist_tb_resp_anexo)
             final SpsDaoQuestionarioMidia objQuestionarioMidiaDao =
-            SpsDaoQuestionarioMidia();
+                SpsDaoQuestionarioMidia();
             final int resultupdate_dependente_anexo =
-            await objQuestionarioMidiaDao.updateRespostaPerguntaDependenteAnexo(
-                _wcodigoEmpresa,
-                _wcodigoProgramacao);
+                await objQuestionarioMidiaDao
+                    .updateRespostaPerguntaDependenteAnexo(
+                        _wcodigoEmpresa, _wcodigoProgramacao);
           }
 
           if (element[1] == "RESPOSTA MULTIPLA") {
@@ -1448,6 +1447,7 @@ class _sps_questionario_ch_item_screen_resposta
                       this.widget._filtroDescrProgramacao,
                       null,
                       null,
+                      null,
                       snapshot.data[0]["imagens"].toString(),
                       snapshot.data[0]["videos"].toString(),
                       snapshot.data[0]["outros"].toString(),
@@ -1480,33 +1480,35 @@ class _sps_questionario_ch_item_screen_resposta
             : Colors.blue,
         onPressed: () {
           if (tabDescricao[snapshot.data[0]["item_checklist"]][0] == null) {
-            tabDescricao[snapshot.data[0]["item_checklist"]][0] = snapshot.data[0]["descr_comentarios"];
+            tabDescricao[snapshot.data[0]["item_checklist"]][0] =
+                snapshot.data[0]["descr_comentarios"];
           }
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => sps_questionario_comentarios_screen(
-                  snapshot.data[0]["codigo_empresa"],
-                  snapshot.data[0]["codigo_programacao"],
-                  snapshot.data[0]["item_checklist"],
-                  tabDescricao[snapshot.data[0]["item_checklist"]][0],
-                  this.widget._registro_colaborador,
-                  this.widget._identificacao_utilizador,
-                  this.widget._codigo_grupo,
-                  this.widget._codigo_checklist,
-                  this.widget._descr_programacao,
-                  this.widget._sincronizado,
-                  snapshot.data[0]["status_aprovacao"],
-                  null,
-                  this.widget._filtro,
-                  this.widget._filtroDescrProgramacao,
-                  this.widget._sessao_checklist,
-                  0,
-                  this.widget._tipo_questionario,
-                funCallback: ({String w_call_comentarios}) {
-                  tabDescricao[snapshot.data[0]["item_checklist"]][0] = w_call_comentarios;
-                },)
-            ),
+                builder: (context) => sps_questionario_comentarios_screen(
+                      snapshot.data[0]["codigo_empresa"],
+                      snapshot.data[0]["codigo_programacao"],
+                      snapshot.data[0]["item_checklist"],
+                      tabDescricao[snapshot.data[0]["item_checklist"]][0],
+                      this.widget._registro_colaborador,
+                      this.widget._identificacao_utilizador,
+                      this.widget._codigo_grupo,
+                      this.widget._codigo_checklist,
+                      this.widget._descr_programacao,
+                      this.widget._sincronizado,
+                      snapshot.data[0]["status_aprovacao"],
+                      null,
+                      this.widget._filtro,
+                      this.widget._filtroDescrProgramacao,
+                      this.widget._sessao_checklist,
+                      0,
+                      this.widget._tipo_questionario,
+                      funCallback: ({String w_call_comentarios}) {
+                        tabDescricao[snapshot.data[0]["item_checklist"]][0] =
+                            w_call_comentarios;
+                      },
+                    )),
           );
         },
       );

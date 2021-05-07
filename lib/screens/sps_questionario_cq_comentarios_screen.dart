@@ -35,6 +35,7 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
   final String _filtroProjeto;
   final String _filtroReferencia;
   final String _filtroPedido;
+  final String _filtroNomeFornecedor;
 
   sps_questionario_cq_comentarios_screen(
       this._codigo_empresa,
@@ -61,7 +62,8 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
       this._indexLista,
       this._filtroProjeto,
       this._filtroReferencia,
-      this._filtroPedido);
+      this._filtroPedido,
+      this._filtroNomeFornecedor);
 
   @override
   _sps_questionario_cq_comentarios_screen createState() =>
@@ -90,7 +92,8 @@ class sps_questionario_cq_comentarios_screen extends StatefulWidget {
           this._indexLista,
           this._filtroProjeto,
           this._filtroReferencia,
-          this._filtroPedido);
+          this._filtroPedido,
+          this._filtroNomeFornecedor);
 }
 
 class _sps_questionario_cq_comentarios_screen
@@ -125,7 +128,8 @@ class _sps_questionario_cq_comentarios_screen
       _indexLista,
       _filtroProjeto,
       _filtroReferencia,
-      _filtroPedido);
+      _filtroPedido,
+      _filtroNomeFornecedor);
 
   //Executar Scrolling automático
   ScrollController _controller;
@@ -173,56 +177,59 @@ class _sps_questionario_cq_comentarios_screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            this.widget._origemUsuario == "EXTERNO" ||
-                                    this.widget._tipoChecklist !=
-                                        "CONTROLE DE QUALIDADE"
-                                ? sps_questionario_cq_ext_item_screen(
-                                    this.widget._codigo_empresa,
-                                    this.widget._codigo_programacao,
-                                    this.widget._registro_colaborador,
-                                    this.widget._identificacao_utilizador,
-                                    this.widget._codigo_grupo,
-                                    this.widget._codigo_checklist,
-                                    this.widget._descr_programacao,
-                                    this.widget._codigo_pedido,
-                                    this.widget._item_pedido,
-                                    this.widget._codigo_material,
-                                    this.widget._referencia_parceiro,
-                                    this.widget._nome_fornecedor,
-                                    this.widget._qtde_pedido,
-                                    this.widget._codigo_projeto,
-                                    this.widget._sincronizado,
-                                    this.widget._status_aprovacao,
-                                    this.widget._origemUsuario,
-                                    this.widget._filtro,
-                                    this.widget._indexLista,
-                                    this.widget._filtroProjeto,
-                                this.widget._filtroReferencia,
-                                this.widget._filtroPedido)
-                                : sps_questionario_cq_int_item_screen(
-                                    this.widget._codigo_empresa,
-                                    this.widget._codigo_programacao,
-                                    this.widget._registro_colaborador,
-                                    this.widget._identificacao_utilizador,
-                                    this.widget._codigo_grupo,
-                                    this.widget._codigo_checklist,
-                                    this.widget._descr_programacao,
-                                    this.widget._codigo_pedido,
-                                    this.widget._item_pedido,
-                                    this.widget._codigo_material,
-                                    this.widget._referencia_parceiro,
-                                    this.widget._nome_fornecedor,
-                                    this.widget._qtde_pedido,
-                                    this.widget._codigo_projeto,
-                                    this.widget._sincronizado,
-                                    this.widget._status_aprovacao,
-                                    this.widget._origemUsuario,
-                                    this.widget._filtro,
-                                    this.widget._indexLista,
-                                    this.widget._filtroProjeto,
-                                this.widget._filtroReferencia,
-                                this.widget._filtroPedido)),
+                      builder: (context) =>
+                          this.widget._origemUsuario == "EXTERNO" ||
+                                  this.widget._tipoChecklist !=
+                                      "CONTROLE DE QUALIDADE"
+                              ? sps_questionario_cq_ext_item_screen(
+                                  this.widget._codigo_empresa,
+                                  this.widget._codigo_programacao,
+                                  this.widget._registro_colaborador,
+                                  this.widget._identificacao_utilizador,
+                                  this.widget._codigo_grupo,
+                                  this.widget._codigo_checklist,
+                                  this.widget._descr_programacao,
+                                  this.widget._codigo_pedido,
+                                  this.widget._item_pedido,
+                                  this.widget._codigo_material,
+                                  this.widget._referencia_parceiro,
+                                  this.widget._nome_fornecedor,
+                                  this.widget._qtde_pedido,
+                                  this.widget._codigo_projeto,
+                                  this.widget._sincronizado,
+                                  this.widget._status_aprovacao,
+                                  this.widget._origemUsuario,
+                                  this.widget._filtro,
+                                  this.widget._indexLista,
+                                  this.widget._filtroProjeto,
+                                  this.widget._filtroReferencia,
+                                  this.widget._filtroPedido,
+                                  this.widget._filtroNomeFornecedor)
+                              : sps_questionario_cq_int_item_screen(
+                                  this.widget._codigo_empresa,
+                                  this.widget._codigo_programacao,
+                                  this.widget._registro_colaborador,
+                                  this.widget._identificacao_utilizador,
+                                  this.widget._codigo_grupo,
+                                  this.widget._codigo_checklist,
+                                  this.widget._descr_programacao,
+                                  this.widget._codigo_pedido,
+                                  this.widget._item_pedido,
+                                  this.widget._codigo_material,
+                                  this.widget._referencia_parceiro,
+                                  this.widget._nome_fornecedor,
+                                  this.widget._qtde_pedido,
+                                  this.widget._codigo_projeto,
+                                  this.widget._sincronizado,
+                                  this.widget._status_aprovacao,
+                                  this.widget._origemUsuario,
+                                  this.widget._filtro,
+                                  this.widget._indexLista,
+                                  this.widget._filtroProjeto,
+                                  this.widget._filtroReferencia,
+                                  this.widget._filtroPedido,
+                                  this.widget._filtroNomeFornecedor),
+                    ),
                   );
                 },
               );
@@ -389,7 +396,8 @@ class _sps_questionario_cq_comentarios_screen
           wpos = wpos + 1;
         }
         wtamanho = wpos - wposResp;
-        wresponsavel = wcomentarios.substring(wposResp + 1, wposResp + wtamanho);
+        wresponsavel =
+            wcomentarios.substring(wposResp + 1, wposResp + wtamanho);
 
         ListaTextos.add(
           new TextSpan(
@@ -402,8 +410,9 @@ class _sps_questionario_cq_comentarios_screen
           ),
         );
 
-        wposTexto =  wpos + 13;
-        while (wpos <= wcomentarios.length && wcomentarios.substring(wpos, wpos + 6) != "<br>||") {
+        wposTexto = wpos + 13;
+        while (wpos <= wcomentarios.length &&
+            wcomentarios.substring(wpos, wpos + 6) != "<br>||") {
           wpos = wpos + 1;
         }
         wtamanho = wpos - wposTexto;

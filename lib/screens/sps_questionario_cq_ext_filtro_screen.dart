@@ -282,7 +282,7 @@ class _sps_questionario_cq_ext_filtro_screen
                         )
                       },
                 color: Colors.purple,
-                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
+                padding: EdgeInsets.fromLTRB(4, 15, 4, 15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 splashColor: Colors.grey,
@@ -318,7 +318,7 @@ class _sps_questionario_cq_ext_filtro_screen
                         )
                       },
                 color: Colors.orange,
-                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
+                padding: EdgeInsets.fromLTRB(4, 15, 4, 15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 splashColor: Colors.grey,
@@ -338,19 +338,19 @@ class _sps_questionario_cq_ext_filtro_screen
                 width: 10,
               ),
               RaisedButton(
-                onPressed: () => _obter_contador(snapshot, "OK") == 0
+                onPressed: () => _obter_contador(snapshot, "OK S/FUP") == 0
                     ? {}
                     : {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  sps_questionario_cq_lista_screen(
-                                      "EXTERNO", "OK", null, null, null, null)),
+                                  sps_questionario_cq_lista_screen("EXTERNO",
+                                      "OK S/FUP", null, null, null, null)),
                         )
                       },
                 color: Colors.green,
-                padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
+                padding: EdgeInsets.fromLTRB(4, 15, 4, 15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 splashColor: Colors.grey,
@@ -359,7 +359,40 @@ class _sps_questionario_cq_ext_filtro_screen
                   children: <Widget>[
                     Center(child: Text("CONCLUÍDO\n")),
                     Center(
-                        child: Text(_obter_contador(snapshot, "OK").toString(),
+                        child: Text(
+                            _obter_contador(snapshot, "OK S/FUP").toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15)))
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              RaisedButton(
+                onPressed: () => _obter_contador(snapshot, "OK C/FUP") == 0
+                    ? {}
+                    : {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  sps_questionario_cq_lista_screen("EXTERNO",
+                                      "OK C/FUP", null, null, null, null)),
+                        )
+                      },
+                color: Colors.blueAccent,
+                padding: EdgeInsets.fromLTRB(4, 15, 4, 15),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                splashColor: Colors.grey,
+                child: Column(
+                  // Replace with a Row for horizontal icon + text
+                  children: <Widget>[
+                    Center(child: Text("FOLLOW-UP\n")),
+                    Center(
+                        child: Text(
+                            _obter_contador(snapshot, "OK C/FUP").toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15)))
                   ],
@@ -451,7 +484,7 @@ class _sps_questionario_cq_ext_filtro_screen
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: () => _obter_contador(snapshot, "OK") == 0
+                  onPressed: () => _obter_contador(snapshot, "OK S/FUP") == 0
                       ? {}
                       : {
                           Navigator.push(
@@ -459,7 +492,7 @@ class _sps_questionario_cq_ext_filtro_screen
                             MaterialPageRoute(
                                 builder: (context) =>
                                     sps_questionario_cq_lista_screen("EXTERNO",
-                                        "OK", null, null, null, null)),
+                                        "OK S/FUP", null, null, null, null)),
                           )
                         },
                   color: Colors.green,
@@ -473,7 +506,39 @@ class _sps_questionario_cq_ext_filtro_screen
                       Center(child: Text("CONCLUÍDO\n")),
                       Center(
                           child: Text(
-                              _obter_contador(snapshot, "OK").toString(),
+                              _obter_contador(snapshot, "OK S/FUP").toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15)))
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                RaisedButton(
+                  onPressed: () => _obter_contador(snapshot, "OK C/FUP") == 0
+                      ? {}
+                      : {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    sps_questionario_cq_lista_screen("EXTERNO",
+                                        "OK C/FUP", null, null, null, null)),
+                          )
+                        },
+                  color: Colors.blueAccent,
+                  padding: EdgeInsets.fromLTRB(8, 25, 8, 25),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)),
+                  splashColor: Colors.grey,
+                  child: Column(
+                    // Replace with a Row for horizontal icon + text
+                    children: <Widget>[
+                      Center(child: Text("FOLLOW-UP\n")),
+                      Center(
+                          child: Text(
+                              _obter_contador(snapshot, "OK C/FUP").toString(),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 15)))
                     ],
@@ -494,6 +559,7 @@ class _sps_questionario_cq_ext_filtro_screen
   }
 
   _obter_contador(_snapshot, _status) {
+    print("Adriano=>status=>" + _snapshot.data.toString());
     var wregistros = _snapshot.data.length;
     var windex = 0;
     while (windex < wregistros) {

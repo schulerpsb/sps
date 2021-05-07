@@ -19,7 +19,7 @@ class sps_questionario_cq_lista_screen extends StatefulWidget {
   final String _filtroProjeto;
   final String _filtroReferencia;
   final String _filtroPedido;
-  final String _nomeFornecedor;
+  final String _filtroNomeFornecedor;
 
   sps_questionario_cq_lista_screen(
       this._origemUsuario,
@@ -27,7 +27,7 @@ class sps_questionario_cq_lista_screen extends StatefulWidget {
       this._filtroProjeto,
       this._filtroReferencia,
       this._filtroPedido,
-      this._nomeFornecedor);
+      this._filtroNomeFornecedor);
 
   @override
   _sps_questionario_cq_lista_screen createState() =>
@@ -37,7 +37,7 @@ class sps_questionario_cq_lista_screen extends StatefulWidget {
           this._filtroProjeto,
           this._filtroReferencia,
           this._filtroPedido,
-          this._nomeFornecedor);
+          this._filtroNomeFornecedor);
 }
 
 class _sps_questionario_cq_lista_screen
@@ -48,7 +48,7 @@ class _sps_questionario_cq_lista_screen
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
   _sps_questionario_cq_lista_screen(_origemUsuario, _filtro, _filtroProjeto,
-      _filtroReferencia, _filtroPedido, _nomeFornecedor);
+      _filtroReferencia, _filtroPedido, _filtroNomeFornecedor);
 
   var formato = new NumberFormat("##0.00", "en_US");
 
@@ -82,7 +82,7 @@ class _sps_questionario_cq_lista_screen
                             this.widget._origemUsuario == "EXTERNO"
                                 ? sps_questionario_cq_ext_filtro_screen()
                                 : sps_questionario_cq_int_filtro_screen(
-                                    this.widget._nomeFornecedor)),
+                                    this.widget._filtroNomeFornecedor)),
                   );
                 },
               );
@@ -100,7 +100,7 @@ class _sps_questionario_cq_lista_screen
               this.widget._filtroReferencia,
               this.widget._filtroPedido,
               null,
-              this.widget._nomeFornecedor),
+              this.widget._filtroNomeFornecedor),
           builder: (context, snapshot) {
             //debugPrint(snapshot.data.toString());
             switch (snapshot.connectionState) {
@@ -183,90 +183,76 @@ class _sps_questionario_cq_lista_screen
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => this
-                                                      .widget
-                                                      ._origemUsuario ==
-                                                  "EXTERNO"
-                                              ? sps_questionario_cq_ext_item_screen(
-                                                  snapshot.data[index]
-                                                      ["codigo_empresa"],
-                                                  snapshot.data[index]
-                                                      ["codigo_programacao"],
-                                                  snapshot.data[index]
-                                                      ["registro_colaborador"],
-                                                  snapshot.data[index][
-                                                      "identificacao_utilizador"],
-                                                  snapshot.data[index]
-                                                      ["codigo_grupo"],
-                                                  snapshot.data[index]
-                                                      ["codigo_checklist"],
-                                                  snapshot.data[index]
-                                                      ["descr_programacao"],
-                                                  snapshot.data[index]
-                                                      ["codigo_pedido"],
-                                                  snapshot.data[index]
-                                                      ["item_pedido"],
-                                                  snapshot.data[index]
-                                                      ["codigo_material"],
-                                                  snapshot.data[index]
-                                                      ["referencia_parceiro"],
-                                                  snapshot.data[index]
-                                                      ["nome_fornecedor"],
-                                                  snapshot.data[index]
-                                                      ["qtde_pedido"],
-                                                  snapshot.data[index]
-                                                      ["codigo_projeto"],
-                                                  snapshot.data[index]
-                                                      ["sincronizado"],
-                                                  snapshot.data[index]
-                                                      ["status_aprovacao"],
-                                                  this.widget._origemUsuario,
-                                                  this.widget._filtro,
-                                                  0,
-                                                  this.widget._filtroProjeto,
-                                                  this.widget._filtroReferencia,
-                                                  this.widget._filtroPedido,
-                                                )
-                                              : sps_questionario_cq_int_item_screen(
-                                                  snapshot.data[index]
-                                                      ["codigo_empresa"],
-                                                  snapshot.data[index]
-                                                      ["codigo_programacao"],
-                                                  snapshot.data[index]
-                                                      ["registro_colaborador"],
-                                                  snapshot.data[index][
-                                                      "identificacao_utilizador"],
-                                                  snapshot.data[index]
-                                                      ["codigo_grupo"],
-                                                  snapshot.data[index]
-                                                      ["codigo_checklist"],
-                                                  snapshot.data[index]
-                                                      ["descr_programacao"],
-                                                  snapshot.data[index]
-                                                      ["codigo_pedido"],
-                                                  snapshot.data[index]
-                                                      ["item_pedido"],
-                                                  snapshot.data[index]
-                                                      ["codigo_material"],
-                                                  snapshot.data[index]
-                                                      ["referencia_parceiro"],
-                                                  snapshot.data[index]
-                                                      ["nome_fornecedor"],
-                                                  snapshot.data[index]
-                                                      ["qtde_pedido"],
-                                                  snapshot.data[index]
-                                                      ["codigo_projeto"],
-                                                  snapshot.data[index]
-                                                      ["sincronizado"],
-                                                  snapshot.data[index]
-                                                      ["status_aprovacao"],
-                                                  this.widget._origemUsuario,
-                                                  this.widget._filtro,
-                                                  0,
-                                                  this.widget._filtroProjeto,
-                                                  this.widget._filtroReferencia,
-                                                  this.widget._filtroPedido,
-                                                )),
+                                        builder: (context) => this.widget._origemUsuario == "EXTERNO"
+                                            ? sps_questionario_cq_ext_item_screen(
+                                                snapshot.data[index]
+                                                    ["codigo_empresa"],
+                                                snapshot.data[index]
+                                                    ["codigo_programacao"],
+                                                snapshot.data[index]
+                                                    ["registro_colaborador"],
+                                                snapshot.data[index][
+                                                    "identificacao_utilizador"],
+                                                snapshot.data[index]
+                                                    ["codigo_grupo"],
+                                                snapshot.data[index]
+                                                    ["codigo_checklist"],
+                                                snapshot.data[index]
+                                                    ["descr_programacao"],
+                                                snapshot.data[index]
+                                                    ["codigo_pedido"],
+                                                snapshot.data[index]
+                                                    ["item_pedido"],
+                                                snapshot.data[index]
+                                                    ["codigo_material"],
+                                                snapshot.data[index]
+                                                    ["referencia_parceiro"],
+                                                snapshot.data[index]
+                                                    ["nome_fornecedor"],
+                                                snapshot.data[index]
+                                                    ["qtde_pedido"],
+                                                snapshot.data[index]
+                                                    ["codigo_projeto"],
+                                                snapshot.data[index]
+                                                    ["sincronizado"],
+                                                snapshot.data[index]
+                                                    ["status_aprovacao"],
+                                                this.widget._origemUsuario,
+                                                this.widget._filtro,
+                                                0,
+                                                this.widget._filtroProjeto,
+                                                this.widget._filtroReferencia,
+                                                this.widget._filtroPedido,
+                                                this
+                                                    .widget
+                                                    ._filtroNomeFornecedor)
+                                            : sps_questionario_cq_int_item_screen(
+                                                snapshot.data[index]
+                                                    ["codigo_empresa"],
+                                                snapshot.data[index]
+                                                    ["codigo_programacao"],
+                                                snapshot.data[index]["registro_colaborador"],
+                                                snapshot.data[index]["identificacao_utilizador"],
+                                                snapshot.data[index]["codigo_grupo"],
+                                                snapshot.data[index]["codigo_checklist"],
+                                                snapshot.data[index]["descr_programacao"],
+                                                snapshot.data[index]["codigo_pedido"],
+                                                snapshot.data[index]["item_pedido"],
+                                                snapshot.data[index]["codigo_material"],
+                                                snapshot.data[index]["referencia_parceiro"],
+                                                snapshot.data[index]["nome_fornecedor"],
+                                                snapshot.data[index]["qtde_pedido"],
+                                                snapshot.data[index]["codigo_projeto"],
+                                                snapshot.data[index]["sincronizado"],
+                                                snapshot.data[index]["status_aprovacao"],
+                                                this.widget._origemUsuario,
+                                                this.widget._filtro,
+                                                0,
+                                                this.widget._filtroProjeto,
+                                                this.widget._filtroReferencia,
+                                                this.widget._filtroPedido,
+                                                this.widget._filtroNomeFornecedor),
+                                      ),
                                     )
                                   : _popup_vencido(context);
                             },
@@ -370,11 +356,11 @@ class _sps_questionario_cq_lista_screen
                           snapshot.data[index]["status"] == "PENDENTE") &&
                       this.widget._origemUsuario == "INTERNO"
                   ? formato
-                          .format(snapshot.data[index]
-                                      ["percentual_evolucao_fornecedor"] >=
-                                  99.9
-                              ? 100
-                              : snapshot.data[index]
+                          .format(//snapshot.data[index]
+                              //         ["percentual_evolucao_fornecedor"] >=
+                              //     99.9
+                              // ? 100
+                              snapshot.data[index]
                                   ["percentual_evolucao_fornecedor"])
                           .toString() +
                       " %\n"
@@ -384,10 +370,11 @@ class _sps_questionario_cq_lista_screen
                           snapshot.data[index]["status"] == "PENDENTE") &&
                       this.widget._origemUsuario == "EXTERNO"
                   ? formato
-                          .format(snapshot.data[index]["percentual_evolucao"] >=
-                                  99.9
-                              ? 100
-                              : snapshot.data[index]["percentual_evolucao"])
+                          .format(
+                              //snapshot.data[index]["percentual_evolucao"] >=
+                              //         99.9
+                              //     ? 100
+                              snapshot.data[index]["percentual_evolucao"])
                           .toString() +
                       " %\n"
                   : ""),

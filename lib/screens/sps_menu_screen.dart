@@ -130,7 +130,7 @@ class sps_menu_screen extends StatelessWidget {
                   color: Color(0xFF004077),
                 ),
               ),
-              Container(height: 40),
+              Container(height: 30),
               Container(
                 width: larguraTela > 320 ? 360 : 300,
                 height: larguraTela > 320 ? 80 : 65,
@@ -162,7 +162,7 @@ class sps_menu_screen extends StatelessWidget {
                   color: Color(0xFF004077),
                 ),
               ),
-              Container(height: 30),
+              Container(height: 10),
               Container(
                 width: larguraTela > 320 ? 360 : 300,
                 height: larguraTela > 320 ? 80 : 65,
@@ -179,7 +179,7 @@ class sps_menu_screen extends StatelessWidget {
                       borderRadius:
                       BorderRadius.all(Radius.circular(10.0))),
                   label: Text(
-                    'GESTÃO DE FORNECEDORES (COTAÇÃO)',
+                    'NOTIFICAÇÃO DE QUALIDADE',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: larguraTela > 320 ? 14.0 : 10.0,
@@ -187,6 +187,38 @@ class sps_menu_screen extends StatelessWidget {
                   ),
                   icon: Icon(
                     Icons.monetization_on,
+                    color: Colors.white,
+                  ),
+                  textColor: Colors.white,
+                  splashColor: Colors.red,
+                  color: Color(0xFF004077),
+                ),
+              ),
+              Container(height: 10),
+              Container(
+                width: larguraTela > 320 ? 360 : 300,
+                height: larguraTela > 320 ? 80 : 65,
+                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: RaisedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => sps_cotacao_screen()),
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(10.0))),
+                  label: Text(
+                    'NOTIFICAÇÃO DE MODIFICAÇÃO',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: larguraTela > 320 ? 14.0 : 10.0,
+                    ),
+                  ),
+                  icon: Icon(
+                    Icons.sd_card_alert_outlined,
                     color: Colors.white,
                   ),
                   textColor: Colors.white,
@@ -216,7 +248,7 @@ class sps_menu_screen extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-              'Version 1.0.0 (20/04/2021)\n',
+              'Version 1.0.0 (07/05/2021)\n',
               style: TextStyle(
                 color: Color(0xFF004077),
                 fontSize: 12.0,
