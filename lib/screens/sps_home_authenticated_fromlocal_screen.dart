@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
@@ -84,8 +83,9 @@ class _HomeSpsAuthenticatedFromLocalState
                   break;
                 case ConnectionState.done:
                   if (snapshot.hasError) {
+                    spsLog.log(debug: 1, tipo: "ERRO", msg:"(Ponto 4) Falha de conexão - ${snapshot.error}");
                     return CenteredMessage(
-                      '(Ponto 4) Falha de conexão!',
+                      '(Ponto 4) Falha de conexão - ${snapshot.error}',
                       icon: Icons.error,
                     );
                   }

@@ -2,17 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
+import 'package:flutter/foundation.dart';
 
-class SPSlog extends StatefulWidget {
+class sps_log_screen extends StatefulWidget {
   final String path;
 
-  SPSlog({Key key, this.path}) : super(key: key);
+  sps_log_screen({Key key, this.path}) : super(key: key);
 
-  _SPSlogState createState() => _SPSlogState();
+  _sps_log_screenState createState() => _sps_log_screenState();
 }
 
-class _SPSlogState extends State<SPSlog> with WidgetsBindingObserver {
+class _sps_log_screenState extends State<sps_log_screen> with WidgetsBindingObserver {
   final SpsLogin spslogin = SpsLogin();
+  String taskId;
 
   @override
   Widget build(BuildContext context) {
