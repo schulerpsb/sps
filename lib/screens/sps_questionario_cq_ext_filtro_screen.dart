@@ -282,7 +282,7 @@ class _sps_questionario_cq_ext_filtro_screen
                         )
                       },
                 color: Colors.purple,
-                padding: EdgeInsets.fromLTRB(4, 15, 4, 15),
+                padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 splashColor: Colors.grey,
@@ -291,7 +291,7 @@ class _sps_questionario_cq_ext_filtro_screen
                   children: <Widget>[
                     Center(
                         child: Text(" PENDENTE \n",
-                            style: TextStyle(color: Colors.white))),
+                            style: TextStyle(color: Colors.white,fontSize: 13))),
                     Center(
                         child: Text(
                             _obter_contador(snapshot, "PENDENTE").toString(),
@@ -318,14 +318,14 @@ class _sps_questionario_cq_ext_filtro_screen
                         )
                       },
                 color: Colors.orange,
-                padding: EdgeInsets.fromLTRB(4, 15, 4, 15),
+                padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 splashColor: Colors.grey,
                 child: Column(
                   // Replace with a Row for horizontal icon + text
                   children: <Widget>[
-                    Center(child: Text("   PARCIAL   \n")),
+                    Center(child: Text("   PARCIAL   \n", style: TextStyle(color: Colors.black,fontSize: 13))),
                     Center(
                         child: Text(
                             _obter_contador(snapshot, "PARCIAL").toString(),
@@ -350,14 +350,14 @@ class _sps_questionario_cq_ext_filtro_screen
                         )
                       },
                 color: Colors.green,
-                padding: EdgeInsets.fromLTRB(4, 15, 4, 15),
+                padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 splashColor: Colors.grey,
                 child: Column(
                   // Replace with a Row for horizontal icon + text
                   children: <Widget>[
-                    Center(child: Text("CONCLUÍDO\n")),
+                    Center(child: Text("CONCLUÍDO\n", style: TextStyle(color: Colors.black,fontSize: 13))),
                     Center(
                         child: Text(
                             _obter_contador(snapshot, "OK S/FUP").toString(),
@@ -382,14 +382,14 @@ class _sps_questionario_cq_ext_filtro_screen
                         )
                       },
                 color: Colors.blueAccent,
-                padding: EdgeInsets.fromLTRB(4, 15, 4, 15),
+                padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0)),
                 splashColor: Colors.grey,
                 child: Column(
                   // Replace with a Row for horizontal icon + text
                   children: <Widget>[
-                    Center(child: Text("FOLLOW-UP\n")),
+                    Center(child: Text("FOLLOW-UP\n", style: TextStyle(color: Colors.black,fontSize: 13))),
                     Center(
                         child: Text(
                             _obter_contador(snapshot, "OK C/FUP").toString(),
