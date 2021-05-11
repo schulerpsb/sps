@@ -52,10 +52,11 @@ class sps_questionario_midia_screen extends StatefulWidget {
   final String _status_aprovacao;
   final String _origemUsuario;
   final String _filtro;
-  final int    _indexLista;
+  final int _indexLista;
   final String _filtroProjeto;
   final String _filtroReferencia;
   final String _filtroPedido;
+  final String _filtroNomeFornecedor;
   final String _qtImagens;
   final String _qtVideos;
   final String _qtOutros;
@@ -86,6 +87,7 @@ class sps_questionario_midia_screen extends StatefulWidget {
       this._filtroProjeto,
       this._filtroReferencia,
       this._filtroPedido,
+      this._filtroNomeFornecedor,
       this._qtImagens,
       this._qtVideos,
       this._qtOutros,
@@ -119,53 +121,52 @@ class sps_questionario_midia_screen extends StatefulWidget {
           this._filtroProjeto,
           this._filtroReferencia,
           this._filtroPedido,
+          this._filtroNomeFornecedor,
           this._qtImagens,
           this._qtVideos,
           this._qtOutros,
           this._acao,
-          {this.funCallback}
-      );
+          {this.funCallback});
 }
 
 //Declaração da classe _sps_questionario_midia_screen
 class _sps_questionario_midia_screen
-    extends State<sps_questionario_midia_screen>
-    with TickerProviderStateMixin {
+    extends State<sps_questionario_midia_screen> with TickerProviderStateMixin {
   //Declaração de variáveis da classe _sps_questionario_midia_screen
-  final SpsQuestionarioMidia spsquestionariocqmidia =
-      SpsQuestionarioMidia();
+  final SpsQuestionarioMidia spsquestionariocqmidia = SpsQuestionarioMidia();
 
   _sps_questionario_midia_screen(
-      _codigo_empresa,
-      _codigo_programacao,
-      _item_checklist,
-      _descr_comentarios,
-      _registro_colaborador,
-      _identificacao_utilizador,
-      _codigo_grupo,
-      _codigo_checklist,
-      _descr_programacao,
-      _codigo_pedido,
-      _item_pedido,
-      _codigo_material,
-      _referencia_parceiro,
-      _nome_fornecedor,
-      _qtde_pedido,
-      _codigo_projeto,
-      _sincronizado,
-      _status_aprovacao,
-      _origemUsuario,
-      _filtro,
-      _indexLista,
-      _filtroProjeto,
-      _filtroReferencia,
-      _filtroPedido,
-      _qtImagens,
-      _qtVideos,
-      _qtOutros,
-      _acao,
-      funCallback,
-      );
+    _codigo_empresa,
+    _codigo_programacao,
+    _item_checklist,
+    _descr_comentarios,
+    _registro_colaborador,
+    _identificacao_utilizador,
+    _codigo_grupo,
+    _codigo_checklist,
+    _descr_programacao,
+    _codigo_pedido,
+    _item_pedido,
+    _codigo_material,
+    _referencia_parceiro,
+    _nome_fornecedor,
+    _qtde_pedido,
+    _codigo_projeto,
+    _sincronizado,
+    _status_aprovacao,
+    _origemUsuario,
+    _filtro,
+    _indexLista,
+    _filtroProjeto,
+    _filtroReferencia,
+    _filtroPedido,
+    _filtroNomeFornecedor,
+    _qtImagens,
+    _qtVideos,
+    _qtOutros,
+    _acao,
+    funCallback,
+  );
 
   // manage state of modal progress HUD widget
   bool _isLoading = false;
@@ -184,8 +185,10 @@ class _sps_questionario_midia_screen
 
   TabController controller;
 
-  final Directory _photoDir = new Directory(usuarioAtual.document_root_folder.toString());
-  final Directory _videoDir = new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs');
+  final Directory _photoDir =
+      new Directory(usuarioAtual.document_root_folder.toString());
+  final Directory _videoDir =
+      new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs');
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -194,7 +197,8 @@ class _sps_questionario_midia_screen
   double progress = 0;
   bool isDownloaded = false;
 
-  FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
+  FlutterLocalNotificationsPlugin flip =
+      spsNotificacao.iniciarNotificacaoGrupo();
 
   //FIM - Declaração de variáveis da classe _sps_questionario_midia_screen
 
@@ -213,7 +217,8 @@ class _sps_questionario_midia_screen
         });
 
         DateTime now = DateTime.now();
-        DateTime _currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
+        DateTime _currentTime = new DateTime(
+            now.year, now.month, now.day, now.hour, now.minute, now.second);
         //Arquivo de video capturado
         //Montagem do arquivo de dados para processamento do arquivo.
         Map<String, dynamic> _dadosArquivo = new Map<String, dynamic>();
@@ -222,18 +227,22 @@ class _sps_questionario_midia_screen
         _dadosArquivo['item_checklist'] = this.widget._item_checklist;
         _dadosArquivo['arquivo'] = file.path.toString();
         if (usuarioAtual.tipo == "INTERNO") {
-          _dadosArquivo['registro_colaborador'] = this.widget._registro_colaborador;
+          _dadosArquivo['registro_colaborador'] =
+              this.widget._registro_colaborador;
           _dadosArquivo['identificacao_utilizador'] = '';
         } else {
           _dadosArquivo['registro_colaborador'] = '';
-          _dadosArquivo['identificacao_utilizador'] = this.widget._identificacao_utilizador;
+          _dadosArquivo['identificacao_utilizador'] =
+              this.widget._identificacao_utilizador;
         }
         _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
         _dadosArquivo['dthratualizacao'] = _currentTime.toString();
         _dadosArquivo['dthranexo'] = _currentTime.toString();
 
         //Processamento do arquivo capturado - Renomear - mover.
-        final String arquivoMovido = await spsMidiaUtils.processarArquivoCapturado(tipo: ".mp4", dadosArquivo: _dadosArquivo);
+        final String arquivoMovido =
+            await spsMidiaUtils.processarArquivoCapturado(
+                tipo: ".mp4", dadosArquivo: _dadosArquivo);
         _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
 
         List _listaArquivos = new List();
@@ -256,27 +265,32 @@ class _sps_questionario_midia_screen
 //          final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
 //
 //        }else{
-          _dadosArquivo['sincronizado'] = 'T';
-          SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
-          //Gravação do registro na tabela de anexos do SQLITE
-          final int registroGravado =  await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+        _dadosArquivo['sincronizado'] = 'T';
+        SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao =
+            SpsDaoQuestionarioMidia();
+        //Gravação do registro na tabela de anexos do SQLITE
+        final int registroGravado =
+            await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(
+                dadosArquivo: _dadosArquivo);
 //        }
         //Atualizar Status das respostas
-        spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
-        final statusrespostas =  await objspsQuestionarioUtils.atualizar_status_resposta(
-            _dadosArquivo['codigo_empresa'],
-            _dadosArquivo['codigo_programacao'],
-            _dadosArquivo['registro_colaborador'],
-            _dadosArquivo['identificacao_utilizador'],
-            _dadosArquivo['item_checklist']
-        );
+        spsQuestionarioUtils objspsQuestionarioUtils =
+            new spsQuestionarioUtils();
+        final statusrespostas =
+            await objspsQuestionarioUtils.atualizar_status_resposta(
+                _dadosArquivo['codigo_empresa'],
+                _dadosArquivo['codigo_programacao'],
+                _dadosArquivo['registro_colaborador'],
+                _dadosArquivo['identificacao_utilizador'],
+                _dadosArquivo['item_checklist']);
         //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
         final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-        final int resultupdateLista = await objQuestionarioDao.update_lista_status_resposta(
-            _dadosArquivo['codigo_empresa'],
-            _dadosArquivo['codigo_programacao'],
-            _dadosArquivo['registro_colaborador'],
-            _dadosArquivo['identificacao_utilizador']);
+        final int resultupdateLista =
+            await objQuestionarioDao.update_lista_status_resposta(
+                _dadosArquivo['codigo_empresa'],
+                _dadosArquivo['codigo_programacao'],
+                _dadosArquivo['registro_colaborador'],
+                _dadosArquivo['identificacao_utilizador']);
         setState(() {
           _isLoading = false;
         });
@@ -288,21 +302,25 @@ class _sps_questionario_midia_screen
 //        maxHeight: null,
 //        imageQuality: null,
 //      );
-      _picker.getImage(
+      _picker
+          .getImage(
         source: source,
         maxWidth: null,
         maxHeight: null,
         imageQuality: null,
-      ).then((pickedFile) async {
-        if(pickedFile != null){
+      )
+          .then((pickedFile) async {
+        if (pickedFile != null) {
           setState(() {
             _isLoading = true;
           });
           spsMidiaUtils objspsMidiaUtils = spsMidiaUtils();
-          File arquivoNormalizado = await objspsMidiaUtils.normalizarArquivo(pickedFile.path.toString());
+          File arquivoNormalizado = await objspsMidiaUtils
+              .normalizarArquivo(pickedFile.path.toString());
 
           DateTime now = DateTime.now();
-          DateTime _currentTime = new DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
+          DateTime _currentTime = new DateTime(
+              now.year, now.month, now.day, now.hour, now.minute, now.second);
           //Arquivo de imagem capturado
           //Montagem do arquivo de dados para processamento do arquivo.
           Map<String, dynamic> _dadosArquivo = new Map<String, dynamic>();
@@ -311,18 +329,22 @@ class _sps_questionario_midia_screen
           _dadosArquivo['item_checklist'] = this.widget._item_checklist;
           _dadosArquivo['arquivo'] = arquivoNormalizado.path.toString();
           if (usuarioAtual.tipo == "INTERNO") {
-            _dadosArquivo['registro_colaborador'] = this.widget._registro_colaborador;
+            _dadosArquivo['registro_colaborador'] =
+                this.widget._registro_colaborador;
             _dadosArquivo['identificacao_utilizador'] = '';
           } else {
             _dadosArquivo['registro_colaborador'] = '';
-            _dadosArquivo['identificacao_utilizador'] = this.widget._identificacao_utilizador;
+            _dadosArquivo['identificacao_utilizador'] =
+                this.widget._identificacao_utilizador;
           }
           _dadosArquivo['usuresponsavel'] = usuarioAtual.codigo_usuario;
           _dadosArquivo['dthratualizacao'] = _currentTime.toString();
           _dadosArquivo['dthranexo'] = _currentTime.toString();
 
           //Processamento do arquivo capturado - Renomear - mover.
-          final String arquivoMovido = await spsMidiaUtils.processarArquivoCapturado(tipo: ".jpg", dadosArquivo: _dadosArquivo);
+          final String arquivoMovido =
+              await spsMidiaUtils.processarArquivoCapturado(
+                  tipo: ".jpg", dadosArquivo: _dadosArquivo);
           _dadosArquivo['nome_arquivo'] = arquivoMovido.split('/').last;
 
           List _listaArquivos = new List();
@@ -345,26 +367,31 @@ class _sps_questionario_midia_screen
 //        }else{
           _dadosArquivo['sincronizado'] = 'T';
           //Gravação do registro na tabela de anexos do SQLITE
-          SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
-          final int arquivoGravadoSQLite = await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(dadosArquivo: _dadosArquivo);
+          SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao =
+              SpsDaoQuestionarioMidia();
+          final int arquivoGravadoSQLite =
+              await objQuestionarioCqMidiaDao.InserirQuestionarioMidia(
+                  dadosArquivo: _dadosArquivo);
           //print('gravei anexo offline');
 //        }
           //Atualizar Status das respostas
-          spsQuestionarioUtils objspsQuestionarioUtils = new spsQuestionarioUtils();
-          final statusrespostas =  await objspsQuestionarioUtils.atualizar_status_resposta(
-              _dadosArquivo['codigo_empresa'],
-              _dadosArquivo['codigo_programacao'],
-              _dadosArquivo['registro_colaborador'],
-              _dadosArquivo['identificacao_utilizador'],
-              _dadosArquivo['item_checklist']
-          );
+          spsQuestionarioUtils objspsQuestionarioUtils =
+              new spsQuestionarioUtils();
+          final statusrespostas =
+              await objspsQuestionarioUtils.atualizar_status_resposta(
+                  _dadosArquivo['codigo_empresa'],
+                  _dadosArquivo['codigo_programacao'],
+                  _dadosArquivo['registro_colaborador'],
+                  _dadosArquivo['identificacao_utilizador'],
+                  _dadosArquivo['item_checklist']);
           //Analisar e Atualizar Status da Lista (cabecalho) em função do status da resposta
           final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-          final int resultupdateLista = await objQuestionarioDao.update_lista_status_resposta(
-              _dadosArquivo['codigo_empresa'],
-              _dadosArquivo['codigo_programacao'],
-              _dadosArquivo['registro_colaborador'],
-              _dadosArquivo['identificacao_utilizador']);
+          final int resultupdateLista =
+              await objQuestionarioDao.update_lista_status_resposta(
+                  _dadosArquivo['codigo_empresa'],
+                  _dadosArquivo['codigo_programacao'],
+                  _dadosArquivo['registro_colaborador'],
+                  _dadosArquivo['identificacao_utilizador']);
           setState(() {
             _isLoading = false;
           });
@@ -470,14 +497,14 @@ class _sps_questionario_midia_screen
     switch (index) {
       case 0: // Fotos
         return FloatingActionButton(
-                onPressed: () {
-                  isVideo = false;
-                  _onImageButtonPressed(ImageSource.camera, context: context);
-                },
-                heroTag: 'image',
-                tooltip: 'Tirar uma foto',
-                child: const Icon(Icons.camera_alt),
-              );
+          onPressed: () {
+            isVideo = false;
+            _onImageButtonPressed(ImageSource.camera, context: context);
+          },
+          heroTag: 'image',
+          tooltip: 'Tirar uma foto',
+          child: const Icon(Icons.camera_alt),
+        );
         break;
       case 1: // Vídeos
         return FloatingActionButton(
@@ -492,8 +519,7 @@ class _sps_questionario_midia_screen
         break;
       case 2: // anexos
         return FloatingActionButton(
-          onPressed: () {
-          },
+          onPressed: () {},
           heroTag: 'video',
           tooltip: 'Anexar um arquivo',
           child: const Icon(Icons.attach_file),
@@ -506,13 +532,14 @@ class _sps_questionario_midia_screen
   }
 
   Future<void> downloadFile(uri, fileName) async {
-
     Random random = new Random();
     int id_notificacao = random.nextInt(1000);
 
-    await spsNotificacao.notificarProgresso(id_notificacao, 100, 0, 'SPS - Supplier Portal','Baixando arquivo 0%', flip);
+    await spsNotificacao.notificarProgresso(id_notificacao, 100, 0,
+        'SPS - Supplier Portal', 'Baixando arquivo 0%', flip);
 
-    String savePath = usuarioAtual.document_root_folder.toString() + '/' + fileName;
+    String savePath =
+        usuarioAtual.document_root_folder.toString() + '/' + fileName;
 
     Dio dio = Dio();
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
@@ -526,11 +553,17 @@ class _sps_questionario_midia_screen
       savePath,
       onReceiveProgress: (rcv, total) {
 //        setState(() {
-          progress = (rcv / total);
+        progress = (rcv / total);
 //        });
 //        print('received: ${rcv.toStringAsFixed(0)} out of total: ${total.toStringAsFixed(0)} %'+(progress * 100).round().toString());
-        print('id not: '+id_notificacao.toString());
-        spsNotificacao.notificarProgresso(id_notificacao, 100, (progress * 100).round(), 'SPS - Supplier Portal','Baixando arquivo '+(progress * 100).round().toString()+'%', flip);
+        print('id not: ' + id_notificacao.toString());
+        spsNotificacao.notificarProgresso(
+            id_notificacao,
+            100,
+            (progress * 100).round(),
+            'SPS - Supplier Portal',
+            'Baixando arquivo ' + (progress * 100).round().toString() + '%',
+            flip);
 //        if (progress == 1) {
 //          setState(() {
 //            isDownloaded = true;
@@ -539,19 +572,25 @@ class _sps_questionario_midia_screen
       },
       deleteOnError: true,
     ).then((_) {
-      print('Download efetuado ==> ' + uri.toString() + ' Para ' +savePath.toString());
+      print('Download efetuado ==> ' +
+          uri.toString() +
+          ' Para ' +
+          savePath.toString());
       //print('Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +ArquivoParaDownload.toString());
       File arquivoLocal = new File(savePath);
-      String tipoArquivo = arquivoLocal.path
-          .split('.')
-          .last;
-      if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4' || tipoArquivo == 'mov' || tipoArquivo == 'MOV') {
+      String tipoArquivo = arquivoLocal.path.split('.').last;
+      if (tipoArquivo == 'mp4' ||
+          tipoArquivo == 'MP4' ||
+          tipoArquivo == 'mov' ||
+          tipoArquivo == 'MOV') {
         //Processamento do arquivo capturado - Gerar thumbnail.
         List _listaArquivos = new List();
         _listaArquivos.add(savePath);
-        print('Converter Vídeo: '+_listaArquivos.toString());
-        spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value){
-          print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +savePath.toString());
+        print('Converter Vídeo: ' + _listaArquivos.toString());
+        spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value) {
+          print(
+              'Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +
+                  savePath.toString());
         });
       }
       spsNotificacao.cancelarNotificacao(id_notificacao, flip);
@@ -573,16 +612,28 @@ class _sps_questionario_midia_screen
     Random random = new Random();
     int id_notificacao = random.nextInt(1000);
 
-    await spsNotificacao.notificarProgresso(id_notificacao, 100, 0, 'SPS - Supplier Portal','Baixando arquivos 0%', flip);
+    await spsNotificacao.notificarProgresso(id_notificacao, 100, 0,
+        'SPS - Supplier Portal', 'Baixando arquivos 0%', flip);
 
     double passo = 1 / listaArquivos.length / 2;
-    print('passo: '+passo.toString());
+    print('passo: ' + passo.toString());
 
     await Future.forEach(listaArquivos, (arquivo) async {
       double progress_individual = 0;
       double limit = 0.5;
-      String uri = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + arquivo['codigo_programacao'].toString() + '_' + arquivo['registro_colaborador'].toString()+ '_' + arquivo['identificacao_utilizador'].toString() + '_' + arquivo['item_checklist'].toString() +'/' + arquivo['nome_arquivo'].toString();
-      String savePath = usuarioAtual.document_root_folder.toString() + '/' + arquivo['nome_arquivo'].toString();
+      String uri = 'https://10.17.20.45/CHECKLIST/ANEXOS/' +
+          arquivo['codigo_programacao'].toString() +
+          '_' +
+          arquivo['registro_colaborador'].toString() +
+          '_' +
+          arquivo['identificacao_utilizador'].toString() +
+          '_' +
+          arquivo['item_checklist'].toString() +
+          '/' +
+          arquivo['nome_arquivo'].toString();
+      String savePath = usuarioAtual.document_root_folder.toString() +
+          '/' +
+          arquivo['nome_arquivo'].toString();
       Dio dio = Dio();
       (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
           (HttpClient client) {
@@ -595,36 +646,50 @@ class _sps_questionario_midia_screen
         savePath,
         onReceiveProgress: (rcv, total) {
           progress_individual = (rcv / total);
-          progress_individual = double.parse(progress_individual.toStringAsFixed(1));
+          progress_individual =
+              double.parse(progress_individual.toStringAsFixed(1));
 //          print('Progresso individual: '+progress_individual.toString());
           //        print('received: ${rcv.toStringAsFixed(0)} out of total: ${total.toStringAsFixed(0)} %'+(progress_individual * 100).round().toString());
           if (progress_individual >= limit && progress < 1.0) {
             limit = limit + 0.5;
 //            print('aumentei o limite: ' + limit.toString());
-              if(progress < 1.0){
-                progress = progress + double.parse(passo.toStringAsFixed(1));
-                spsNotificacao.notificarProgresso(id_notificacao, 100, (progress * 100).round(), 'SPS - Supplier Portal','Baixando arquivos '+(progress * 100).round().toString()+'%', flip);
+            if (progress < 1.0) {
+              progress = progress + double.parse(passo.toStringAsFixed(1));
+              spsNotificacao.notificarProgresso(
+                  id_notificacao,
+                  100,
+                  (progress * 100).round(),
+                  'SPS - Supplier Portal',
+                  'Baixando arquivos ' +
+                      (progress * 100).round().toString() +
+                      '%',
+                  flip);
 //                print('aumentei o progress: ' + progress.toString());
-              }else{
-                progress = 1.0;
-              }
+            } else {
+              progress = 1.0;
+            }
           }
 //          print('Progresso: '+progress.toString());
         },
         deleteOnError: true,
       );
-      print('Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +arquivo['nome_arquivo'].toString());
+      print(
+          'Download de Anexos de midia efetuado com sucesso - Server to Local!==>' +
+              arquivo['nome_arquivo'].toString());
       File arquivoLocal = new File(savePath);
-      String tipoArquivo = arquivoLocal.path
-          .split('.')
-          .last;
-      if (tipoArquivo == 'mp4' || tipoArquivo == 'MP4' || tipoArquivo == 'mov' || tipoArquivo == 'MOV') {
+      String tipoArquivo = arquivoLocal.path.split('.').last;
+      if (tipoArquivo == 'mp4' ||
+          tipoArquivo == 'MP4' ||
+          tipoArquivo == 'mov' ||
+          tipoArquivo == 'MOV') {
         //Processamento do arquivo capturado - Gerar thumbnail.
         List _listaArquivos = new List();
         _listaArquivos.add(savePath);
-        print('Converter Vídeo: '+_listaArquivos.toString());
-        spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value){
-          print('Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +savePath.toString());
+        print('Converter Vídeo: ' + _listaArquivos.toString());
+        spsMidiaUtils.criarVideoThumb(fileList: _listaArquivos).then((value) {
+          print(
+              'Thumbnail de Download de Anexos de video efetuado com sucesso - Server to Local!==>' +
+                  savePath.toString());
         });
       }
       if (progress >= 0.9) {
@@ -632,9 +697,8 @@ class _sps_questionario_midia_screen
         setState(() {
           downloading = false;
         });
-      }else{
-        setState(() {
-        });
+      } else {
+        setState(() {});
       }
     });
   }
@@ -647,8 +711,10 @@ class _sps_questionario_midia_screen
     //limpar cache de imagem
     //print('Acao====>'+this.widget._acao.toString());
     imageCache.clear();
-    new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs').create();
-    SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao = SpsDaoQuestionarioMidia();
+    new Directory(usuarioAtual.document_root_folder.toString() + '/thumbs')
+        .create();
+    SpsDaoQuestionarioMidia objQuestionarioCqMidiaDao =
+        SpsDaoQuestionarioMidia();
     final objSpsQuestionarioCqMidia = SpsQuestionarioMidia();
     return DefaultTabController(
         length: 3,
@@ -662,29 +728,37 @@ class _sps_questionario_midia_screen
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      widget.funCallback(index_posicao_retorno: this.widget._indexLista, acao: this.widget._acao);
-                    },
-                  );
-                },
-              ),
+            leading: Builder(
+              builder: (BuildContext context) {
+                return IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    widget.funCallback(
+                        index_posicao_retorno: this.widget._indexLista,
+                        acao: this.widget._acao);
+                  },
+                );
+              },
+            ),
             bottom: TabBar(controller: controller, tabs: [
               Tab(
                 icon: Badge(
-                  badgeContent: Text(this.widget._qtImagens == '0' ? '' : this.widget._qtImagens, style: TextStyle(color: Colors.white, fontSize: 10)),
+                  badgeContent: Text(
+                      this.widget._qtImagens == '0'
+                          ? ''
+                          : this.widget._qtImagens,
+                      style: TextStyle(color: Colors.white, fontSize: 10)),
                   showBadge: true,
                   badgeColor: Color(0xFF004077),
-                  child: Icon(Icons.collections ),
+                  child: Icon(Icons.collections),
                 ),
               ),
               Tab(
                 icon: Badge(
-                  badgeContent: Text(this.widget._qtVideos == '0' ? '' : this.widget._qtVideos, style: TextStyle(color: Colors.white, fontSize: 10)),
+                  badgeContent: Text(
+                      this.widget._qtVideos == '0' ? '' : this.widget._qtVideos,
+                      style: TextStyle(color: Colors.white, fontSize: 10)),
                   showBadge: true,
                   badgeColor: Color(0xFF004077),
                   child: Icon(Icons.video_library),
@@ -692,7 +766,9 @@ class _sps_questionario_midia_screen
               ),
               Tab(
                 icon: Badge(
-                  badgeContent: Text(this.widget._qtOutros == '0' ? '' : this.widget._qtOutros, style: TextStyle(color: Colors.white, fontSize: 10)),
+                  badgeContent: Text(
+                      this.widget._qtOutros == '0' ? '' : this.widget._qtOutros,
+                      style: TextStyle(color: Colors.white, fontSize: 10)),
                   showBadge: true,
                   badgeColor: Color(0xFF004077),
                   child: Icon(Icons.library_books),
@@ -752,7 +828,10 @@ class _sps_questionario_midia_screen
                 color: Color(0xFFe9eef7),
                 child: Center(
                   child: FutureBuilder<List<Map<String, dynamic>>>(
-                    future: objQuestionarioCqMidiaDao.listarArquivosOutros(this.widget._codigo_empresa,this.widget._codigo_programacao,this.widget._item_checklist),
+                    future: objQuestionarioCqMidiaDao.listarArquivosOutros(
+                        this.widget._codigo_empresa,
+                        this.widget._codigo_programacao,
+                        this.widget._item_checklist),
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
                         case ConnectionState.none:
@@ -767,7 +846,9 @@ class _sps_questionario_midia_screen
                             var werror;
                             werror = snapshot.error.toString();
                             return CenteredMessage(
-                              '(Ponto 13) Falha de conexão! \n\n(' + werror + ')',
+                              '(Ponto 13) Falha de conexão! \n\n(' +
+                                  werror +
+                                  ')',
                               icon: Icons.error,
                             );
                           }
@@ -785,28 +866,71 @@ class _sps_questionario_midia_screen
                                           children: <Widget>[
                                             //Tratar descrição da pergunta
                                             ListTile(
-                                              trailing: snapshot.data[index]["nome_arquivo"].toString().split('.').last == "PDF" || snapshot.data[index]["nome_arquivo"].toString().split('.').last == "pdf" ? Icon(Icons.picture_as_pdf, color: Colors.green, size: 40) : Icon(Icons.description, color: Colors.grey, size: 40),
-                                              title: Text(snapshot.data[index]["titulo_arquivo"] != "" ? '${snapshot.data[index]["titulo_arquivo"]}' +
-                                                  " - " +
-                                                  '${snapshot.data[index]["nome_arquivo"].toString().split('.').last}' : snapshot.data[index]["nome_arquivo"],
+                                              trailing: snapshot.data[index][
+                                                                  "nome_arquivo"]
+                                                              .toString()
+                                                              .split('.')
+                                                              .last ==
+                                                          "PDF" ||
+                                                      snapshot.data[index][
+                                                                  "nome_arquivo"]
+                                                              .toString()
+                                                              .split('.')
+                                                              .last ==
+                                                          "pdf"
+                                                  ? Icon(Icons.picture_as_pdf,
+                                                      color: Colors.green,
+                                                      size: 40)
+                                                  : Icon(Icons.description,
+                                                      color: Colors.grey,
+                                                      size: 40),
+                                              title: Text(
+                                                  snapshot.data[index][
+                                                              "titulo_arquivo"] !=
+                                                          ""
+                                                      ? '${snapshot.data[index]["titulo_arquivo"]}' +
+                                                          " - " +
+                                                          '${snapshot.data[index]["nome_arquivo"].toString().split('.').last}'
+                                                      : snapshot.data[index]
+                                                          ["nome_arquivo"],
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.normal,
+                                                      fontWeight:
+                                                          FontWeight.normal,
                                                       fontSize: 15)),
                                               subtitle: Text(""),
                                               onTap: () {
-                                                snapshot.data[index]["nome_arquivo"].toString().split('.').last == "PDF" || snapshot.data[index]["nome_arquivo"].toString().split('.').last == "pdf" ?
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        PDFScreen(path: usuarioAtual.document_root_folder.toString() + '/' + snapshot.data[index]['nome_arquivo'].toString()),
-                                                  ),
-                                                ) : '';
+                                                snapshot.data[index][
+                                                                    "nome_arquivo"]
+                                                                .toString()
+                                                                .split('.')
+                                                                .last ==
+                                                            "PDF" ||
+                                                        snapshot.data[index][
+                                                                    "nome_arquivo"]
+                                                                .toString()
+                                                                .split('.')
+                                                                .last ==
+                                                            "pdf"
+                                                    ? Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => PDFScreen(
+                                                              path: usuarioAtual
+                                                                      .document_root_folder
+                                                                      .toString() +
+                                                                  '/' +
+                                                                  snapshot.data[
+                                                                          index]
+                                                                          [
+                                                                          'nome_arquivo']
+                                                                      .toString()),
+                                                        ),
+                                                      )
+                                                    : '';
                                               },
                                             ),
                                           ],
                                         ),
-
                                       );
                                     },
                                   ),
@@ -841,7 +965,10 @@ class _sps_questionario_midia_screen
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(left: 35.0),
             child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: objSpsQuestionarioCqMidia.listarQuestionarioMidiaFaltante(codigo_empresa: this.widget._codigo_empresa,codigo_programacao: this.widget._codigo_programacao,item_checklist: this.widget._item_checklist),
+              future: objSpsQuestionarioCqMidia.listarQuestionarioMidiaFaltante(
+                  codigo_empresa: this.widget._codigo_empresa,
+                  codigo_programacao: this.widget._codigo_programacao,
+                  item_checklist: this.widget._item_checklist),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -852,9 +979,7 @@ class _sps_questionario_midia_screen
                   case ConnectionState.active:
                     break;
                   case ConnectionState.done:
-                    if (snapshot.hasError) {
-
-                    }
+                    if (snapshot.hasError) {}
                     if (erroConexao.msg_erro_conexao.toString() == "") {
                       if (snapshot.data.isNotEmpty) {
                         return Row(
@@ -862,50 +987,52 @@ class _sps_questionario_midia_screen
                           children: [
                             downloading == false
                                 ? CircleAvatar(
-                              radius: 15,
-                              backgroundColor: Color(0xFF004077),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.download_sharp,
-                                  color: Colors.white,
-                                  size: 15,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                            title: Text("SPS App"),
-                                            content: Text(
-                                                "Deseja fazer o download de todas as mídas desse item?"),
-                                            actions: [
-                                              FlatButton(
-                                                child: Text("Cancelar"),
-                                                onPressed: () {
-                                                  Navigator.of(context,
-                                                      rootNavigator:
-                                                      true)
-                                                      .pop();
-                                                },
-                                              ),
-                                              FlatButton(
-                                                  child: Text("Sim"),
-                                                  onPressed: () {
-                                                    downloadList(snapshot.data);
-                                                    Navigator.of(context,
-                                                        rootNavigator:
-                                                        true)
-                                                        .pop();
-                                                  }),
-                                            ]);
-                                      });
-                                },
-                              ),
-                            ) : Text(''),
+                                    radius: 15,
+                                    backgroundColor: Color(0xFF004077),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.download_sharp,
+                                        color: Colors.white,
+                                        size: 15,
+                                      ),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                  title: Text("SPS App"),
+                                                  content: Text(
+                                                      "Deseja fazer o download de todas as mídas desse item?"),
+                                                  actions: [
+                                                    FlatButton(
+                                                      child: Text("Cancelar"),
+                                                      onPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    FlatButton(
+                                                        child: Text("Sim"),
+                                                        onPressed: () {
+                                                          downloadList(
+                                                              snapshot.data);
+                                                          Navigator.of(context,
+                                                                  rootNavigator:
+                                                                      true)
+                                                              .pop();
+                                                        }),
+                                                  ]);
+                                            });
+                                      },
+                                    ),
+                                  )
+                                : Text(''),
                             _bottomButtons(controller.index),
                           ],
                         );
-                      }else{
+                      } else {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -926,8 +1053,7 @@ class _sps_questionario_midia_screen
               },
             ),
           ),
-        )
-    );
+        ));
   }
 }
 //FIM - Widget Build da classe  _sps_questionario_midia_screen

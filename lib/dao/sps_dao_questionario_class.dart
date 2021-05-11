@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SpsDaoQuestionario {
@@ -288,52 +289,62 @@ class SpsDaoQuestionario {
       _filtroDescrProgramacao,
       _origemUsuario,
       String doc_action,
-      _nomeFornecedor) async {
+      _filtroNomeFornecedor) async {
     final Database db = await getDatabase();
-    var _query = 'SELECT * FROM checklist_lista where 1 = 1 ';
+    var _query = 'SELECT * FROM checklist_lista a where 1 = 1 ';
     if (_filtro.toString() != "" && _filtro.toString() != "null") {
-      _query = _query + " and status = '" + _filtro.toString() + "'";
+      if (_filtro == "OK S/FUP") {
+        _query = _query +
+            " and a.status = 'OK' and (select count(*) from checklist_item x where x.codigo_empresa = a.codigo_empresa and x.codigo_programacao = a.codigo_programacao and x.status_aprovacao <> 'APROVADO') <> 0 ";
+      } else {
+        if (_filtro == "OK C/FUP") {
+          _query = _query +
+              " and a.status = 'OK' and (select count(*) from checklist_item x where x.codigo_empresa = a.codigo_empresa and x.codigo_programacao = a.codigo_programacao and x.status_aprovacao <> 'APROVADO') = 0 ";
+        } else {
+          _query = _query + " and a.status = '" + _filtro.toString() + "'";
+        }
+      }
     }
-    if (_nomeFornecedor.toString() != "" &&
-        _nomeFornecedor.toString() != "null" &&
-        _nomeFornecedor != null) {
+    if (_filtroNomeFornecedor.toString() != "" &&
+        _filtroNomeFornecedor.toString() != "null" &&
+        _filtroNomeFornecedor != null) {
       _query = _query +
-          " and nome_fornecedor = '" +
-          _nomeFornecedor.toString() +
+          " and a.nome_fornecedor = '" +
+          _filtroNomeFornecedor.toString() +
           "' ";
     }
     if (_filtroProjeto.toString() != "" &&
         _filtroProjeto.toString() != "null") {
       _query = _query +
-          " and codigo_projeto like '%" +
+          " and a.codigo_projeto like '%" +
           _filtroProjeto.toString() +
           "%'";
     }
     if (_filtroReferencia.toString() != "" &&
         _filtroReferencia.toString() != "null") {
       _query = _query +
-          " and referencia_parceiro like '%" +
+          " and a.referencia_parceiro like '%" +
           _filtroReferencia.toString() +
           "%'";
     }
     if (_filtroPedido.toString() != "" && _filtroPedido.toString() != "null") {
       _query = _query +
-          " and codigo_pedido like '%" +
+          " and a.codigo_pedido like '%" +
           _filtroPedido.toString() +
           "%'";
     }
     if (_filtroDescrProgramacao.toString() != "" &&
         _filtroDescrProgramacao.toString() != "null") {
       _query = _query +
-          " and descr_programacao like '%" +
+          " and a.descr_programacao like '%" +
           _filtroDescrProgramacao.toString() +
           "%'";
     }
     _query = _query +
-        ' and doc_action = "' +
+        ' and a.doc_action = "' +
         doc_action +
         '" ' +
-        'order by dtfim_aplicacao';
+        'order by a.dtfim_aplicacao';
 
     debugPrint("query listar item geral=> " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
@@ -342,8 +353,17 @@ class SpsDaoQuestionario {
 
   Future<List<Map<String, dynamic>>> listarQuestionarioFornecedor() async {
     final Database db = await getDatabase();
-    var _query =
-        'SELECT 1, "TODOS OS FORNECEDORES" as nome_fornecedor UNION ALL SELECT distinct 2, nome_fornecedor FROM checklist_lista where nome_fornecedor <> "" order by 1, 2';
+    var _query = 'SELECT 1, "TODOS OS FORNECEDORES" as nome_fornecedor, '
+        '  (select count(*) from checklist_lista x1 where status = "PENDENTE" and x1.nome_fornecedor <> "") as qtde_pendente, '
+        '  (select count(*) from checklist_lista x1 where status = "PARCIAL" and x1.nome_fornecedor <> "") as qtde_parcial, '
+        '  (select count(*) from checklist_lista x1 where status = "OK" and x1.nome_fornecedor <> "") as qtde_ok '
+        'UNION ALL '
+        'SELECT distinct 2, a.nome_fornecedor, '
+        '  (select count(*) from checklist_lista x1 where x1.nome_fornecedor = a.nome_fornecedor and status = "PENDENTE") as qtde_pendente, '
+        '  (select count(*) from checklist_lista x1 where x1.nome_fornecedor = a.nome_fornecedor and status = "PARCIAL") as qtde_parcial, '
+        '  (select count(*) from checklist_lista x1 where x1.nome_fornecedor = a.nome_fornecedor and status = "OK") as qtde_ok '
+        'FROM checklist_lista a where a.nome_fornecedor <> "" '
+        'order by 1, 2';
 
     debugPrint("query listar fornecedor => " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
@@ -351,18 +371,33 @@ class SpsDaoQuestionario {
   }
 
   Future<List<Map<String, dynamic>>> contarQuestionarioGeral(
-      String doc_action, String _nomeFornecedor) async {
+      String doc_action, String _filtroNomeFornecedor) async {
     final Database db = await getDatabase();
-    print ("adriano ======>"+_nomeFornecedor.toString());
-    var _query =
-        'SELECT status, count(*) as contador FROM checklist_lista where doc_action = "' +
-            doc_action +
-            '" ';
-    if (_nomeFornecedor != "" && _nomeFornecedor != null) {
-      _query = _query + ' and nome_fornecedor = "' + _nomeFornecedor + '" ';
+    //print ("adriano ======>"+_filtroNomeFornecedor.toString());
+    var _query;
+    if (doc_action == "PREENCHER_CQ" && usuarioAtual.tipo != "INTERNO") {
+      _query =
+          'SELECT case when a.status = "OK" then case when (select count(*) from checklist_item x where x.codigo_empresa = a.codigo_empresa and x.codigo_programacao = a.codigo_programacao and x.status_aprovacao <> "APROVADO") = 0 then "OK C/FUP" else "OK S/FUP" end else a.status end as status, count(*) as contador '
+          'FROM checklist_lista a '
+          'where a.doc_action = "PREENCHER_CQ" ';
+      if (_filtroNomeFornecedor != "" && _filtroNomeFornecedor != null) {
+        _query =
+            _query + ' and nome_fornecedor = "' + _filtroNomeFornecedor + '" ';
+      }
+      _query = _query +
+          ' group by case when a.status = "OK" then case when (select count(*) from checklist_item x where x.codigo_empresa = a.codigo_empresa and x.codigo_programacao = a.codigo_programacao and x.status_aprovacao <> "APROVADO") = 0 then "OK C/FUP" else "OK S/FUP" end else a.status end ';
+    } else {
+      _query =
+          'SELECT status, count(*) as contador FROM checklist_lista where doc_action = "' +
+              doc_action +
+              '" ';
+      if (_filtroNomeFornecedor != "" && _filtroNomeFornecedor != null) {
+        _query =
+            _query + ' and nome_fornecedor = "' + _filtroNomeFornecedor + '" ';
+      }
+      _query = _query + ' group by status';
     }
-    print ("adriano ======>1=>"+_query);
-    _query = _query + ' group by status';
+
     print("query => contarQuestionarioGeral=> " + _query);
     final List<Map<String, dynamic>> result = await db.rawQuery(_query);
     return result;

@@ -7,9 +7,16 @@ import 'package:sps/models/sps_sincronizacao.dart';
 class SpsQuestionario {
   @override
   Future<List<Map<String, dynamic>>> listarQuestionario(
-      _origemUsuario, _tipoChecklist, _parametro, _filtro, _filtroProjeto, _filtroReferencia, _filtroPedido, _filtroDescrProgramacao, _nomeFornecedor) async {
-
-    print ("SpsQuestionario -> listarQuestionario");
+      _origemUsuario,
+      _tipoChecklist,
+      _parametro,
+      _filtro,
+      _filtroProjeto,
+      _filtroReferencia,
+      _filtroPedido,
+      _filtroDescrProgramacao,
+      _filtroNomeFornecedor) async {
+    print("SpsQuestionario -> listarQuestionario");
 
     //Tipos de usuário: "INTERNO / COLIGADA/ CLIENTE / FORNECEDOR / CLIENTE-FORNECEDOR / OUTROS
 
@@ -29,7 +36,7 @@ class SpsQuestionario {
       if (sps_usuario().tipo == "INTERNO" || sps_usuario().tipo == "COLIGADA") {
         registro_colaborador = sps_usuario().registro_usuario;
         identificacao_utilizador = 'SCHULER';
-      }else{
+      } else {
         registro_colaborador = '';
         identificacao_utilizador = sps_usuario().codigo_usuario;
       }
@@ -67,14 +74,23 @@ class SpsQuestionario {
 
     //Sincronização de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();
-    await objspsSincronizacao.sincronizarQuestionariosServerToLocal(origem_usuario, doc_action, registro_colaborador, identificacao_utilizador, tipo_frequencia, tipo_checklist, registro_aprovador,null,null);
+    await objspsSincronizacao.sincronizarQuestionariosServerToLocal(
+        origem_usuario,
+        doc_action,
+        registro_colaborador,
+        identificacao_utilizador,
+        tipo_frequencia,
+        tipo_checklist,
+        registro_aprovador,
+        null,
+        null);
 
     //Ler dados do SQlite (contar)
     if (_parametro == "CONTAR") {
       debugPrint("Ler dados do SQlite (Tabela: checklist_lista) contador");
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-      final List<Map<String, dynamic>> DadosSessao =
-          await objQuestionarioDao.contarQuestionarioGeral(doc_action,_nomeFornecedor);
+      final List<Map<String, dynamic>> DadosSessao = await objQuestionarioDao
+          .contarQuestionarioGeral(doc_action, _filtroNomeFornecedor);
       return DadosSessao;
     }
 
@@ -84,7 +100,14 @@ class SpsQuestionario {
       final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
       final List<Map<String, dynamic>> DadosSessao =
           await objQuestionarioDao.listarQuestionarioGeral(
-              _filtro, _filtroProjeto, _filtroReferencia, _filtroPedido, _filtroDescrProgramacao, _origemUsuario, doc_action, _nomeFornecedor);
+              _filtro,
+              _filtroProjeto,
+              _filtroReferencia,
+              _filtroPedido,
+              _filtroDescrProgramacao,
+              _origemUsuario,
+              doc_action,
+              _filtroNomeFornecedor);
       return DadosSessao;
     }
   }
@@ -98,24 +121,32 @@ class SpsQuestionario {
     String origem_usuario = "INTERNO";
     String doc_action;
 
-      doc_action = 'PREENCHER_CQ';
-      tipo_checklist = 'CHECKLIST';
-      tipo_frequencia = 'CONTROLE DE QUALIDADE';
-      registro_colaborador = sps_usuario().registro_usuario;
-      identificacao_utilizador = 'SCHULER';
-      registro_aprovador = sps_usuario().registro_usuario;
+    doc_action = 'PREENCHER_CQ';
+    tipo_checklist = 'CHECKLIST';
+    tipo_frequencia = 'CONTROLE DE QUALIDADE';
+    registro_colaborador = sps_usuario().registro_usuario;
+    identificacao_utilizador = 'SCHULER';
+    registro_aprovador = sps_usuario().registro_usuario;
 
     //Sincronização de questionarios Server to Local
     spsSincronizacao objspsSincronizacao = spsSincronizacao();
-    await objspsSincronizacao.sincronizarQuestionariosServerToLocal(origem_usuario, doc_action, registro_colaborador, identificacao_utilizador, tipo_frequencia, tipo_checklist, registro_aprovador,null,null);
+    await objspsSincronizacao.sincronizarQuestionariosServerToLocal(
+        origem_usuario,
+        doc_action,
+        registro_colaborador,
+        identificacao_utilizador,
+        tipo_frequencia,
+        tipo_checklist,
+        registro_aprovador,
+        null,
+        null);
 
     //Ler dados do SQlite (listar)
-      debugPrint("Ler dados do SQlite (Tabela: checklist_lista) distinct por nome_fornecedor");
-      final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
-      final List<Map<String, dynamic>> DadosSessao =
-      await objQuestionarioDao.listarQuestionarioFornecedor();
-      return DadosSessao;
-
+    debugPrint(
+        "Ler dados do SQlite (Tabela: checklist_lista) distinct por nome_fornecedor");
+    final SpsDaoQuestionario objQuestionarioDao = SpsDaoQuestionario();
+    final List<Map<String, dynamic>> DadosSessao =
+        await objQuestionarioDao.listarQuestionarioFornecedor();
+    return DadosSessao;
   }
-
 }

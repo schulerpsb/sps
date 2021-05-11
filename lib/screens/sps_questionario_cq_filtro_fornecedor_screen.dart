@@ -97,7 +97,7 @@ class _sps_questionario_cq_filtro_fornecedor_screen
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-                          child: Text("SELECIONE O FORNECEDOR DESEJADO",
+                          child: Text("Selecione o fornecedor desejado",
                               style: TextStyle(
                                   color: Colors.indigo,
                                   fontSize: 20.0,
@@ -165,9 +165,55 @@ class _sps_questionario_cq_filtro_fornecedor_screen
   ListTile nome_fornecedor(
       AsyncSnapshot<List<Map<String, dynamic>>> snapshot, int index, tamanho) {
     return ListTile(
-      title: Text(
-        '${snapshot.data[index]["nome_fornecedor"]}',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+      title: Column(
+        children: [
+          Text(
+            snapshot.data[index]["nome_fornecedor"],
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 5.0,
+          ),
+          RichText(
+            text: new TextSpan(
+              style:
+                  TextStyle(fontWeight: FontWeight.normal, color: Colors.black),
+              children: <TextSpan>[
+                new TextSpan(
+                  text: "Pendente: ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.normal, color: Colors.red),
+                ),
+                new TextSpan(
+                  text:
+                      snapshot.data[index]["qtde_pendente"].toString() + "      ",
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                ),
+                new TextSpan(
+                  text: "Parcial: ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.normal, color: Colors.orange),
+                ),
+                new TextSpan(
+                  text: snapshot.data[index]["qtde_parcial"].toString() + "      ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.orange),
+                ),
+                new TextSpan(
+                  text: "Concluído: ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.normal, color: Colors.green),
+                ),
+                new TextSpan(
+                  text: snapshot.data[index]["qtde_ok"].toString() ,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.green),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       onTap: () {
         usuarioAtual.index_perguntas = index;

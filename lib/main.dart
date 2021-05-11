@@ -15,6 +15,7 @@ import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:sps/models/sps_notificacao.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sps/models/sps_log.dart';
+import 'package:flutter/services.dart';
 
 void isolateSincronizacao(int arg) async  {
   final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
@@ -111,6 +112,11 @@ void isolateSincronizacao(int arg) async  {
 }
 
 void main() {
+  // Avoid Landscape
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   WidgetsFlutterBinding.ensureInitialized();
   FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
   spsLog.setUpLog();
