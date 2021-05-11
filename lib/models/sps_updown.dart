@@ -30,6 +30,25 @@ class spsUpDown {
     }
   }
 
+  Future<bool> uploadLog(FormData formData) async {
+    try {
+      Response response;
+      Dio dio = new Dio();
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (HttpClient client) {
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+        return client;
+      };
+      response = await dio.post("http://10.17.20.45/webapi/api/log/upload.php", data: formData);
+      return true;
+    } catch (e) {
+      print('Erro');
+      print(e);
+      return false;
+    }
+  }
+
   Future<String> downloadQuestionarioMidia(String ArquivoParaDownload, String destinoLocal) async {
     try {
       Response response;

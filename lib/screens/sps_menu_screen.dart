@@ -194,38 +194,38 @@ class sps_menu_screen extends StatelessWidget {
                   color: Color(0xFF004077),
                 ),
               ),
-              Container(height: 30),
-              Container(
-                width: larguraTela > 320 ? 360 : 300,
-                height: larguraTela > 320 ? 80 : 65,
-                padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                child: RaisedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => sps_log_screen()),
-                    );
-                  },
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(10.0))),
-                  label: Text(
-                    'LOG',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: larguraTela > 320 ? 14.0 : 10.0,
-                    ),
-                  ),
-                  icon: Icon(
-                    Icons.insert_drive_file_outlined,
-                    color: Colors.white,
-                  ),
-                  textColor: Colors.white,
-                  splashColor: Colors.red,
-                  color: Color(0xFF004077),
-                ),
-              ),
+              // Container(height: 30),
+              // Container(
+              //   width: larguraTela > 320 ? 360 : 300,
+              //   height: larguraTela > 320 ? 80 : 65,
+              //   padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+              //   child: RaisedButton.icon(
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => sps_log_screen()),
+              //       );
+              //     },
+              //     shape: RoundedRectangleBorder(
+              //         borderRadius:
+              //         BorderRadius.all(Radius.circular(10.0))),
+              //     label: Text(
+              //       'LOG',
+              //       style: TextStyle(
+              //         color: Colors.white,
+              //         fontSize: larguraTela > 320 ? 14.0 : 10.0,
+              //       ),
+              //     ),
+              //     icon: Icon(
+              //       Icons.insert_drive_file_outlined,
+              //       color: Colors.white,
+              //     ),
+              //     textColor: Colors.white,
+              //     splashColor: Colors.red,
+              //     color: Color(0xFF004077),
+              //   ),
+              // ),
             ],
           ),
         ),

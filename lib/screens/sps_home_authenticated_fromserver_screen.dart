@@ -9,7 +9,7 @@ import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
-import 'package:sps/screens/sps_menu_screen.dart';
+import 'package:sps/models/sps_log.dart';
 
 import '../main.dart';
 
@@ -38,6 +38,13 @@ class _HomeSpsAuthenticatedFromServerState
 
   _HomeSpsAuthenticatedFromServerState(_controladorusuario, _controladorsenha);
 
+
+  @override
+  void initState() {
+    super.initState();
+    spsLog.clearLog();
+    spsLog.setUpLog();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +98,9 @@ class _HomeSpsAuthenticatedFromServerState
                   usuarioAtual.telefone_usuario = snapshot.data[0]['telefone_usuario'];
                   usuarioAtual.tipo = snapshot.data[0]['tipo'];
                   usuarioAtual.registro_usuario =snapshot.data[0]['registro_usuario'];
-                  print('Codigo gerado: '+usuarioAtual.codigoValidacao.toString());
+                  // print('Codigo gerado: '+usuarioAtual.codigoValidacao.toString());
+                  //inicialização dos Logs do Usuário
+                  spsLog.log(tipo: "INFO", msg: "Dados do usuario: codigo_usuario: " + usuarioAtual.codigo_usuario + ", nome_usuario: "+ usuarioAtual.nome_usuario + ", telefone_usuario: "+ usuarioAtual.telefone_usuario + ", email_usuario: "+ usuarioAtual.email_usuario);
                   return Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(

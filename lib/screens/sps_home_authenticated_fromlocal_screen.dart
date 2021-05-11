@@ -1,9 +1,13 @@
+import 'package:device_info/device_info.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/models/sps_log.dart';
 import 'package:sps/models/sps_login.dart';
+import 'package:sps/models/sps_updown.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_drawer_screen.dart';
 import 'package:sps/screens/sps_home_authenticated_fromserver_screen.dart';
@@ -26,16 +30,16 @@ class _HomeSpsAuthenticatedFromLocalState
   // var toggle = false;
   // static Completer _completer = new Completer<String>();
 
+
   _HomeSpsAuthenticatedFromLocalState();
 
   final SpsLogin spslogin = SpsLogin();
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //     setUpLogs();
-  // }
+  @override
+  void initState() {
+    super.initState();
+  }
 
 
 
@@ -112,6 +116,7 @@ class _HomeSpsAuthenticatedFromLocalState
                       usuarioAtual.tipo = snapshot.data[0]['tipo'];
                       usuarioAtual.registro_usuario =
                           snapshot.data[0]['registro_usuario'];
+                      // spsLog.log(tipo: "INFO", msg: "Dados do usuario: codigo_usuario: " + usuarioAtual.codigo_usuario + ", nome_usuario: "+ usuarioAtual.nome_usuario + ", telefone_usuario: "+ usuarioAtual.telefone_usuario + ", email_usuario: "+ usuarioAtual.email_usuario);
                       return sps_menu_screen();
                     } else {
                       return SingleChildScrollView(

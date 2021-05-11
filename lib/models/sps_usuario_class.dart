@@ -27,6 +27,10 @@ class sps_usuario {
   int status_sincronizacao;
   int index_perguntas;
   int codigoValidacao;
+  String dados_dispositivo;
+  String tipo_dispositivo;
+  String modelo_dispositivo;
+  String versao_sistema_operacional;
 
   factory sps_usuario() {
     return _sps_usuario;
