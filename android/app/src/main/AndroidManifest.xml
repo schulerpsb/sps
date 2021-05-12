@@ -10,6 +10,7 @@
     <!-- FIM - Neccessário para funcionar o plugin Local_notification -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="sps"

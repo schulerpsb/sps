@@ -5,10 +5,12 @@ import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:sps/components/centered_message.dart';
 import 'package:sps/components/progress.dart';
 import 'package:sps/dao/sps_dao_sincronizacao_class.dart';
+import 'package:sps/http/sps_http_verificar_conexao_class.dart';
 import 'package:sps/models/sps_login.dart';
 import 'package:sps/models/sps_usuario_class.dart';
 import 'package:sps/screens/sps_home_authenticated_fromlocal_screen.dart';
 import '../main.dart';
+import 'package:sps/models/sps_log.dart';
 
 class sps_drawer extends StatefulWidget {
   sps_drawer({
@@ -109,7 +111,7 @@ class _sps_drawerState extends State<sps_drawer> {
                       ),
                     ),
                     SizedBox(
-                      height: 45.0,
+                      height: 50.0,
                       child: ListTile(
                         title: Text("E-mail: " + snapshot.data[0]['email_usuario'].toString()),
                         onTap: () {
@@ -124,6 +126,170 @@ class _sps_drawerState extends State<sps_drawer> {
                         onTap: () {
                           Navigator.pop(context);
                         },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.file_upload),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        title: Text("SPS App - Log de erros"),
+                                        content: Text("Deseja enviar o log de erros agora?"),
+                                        actions: [
+                                          FlatButton(
+                                            child: Text("Cancelar"),
+                                            onPressed: () {
+                                              Navigator.of(context,
+                                                  rootNavigator:
+                                                  true)
+                                                  .pop();
+                                            },
+                                          ),
+                                          FlatButton(
+                                              child: Text("Sim"),
+                                              onPressed: () {
+                                                final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+                                                ObjVerificarConexao.verificar_conexao().then((result){
+                                                  if (result == true) {
+                                                    spsLog.uploadLogNow();
+                                                    WidgetsBinding.instance
+                                                        .addPostFrameCallback((_) => showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return AlertDialog(
+                                                          title: Text("SPS App - Log de erros"),
+                                                          content:
+                                                          Text("O log de erros foi enviado com sucesso!"),
+                                                          actions: [
+                                                            FlatButton(
+                                                              child: Text("OK"),
+                                                              onPressed: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(builder: (context) => HomeSpsAuthenticatedFromLocal()),
+                                                                );
+                                                              },
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                    ));
+                                                  }else{
+                                                    WidgetsBinding.instance
+                                                        .addPostFrameCallback((_) => showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return AlertDialog(
+                                                          title: Text("SPS App - Log de erros"),
+                                                          content:
+                                                          Text("ERRO: O Log de erros não pode ser enviado em modo Offline!"),
+                                                          actions: [
+                                                            FlatButton(
+                                                              child: Text("OK"),
+                                                              onPressed: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(builder: (context) => HomeSpsAuthenticatedFromLocal()),
+                                                                );
+                                                              },
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                    ));
+                                                  }
+                                                });
+                                              }),
+                                        ]);
+                                  });
+                            },
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        title: Text("SPS App - Log de erros"),
+                                        content: Text("Deseja enviar o log de erros agora?"),
+                                        actions: [
+                                          FlatButton(
+                                            child: Text("Cancelar"),
+                                            onPressed: () {
+                                              Navigator.of(context,
+                                                  rootNavigator:
+                                                  true)
+                                                  .pop();
+                                            },
+                                          ),
+                                          FlatButton(
+                                              child: Text("Sim"),
+                                              onPressed: () {
+                                                final SpsVerificarConexao ObjVerificarConexao = SpsVerificarConexao();
+                                                ObjVerificarConexao.verificar_conexao().then((result){
+                                                  if (result == true) {
+                                                    spsLog.uploadLogNow();
+                                                    WidgetsBinding.instance
+                                                        .addPostFrameCallback((_) => showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return AlertDialog(
+                                                          title: Text("SPS App - Log de erros"),
+                                                          content:
+                                                          Text("O log de erros foi enviado com sucesso!"),
+                                                          actions: [
+                                                            FlatButton(
+                                                              child: Text("OK"),
+                                                              onPressed: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(builder: (context) => HomeSpsAuthenticatedFromLocal()),
+                                                                );
+                                                              },
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                    ));
+                                                  }else{
+                                                    WidgetsBinding.instance
+                                                        .addPostFrameCallback((_) => showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return AlertDialog(
+                                                          title: Text("SPS App - Log de erros"),
+                                                          content:
+                                                          Text("ERRO: O Log de erros não pode ser enviado em modo Offline!"),
+                                                          actions: [
+                                                            FlatButton(
+                                                              child: Text("OK"),
+                                                              onPressed: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(builder: (context) => HomeSpsAuthenticatedFromLocal()),
+                                                                );
+                                                              },
+                                                            )
+                                                          ],
+                                                        );
+                                                      },
+                                                    ));
+                                                  }
+                                                });
+                                              }),
+                                        ]);
+                                  });
+                            },
+                            child: Text("Enviar log de erros"),
+                          ),
+                        ],
                       ),
                     ),
                     //Cabecalho Status de conexao
@@ -161,6 +327,7 @@ class _sps_drawerState extends State<sps_drawer> {
                           IconButton(
                             icon: const Icon(Icons.person),
                             onPressed: () {
+                              spsLog.uploadLogNowAndLogout();
                               widget.spslogin.logoutUser();
                               Navigator.push(
                                 context,
@@ -174,6 +341,7 @@ class _sps_drawerState extends State<sps_drawer> {
                           ),
                           FlatButton(
                             onPressed: () {
+                              spsLog.uploadLogNowAndLogout();
                               widget.spslogin.logoutUser();
                               Navigator.push(
                                 context,

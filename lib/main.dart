@@ -23,8 +23,8 @@ void isolateSincronizacao(int arg) async  {
   final cron = Cron();
   DateTime now = new DateTime.now();
   DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-  print('Verificando sincronização '+ dataHoraAtual.toString());
-  print('ISOLATE===> '+arg.toString());
+  // print('Verificando sincronização '+ dataHoraAtual.toString());
+  // print('ISOLATE===> '+arg.toString());
   bool statusSincronizarQuestionarios = true;
 
   //verificação para inicio da primeira execução
@@ -43,25 +43,26 @@ void isolateSincronizacao(int arg) async  {
       usuarioAtual.tipo = dadosSessaoInicial[0]['tipo'];
       usuarioAtual.registro_usuario = dadosSessaoInicial[0]['registro_usuario'];
       usuarioAtual.codigo_planta = dadosSessaoInicial[0]['codigo_planta'].toString();
+      spsLog.log(tipo: "INFO", msg: "Dados do usuario: codigo_usuario: " + usuarioAtual.codigo_usuario + ", nome_usuario: "+ usuarioAtual.nome_usuario + ", telefone_usuario: "+ usuarioAtual.telefone_usuario + ", email_usuario: "+ usuarioAtual.email_usuario);
       //Inicio da sincronização Recorrente de 1 em 1 minuto
-      print('Sincronizando Dados em background - Primeira execução');
-      print('Sincronizando Dados de questionários - Primeira execução');
+      // print('Sincronizando Dados em background - Primeira execução');
+      // print('Sincronizando Dados de questionários - Primeira execução');
       statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
     }else{
-      print('Sincronização Primeira execução - Não executada - SEM DADOS DE LOGON LOCAL');
+      // print('Sincronização Primeira execução - Não executada - SEM DADOS DE LOGON LOCAL');
     }
   }else{
-    print('Sincronização Primeira execução - Não executada - Dispositivo OFFLINE');
+    // print('Sincronização Primeira execução - Não executada - Dispositivo OFFLINE');
   }
 
   //Verificação recorrente - 1 em 1 minuto
   //  bool statusSincronizandoArquivos = false;
   int numsinc;
   cron.schedule(Schedule.parse('*/15 * * * *'), () async {
-    print('ISOLATE===> '+arg.toString());
+    // print('ISOLATE===> '+arg.toString());
     DateTime now = new DateTime.now();
     DateTime dataHoraAtual = new DateTime(now.year, now.month, now.day, now.hour, now.minute);
-    print('Verificando sincronização recorrente '+ dataHoraAtual.toString());
+    // print('Verificando sincronização recorrente '+ dataHoraAtual.toString());
 
     final bool conectadoRecorrente = await ObjVerificarConexao.verificar_conexao();
     if (conectadoRecorrente == true) {
@@ -77,12 +78,13 @@ void isolateSincronizacao(int arg) async  {
         usuarioAtual.tipo = dadosSessao[0]['tipo'];
         usuarioAtual.registro_usuario = dadosSessao[0]['registro_usuario'];
         usuarioAtual.codigo_planta = dadosSessao[0]['codigo_planta'].toString();
+        spsLog.log(tipo: "INFO", msg: "Dados do usuario: codigo_usuario: " + usuarioAtual.codigo_usuario + ", nome_usuario: "+ usuarioAtual.nome_usuario + ", telefone_usuario: "+ usuarioAtual.telefone_usuario + ", email_usuario: "+ usuarioAtual.email_usuario);
         //Inicio da sincronização Recorrente de 1 em 1 minuto
-        print('Verificando a possibilidade de rodar a sincronização Dados em background - Recorrente');
+        // print('Verificando a possibilidade de rodar a sincronização Dados em background - Recorrente');
         if(usuarioAtual.id_isolate == arg){
           if(statusSincronizarQuestionarios == true){
             numsinc = 0;
-            print('Sincronizando Dados de questionários - Recorrente - numsync:'+numsinc.toString());
+            // print('Sincronizando Dados de questionários - Recorrente - numsync:'+numsinc.toString());
             statusSincronizarQuestionarios = false;
             statusSincronizarQuestionarios = await spsSincronizacao.sincronizarQuestionarios();
           }else{
@@ -92,14 +94,14 @@ void isolateSincronizacao(int arg) async  {
             }else{
               numsinc++;
             }
-            print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - JA EXISTE UMA SINCRONIZAÇÃO EM ANDAMENTO - numsync:'+numsinc.toString());
+            // print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - JA EXISTE UMA SINCRONIZAÇÃO EM ANDAMENTO - numsync:'+numsinc.toString());
           }
         }else{
-          print('ISOLATE ENCERRADO ===> '+arg.toString());
+          // print('ISOLATE ENCERRADO ===> '+arg.toString());
           cron.close();
         }
       }else{
-        print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - SEM DADOS DE LOGON LOCAL');
+        // print('Sincronização recorrente não executada - '+ dataHoraAtual.toString()+ ' - SEM DADOS DE LOGON LOCAL');
       }
     }else{
       DateTime now = new DateTime.now();
@@ -118,6 +120,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterLocalNotificationsPlugin flip = spsNotificacao.iniciarNotificacaoGrupo();
   spsLog.setUpLog();
+  spsLog.logDispositivo();
   SpsDaoSincronizacao objSpsDaoSincronizacao = SpsDaoSincronizacao();
   objSpsDaoSincronizacao.create_table();
   objSpsDaoSincronizacao.emptyTable();

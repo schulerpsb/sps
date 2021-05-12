@@ -132,9 +132,6 @@ class spsSincronizacao {
         }
         windexLista = windexLista + 1;
       });
-//      while (windexLista < _wregistrosLista) {
-//
-//      }
       spsLog.log(debug: 1, tipo: "INFO", msg: "=== UPLOAD - FIM SINCRONIZAÇÃO DE DADOS (Tabela: checklist_lista) =============================================");
       spsLog.log(debug: 1, tipo: "INFO", msg: "=== UPLOAD - INICIO SINCRONIZAÇÃO DE DADOS (Tabela: checklist_item) =============================================");
 
@@ -390,6 +387,9 @@ class spsSincronizacao {
       jaNotificado = await sincronizarAnexosServerToLocal(tipo, 'PESQUISA',flip, jaNotificado);
       spsLog.log(debug: 1, tipo: "INFO", msg: "DOWNLOAD - FIM SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens, resposatas multiplas e Anexos) =============================================");
 //DOWNLOAD - SINCRONIZAÇÃO - Rotina de atualização servidor(Rest API) para Local(Sqlite) - Cabeçalhos, Itens, resposatas multiplas e Anexos)
+      spsLog.log(debug: 1, tipo: "INFO", msg: "=== UPLOAD - LOGS =============================================");
+      spsLog.uploadLogDiario();
+      spsLog.log(debug: 1, tipo: "INFO", msg: "=== FIM UPLOAD - LOGS =============================================");
       jaNotificado = 0;
 
       DateTime now = new DateTime.now();
