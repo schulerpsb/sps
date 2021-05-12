@@ -263,139 +263,152 @@ class _sps_questionario_cq_ext_filtro_screen
       BuildContext context) {
     int larguraTela = MediaQuery.of(context).size.width.toInt();
     int alturaTela = MediaQuery.of(context).size.height.toInt();
+    //print ("adriano =>larguraTela=>"+larguraTela.toString());
     if (larguraTela > 320) {
       return Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(
-                onPressed: () => _obter_contador(snapshot, "PENDENTE") == 0
-                    ? {}
-                    : {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  sps_questionario_cq_lista_screen("EXTERNO",
-                                      "PENDENTE", null, null, null, null)),
-                        )
-                      },
-                color: Colors.purple,
-                padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                splashColor: Colors.grey,
-                child: Column(
-                  // Replace with a Row for horizontal icon + text
-                  children: <Widget>[
-                    Center(
-                        child: Text(" PENDENTE \n",
-                            style: TextStyle(color: Colors.white,fontSize: 13))),
-                    Center(
-                        child: Text(
-                            _obter_contador(snapshot, "PENDENTE").toString(),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15)))
-                  ],
+              SizedBox(
+                width: 80,
+                child: RaisedButton(
+                  onPressed: () => _obter_contador(snapshot, "PENDENTE") == 0
+                      ? {}
+                      : {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    sps_questionario_cq_lista_screen("EXTERNO",
+                                        "PENDENTE", null, null, null, null)),
+                          )
+                        },
+                  color: Colors.purple,
+                  padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)),
+                  splashColor: Colors.grey,
+                  child: Column(
+                    // Replace with a Row for horizontal icon + text
+                    children: <Widget>[
+                      Center(
+                          child: Text(" PENDENTE \n",
+                              style: TextStyle(color: Colors.white,fontSize: 13))),
+                      Center(
+                          child: Text(
+                              _obter_contador(snapshot, "PENDENTE").toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15)))
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
-                width: 10,
+                width: 5,
               ),
-              RaisedButton(
-                onPressed: () => _obter_contador(snapshot, "PARCIAL") == 0
-                    ? {}
-                    : {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  sps_questionario_cq_lista_screen("EXTERNO",
-                                      "PARCIAL", null, null, null, null)),
-                        )
-                      },
-                color: Colors.orange,
-                padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                splashColor: Colors.grey,
-                child: Column(
-                  // Replace with a Row for horizontal icon + text
-                  children: <Widget>[
-                    Center(child: Text("   PARCIAL   \n", style: TextStyle(color: Colors.black,fontSize: 13))),
-                    Center(
-                        child: Text(
-                            _obter_contador(snapshot, "PARCIAL").toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15)))
-                  ],
+              SizedBox(
+                width: 80,
+                child: RaisedButton(
+                  onPressed: () => _obter_contador(snapshot, "PARCIAL") == 0
+                      ? {}
+                      : {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    sps_questionario_cq_lista_screen("EXTERNO",
+                                        "PARCIAL", null, null, null, null)),
+                          )
+                        },
+                  color: Colors.orange,
+                  padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)),
+                  splashColor: Colors.grey,
+                  child: Column(
+                    // Replace with a Row for horizontal icon + text
+                    children: <Widget>[
+                      Center(child: Text("   PARCIAL   \n", style: TextStyle(color: Colors.black,fontSize: 13))),
+                      Center(
+                          child: Text(
+                              _obter_contador(snapshot, "PARCIAL").toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15)))
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
-                width: 10,
+                width: 5,
               ),
-              RaisedButton(
-                onPressed: () => _obter_contador(snapshot, "OK S/FUP") == 0
-                    ? {}
-                    : {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  sps_questionario_cq_lista_screen("EXTERNO",
-                                      "OK S/FUP", null, null, null, null)),
-                        )
-                      },
-                color: Colors.green,
-                padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                splashColor: Colors.grey,
-                child: Column(
-                  // Replace with a Row for horizontal icon + text
-                  children: <Widget>[
-                    Center(child: Text("CONCLUÍDO\n", style: TextStyle(color: Colors.black,fontSize: 13))),
-                    Center(
-                        child: Text(
-                            _obter_contador(snapshot, "OK S/FUP").toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15)))
-                  ],
+              SizedBox(
+                width: 80,
+                child: RaisedButton(
+                  onPressed: () => _obter_contador(snapshot, "OK S/FUP") == 0
+                      ? {}
+                      : {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    sps_questionario_cq_lista_screen("EXTERNO",
+                                        "OK S/FUP", null, null, null, null)),
+                          )
+                        },
+                  color: Colors.green,
+                  padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)),
+                  splashColor: Colors.grey,
+                  child: Column(
+                    // Replace with a Row for horizontal icon + text
+                    children: <Widget>[
+                      Center(child: Text("CONCLUÍDO\n", style: TextStyle(color: Colors.black,fontSize: 13))),
+                      Center(
+                          child: Text(
+                              _obter_contador(snapshot, "OK S/FUP").toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15)))
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
-                width: 10,
+                width: 5,
               ),
-              RaisedButton(
-                onPressed: () => _obter_contador(snapshot, "OK C/FUP") == 0
-                    ? {}
-                    : {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  sps_questionario_cq_lista_screen("EXTERNO",
-                                      "OK C/FUP", null, null, null, null)),
-                        )
-                      },
-                color: Colors.blueAccent,
-                padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                splashColor: Colors.grey,
-                child: Column(
-                  // Replace with a Row for horizontal icon + text
-                  children: <Widget>[
-                    Center(child: Text("FOLLOW-UP\n", style: TextStyle(color: Colors.black,fontSize: 13))),
-                    Center(
-                        child: Text(
-                            _obter_contador(snapshot, "OK C/FUP").toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15)))
-                  ],
+              SizedBox(
+                width: 80,
+                child: RaisedButton(
+                  onPressed: () => _obter_contador(snapshot, "OK C/FUP") == 0
+                      ? {}
+                      : {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    sps_questionario_cq_lista_screen("EXTERNO",
+                                        "OK C/FUP", null, null, null, null)),
+                          )
+                        },
+                  color: Colors.blueAccent,
+                  padding: EdgeInsets.fromLTRB(1, 15, 1, 15),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0)),
+                  splashColor: Colors.grey,
+                  child: Column(
+                    // Replace with a Row for horizontal icon + text
+                    children: <Widget>[
+                      Center(child: Text("FOLLOW-UP\n", style: TextStyle(color: Colors.black,fontSize: 13))),
+                      Center(
+                          child: Text(
+                              _obter_contador(snapshot, "OK C/FUP").toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15)))
+                    ],
+                  ),
                 ),
               ),
             ],
