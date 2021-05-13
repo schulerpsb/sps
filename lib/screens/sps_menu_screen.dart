@@ -1,21 +1,12 @@
-import 'dart:async';
-import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:sps/models/sps_sincronizacao.dart';
 import 'package:sps/models/sps_usuario_class.dart';
-import 'package:sps/screens/sps_log_screen.dart';
 import 'package:sps/screens/sps_questionario_ch_filtro_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_ext_filtro_screen.dart';
 import 'package:sps/screens/sps_questionario_cq_filtro_fornecedor_screen.dart';
-import 'package:sps/screens/sps_questionario_cq_int_filtro_screen.dart';
 import 'sps_cotacao_screen.dart';
 import 'sps_feedback_screen.dart';
-import 'package:sps/models/sps_notificacao.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class sps_menu_screen extends StatelessWidget {
 //  final sps_usuario usuarioAtual;

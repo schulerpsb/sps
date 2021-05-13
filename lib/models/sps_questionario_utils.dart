@@ -151,7 +151,7 @@ class spsQuestionarioUtils {
     }
 
     //Não se aplica
-    if (result[0]["resp_nao_se_aplica"] == "SIM") {
+    if (result[0]["resp_nao_se_aplica"] == "SIM"  || result[0]["resp_cq"] == "NÃO SE APLICA") {
       _wstatusResposta = "PREENCHIDA";
     }
 
