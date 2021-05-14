@@ -112,16 +112,17 @@ class SpsLogin {
           final storage = new FlutterSecureStorage();
           await storage.write(key: 'jwtKey', value: dadosUsuario['chave'].toString());
           dadosUsuario['chave'] = "";
-//          final SpsDaoLogin objLoginDao = SpsDaoLogin();
-//          final int resulcreate = await objLoginDao.create_table();
-//          final int resullimpar = await objLoginDao.emptyTable(dadosUsuario);
-//          final int resultsave = await objLoginDao.save(dadosUsuario);
-//          final List<Map<String, dynamic>> DadosSessao = await objLoginDao.listaUsuarioLocal();
-          final List<Map<String, dynamic>> DadosSessao = [];
-          DadosSessao.add(dadosUsuario);
+          final SpsDaoLogin objLoginDao = SpsDaoLogin();
+          final int resulcreate = await objLoginDao.create_table();
+          final int resullimpar = await objLoginDao.emptyTable(dadosUsuario);
+          final int resultsave = await objLoginDao.save(dadosUsuario);
+          final List<Map<String, dynamic>> DadosSessao = await objLoginDao.listaUsuarioLocal();
+//          final List<Map<String, dynamic>> DadosSessao = [];
+//          DadosSessao.add(dadosUsuario);
 
           if (DadosSessao != null) {
 //          List<Map<String, dynamic>> DadosSessao;
+
 //          DadosSessao.add(dadosUsuario);
 //          debugPrint('dados da sessao: '+dadosUsuario.toString());
             return DadosSessao;
@@ -184,7 +185,7 @@ class SpsLogin {
               //print("ATUALIZANDO DADOS SQLITE ========>");
               dadosUsuario.remove('mensagem');
               dadosUsuario['chave'] = "";
-              await objLoginDao.emptyTable(dadosUsuario).then((value) => null);
+              await objLoginDao.emptyTable(dadosUsuario);
               final int resultsave = await objLoginDao.save(dadosUsuario);
               final List<Map<String, dynamic>> DadosSessao = await objLoginDao
                   .listaUsuarioLocal();
