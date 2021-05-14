@@ -557,12 +557,6 @@ class _sps_questionario_cq_ext_filtro_screen
                     ],
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                SizedBox(
-                  width: 92,
-                ),
               ],
             ),
           ),

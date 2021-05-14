@@ -55,7 +55,9 @@ class sps_menu_screen extends StatelessWidget {
                                 BorderRadius.all(Radius.circular(10.0))),
                         label: Text(
                           'FOLLOW-UP',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white,
+                            fontSize: larguraTela > 320 ? 14.0 : 10.0,
+                          ),
                         ),
                         icon: Icon(
                           Icons.check_circle,
@@ -85,7 +87,9 @@ class sps_menu_screen extends StatelessWidget {
                                 BorderRadius.all(Radius.circular(10.0))),
                         label: Text(
                           'CHECKLIST',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white,
+                            fontSize: larguraTela > 320 ? 14.0 : 10.0,
+                          ),
                         ),
                         icon: Icon(
                           Icons.fact_check_outlined,
@@ -119,7 +123,10 @@ class sps_menu_screen extends StatelessWidget {
                                 BorderRadius.all(Radius.circular(10.0))),
                         label: Text(
                           'PESQUISA',
-                          style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white,
+                            fontSize: larguraTela > 320 ? 14.0 : 10.0,
+                          ),
+
                         ),
                         icon: Icon(
                           Icons.web,
@@ -166,7 +173,7 @@ class sps_menu_screen extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: larguraTela > 320 ? (larguraTela - 30).toDouble() : 270,
+                      width: larguraTela > 320 ? (larguraTela - 30).toDouble() : 300,
                       height: larguraTela > 320 ? 90 : 65,
                       padding: EdgeInsets.fromLTRB(2, 10, 0, 2),
                       child: RaisedButton.icon(
@@ -201,7 +208,7 @@ class sps_menu_screen extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: larguraTela > 320 ? (larguraTela - 30).toDouble() : 270,
+                      width: larguraTela > 320 ? (larguraTela - 30).toDouble() : 300,
                       height: larguraTela > 320 ? 90 : 65,
                       padding: EdgeInsets.fromLTRB(2, 5, 2, 2),
                       child: RaisedButton.icon(
@@ -236,7 +243,7 @@ class sps_menu_screen extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: larguraTela > 320 ? (larguraTela - 30).toDouble() : 270,
+                      width: larguraTela > 320 ? (larguraTela - 30).toDouble() : 300,
                       height: larguraTela > 320 ? 90 : 65,
                       padding: EdgeInsets.fromLTRB(2, 5, 2, 2),
                       child: RaisedButton.icon(
