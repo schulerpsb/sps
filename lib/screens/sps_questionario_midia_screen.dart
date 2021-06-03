@@ -29,6 +29,7 @@ import 'package:badges/badges.dart';
 import 'package:sps/screens/sps_pdf_viewer_screen.dart';
 import 'package:sps/models/sps_notificacao.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:sps/models/sps_log.dart';
 
 class sps_questionario_midia_screen extends StatefulWidget {
   final Function({int index_posicao_retorno, String acao}) funCallback;
@@ -548,6 +549,7 @@ class _sps_questionario_midia_screen
           (X509Certificate cert, String host, int port) => true;
       return client;
     };
+    spsLog.log(debug: 1, tipo: "INFO", msg: "Baixando arquivo manualmente!==>" +uri.toString());
     dio.download(
       uri,
       savePath,
