@@ -621,7 +621,7 @@ class _sps_questionario_midia_screen
     await Future.forEach(listaArquivos, (arquivo) async {
       double progress_individual = 0;
       double limit = 0.5;
-      String uri = 'https://10.17.20.45/CHECKLIST/ANEXOS/' +
+      String uri = 'https://10.17.20.45/APPS/CHECKLIST/ANEXOS/' +
           arquivo['codigo_programacao'].toString() +
           '_' +
           arquivo['registro_colaborador'].toString() +
