@@ -82,7 +82,7 @@ void isolateSincronizacao(int arg) async  {
         //Inicio da sincronização Recorrente de 1 em 1 minuto
         // print('Verificando a possibilidade de rodar a sincronização Dados em background - Recorrente');
         if(usuarioAtual.id_isolate == arg){
-          if(statusSincronizarQuestionarios == true){
+            if(statusSincronizarQuestionarios == true){
             numsinc = 0;
             // print('Sincronizando Dados de questionários - Recorrente - numsync:'+numsinc.toString());
             statusSincronizarQuestionarios = false;

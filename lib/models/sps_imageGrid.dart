@@ -487,7 +487,7 @@ class ImageGrid extends StatelessWidget {
                       size: 15,
                     ),
                     onPressed: () {
-                      String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + _listaArquivos[index]['codigo_programacao'].toString() + '_' + _listaArquivos[index]['registro_colaborador'].toString()+ '_' + _listaArquivos[index]['identificacao_utilizador'].toString() + '_' + _listaArquivos[index]['item_checklist'].toString() +'/' + _listaArquivos[index]['nome_arquivo'].toString();
+                      String ArquivoParaDownload = 'https://10.17.20.45/APPS/CHECKLIST/ANEXOS/' + _listaArquivos[index]['codigo_programacao'].toString() + '_' + _listaArquivos[index]['registro_colaborador'].toString()+ '_' + _listaArquivos[index]['identificacao_utilizador'].toString() + '_' + _listaArquivos[index]['item_checklist'].toString() +'/' + _listaArquivos[index]['nome_arquivo'].toString();
                       funcDownload(uri: ArquivoParaDownload, filename: _listaArquivos[index]['nome_arquivo'].toString());
                     },
                   ),

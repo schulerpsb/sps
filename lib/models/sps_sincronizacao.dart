@@ -518,7 +518,7 @@ class spsSincronizacao {
                 }
                 spsLog.log(tipo: "INFO", msg: "Arquivo da web ===>"+AnexoServidor["nome_arquivo"].toString());
               if(AnexoServidor["nome_arquivo"].toString() != null && AnexoServidor["nome_arquivo"].toString() != "null"){
-                String ArquivoParaDownload = 'https://10.17.20.45/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' +AnexoServidor["registro_colaborador"].toString()+ '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
+                String ArquivoParaDownload = 'https://10.17.20.45/APPS/CHECKLIST/ANEXOS/' + AnexoServidor["codigo_programacao"].toString() + '_' +AnexoServidor["registro_colaborador"].toString()+ '_' + AnexoServidor["identificacao_utilizador"].toString() + '_' + AnexoServidor["item_checklist"].toString() +'/' + AnexoServidor["nome_arquivo"].toString();
                 String destinoLocal = usuarioAtual.document_root_folder.toString() + '/' + AnexoServidor["nome_arquivo"].toString();
                 spsLog.log(tipo: "INFO", msg: "baixar ==> " + ArquivoParaDownload.toString() + " Para " +destinoLocal.toString());
                 await objspsUpDown.downloadQuestionarioMidia(ArquivoParaDownload, destinoLocal).then((String statusDownload) {
