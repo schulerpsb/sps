@@ -554,6 +554,9 @@ class _sps_questionario_ch_item_screen_resposta
           if (_linhas < 1) {
             _linhas = 1;
           }
+          if (_linhas > 5) {
+            _linhas = 10;
+          }
         }
         //Construir campo texto/numero
         if (snapshot.data[index]["tipo_resposta_fixa"].toString() == "TEXTO" ||
