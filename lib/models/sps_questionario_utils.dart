@@ -92,7 +92,7 @@ class spsQuestionarioUtils {
     }
 
     //Analisar resposta multipla
-    if (result[0]["tipo_resposta"] == "RESPOSTA MULTIPLA") {
+    if (result[0]["tipo_resposta"] == "RESPOSTA MULTIPLA" || result[0]["tipo_resposta"] == "RESPOSTA UNICA") {
       //Ler dados do SQlite (Checklist Item - chave parcial 2)
       final List<Map<String, dynamic>> result_resp_multipla =
           await objQuestionarioItemDao.select_chave_parcial_2(

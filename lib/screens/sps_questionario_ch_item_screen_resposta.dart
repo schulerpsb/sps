@@ -122,6 +122,7 @@ class _sps_questionario_ch_item_screen_resposta
   var _wrespEscala;
   var _wrespSimNao;
   var _wrespNaoSeAplica;
+  int _index_limpeza;
 
   @override
   Widget build(BuildContext context) {
@@ -367,7 +368,7 @@ class _sps_questionario_ch_item_screen_resposta
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold)),
 
-                                          Container(child:Text("      ")),
+                                          Container(child: Text("      ")),
 
                                           //Tratar comentarios
                                           tratar_comentarios(context, snapshot),
@@ -1037,7 +1038,7 @@ class _sps_questionario_ch_item_screen_resposta
                                             fontSize: 15,
                                             color: Colors.black,
                                             fontWeight: FontWeight.normal)),
-                                    value: tabRespMultipla[
+                                      value: tabRespMultipla[
                                     snapshot.data[indexList]
                                     ["item_checklist"]][
                                     snapshot.data[indexList]
@@ -1093,7 +1094,172 @@ class _sps_questionario_ch_item_screen_resposta
                 },
               );
             } else {
-              return TextField();
+              if (snapshot.data[index]["tipo_resposta"] == "RESPOSTA UNICA") {
+                var windex_inicial = index;
+                return StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                    List<Widget> _listaRespMultipla = [];
+                    var witem_checklist_ant =
+                    snapshot.data[index]["item_checklist"];
+                    var wparar = false;
+                    var windex_inicio = index;
+                    var wqtde_texto_adicional = 0;
+                    while (snapshot.data[index]["item_checklist"] ==
+                        witem_checklist_ant &&
+                        wparar == false) {
+                      if (snapshot.data[index]["tamanho_texto_adicional"]
+                          .toString() !=
+                          null &&
+                          snapshot.data[index]["tamanho_texto_adicional"]
+                              .toString() !=
+                              "null" &&
+                          snapshot.data[index]["tamanho_texto_adicional"]
+                              .toString() !=
+                              "" &&
+                          snapshot.data[index]["tamanho_texto_adicional"] != 0) {
+                        wqtde_texto_adicional = wqtde_texto_adicional + 1;
+                      }
+                      if (snapshot.data.length - 1 == index) {
+                        wparar = true;
+                      } else {
+                        index = index + 1;
+                      }
+                    }
+
+                    int witens = index - windex_inicio;
+                    if (wparar == true) {
+                      witens = index - windex_inicio + 1;
+                    }
+                    double wtamanho = witens * 50.toDouble();
+                    wtamanho = wtamanho + (wqtde_texto_adicional * 60.toDouble());
+
+                    _listaRespMultipla.add(
+                      Transform.scale(
+                        scale: .85,
+                        child: Container(
+                          //color: Colors.green, // Cinza
+                          height: wtamanho,
+                          decoration: BoxDecoration(
+                            color: Colors.white10,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset:
+                                Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: ListView.builder(
+                            itemCount: witens,
+                            itemBuilder: (BuildContext context, int indexList) {
+                              indexList = indexList + windex_inicio;
+                              return new Card(
+                                child: new Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.all(8.0),
+                                          width: 25.0,
+                                          height: 25.0,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blueAccent,
+                                            borderRadius: BorderRadius.circular(180),
+
+                                          ),
+                                          child: new Checkbox(
+                                            value: tabRespMultipla[
+                                            snapshot.data[indexList]
+                                            ["item_checklist"]][
+                                            snapshot.data[indexList]
+                                            ["subcodigo_tpresposta"]] ==
+                                                null
+                                                ? snapshot.data[indexList]
+                                            ["subcodigo_tpresposta"] ==
+                                                snapshot.data[indexList]
+                                                ["subcodigo_resposta"]
+                                                ? true
+                                                : false
+                                                : tabRespMultipla[snapshot
+                                                .data[indexList]["item_checklist"]]
+                                            [snapshot
+                                                .data[indexList]["subcodigo_tpresposta"]]
+                                                .toString() ==
+                                                "true"
+                                                ? true
+                                                : false,
+                                            onChanged: (val) =>
+                                            {
+                                              print("adriano antes =>" +
+                                                  tabRespMultipla.toString()),
+
+                                            //Assinalar opção unica
+                                              tabConteudo[snapshot.data[indexList]
+                                              ["item_checklist"]][1] =
+                                              "RESPOSTA UNICA",
+                                              tabRespMultipla[snapshot.data[indexList]
+                                              ["item_checklist"]][
+                                              snapshot.data[indexList]
+                                              ["subcodigo_tpresposta"]] = val,
+
+                                              setState(
+                                                    () {
+                                                      //Limpar todas as opções
+                                                      if (val == true) {
+                                                        int _index_limpeza = 0;
+                                                        while (_index_limpeza <= 10) {
+                                                          if (_index_limpeza != snapshot.data[indexList]["subcodigo_tpresposta"]) {
+                                                            tabRespMultipla[snapshot.data[indexList]
+                                                            ["item_checklist"]][_index_limpeza] = false;
+                                                          }
+                                                          _index_limpeza = _index_limpeza + 1;
+                                                        }
+                                                    };
+                                                      print ("adriano depois =>"+tabRespMultipla.toString());
+                                                  index = windex_inicial;
+                                                },
+                                              )
+                                            },
+                                          ),
+                                        ),
+                                        Text(
+                                            snapshot.data[indexList]
+                                            ["descr_sub_tpresposta"],
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal)),
+                                      ],
+                                    ),
+
+                                    textoAdicionalRespostaMultipla(
+                                        snapshot, indexList),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+
+                    return Column(
+                      children: <Widget>[
+                        Column(children: _listaRespMultipla),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                return TextField();
+              }
             }
           }
         }
@@ -1134,8 +1300,7 @@ class _sps_questionario_ch_item_screen_resposta
           keyboardType: TextInputType.text,
           onChanged: (novoTexto) =>
           {
-            tabConteudo[snapshot.data[indexList]["item_checklist"]][1] =
-            "RESPOSTA MULTIPLA",
+            tabConteudo[snapshot.data[indexList]["item_checklist"]][1] = snapshot.data[indexList]["tipo_resposta"],
             tabRespMultipla[snapshot.data[indexList]["item_checklist"]]
             [snapshot.data[indexList]["subcodigo_tpresposta"]] = true,
             //_textoAdicional.text = novoTexto,
@@ -1283,7 +1448,7 @@ class _sps_questionario_ch_item_screen_resposta
             }
           }
 
-          if (element[1] == "RESPOSTA MULTIPLA") {
+          if (element[1] == "RESPOSTA MULTIPLA" || element[1] == "RESPOSTA UNICA") {
             int windex = 0;
             while (windex < 100) {
               if (tabRespMultipla[_witemChecklist][windex] != null) {
@@ -1366,7 +1531,7 @@ class _sps_questionario_ch_item_screen_resposta
                 _wcodigoEmpresa, _wcodigoProgramacao);
           }
 
-          if (element[1] == "RESPOSTA MULTIPLA") {
+          if (element[1] == "RESPOSTA MULTIPLA" ||element[1] == "RESPOSTA UNICA") {
             if (element[3] != "NÃO SE APLICA") {
               //Gravar SQlite (Respostas)
               final SpsDaoQuestionarioItem objQuestionarioItemDao =
