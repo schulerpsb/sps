@@ -1217,7 +1217,7 @@ class _sps_questionario_ch_item_screen_resposta
                                                       //Limpar todas as opções
                                                       if (val == true) {
                                                         int _index_limpeza = 0;
-                                                        while (_index_limpeza <= 10) {
+                                                        while (_index_limpeza <= 100) {
                                                           if (_index_limpeza != snapshot.data[indexList]["subcodigo_tpresposta"]) {
                                                             tabRespMultipla[snapshot.data[indexList]
                                                             ["item_checklist"]][_index_limpeza] = false;
